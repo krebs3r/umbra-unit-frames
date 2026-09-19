@@ -93,15 +93,18 @@ local function CreateBar(parent, color)
 	-- the whole bar rather than over the fill, because the fill's geometry
 	-- follows a hidden value and must not be anchored to. Sublevel 1 puts it
 	-- above the fill and still below the labels.
-	local shade = bar:CreateTexture(nil, 'ARTWORK', nil, 1)
-	shade:SetAllPoints()
-	shade:SetColorTexture(1, 1, 1, 1)
+	if layout.barShade > 0 then
+		local shade = bar:CreateTexture(nil, 'ARTWORK', nil, 1)
+		shade:SetAllPoints()
+		shade:SetColorTexture(1, 1, 1, 1)
 
-	-- Without the gradient this is a white block over the bar, so it only
-	-- stays if the gradient took.
-	if not pcall(shade.SetGradient, shade, 'VERTICAL',
-		CreateColor(0, 0, 0, 0.28), CreateColor(1, 1, 1, 0.12)) then
-		shade:Hide()
+		-- Without the gradient this is a white block over the bar, so it only
+		-- stays if the gradient took.
+		if not pcall(shade.SetGradient, shade, 'VERTICAL',
+			CreateColor(0, 0, 0, layout.barShade),
+			CreateColor(1, 1, 1, layout.barGloss)) then
+			shade:Hide()
+		end
 	end
 
 	return bar
@@ -188,10 +191,14 @@ local function Style(self, unit)
 	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -(l.inset * 2), healthY)
 	healthPercent:SetSize(l.valueWidth, l.healthHeight)
 
+	-- Power colors come from the client's own PowerBarColor table, and where
+	-- Blizzard ships a texture for a resource, colorPowerAtlas uses that
+	-- rather than a flat approximation of it.
 	local power = CreateBar(self, colors.muted)
 	power:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, powerY)
 	power:SetSize(columnWidth, l.powerHeight)
 	power.colorPower = true
+	power.colorPowerAtlas = true
 	self.Power = power
 
 	if config.classPower then

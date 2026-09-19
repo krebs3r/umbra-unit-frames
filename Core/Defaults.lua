@@ -12,14 +12,11 @@ Umbra.media = {
 }
 
 Umbra.colors = {
-	-- The health bar stays neutral so that class color means class and nothing
-	-- else. This is also what keeps the bar working inside encounters: a fixed
-	-- color needs no curve evaluated against a secret health value.
-	--
-	-- Neutral is not the same as washed out. The mockup drew the bar as a
-	-- gradient and this took its darkest stop for the whole fill, which is how
-	-- it ended up looking faded against the frame behind it.
-	health = {0.239, 0.761, 0.290},
+	-- The client's own default health green. The bar stays neutral so that
+	-- class color means class and nothing else, which is also what keeps it
+	-- working inside encounters: a fixed color needs no curve evaluated
+	-- against a hidden health value.
+	health = {0, 1, 0},
 
 	-- Dark enough to carry light text. The interface accent is too bright to
 	-- put a label on, and a cast bar is unit information rather than chrome.
@@ -47,6 +44,12 @@ Umbra.layout = {
 
 	fontSize = 12,
 	rangeAlpha = 0.45,
+
+	-- How far the vertical shading darkens the bottom of a bar. Zero leaves
+	-- the fill exactly as its color says, which matters for the power bar,
+	-- where the color is really one of Blizzard's own textures.
+	barShade = 0.28,
+	barGloss = 0.12,
 }
 
 -- Width is set by the longest thing a frame has to show, which is an NPC name
