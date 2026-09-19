@@ -6,7 +6,7 @@ ns.Umbra = Umbra
 Umbra.addonName = addonName
 
 -- The packager substitutes this token on release; a plain checkout keeps it.
-Umbra.version = C_AddOn.GetAddOnMetadata(addonName, 'Version')
+Umbra.version = C_AddOns.GetAddOnMetadata(addonName, 'Version')
 if not Umbra.version or Umbra.version:find('project%-version') then
 	Umbra.version = 'dev'
 end

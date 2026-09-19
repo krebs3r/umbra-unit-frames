@@ -4,11 +4,21 @@ local oUF = ns.oUF
 
 local layout, colors, media = Umbra.layout, Umbra.colors, Umbra.media
 
+--[[ Geometry rule
+Every widget gets an explicit size and a single anchor to the frame itself.
+
+Nothing may derive its size from a widget that receives unit data. A widget
+handed a hidden value reports hidden geometry, and that spreads along the
+anchor chain: oUF asks the health bar for its width on every update, and a bar
+sized by anchors to a tag'd font string answers with a value it cannot do
+arithmetic on. Explicit sizes keep that question answerable.
+--]]
+
 --[[ CreateColorLayer(parent, alpha)
 A flat, single-color surface that can carry a class color.
 
-Inside an instance a unit's class is secret and C_ClassColor answers with a
-secret color. SetStatusBarColor takes those; SetColorTexture and SetVertexColor
+Inside an instance a unit's class is hidden and C_ClassColor answers with a
+hidden color. SetStatusBarColor takes those; SetColorTexture and SetVertexColor
 have no such guarantee. So anything tinted by class identity is a StatusBar
 pinned to full rather than a plain texture.
 --]]
@@ -34,6 +44,18 @@ local function CreateText(parent, justify)
 	return fs
 end
 
+local function CreateBar(parent, color)
+	local bar = CreateFrame('StatusBar', nil, parent)
+	bar:SetStatusBarTexture(media.bar)
+	bar:SetStatusBarColor(unpack(color))
+
+	local background = bar:CreateTexture(nil, 'BACKGROUND')
+	background:SetAllPoints()
+	background:SetColorTexture(unpack(colors.border))
+
+	return bar
+end
+
 local function UpdateIdentity(element, unit)
 	local color = Umbra.Secrets.UnitColor(unit)
 	if not color then return end
@@ -45,8 +67,15 @@ end
 
 local function Style(self, unit)
 	local config = Umbra.frames[unit] or Umbra.frames.player
+	local l = layout
 
-	self:SetSize(config.width, Umbra:FrameHeight())
+	local width, height = config.width, Umbra:FrameHeight()
+	local columnX = l.classEdge + l.gap + l.portrait + l.gap
+	local columnWidth = width - columnX - l.inset
+	local healthY = -(l.nameHeight + l.gap)
+	local powerY = healthY - (l.healthHeight + l.gap)
+
+	self:SetSize(width, height)
 	self:RegisterForClicks('AnyUp')
 
 	local background = self:CreateTexture(nil, 'BACKGROUND')
@@ -55,80 +84,55 @@ local function Style(self, unit)
 
 	-- Class color lives here and on the name, never on the health bar.
 	local edge = CreateColorLayer(self)
-	edge:SetPoint('TOPLEFT')
-	edge:SetPoint('BOTTOMLEFT')
-	edge:SetWidth(layout.classEdge)
+	edge:SetPoint('TOPLEFT', self, 'TOPLEFT', 0, 0)
+	edge:SetSize(l.classEdge, height)
 	self.ClassEdge = edge
 
 	local portrait = CreateFrame('PlayerModel', nil, self)
-	portrait:SetPoint('TOPLEFT', edge, 'TOPRIGHT', layout.gap, 0)
-	portrait:SetPoint('BOTTOMLEFT', edge, 'BOTTOMRIGHT', layout.gap, 0)
-	portrait:SetWidth(layout.portrait)
+	portrait:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
+	portrait:SetSize(l.portrait, height)
 	self.Portrait = portrait
 
 	local tint = CreateColorLayer(self, 0.13)
-	tint:SetAllPoints(portrait)
+	tint:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
+	tint:SetSize(l.portrait, height)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
-	local stack = CreateFrame('Frame', nil, self)
-	stack:SetPoint('TOPLEFT', portrait, 'TOPRIGHT', layout.gap, 0)
-	stack:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -layout.inset, 0)
-
-	local name = CreateText(stack, 'LEFT')
-	name:SetPoint('TOPLEFT')
-	name:SetHeight(layout.nameHeight)
-
-	local healthValue = CreateText(stack, 'RIGHT')
-	healthValue:SetPoint('TOPRIGHT')
-	healthValue:SetHeight(layout.nameHeight)
+	local healthValue = CreateText(self, 'RIGHT')
+	healthValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
+	healthValue:SetSize(l.valueWidth, l.nameHeight)
 	healthValue:SetTextColor(unpack(colors.muted))
 
-	name:SetPoint('RIGHT', healthValue, 'LEFT', -layout.gap, 0)
+	local name = CreateText(self, 'LEFT')
+	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
+	name:SetSize(columnWidth - l.valueWidth - l.gap, l.nameHeight)
 
-	-- The bar stays neutral: no color flag is set, so oUF leaves the color we
-	-- apply here alone and never evaluates a curve against a secret value.
-	local health = CreateFrame('StatusBar', nil, stack)
-	health:SetStatusBarTexture(media.bar)
-	health:SetStatusBarColor(unpack(colors.health))
-	health:SetPoint('TOPLEFT', name, 'BOTTOMLEFT', 0, -layout.gap)
-	health:SetPoint('TOPRIGHT', healthValue, 'BOTTOMRIGHT', 0, -layout.gap)
-	health:SetHeight(layout.healthHeight)
+	-- No color flag is set, so oUF leaves the color applied here alone and
+	-- never evaluates a curve against a hidden value.
+	local health = CreateBar(self, colors.health)
+	health:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, healthY)
+	health:SetSize(columnWidth, l.healthHeight)
 	health.PostUpdateColor = UpdateIdentity
 	self.Health = health
 
-	local healthBackground = health:CreateTexture(nil, 'BACKGROUND')
-	healthBackground:SetAllPoints()
-	healthBackground:SetColorTexture(unpack(colors.border))
-
-	local power = CreateFrame('StatusBar', nil, stack)
-	power:SetStatusBarTexture(media.bar)
-	power:SetPoint('TOPLEFT', health, 'BOTTOMLEFT', 0, -layout.gap)
-	power:SetPoint('TOPRIGHT', health, 'BOTTOMRIGHT', 0, -layout.gap)
-	power:SetHeight(layout.powerHeight)
+	local power = CreateBar(self, colors.muted)
+	power:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, powerY)
+	power:SetSize(columnWidth, l.powerHeight)
 	power.colorPower = true
 	self.Power = power
 
-	local powerBackground = power:CreateTexture(nil, 'BACKGROUND')
-	powerBackground:SetAllPoints()
-	powerBackground:SetColorTexture(unpack(colors.border))
-
-	local castbar = CreateFrame('StatusBar', nil, self)
-	castbar:SetStatusBarTexture(media.bar)
-	castbar:SetStatusBarColor(unpack(colors.accent))
-	castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -layout.gap)
-	castbar:SetPoint('TOPRIGHT', self, 'BOTTOMRIGHT', 0, -layout.gap)
-	castbar:SetHeight(layout.castbarHeight)
-
-	local castbarBackground = castbar:CreateTexture(nil, 'BACKGROUND')
-	castbarBackground:SetAllPoints()
-	castbarBackground:SetColorTexture(unpack(colors.background))
+	local castbar = CreateBar(self, colors.accent)
+	castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
+	castbar:SetSize(width, l.castbarHeight)
 
 	castbar.Text = CreateText(castbar, 'LEFT')
-	castbar.Text:SetPoint('LEFT', layout.inset, 0)
+	castbar.Text:SetPoint('LEFT', castbar, 'LEFT', l.inset, 0)
+	castbar.Text:SetSize(width - l.valueWidth - l.inset * 3, l.castbarHeight)
 
 	castbar.Time = CreateText(castbar, 'RIGHT')
-	castbar.Time:SetPoint('RIGHT', -layout.inset, 0)
+	castbar.Time:SetPoint('RIGHT', castbar, 'RIGHT', -l.inset, 0)
+	castbar.Time:SetSize(l.valueWidth, l.castbarHeight)
 	castbar.Time:SetTextColor(unpack(colors.muted))
 
 	self.Castbar = castbar
@@ -140,7 +144,7 @@ end
 --[[ Tag: umbra:identity
 Opens a color escape for the unit's class or reaction color.
 
-GenerateHexColorMarkup works on a secret color, which is why the name can stay
+GenerateHexColorMarkup works on a hidden color, which is why the name can stay
 class-colored inside an instance even though we cannot read the class.
 --]]
 oUF.Tags.Methods['umbra:identity'] = function(unit)

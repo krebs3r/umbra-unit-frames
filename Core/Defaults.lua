@@ -34,6 +34,7 @@ Umbra.layout = {
 	healthHeight = 24,
 	powerHeight = 4,
 	castbarHeight = 16,
+	valueWidth = 40,
 
 	fontSize = 12,
 	rangeAlpha = 0.45,

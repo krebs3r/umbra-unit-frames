@@ -37,7 +37,7 @@ read_globals = {
 	'SecondsFormatter',
 
 	-- Namespaced API
-	'C_AddOn', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
+	'C_AddOns', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
 
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
