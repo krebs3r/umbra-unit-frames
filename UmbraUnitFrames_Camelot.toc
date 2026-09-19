@@ -5,6 +5,7 @@
 ## Version: @project-version@
 ## SavedVariables: UmbraUnitFramesDB
 ## OptionalDeps: Clique
+## IconTexture: Interface\AddOns\UmbraUnitFrames\Media\logo
 ## X-oUF: UmbraUF
 ## X-Website: https://github.com/krebs3r/umbra-unit-frames
 ## X-License: MIT

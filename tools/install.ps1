@@ -80,5 +80,22 @@ foreach ($stale in $excludeDirs + @('.gitignore', '.gitattributes', '.luacheckrc
 	}
 }
 
-Write-Host "Installed to $target"
+# The packager substitutes @project-version@ on release. A checkout has no
+# release to name, so the installed copy gets the commit it was built from,
+# which beats the raw token showing up in the addon list.
+$version = 'dev'
+$sha = (git -C $repo rev-parse --short HEAD 2>$null)
+if ($LASTEXITCODE -eq 0 -and $sha) {
+	$version = "dev-$sha"
+	git -C $repo diff --quiet HEAD 2>$null
+	if ($LASTEXITCODE -ne 0) { $version += '-dirty' }
+}
+
+foreach ($toc in Get-ChildItem -Path $target -Filter '*.toc') {
+	$text = [System.IO.File]::ReadAllText($toc.FullName)
+	$text = $text -replace '@project-version@', $version
+	[System.IO.File]::WriteAllText($toc.FullName, $text, (New-Object System.Text.UTF8Encoding $false))
+}
+
+Write-Host "Installed to $target as $version"
 Write-Host "Restart the client fully: a newly added addon folder is only read at launch."
