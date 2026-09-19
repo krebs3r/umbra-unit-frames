@@ -20,7 +20,7 @@ globals = {
 read_globals = {
 	-- Widgets and core
 	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim',
-	'AbbreviateNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
+	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
 
 	-- Project identity
 	'WOW_PROJECT_ID', 'WOW_PROJECT_MAINLINE', 'WOW_PROJECT_CLASSIC',

@@ -168,7 +168,14 @@ oUF.Tags.Methods['umbra:health'] = function(unit)
 		return current
 	end
 
-	return AbbreviateNumbers(current)
+	-- AbbreviateNumbers works off locale-specific breakpoints, and locales
+	-- without a thousands step hand back the raw digits. Grouping below a
+	-- million and abbreviating above it reads the same in every language.
+	if current >= 1e6 then
+		return AbbreviateNumbers(current)
+	end
+
+	return BreakUpLargeNumbers(current)
 end
 
 oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'

@@ -30,28 +30,31 @@ Umbra.colors = {
 
 Umbra.layout = {
 	classEdge = 3,
-	portrait = 40,
+	portrait = 38,
 	gap = 2,
 	inset = 4,
 
-	nameHeight = 14,
-	healthHeight = 24,
+	nameHeight = 13,
+	healthHeight = 20,
 	powerHeight = 4,
-	castbarHeight = 16,
+	castbarHeight = 14,
 	valueWidth = 40,
 
 	fontSize = 12,
 	rangeAlpha = 0.45,
 }
 
+-- Width is set by the longest thing a frame has to show, which is an NPC name
+-- rather than a player name. Much past this the frame reads as a bar with a
+-- lot of empty space in it.
 Umbra.frames = {
 	player = {
-		width = 278,
-		point = {'BOTTOM', UIParent, 'BOTTOM', -270, 260},
+		width = 210,
+		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 260},
 	},
 	target = {
-		width = 278,
-		point = {'BOTTOM', UIParent, 'BOTTOM', 270, 260},
+		width = 210,
+		point = {'BOTTOM', UIParent, 'BOTTOM', 250, 260},
 	},
 }
 
