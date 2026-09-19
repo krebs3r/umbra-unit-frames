@@ -12,9 +12,14 @@ Umbra.media = {
 }
 
 Umbra.colors = {
-	-- Health is not listed here: how green the bar should be turned out to be
-	-- a judgement nobody can make from a color value, so it is a dial. See
-	-- Umbra:HealthColor and /uuf green.
+	-- The bar stays neutral so that class color means class and nothing else,
+	-- which is also what keeps it working inside encounters: a fixed color
+	-- needs no curve evaluated against a hidden health value.
+	health = {0.205, 0.75, 0.26},
+
+	-- The ground the portrait model stands on. Opaque, so the world behind
+	-- the frame never tints it and the class tint above reads as a tint.
+	portraitGround = {0.137, 0.169, 0.235},
 
 	-- Dark enough to carry light text. The interface accent is too bright to
 	-- put a label on, and a cast bar is unit information rather than chrome.
@@ -77,33 +82,6 @@ Umbra.frames = {
 		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 207},
 	},
 }
-
---[[ The health green
-The bar stays neutral so that class color means class and nothing else, which
-is also what keeps it working inside encounters: a fixed color needs no curve
-evaluated against a hidden health value.
-
-Which neutral green, though, is taste. The ends of this ramp are the two
-answers that were clearly wrong — a washed-out sage at one end, a green close
-to the client's own neon default at the other — and `/uuf green` picks a point
-between them.
---]]
-Umbra.greenRamp = {
-	low = {0.31, 0.50, 0.34},
-	high = {0.10, 1.00, 0.18},
-}
-
-Umbra.healthBars = {}
-
-function Umbra:HealthColor()
-	local tint = UmbraUnitFramesDB and UmbraUnitFramesDB.healthTint or 50
-	local t = tint / 100
-	local lo, hi = self.greenRamp.low, self.greenRamp.high
-
-	return lo[1] + (hi[1] - lo[1]) * t,
-		lo[2] + (hi[2] - lo[2]) * t,
-		lo[3] + (hi[3] - lo[3]) * t
-end
 
 -- A frame may override any layout value; anything it does not name falls back.
 for _, config in pairs(Umbra.frames) do

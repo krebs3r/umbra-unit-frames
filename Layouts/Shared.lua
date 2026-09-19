@@ -144,6 +144,14 @@ local function Style(self, unit)
 	edge:SetSize(l.classEdge, height)
 	self.ClassEdge = edge
 
+	-- A PlayerModel renders on nothing, so without a ground of its own the
+	-- portrait shows whatever is behind the frame, and the class tint above it
+	-- lands on that instead of on a neutral surface.
+	local ground = self:CreateTexture(nil, 'BACKGROUND', nil, 1)
+	ground:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
+	ground:SetSize(l.portrait, height)
+	ground:SetColorTexture(unpack(colors.portraitGround))
+
 	local portrait = CreateFrame('PlayerModel', nil, self)
 	portrait:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	portrait:SetSize(l.portrait, height)
@@ -175,13 +183,11 @@ local function Style(self, unit)
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
-	local health = CreateBar(self, {Umbra:HealthColor()})
+	local health = CreateBar(self, colors.health)
 	health:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, healthY)
 	health:SetSize(columnWidth, l.healthHeight)
 	health.PostUpdateColor = UpdateIdentity
 	self.Health = health
-
-	Umbra.healthBars[#Umbra.healthBars + 1] = health
 
 	-- Parented to the bar so they draw above it, but anchored to the frame so
 	-- that no geometry is routed through a widget that receives unit data.
