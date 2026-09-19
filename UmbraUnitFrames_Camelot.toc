@@ -16,6 +16,7 @@ Libs\oUF\oUF.xml
 Core\Init.lua
 Core\Defaults.lua
 Core\Secrets.lua
+Core\Mover.lua
 
 Compat\Forever.lua
 

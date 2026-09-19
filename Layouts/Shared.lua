@@ -14,6 +14,35 @@ sized by anchors to a tag'd font string answers with a value it cannot do
 arithmetic on. Explicit sizes keep that question answerable.
 --]]
 
+local DECIMAL = _G.DECIMAL_SEPERATOR or '.'
+
+local function Decimal(number)
+	local text = ('%.1f'):format(number)
+
+	if DECIMAL ~= '.' then
+		text = text:gsub('%.', DECIMAL, 1)
+	end
+
+	return text
+end
+
+--[[ FormatHealth(value)
+Health at a glance: three significant digits and a magnitude.
+
+The client's own helpers are not dependable for this. AbbreviateNumbers works
+off locale-specific breakpoints and hands back the raw digits in locales that
+have no thousands step, which is how a bar came to read 29408.
+--]]
+local function FormatHealth(value)
+	if value >= 1e6 then
+		return Decimal(value / 1e6) .. 'M'
+	elseif value >= 1e3 then
+		return Decimal(value / 1e3) .. 'k'
+	end
+
+	return ('%d'):format(value)
+end
+
 --[[ CreateColorLayer(parent, alpha)
 A flat, single-color surface that can carry a class color.
 
@@ -76,11 +105,12 @@ local function Style(self, unit)
 	local config = Umbra.frames[unit] or Umbra.frames.player
 	local l = layout
 
-	local width, height = config.width, Umbra:FrameHeight()
+	local width, height = config.width, Umbra:FrameHeight(config)
 	local columnX = l.classEdge + l.gap + l.portrait + l.gap
 	local columnWidth = width - columnX - l.inset
 	local healthY = -(l.nameHeight + l.gap)
 	local powerY = healthY - (l.healthHeight + l.gap)
+	local pipY = powerY - (l.powerHeight + l.gap)
 
 	self:SetSize(width, height)
 	self:RegisterForClicks('AnyUp')
@@ -106,9 +136,23 @@ local function Style(self, unit)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
+	local nameWidth = columnWidth
+
+	-- Power is a hairline and cannot hold a label, so the number goes in the
+	-- header where there is room for it. Only worth the space on the player.
+	if config.powerValue then
+		nameWidth = columnWidth - l.valueWidth - l.gap
+
+		local powerValue = CreateText(self, 'RIGHT')
+		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
+		powerValue:SetSize(l.valueWidth, l.nameHeight)
+		powerValue:SetTextColor(unpack(colors.muted))
+		self:Tag(powerValue, '[perpp]%')
+	end
+
 	local name = CreateText(self, 'LEFT')
 	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
-	name:SetSize(columnWidth, l.nameHeight)
+	name:SetSize(nameWidth, l.nameHeight)
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
@@ -134,20 +178,50 @@ local function Style(self, unit)
 	power.colorPower = true
 	self.Power = power
 
-	local castbar = CreateBar(self, colors.cast)
-	castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
-	castbar:SetSize(width, l.castbarHeight)
+	if config.classPower then
+		local pips = {}
 
-	castbar.Text = CreateText(castbar, 'LEFT')
-	castbar.Text:SetPoint('LEFT', castbar, 'LEFT', l.inset, 0)
-	castbar.Text:SetSize(width - l.valueWidth - l.inset * 3, l.castbarHeight)
+		for index = 1, 10 do
+			local pip = CreateBar(self, colors.accent)
+			pip:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, pipY)
+			pip:SetSize(columnWidth, l.pipHeight)
+			pips[index] = pip
+		end
 
-	castbar.Time = CreateText(castbar, 'RIGHT')
-	castbar.Time:SetPoint('RIGHT', castbar, 'RIGHT', -l.inset, 0)
-	castbar.Time:SetSize(l.valueWidth, l.castbarHeight)
-	castbar.Time:SetTextColor(unpack(colors.muted))
+		-- How many points the class has is not known until oUF reports it,
+		-- and it changes with specialisation, so the row is laid out then.
+		pips.PostUpdate = function(element, _, max, _, hasMaxChanged)
+			if not hasMaxChanged or not max or max < 1 then return end
 
-	self.Castbar = castbar
+			local slot = (columnWidth - (max - 1) * l.gap) / max
+
+			for index = 1, max do
+				element[index]:ClearAllPoints()
+				element[index]:SetPoint('TOPLEFT', self, 'TOPLEFT',
+					columnX + (index - 1) * (slot + l.gap), pipY)
+				element[index]:SetSize(slot, l.pipHeight)
+			end
+		end
+
+		self.ClassPower = pips
+	end
+
+	if config.castbar then
+		local castbar = CreateBar(self, colors.cast)
+		castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
+		castbar:SetSize(width, l.castbarHeight)
+
+		castbar.Text = CreateText(castbar, 'LEFT')
+		castbar.Text:SetPoint('LEFT', castbar, 'LEFT', l.inset, 0)
+		castbar.Text:SetSize(width - l.valueWidth - l.inset * 3, l.castbarHeight)
+
+		castbar.Time = CreateText(castbar, 'RIGHT')
+		castbar.Time:SetPoint('RIGHT', castbar, 'RIGHT', -l.inset, 0)
+		castbar.Time:SetSize(l.valueWidth, l.castbarHeight)
+		castbar.Time:SetTextColor(unpack(colors.muted))
+
+		self.Castbar = castbar
+	end
 
 	self:Tag(name, '[umbra:identity][name]|r')
 	self:Tag(healthValue, '[umbra:health]')
@@ -158,8 +232,8 @@ end
 The absolute health value, shortened where we are allowed to look at it.
 
 A hidden value is returned untouched: oUF passes it to SetFormattedText, which
-renders it, while AbbreviateNumbers would throw on it. So the number stays on
-screen inside an instance, just at full length.
+renders it, while arithmetic on it would throw. So the number stays on screen
+inside an instance, just at full length.
 --]]
 oUF.Tags.Methods['umbra:health'] = function(unit)
 	local current = UnitHealth(unit)
@@ -168,14 +242,7 @@ oUF.Tags.Methods['umbra:health'] = function(unit)
 		return current
 	end
 
-	-- AbbreviateNumbers works off locale-specific breakpoints, and locales
-	-- without a thousands step hand back the raw digits. Grouping below a
-	-- million and abbreviating above it reads the same in every language.
-	if current >= 1e6 then
-		return AbbreviateNumbers(current)
-	end
-
-	return BreakUpLargeNumbers(current)
+	return FormatHealth(current)
 end
 
 oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'

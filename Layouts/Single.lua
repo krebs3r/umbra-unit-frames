@@ -7,6 +7,6 @@ oUF:Factory(function(self)
 
 	for unit, config in pairs(Umbra.frames) do
 		local frame = self:Spawn(unit, 'Umbra' .. unit:gsub('^%l', string.upper) .. 'Frame')
-		frame:SetPoint(unpack(config.point))
+		Umbra:PlaceFrame(frame, unit, config.point)
 	end
 end)

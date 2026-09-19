@@ -37,6 +37,7 @@ Umbra.layout = {
 	nameHeight = 13,
 	healthHeight = 20,
 	powerHeight = 4,
+	pipHeight = 4,
 	castbarHeight = 14,
 	valueWidth = 40,
 
@@ -50,15 +51,29 @@ Umbra.layout = {
 Umbra.frames = {
 	player = {
 		width = 210,
+		castbar = true,
+		classPower = true,
+		powerValue = true,
 		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 260},
 	},
 	target = {
 		width = 210,
+		castbar = true,
 		point = {'BOTTOM', UIParent, 'BOTTOM', 250, 260},
+	},
+	pet = {
+		width = 150,
+		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 205},
 	},
 }
 
-function Umbra:FrameHeight()
+function Umbra:FrameHeight(config)
 	local l = self.layout
-	return l.nameHeight + l.gap + l.healthHeight + l.gap + l.powerHeight
+	local height = l.nameHeight + l.gap + l.healthHeight + l.gap + l.powerHeight
+
+	if config and config.classPower then
+		height = height + l.gap + l.pipHeight
+	end
+
+	return height
 end
