@@ -129,7 +129,12 @@ local function Style(self, unit)
 	local columnWidth = width - columnX - l.inset
 	local healthY = -(l.nameHeight + l.gap)
 	local powerY = healthY - (l.healthHeight + l.gap)
+	local powerValueY = powerY - l.powerHeight
 	local pipY = powerY - (l.powerHeight + l.gap)
+
+	if config.powerValue then
+		pipY = powerValueY - (l.powerValueHeight + l.gap)
+	end
 
 	self:SetSize(width, height)
 	self:RegisterForClicks('AnyUp')
@@ -163,23 +168,9 @@ local function Style(self, unit)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
-	local nameWidth = columnWidth
-
-	-- Power is a hairline and cannot hold a label, so the number goes in the
-	-- header where there is room for it. Only worth the space on the player.
-	if config.powerValue then
-		nameWidth = columnWidth - l.valueWidth - l.gap
-
-		local powerValue = CreateText(self, 'RIGHT', l.fontSize)
-		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
-		powerValue:SetSize(l.valueWidth, l.nameHeight)
-		powerValue:SetTextColor(unpack(colors.muted))
-		self:Tag(powerValue, '[perpp]%')
-	end
-
 	local name = CreateText(self, 'LEFT', l.fontSize)
 	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
-	name:SetSize(nameWidth, l.nameHeight)
+	name:SetSize(columnWidth, l.nameHeight)
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
@@ -208,6 +199,14 @@ local function Style(self, unit)
 	power.colorPower = true
 	power.colorPowerAtlas = true
 	self.Power = power
+
+	if config.powerValue then
+		local powerValue = CreateText(self, 'RIGHT', l.powerValueFontSize)
+		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, powerValueY)
+		powerValue:SetSize(l.valueWidth, l.powerValueHeight)
+		powerValue:SetTextColor(unpack(colors.muted))
+		self:Tag(powerValue, '[perpp]%')
+	end
 
 	if config.classPower then
 		local pips = {}

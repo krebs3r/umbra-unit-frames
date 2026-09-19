@@ -43,6 +43,12 @@ Umbra.layout = {
 	healthHeight = 20,
 	powerHeight = 4,
 	pipHeight = 4,
+
+	-- Sits under the power hairline rather than in it: four pixels cannot
+	-- hold a label, and making them enough to would turn the hairline into a
+	-- second bar competing with health.
+	powerValueHeight = 9,
+	powerValueFontSize = 9,
 	castbarHeight = 14,
 	valueWidth = 40,
 
@@ -92,6 +98,11 @@ end
 function Umbra:FrameHeight(config)
 	local height = config.nameHeight + config.gap + config.healthHeight
 		+ config.gap + config.powerHeight
+
+	-- No gap: the label belongs to the bar above it, not to the row below.
+	if config.powerValue then
+		height = height + config.powerValueHeight
+	end
 
 	if config.classPower then
 		height = height + config.gap + config.pipHeight
