@@ -68,6 +68,19 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	elseif input == 'reset' then
 		Umbra:ResetPositions()
 		print(PREFIX .. 'positions reset.')
+	elseif input:find('^green') then
+		local value = tonumber(input:match('^green%s+(%-?%d+)'))
+
+		if value then
+			UmbraUnitFramesDB.healthTint = math.max(0, math.min(100, value))
+
+			for _, bar in ipairs(Umbra.healthBars) do
+				bar:SetStatusBarColor(Umbra:HealthColor())
+			end
+		end
+
+		print(PREFIX .. ('health green: %d — 0 is muted, 100 is vivid. /uuf green <0-100>')
+			:format(UmbraUnitFramesDB.healthTint or 50))
 	elseif input == 'numbers' then
 		UmbraUnitFramesDB.rawHealth = not UmbraUnitFramesDB.rawHealth
 
@@ -108,6 +121,6 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
-		print(PREFIX .. 'unlock · lock · reset · numbers · check · debug')
+		print(PREFIX .. 'unlock · lock · reset · green <0-100> · numbers · check · debug')
 	end
 end

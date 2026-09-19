@@ -175,11 +175,13 @@ local function Style(self, unit)
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
-	local health = CreateBar(self, colors.health)
+	local health = CreateBar(self, {Umbra:HealthColor()})
 	health:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, healthY)
 	health:SetSize(columnWidth, l.healthHeight)
 	health.PostUpdateColor = UpdateIdentity
 	self.Health = health
+
+	Umbra.healthBars[#Umbra.healthBars + 1] = health
 
 	-- Parented to the bar so they draw above it, but anchored to the frame so
 	-- that no geometry is routed through a widget that receives unit data.
