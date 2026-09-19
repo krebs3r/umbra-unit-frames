@@ -12,10 +12,11 @@ Umbra.media = {
 }
 
 Umbra.colors = {
+	-- RGB 78/122/85, sampled from the reference shot rather than guessed at.
 	-- The bar stays neutral so that class color means class and nothing else,
 	-- which is also what keeps it working inside encounters: a fixed color
 	-- needs no curve evaluated against a hidden health value.
-	health = {0.205, 0.75, 0.26},
+	health = {0.306, 0.478, 0.333},
 
 	-- The ground the portrait model stands on. Opaque, so the world behind
 	-- the frame never tints it and the class tint above reads as a tint.
