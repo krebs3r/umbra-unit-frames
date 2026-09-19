@@ -61,18 +61,29 @@ Umbra.frames = {
 		castbar = true,
 		point = {'BOTTOM', UIParent, 'BOTTOM', 250, 260},
 	},
+	-- Same width as the player frame so the two line up, but shorter: a pet
+	-- is something you glance at, not something you read.
 	pet = {
-		width = 150,
-		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 205},
+		width = 210,
+		nameHeight = 11,
+		healthHeight = 14,
+		portrait = 28,
+		fontSize = 11,
+		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 200},
 	},
 }
 
-function Umbra:FrameHeight(config)
-	local l = self.layout
-	local height = l.nameHeight + l.gap + l.healthHeight + l.gap + l.powerHeight
+-- A frame may override any layout value; anything it does not name falls back.
+for _, config in pairs(Umbra.frames) do
+	setmetatable(config, {__index = Umbra.layout})
+end
 
-	if config and config.classPower then
-		height = height + l.gap + l.pipHeight
+function Umbra:FrameHeight(config)
+	local height = config.nameHeight + config.gap + config.healthHeight
+		+ config.gap + config.powerHeight
+
+	if config.classPower then
+		height = height + config.gap + config.pipHeight
 	end
 
 	return height

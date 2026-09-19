@@ -21,7 +21,8 @@ read_globals = {
 	-- Widgets and core
 	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim',
 	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
-	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'wipe', 'math', 'string',
+	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'CurveConstants',
+	'wipe', 'math', 'string',
 
 	-- Project identity
 	'WOW_PROJECT_ID', 'WOW_PROJECT_MAINLINE', 'WOW_PROJECT_CLASSIC',

@@ -65,9 +65,9 @@ local function CreateColorLayer(parent, alpha)
 	return bar
 end
 
-local function CreateText(parent, justify)
+local function CreateText(parent, justify, size)
 	local fs = parent:CreateFontString(nil, 'OVERLAY')
-	fs:SetFont(media.font, layout.fontSize)
+	fs:SetFont(media.font, size or layout.fontSize)
 	fs:SetJustifyH(justify)
 	fs:SetJustifyV('MIDDLE')
 	fs:SetTextColor(unpack(colors.text))
@@ -102,8 +102,9 @@ local function UpdateIdentity(element, unit)
 end
 
 local function Style(self, unit)
+	-- Frame configs fall back to the shared layout, so `l` answers for both.
 	local config = Umbra.frames[unit] or Umbra.frames.player
-	local l = layout
+	local l = config
 
 	local width, height = config.width, Umbra:FrameHeight(config)
 	local columnX = l.classEdge + l.gap + l.portrait + l.gap
@@ -143,14 +144,14 @@ local function Style(self, unit)
 	if config.powerValue then
 		nameWidth = columnWidth - l.valueWidth - l.gap
 
-		local powerValue = CreateText(self, 'RIGHT')
+		local powerValue = CreateText(self, 'RIGHT', l.fontSize)
 		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
 		powerValue:SetSize(l.valueWidth, l.nameHeight)
 		powerValue:SetTextColor(unpack(colors.muted))
 		self:Tag(powerValue, '[perpp]%')
 	end
 
-	local name = CreateText(self, 'LEFT')
+	local name = CreateText(self, 'LEFT', l.fontSize)
 	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
 	name:SetSize(nameWidth, l.nameHeight)
 
@@ -164,11 +165,11 @@ local function Style(self, unit)
 
 	-- Parented to the bar so they draw above it, but anchored to the frame so
 	-- that no geometry is routed through a widget that receives unit data.
-	local healthValue = CreateText(health, 'LEFT')
+	local healthValue = CreateText(health, 'LEFT', l.fontSize)
 	healthValue:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX + l.inset, healthY)
 	healthValue:SetSize(columnWidth - l.valueWidth - l.inset * 2, l.healthHeight)
 
-	local healthPercent = CreateText(health, 'RIGHT')
+	local healthPercent = CreateText(health, 'RIGHT', l.fontSize)
 	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -(l.inset * 2), healthY)
 	healthPercent:SetSize(l.valueWidth, l.healthHeight)
 
@@ -185,6 +186,7 @@ local function Style(self, unit)
 			local pip = CreateBar(self, colors.accent)
 			pip:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, pipY)
 			pip:SetSize(columnWidth, l.pipHeight)
+			pip:Hide()
 			pips[index] = pip
 		end
 
@@ -211,11 +213,11 @@ local function Style(self, unit)
 		castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
 		castbar:SetSize(width, l.castbarHeight)
 
-		castbar.Text = CreateText(castbar, 'LEFT')
+		castbar.Text = CreateText(castbar, 'LEFT', l.fontSize)
 		castbar.Text:SetPoint('LEFT', castbar, 'LEFT', l.inset, 0)
 		castbar.Text:SetSize(width - l.valueWidth - l.inset * 3, l.castbarHeight)
 
-		castbar.Time = CreateText(castbar, 'RIGHT')
+		castbar.Time = CreateText(castbar, 'RIGHT', l.fontSize)
 		castbar.Time:SetPoint('RIGHT', castbar, 'RIGHT', -l.inset, 0)
 		castbar.Time:SetSize(l.valueWidth, l.castbarHeight)
 		castbar.Time:SetTextColor(unpack(colors.muted))
@@ -229,20 +231,37 @@ local function Style(self, unit)
 end
 
 --[[ Tag: umbra:health
-The absolute health value, shortened where we are allowed to look at it.
+The health value, shortened.
 
-A hidden value is returned untouched: oUF passes it to SetFormattedText, which
-renders it, while arithmetic on it would throw. So the number stays on screen
-inside an instance, just at full length.
+The client hides the exact value from addons far more widely than the patch
+notes suggest, so formatting it directly usually is not an option: arithmetic
+on a hidden value throws.
+
+Maximum health and a coarse percentage are handed over in the clear, though, so
+the number can be rebuilt from those and then formatted. It is accurate to
+about a percent, which is past what anyone reads off a bar. Only if the maximum
+is hidden too does the raw value go out unformatted, which at least keeps it on
+screen: oUF passes tag output to SetFormattedText, and that renders hidden
+values even though we may not touch them.
 --]]
 oUF.Tags.Methods['umbra:health'] = function(unit)
 	local current = UnitHealth(unit)
 
-	if Umbra.Secrets.Is(current) then
-		return current
+	if not Umbra.Secrets.Is(current) then
+		return FormatHealth(current)
 	end
 
-	return FormatHealth(current)
+	local max = UnitHealthMax(unit)
+
+	if not Umbra.Secrets.Is(max) then
+		local percent = UnitHealthPercent(unit, true, CurveConstants.ScaleTo100)
+
+		if not Umbra.Secrets.Is(percent) then
+			return FormatHealth(max * percent / 100)
+		end
+	end
+
+	return current
 end
 
 oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'

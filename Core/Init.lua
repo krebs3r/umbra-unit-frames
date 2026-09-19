@@ -68,12 +68,23 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	elseif input == 'reset' then
 		Umbra:ResetPositions()
 		print(PREFIX .. 'positions reset.')
+	elseif input == 'check' then
+		-- Which unit values this client hands over in the clear decides how
+		-- much of the display can be formatted at all.
+		local function state(value)
+			return Umbra.Secrets.Is(value) and '|cffcc6666hidden|r' or '|cff88cc88readable|r'
+		end
+
+		print(PREFIX .. 'UnitHealth: ' .. state(UnitHealth('player')))
+		print(PREFIX .. 'UnitHealthMax: ' .. state(UnitHealthMax('player')))
+		print(PREFIX .. 'UnitHealthPercent: ' ..
+			state(UnitHealthPercent('player', true, CurveConstants.ScaleTo100)))
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off'))
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
-		print(PREFIX .. 'unlock · lock · reset · debug')
+		print(PREFIX .. 'unlock · lock · reset · check · debug')
 	end
 end
