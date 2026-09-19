@@ -15,7 +15,7 @@ A project for modern, readable unit frames in World of Warcraft Classic and Reta
 
 ## The idea
 
-Your character, your target, and your group should be the focus. The interface should help you understand their status—not compete for your attention.
+Your character, your target, and your group should be the focus. The interface should help you understand their status — not compete for your attention.
 
 Umbra brings together compact unit frames, a clear information hierarchy, and restrained styling. Rather than replacing the entire user interface, it focuses on player, target, focus, party, and raid frames.
 
