@@ -76,24 +76,22 @@ The addon folder is named `UmbraUnitFrames` and the slash command is `/uuf`. An 
 
 ### Running from a checkout
 
-Two things differ from a released build, and both make the addon invisible in the character-select list rather than producing an error:
+Copying the clone directly into `AddOns` does not work, and it fails silently: the addon simply never appears in the list. Two things differ from a released build.
 
-1. **The folder must be named `UmbraUnitFrames`.** WoW only finds `Foo_Mainline.toc` inside a folder named `Foo`, so a clone directory named `umbra-unit-frames` is never looked at.
+1. **The folder must be named `UmbraUnitFrames`.** WoW looks for `Foo_Mainline.toc` only inside a folder named `Foo`, so a clone directory named `umbra-unit-frames` is never inspected.
 2. **`Libs/oUF` is not in the repository.** It is fetched at build time and ignored by git, so a checkout has to provide it.
 
-On Windows, a junction avoids copying after every change:
-
-```bash
-git clone --depth 1 --branch 14.0.3 https://github.com/oUF-wow/oUF.git Libs/oUF
-```
-
-Then link the checkout into the AddOns folder under the name WoW expects (PowerShell, no administrator rights needed):
+`tools/install.ps1` handles both. Pass the WoW path once; it is remembered afterwards.
 
 ```powershell
-New-Item -ItemType Junction -Path "<WoW>\_retail_\Interface\AddOns\UmbraUnitFrames" -Target "<checkout>"
+.\tools\install.ps1 -WowPath "E:\Battle.net\World of Warcraft"
 ```
 
-Editing the checkout then takes effect on the next `/reload`.
+```powershell
+.\tools\install.ps1 -Flavor forever
+```
+
+Re-run it after every change, then `/reload` in the client. Adding the folder for the first time needs a full client restart, because the addon list is only read at launch.
 
 ## Contributing
 

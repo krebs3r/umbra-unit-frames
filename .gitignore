@@ -1,5 +1,6 @@
 .release/
 Libs/
+tools/.wowpath
 *.zip
 Thumbs.db
 .DS_Store
