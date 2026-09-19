@@ -40,7 +40,14 @@ local function CreateText(parent, justify)
 	local fs = parent:CreateFontString(nil, 'OVERLAY')
 	fs:SetFont(media.font, layout.fontSize)
 	fs:SetJustifyH(justify)
+	fs:SetJustifyV('MIDDLE')
 	fs:SetTextColor(unpack(colors.text))
+
+	-- Text sits on top of filled bars, whose color is not ours to choose in
+	-- every case. A shadow keeps it legible without an outline font.
+	fs:SetShadowColor(0, 0, 0, 0.85)
+	fs:SetShadowOffset(1, -1)
+
 	return fs
 end
 
@@ -99,14 +106,9 @@ local function Style(self, unit)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
-	local healthValue = CreateText(self, 'RIGHT')
-	healthValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
-	healthValue:SetSize(l.valueWidth, l.nameHeight)
-	healthValue:SetTextColor(unpack(colors.muted))
-
 	local name = CreateText(self, 'LEFT')
 	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
-	name:SetSize(columnWidth - l.valueWidth - l.gap, l.nameHeight)
+	name:SetSize(columnWidth, l.nameHeight)
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
@@ -116,13 +118,23 @@ local function Style(self, unit)
 	health.PostUpdateColor = UpdateIdentity
 	self.Health = health
 
+	-- Parented to the bar so they draw above it, but anchored to the frame so
+	-- that no geometry is routed through a widget that receives unit data.
+	local healthValue = CreateText(health, 'LEFT')
+	healthValue:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX + l.inset, healthY)
+	healthValue:SetSize(columnWidth - l.valueWidth - l.inset * 2, l.healthHeight)
+
+	local healthPercent = CreateText(health, 'RIGHT')
+	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -(l.inset * 2), healthY)
+	healthPercent:SetSize(l.valueWidth, l.healthHeight)
+
 	local power = CreateBar(self, colors.muted)
 	power:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, powerY)
 	power:SetSize(columnWidth, l.powerHeight)
 	power.colorPower = true
 	self.Power = power
 
-	local castbar = CreateBar(self, colors.accent)
+	local castbar = CreateBar(self, colors.cast)
 	castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
 	castbar:SetSize(width, l.castbarHeight)
 
@@ -138,8 +150,28 @@ local function Style(self, unit)
 	self.Castbar = castbar
 
 	self:Tag(name, '[umbra:identity][name]|r')
-	self:Tag(healthValue, '[perhp]%')
+	self:Tag(healthValue, '[umbra:health]')
+	self:Tag(healthPercent, '[perhp]%')
 end
+
+--[[ Tag: umbra:health
+The absolute health value, shortened where we are allowed to look at it.
+
+A hidden value is returned untouched: oUF passes it to SetFormattedText, which
+renders it, while AbbreviateNumbers would throw on it. So the number stays on
+screen inside an instance, just at full length.
+--]]
+oUF.Tags.Methods['umbra:health'] = function(unit)
+	local current = UnitHealth(unit)
+
+	if Umbra.Secrets.Is(current) then
+		return current
+	end
+
+	return AbbreviateNumbers(current)
+end
+
+oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'
 
 --[[ Tag: umbra:identity
 Opens a color escape for the unit's class or reaction color.

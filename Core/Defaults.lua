@@ -17,6 +17,10 @@ Umbra.colors = {
 	-- color needs no curve evaluated against a secret health value.
 	health = {0.306, 0.478, 0.333},
 
+	-- Dark enough to carry light text. The interface accent is too bright to
+	-- put a label on, and a cast bar is unit information rather than chrome.
+	cast = {0.541, 0.416, 0.173},
+
 	background = {0.078, 0.098, 0.145, 0.96},
 	border = {0.043, 0.055, 0.082},
 	text = {0.902, 0.914, 0.941},
