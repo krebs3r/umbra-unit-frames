@@ -4,7 +4,12 @@ local Umbra = {}
 ns.Umbra = Umbra
 
 Umbra.addonName = addonName
+
+-- The packager substitutes this token on release; a plain checkout keeps it.
 Umbra.version = C_AddOn.GetAddOnMetadata(addonName, 'Version')
+if not Umbra.version or Umbra.version:find('project%-version') then
+	Umbra.version = 'dev'
+end
 
 local interface = select(4, GetBuildInfo())
 
@@ -43,6 +48,6 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(('|cff75dcc4Umbra Unit Frames|r %s — %s (interface %d)'):format(
-			Umbra.version or 'dev', client, interface))
+			Umbra.version, client, interface))
 	end
 end

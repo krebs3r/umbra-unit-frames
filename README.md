@@ -48,7 +48,7 @@ Umbra targets **Retail** and **WoW: Forever**. These are one codebase, because F
 
 | | Retail (Midnight) | WoW: Forever | Classic Era |
 | :--- | :--- | :--- | :--- |
-| Interface | `120105` | `16001` | `11509` |
+| Interface | `120100`, `120105` | `16001` | `11509` |
 | `WOW_PROJECT_ID` | Mainline | Mainline | Classic |
 | API surface | 12.1.5 | 12.1.5, minus parts | Vanilla |
 | Secret Values | yes | yes | no |
@@ -73,6 +73,27 @@ Actual support is determined by documented client testing and the compatibility 
 ## Installing
 
 The addon folder is named `UmbraUnitFrames` and the slash command is `/uuf`. An unrelated addon named *Umbra* already exists; the longer name keeps both installable side by side.
+
+### Running from a checkout
+
+Two things differ from a released build, and both make the addon invisible in the character-select list rather than producing an error:
+
+1. **The folder must be named `UmbraUnitFrames`.** WoW only finds `Foo_Mainline.toc` inside a folder named `Foo`, so a clone directory named `umbra-unit-frames` is never looked at.
+2. **`Libs/oUF` is not in the repository.** It is fetched at build time and ignored by git, so a checkout has to provide it.
+
+On Windows, a junction avoids copying after every change:
+
+```bash
+git clone --depth 1 --branch 14.0.3 https://github.com/oUF-wow/oUF.git Libs/oUF
+```
+
+Then link the checkout into the AddOns folder under the name WoW expects (PowerShell, no administrator rights needed):
+
+```powershell
+New-Item -ItemType Junction -Path "<WoW>\_retail_\Interface\AddOns\UmbraUnitFrames" -Target "<checkout>"
+```
+
+Editing the checkout then takes effect on the next `/reload`.
 
 ## Contributing
 

@@ -1,4 +1,4 @@
-## Interface: 120105
+## Interface: 120100, 120105
 ## Title: Umbra Unit Frames
 ## Notes: Compact, readable unit frames. Class color at the edge, portrait in its own column.
 ## Author: krebs3r
