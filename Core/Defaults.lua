@@ -19,7 +19,7 @@ Umbra.colors = {
 	-- Neutral is not the same as washed out. The mockup drew the bar as a
 	-- gradient and this took its darkest stop for the whole fill, which is how
 	-- it ended up looking faded against the frame behind it.
-	health = {0.298, 0.678, 0.361},
+	health = {0.239, 0.761, 0.290},
 
 	-- Dark enough to carry light text. The interface accent is too bright to
 	-- put a label on, and a cast bar is unit information rather than chrome.

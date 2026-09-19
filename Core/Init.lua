@@ -68,6 +68,15 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	elseif input == 'reset' then
 		Umbra:ResetPositions()
 		print(PREFIX .. 'positions reset.')
+	elseif input == 'numbers' then
+		UmbraUnitFramesDB.rawHealth = not UmbraUnitFramesDB.rawHealth
+
+		for _, frame in ipairs(ns.oUF.objects) do
+			if frame.UpdateTags then frame:UpdateTags() end
+		end
+
+		print(PREFIX .. 'unformatted health numbers ' ..
+			(UmbraUnitFramesDB.rawHealth and 'on' or 'off'))
 	elseif input == 'check' then
 		-- Which unit values this client hands over in the clear decides how
 		-- much of the display can be formatted at all, and the tag's own
@@ -99,6 +108,6 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
-		print(PREFIX .. 'unlock · lock · reset · check · debug')
+		print(PREFIX .. 'unlock · lock · reset · numbers · check · debug')
 	end
 end

@@ -275,6 +275,12 @@ oUF.Tags.Methods['umbra:health'] = function(unit)
 		end
 	end
 
+	-- Nothing left to format. Whether an unbroken run of digits beats an empty
+	-- slot is a judgement call, so it belongs to the reader: /uuf numbers.
+	if UmbraUnitFramesDB and UmbraUnitFramesDB.rawHealth then
+		return current
+	end
+
 	return ''
 end
 
