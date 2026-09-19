@@ -1,0 +1,14 @@
+package-as: UmbraUnitFrames
+
+externals:
+  Libs/oUF:
+    url: https://github.com/oUF-wow/oUF
+    tag: latest
+
+ignore:
+  - .claude
+  - .github
+  - docs
+  - assets
+
+manual-changelog: CHANGELOG.md

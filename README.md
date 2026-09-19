@@ -3,13 +3,13 @@
 **Your game. Front and center.**
 
 ![World of Warcraft · Unit Frames](https://img.shields.io/badge/World_of_Warcraft-Unit_Frames-75DCC4?style=flat-square&labelColor=15191F)
-![Focus · Classic & Retail](https://img.shields.io/badge/Focus-Classic_%26_Retail-C9B888?style=flat-square&labelColor=15191F)
+![Focus · Retail & Forever](https://img.shields.io/badge/Focus-Retail_%26_Forever-C9B888?style=flat-square&labelColor=15191F)
 
 **Umbra preserves the idea, not every old design decision.**
 
-A project for modern, readable unit frames in World of Warcraft Classic and Retail. Inspired by ShadowedUnitFrames, with a visual identity of its own: class-colored edges, rectangular character portraits beside the bars, and information right where you need it.
+A project for modern, readable unit frames in World of Warcraft Retail and WoW: Forever. Inspired by ShadowedUnitFrames, with a visual identity of its own: class-colored edges, rectangular character portraits beside the bars, and information right where you need it.
 
-[The idea](#the-idea) · [Design principles](#design-principles) · [Classic and Retail](#classic-and-retail) · [Contributing](#contributing)
+[The idea](#the-idea) · [Design principles](#design-principles) · [Supported clients](#supported-clients) · [Contributing](#contributing)
 
 ---
 
@@ -42,13 +42,37 @@ Color, shape, and placement should make different kinds of information easy to d
 
 **Accent color belongs to the interface. Class color belongs to the unit. The health bar belongs to health.**
 
-## Classic and Retail
+## Supported clients
 
-Umbra is aimed at **World of Warcraft Classic and Retail**. The goal is a shared visual language and consistent interaction—from a small Classic party to a Retail raid.
+Umbra targets **Retail** and **WoW: Forever**. These are one codebase, because Forever is not a Classic client: it runs the Mainline UI architecture on Vanilla content.
 
-Differences between clients should be handled explicitly. Shared layout and profile functionality belong in a common core; differences in aura APIs, class resources, or protected UI functionality require targeted adaptations.
+| | Retail (Midnight) | WoW: Forever | Classic Era |
+| :--- | :--- | :--- | :--- |
+| Interface | `120105` | `16001` | `11509` |
+| `WOW_PROJECT_ID` | Mainline | Mainline | Classic |
+| API surface | 12.1.5 | 12.1.5, minus parts | Vanilla |
+| Secret Values | yes | yes | no |
+| TOC suffix | `_Mainline` | `_Camelot` | `_Vanilla` |
+| Umbra support | planned | planned | not planned |
+
+The old Classic globals—`UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo`—do not exist on Forever. Code is written against the Retail API and the handful of Forever deviations live in `Compat/Forever.lua`.
+
+Classic Era would need a second implementation rather than a compatibility layer, and is out of scope.
+
+### What Secret Values change
+
+Since patch 12.0 the client returns opaque values for health, power and aura data inside encounters, Mythic+ runs and PvP matches. An addon may hand such a value to the client for display, but may not read it, compare it, or calculate with it.
+
+This suits Umbra's design better than most: a neutral health bar with class color at the edge never needs to derive a color from a health value, so the bar looks and behaves the same inside an encounter as outside one. Two consequences are visible to you:
+
+- **Health reads as a percentage.** The number itself is not lost—the client can still render a hidden value—but nothing may be *derived* from it. Custom thresholds, or a bar color that shifts as health drops, are not possible while the value is hidden.
+- **Auras are drawn through Blizzard's aura containers**, which constrains how freely icons can be arranged.
 
 Actual support is determined by documented client testing and the compatibility information for each addon version.
+
+## Installing
+
+The addon folder is named `UmbraUnitFrames` and the slash command is `/uuf`. An unrelated addon named *Umbra* already exists; the longer name keeps both installable side by side.
 
 ## Contributing
 
@@ -68,9 +92,15 @@ ShadowedUnitFrames is the visual inspiration behind Umbra. Thank you to the orig
 
 Listing these projects does not imply that their code is already included in Umbra. Umbra is an **independent project**, not an official successor to ShadowedUnitFrames, and is not affiliated with Blizzard Entertainment.
 
+The inspiration is visual only. ShadowedUnitFrames carries no license file, which means no permission to reuse its code has been granted—so none of it is used here, and none of it may be contributed.
+
+Umbra is built on [oUF](https://github.com/oUF-wow/oUF) (MIT), which is embedded at build time rather than checked in.
+
 ## License
 
-A license for the project's original code has not yet been selected and will be documented separately. The origin and licensing terms of any incorporated third-party components must be considered independently.
+Umbra's own code is [MIT licensed](LICENSE). If this project ever goes quiet, someone else can pick it up—which is precisely what ShadowedUnitFrames could not offer.
+
+Embedded third-party components keep their own terms: oUF is MIT.
 
 ---
 

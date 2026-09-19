@@ -1,0 +1,21 @@
+## Interface: 120105
+## Title: Umbra Unit Frames
+## Notes: Compact, readable unit frames. Class color at the edge, portrait in its own column.
+## Author: krebs3r
+## Version: @project-version@
+## SavedVariables: UmbraUnitFramesDB
+## OptionalDeps: Clique
+## X-oUF: UmbraUF
+## X-Website: https://github.com/krebs3r/umbra-unit-frames
+## X-License: MIT
+## Category-enUS: Unit Frames
+## Category-deDE: Einheitenfenster
+
+Libs\oUF\oUF.xml
+
+Core\Init.lua
+Core\Defaults.lua
+Core\Secrets.lua
+
+Layouts\Shared.lua
+Layouts\Single.lua
