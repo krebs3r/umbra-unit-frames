@@ -89,6 +89,21 @@ local function CreateBar(parent, color)
 	background:SetAllPoints()
 	background:SetColorTexture(unpack(colors.border))
 
+	-- A flat fill reads as paint rather than as a bar. The shading lies over
+	-- the whole bar rather than over the fill, because the fill's geometry
+	-- follows a hidden value and must not be anchored to. Sublevel 1 puts it
+	-- above the fill and still below the labels.
+	local shade = bar:CreateTexture(nil, 'ARTWORK', nil, 1)
+	shade:SetAllPoints()
+	shade:SetColorTexture(1, 1, 1, 1)
+
+	-- Without the gradient this is a white block over the bar, so it only
+	-- stays if the gradient took.
+	if not pcall(shade.SetGradient, shade, 'VERTICAL',
+		CreateColor(0, 0, 0, 0.28), CreateColor(1, 1, 1, 0.12)) then
+		shade:Hide()
+	end
+
 	return bar
 end
 
@@ -231,18 +246,17 @@ local function Style(self, unit)
 end
 
 --[[ Tag: umbra:health
-The health value, shortened.
+The health value, shortened — where the client lets us have it.
 
-The client hides the exact value from addons far more widely than the patch
-notes suggest, so formatting it directly usually is not an option: arithmetic
-on a hidden value throws.
+Both the current and the maximum come back hidden on this client, well outside
+the encounters and arenas the patch notes describe, and arithmetic on a hidden
+value throws. So there is no formatting to be done: passing the raw value to
+the client renders it, but as an unbroken run of digits.
 
-Maximum health and a coarse percentage are handed over in the clear, though, so
-the number can be rebuilt from those and then formatted. It is accurate to
-about a percent, which is past what anyone reads off a bar. Only if the maximum
-is hidden too does the raw value go out unformatted, which at least keeps it on
-screen: oUF passes tag output to SetFormattedText, and that renders hidden
-values even though we may not touch them.
+Rather than show that, the tag yields the slot. The percentage beside it is
+built from a deliberately coarse value the client does hand over, so the bar
+still carries a number. On a client that does give up the real value, this
+formats it as it always did.
 --]]
 oUF.Tags.Methods['umbra:health'] = function(unit)
 	local current = UnitHealth(unit)
@@ -261,7 +275,7 @@ oUF.Tags.Methods['umbra:health'] = function(unit)
 		end
 	end
 
-	return current
+	return ''
 end
 
 oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'
