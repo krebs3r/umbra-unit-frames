@@ -69,7 +69,7 @@ Umbra.frames = {
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
-		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 200},
+		point = {'BOTTOM', UIParent, 'BOTTOM', -250, 207},
 	},
 }
 

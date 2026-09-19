@@ -70,15 +70,29 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		print(PREFIX .. 'positions reset.')
 	elseif input == 'check' then
 		-- Which unit values this client hands over in the clear decides how
-		-- much of the display can be formatted at all.
-		local function state(value)
-			return Umbra.Secrets.Is(value) and '|cffcc6666hidden|r' or '|cff88cc88readable|r'
+		-- much of the display can be formatted at all, and the tag's own
+		-- output says whether that reasoning survives contact with oUF.
+		local function report(label, getter)
+			local ok, value = pcall(getter)
+
+			if not ok then
+				print(PREFIX .. label .. ': |cffcc6666errors|r — ' .. tostring(value))
+			elseif Umbra.Secrets.Is(value) then
+				print(PREFIX .. label .. ': |cffcc6666hidden|r')
+			else
+				print(PREFIX .. label .. ': |cff88cc88readable|r — ' .. tostring(value))
+			end
 		end
 
-		print(PREFIX .. 'UnitHealth: ' .. state(UnitHealth('player')))
-		print(PREFIX .. 'UnitHealthMax: ' .. state(UnitHealthMax('player')))
-		print(PREFIX .. 'UnitHealthPercent: ' ..
-			state(UnitHealthPercent('player', true, CurveConstants.ScaleTo100)))
+		print(PREFIX .. 'issecretvalue: ' .. tostring(type(_G.issecretvalue) == 'function'))
+		report('UnitHealth', function() return UnitHealth('player') end)
+		report('UnitHealthMax', function() return UnitHealthMax('player') end)
+		report('UnitHealthPercent', function()
+			return UnitHealthPercent('player', true, CurveConstants.ScaleTo100)
+		end)
+		report('tag [umbra:health]', function()
+			return ns.oUF.Tags.Methods['umbra:health']('player')
+		end)
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off'))

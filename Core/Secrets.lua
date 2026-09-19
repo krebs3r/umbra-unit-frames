@@ -34,7 +34,9 @@ Whether the value is opaque to us. False on clients without the system.
 --]]
 function Secrets.Is(value)
 	if not isSecretValue then return false end
-	return isSecretValue(value)
+
+	local ok, result = pcall(isSecretValue, value)
+	return ok and result == true
 end
 
 --[[ Secrets.UnitColor(unit)
