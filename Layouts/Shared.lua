@@ -260,43 +260,53 @@ local function Style(self, unit)
 	self:Tag(healthPercent, '[perhp]%')
 end
 
---[[ Tag: umbra:health
-The health value, shortened — where the client lets us have it.
+--[[ Abbreviating a value we are not allowed to read
+AbbreviateNumbers shortens hidden values, because the client does the work
+natively rather than handing the number to us first. What it will not do is
+invent a thousands step for a locale that has none, and German has none, which
+is why health read as an unbroken run of digits for so long.
 
-Both the current and the maximum come back hidden on this client, well outside
-the encounters and arenas the patch notes describe, and arithmetic on a hidden
-value throws. So there is no formatting to be done: passing the raw value to
-the client renders it, but as an unbroken run of digits.
-
-Rather than show that, the tag yields the slot. The percentage beside it is
-built from a deliberately coarse value the client does hand over, so the bar
-still carries a number. On a client that does give up the real value, this
-formats it as it always did.
+Passing our own breakpoints fixes that. The shape mirrors what
+C_StringUtil.GetDefaultAbbreviationBreakpoints returns: the client divides by
+significandDivisor, floors, divides by fractionDivisor, and appends the
+abbreviation. abbreviationIsGlobal false means the text is literal rather than
+the name of a global holding a localized string.
 --]]
+local abbreviation
+
+local function AbbreviationOptions()
+	if abbreviation then return abbreviation end
+
+	abbreviation = {
+		breakpointData = {
+			{breakpoint = 1000000, abbreviation = 'M', significandDivisor = 10000,
+				fractionDivisor = 100, abbreviationIsGlobal = false},
+			{breakpoint = 1000, abbreviation = 'K', significandDivisor = 100,
+				fractionDivisor = 10, abbreviationIsGlobal = false},
+			{breakpoint = 1, abbreviation = '', significandDivisor = 1,
+				fractionDivisor = 1, abbreviationIsGlobal = false},
+		},
+	}
+
+	if CreateAbbreviateConfig then
+		abbreviation.config = CreateAbbreviateConfig(abbreviation.breakpointData)
+	end
+
+	return abbreviation
+end
+
 oUF.Tags.Methods['umbra:health'] = function(unit)
 	local current = UnitHealth(unit)
 
-	if not Umbra.Secrets.Is(current) then
-		return FormatHealth(current)
+	if not AbbreviateNumbers then
+		return Umbra.Secrets.Is(current) and current or FormatHealth(current)
 	end
 
-	local max = UnitHealthMax(unit)
+	local ok, text = pcall(AbbreviateNumbers, current, AbbreviationOptions())
+	if ok then return text end
 
-	if not Umbra.Secrets.Is(max) then
-		local percent = UnitHealthPercent(unit, true, CurveConstants.ScaleTo100)
-
-		if not Umbra.Secrets.Is(percent) then
-			return FormatHealth(max * percent / 100)
-		end
-	end
-
-	-- Nothing left to format. Whether an unbroken run of digits beats an empty
-	-- slot is a judgement call, so it belongs to the reader: /uuf numbers.
-	if UmbraUnitFramesDB and UmbraUnitFramesDB.rawHealth then
-		return current
-	end
-
-	return ''
+	-- Our breakpoints were refused; the client's own still beat raw digits.
+	return AbbreviateNumbers(current)
 end
 
 oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'

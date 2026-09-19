@@ -22,6 +22,7 @@ read_globals = {
 	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim',
 	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
 	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'CurveConstants',
+	'C_StringUtil', 'CreateAbbreviateConfig',
 	'wipe', 'math', 'string',
 
 	-- Project identity
