@@ -24,7 +24,7 @@ globals = {
 
 read_globals = {
 	-- Widgets and core
-	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim',
+	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim', 'C_Timer',
 	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
 	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'CurveConstants',
 	'C_StringUtil', 'CreateAbbreviateConfig',
@@ -38,7 +38,7 @@ read_globals = {
 	'UnitPower', 'UnitPowerMax', 'UnitPowerPercent', 'UnitPowerMissing',
 	'UnitClass', 'UnitName', 'UnitExists', 'UnitIsUnit', 'UnitInRange',
 	'UnitIsPlayer', 'UnitReaction', 'C_ClassColor',
-	'UnitIsVisible', 'UnitIsConnected',
+	'UnitIsVisible', 'UnitIsConnected', 'IsUnitModelReadyForUI',
 
 	-- Secret values, added in 12.0
 	'issecretvalue', 'C_Secrets', 'C_CurveUtil', 'C_DurationUtil',

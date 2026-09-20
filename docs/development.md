@@ -495,6 +495,49 @@ cooldown and the count are pinned to the square at the top and the line sits in
 the strip below. Metrics reach that callback on the element rather than in the
 group options, because the options table goes on to the client and is typed.
 
+### A portrait the client was not ready to give
+
+oUF sets a portrait model once, when the unit changes, and never asks again.
+That is enough for the player and the pet, whose models are loaded because
+they are standing there. It is not enough for a target picked up in a dungeon,
+and the difference is not what it first looked like.
+
+Measured in *Der Steinerne Kern* on 20 September 2026:
+
+```
+portrait target: UnitIsConnected: readable — true
+portrait target: UnitIsVisible:   readable — true
+portrait target: model: readable — nil
+portrait player: model: readable — 878772
+portrait pet:    model: readable — 1266661
+```
+
+Both halves of oUF's `UnitIsConnected and UnitIsVisible` readable and true, so
+it took the real branch and called `SetUnit` — and the client answered with
+nothing. **Nothing is hidden here.** The first two explanations were both
+wrong: not the restricted-value regime, which hands over both conditions in
+the clear and loads the other two models in the same instance, and not the
+column, which is explicitly placed and does not care what the unit is. The
+model had simply not streamed in yet, and oUF's one shot was already spent.
+
+`IsUnitModelReadyForUI` is the client's own word for that state, and
+DialogueUI answers it the way this now does: when the model is not ready it
+keeps the unit and comes back to it a moment later. The retry goes through the
+element's own `ForceUpdate`, so oUF still sets the model and this file does
+not grow a second copy of that code.
+
+It is bounded, and only runs while the client says the model is still coming:
+five attempts, four tenths of a second apart. A unit that will never have a
+model must not leave a timer behind it. One flag on the element keeps it to
+one chain, because the `ForceUpdate` comes back through the same callback that
+started it — and clearing that flag when the chain ends is what lets the next
+target have a chain of its own.
+
+**How to read it in the client:** the portrait fills a moment after the target
+is picked up rather than staying empty. An empty one that never fills means
+the model is not merely late, and `/uuf check` will still say `model: nil`
+with both conditions true.
+
 ### Incoming healing and absorbs
 
 Three surfaces on the health bar, all of them oUF's own: `HealingAll`,
@@ -609,33 +652,11 @@ quietly rather than erroring, which is why none of them announced itself.
    hunter carries none of its own, and the two runs so far produced no
    shielded unit to point at. The remaining question is only whether oUF's
    values arrive, not whether the surfaces work.
-5. **The 3D portrait on the target frame.** Empty inside an instance while the
-   player's and the pet's are filled — which is the interesting part, because
-   it rules out the first explanation. Measured in *Die Abyssalhallen* on
-   20 September 2026:
+5. **The 3D portrait on the target frame.** Cause found, fix written, not yet
+   confirmed. See *A portrait the client was not ready to give* — the retry
+   needs one dungeon pull to prove, and the way to read it is that the
+   portrait fills a moment late rather than never.
 
-   ```
-   portrait player: UnitIsVisible: readable — true, model: readable — 878772
-   portrait pet:    UnitIsVisible: readable — true, model: readable — 1266661
-   ```
-
-   So the restricted-value regime does not break portraits as such, and
-   neither does anything about the column: the same style builds all three
-   frames, and the frame, its ground and its tint are explicitly placed and
-   do not care what the unit is. What is special about the target is that it
-   is the one hostile NPC among them.
-
-   **That run printed no target line at all**, which is the empty debug
-   buffer over again — it could mean the portrait failed, or that nothing was
-   targeted when the command was typed. So `/uuf check` now answers for every
-   frame, naming which of the four states it is in, and asks both halves of
-   oUF's `UnitIsConnected and UnitIsVisible` rather than only the second: on
-   an `and`, asking one half names the wrong culprit half the time.
-
-   oUF's own update path is not in question. `HandleUnit` registers
-   `PLAYER_TARGET_CHANGED` against `UpdateAllElements` for a target frame, and
-   the Portrait element treats any event but `OnUpdate` as a state change, so
-   `SetUnit` is reached on every target switch.
 
 Settled since this list was written: auras inside an instance, the side a row
 lands on after a switch, and the frame positions in both sets.

@@ -66,6 +66,94 @@ local function Tooltip(frame)
 	end)
 end
 
+--[[ A portrait the client was not ready to give yet
+oUF sets the model once, when the unit changes, and never asks again. That is
+enough for the player and the pet, whose models are loaded because they are
+standing there. It is not enough for a target picked up in a dungeon.
+
+Measured in *Der Steinerne Kern* on 20 September 2026, with `/uuf check`:
+
+	portrait target: UnitIsConnected: readable — true
+	portrait target: UnitIsVisible:   readable — true
+	portrait target: model: readable — nil
+
+Both halves of oUF's condition readable and true, so it took the real branch
+and called `SetUnit` — and the client had nothing to give it. Nothing is
+hidden here and nothing is misanchored; the model had simply not streamed in
+yet, and oUF's one shot had already been spent. The portrait then stays empty
+for that target for as long as it is the target.
+
+`IsUnitModelReadyForUI` is the client's own word for this, and DialogueUI
+answers it the same way: when the model is not ready it keeps the unit and
+comes back to it a second later. The retry here goes through the element's own
+`ForceUpdate`, so the model is still set by oUF's code rather than by a second
+copy of it that could drift.
+
+Bounded on purpose, and only while the client says the model is still coming.
+A unit that will never have one must not leave a timer running behind it.
+--]]
+local PORTRAIT_RETRIES = 5
+local PORTRAIT_DELAY = 0.4
+
+--[[ ModelPending(element, unit)
+Whether this is worth asking again: the symptom, and then the cause.
+
+A plain nil is the symptom — anything else, including a hidden value, means
+there is nothing to wait for. `IsUnitModelReadyForUI` is the cause, and
+answers whether the client is still working on it. Without that function the
+symptom has to stand on its own, which is what the retry limit is for.
+--]]
+local function ModelPending(element, unit)
+	if not element.GetModelFileID then return false end
+
+	local ok, file = pcall(element.GetModelFileID, element)
+
+	if not ok or Umbra.Secrets.Is(file) or file ~= nil then return false end
+
+	if type(_G.IsUnitModelReadyForUI) ~= 'function' then return true end
+
+	local asked, ready = pcall(IsUnitModelReadyForUI, unit)
+
+	return asked and not ready
+end
+
+local function RetryPortrait(element, tries)
+	C_Timer.After(PORTRAIT_DELAY, function()
+		local frame = element.__owner
+		local unit = frame and Umbra:FrameUnit(frame)
+
+		if not unit or not UnitExists(unit) then
+			element.umbraWaiting = nil
+			return
+		end
+
+		element:ForceUpdate()
+
+		if tries >= PORTRAIT_RETRIES or not ModelPending(element, unit) then
+			element.umbraWaiting = nil
+			return
+		end
+
+		RetryPortrait(element, tries + 1)
+	end)
+end
+
+--[[ PortraitPostUpdate(element, unit)
+Starts one chain of retries, and only one.
+
+The ForceUpdate inside the chain comes back through here, which is what the
+flag is for: without it each attempt would start a chain of its own. Clearing
+it when the chain ends is what lets the next target have its own.
+--]]
+local function PortraitPostUpdate(element, unit)
+	if element.umbraWaiting then return end
+	if not unit or not UnitExists(unit) then return end
+	if not ModelPending(element, unit) then return end
+
+	element.umbraWaiting = true
+	RetryPortrait(element, 1)
+end
+
 local function UpdateIdentity(element, unit)
 	local color = Umbra.Secrets.UnitColor(unit)
 	if not color then return end
@@ -113,6 +201,7 @@ local function Style(self, unit)
 	local portrait = CreateFrame('PlayerModel', nil, self)
 	portrait:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	portrait:SetSize(l.portrait, height)
+	portrait.PostUpdate = PortraitPostUpdate
 	self.Portrait = portrait
 
 	local tint = CreateColorLayer(self, 0.13)
