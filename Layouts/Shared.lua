@@ -83,38 +83,41 @@ hidden here and nothing is misanchored; the model had simply not streamed in
 yet, and oUF's one shot had already been spent. The portrait then stays empty
 for that target for as long as it is the target.
 
-`IsUnitModelReadyForUI` is the client's own word for this, and DialogueUI
-answers it the same way: when the model is not ready it keeps the unit and
-comes back to it a second later. The retry here goes through the element's own
+DialogueUI answers a related problem by asking `IsUnitModelReadyForUI` and
+coming back later when the answer is no. **Gating the retry on that was a
+mistake**, and the first version of this made it: the target came back
+`model: nil` again on the next run, and the chain had very likely never
+started. A gate on an API nobody here had measured is exactly the assumption
+this file exists to prevent — if the client answers "ready" while handing over
+nothing, the retry never runs and the measurement never happens.
+
+So it now runs on the **symptom** alone, a model file that is plainly nil, and
+`/uuf check` asks the ready question separately, where the answer is data
+rather than a decision. The retry goes through the element's own
 `ForceUpdate`, so the model is still set by oUF's code rather than by a second
 copy of it that could drift.
 
-Bounded on purpose, and only while the client says the model is still coming.
-A unit that will never have one must not leave a timer running behind it.
+Bounded on purpose: a unit that will never have a model must not leave a timer
+running behind it, and that bound is what makes a symptom safe to act on while
+the cause is still unknown. It reports itself through `Umbra:Debug`, because a
+chain that never ran and one that ran and failed are otherwise the same empty
+square.
 --]]
-local PORTRAIT_RETRIES = 5
-local PORTRAIT_DELAY = 0.4
+local PORTRAIT_RETRIES = 8
+local PORTRAIT_DELAY = 0.5
 
---[[ ModelPending(element, unit)
-Whether this is worth asking again: the symptom, and then the cause.
+--[[ ModelPending(element)
+Whether a model is missing that could still turn up.
 
-A plain nil is the symptom — anything else, including a hidden value, means
-there is nothing to wait for. `IsUnitModelReadyForUI` is the cause, and
-answers whether the client is still working on it. Without that function the
-symptom has to stand on its own, which is what the retry limit is for.
+A plain nil is the whole test. Anything else — a file id, or a hidden value we
+are not allowed to look at — means there is nothing here to wait for.
 --]]
-local function ModelPending(element, unit)
+local function ModelPending(element)
 	if not element.GetModelFileID then return false end
 
 	local ok, file = pcall(element.GetModelFileID, element)
 
-	if not ok or Umbra.Secrets.Is(file) or file ~= nil then return false end
-
-	if type(_G.IsUnitModelReadyForUI) ~= 'function' then return true end
-
-	local asked, ready = pcall(IsUnitModelReadyForUI, unit)
-
-	return asked and not ready
+	return ok and not Umbra.Secrets.Is(file) and file == nil
 end
 
 local function RetryPortrait(element, tries)
@@ -129,8 +132,15 @@ local function RetryPortrait(element, tries)
 
 		element:ForceUpdate()
 
-		if tries >= PORTRAIT_RETRIES or not ModelPending(element, unit) then
+		if not ModelPending(element) then
 			element.umbraWaiting = nil
+			Umbra:Debug('portrait arrived for', unit, 'on try', tries)
+			return
+		end
+
+		if tries >= PORTRAIT_RETRIES then
+			element.umbraWaiting = nil
+			Umbra:Debug('portrait never arrived for', unit, 'after', tries, 'tries')
 			return
 		end
 
@@ -148,9 +158,10 @@ it when the chain ends is what lets the next target have its own.
 local function PortraitPostUpdate(element, unit)
 	if element.umbraWaiting then return end
 	if not unit or not UnitExists(unit) then return end
-	if not ModelPending(element, unit) then return end
+	if not ModelPending(element) then return end
 
 	element.umbraWaiting = true
+	Umbra:Debug('portrait missing for', unit, '— waiting for it')
 	RetryPortrait(element, 1)
 end
 

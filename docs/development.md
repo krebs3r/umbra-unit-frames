@@ -495,13 +495,13 @@ cooldown and the count are pinned to the square at the top and the line sits in
 the strip below. Metrics reach that callback on the element rather than in the
 group options, because the options table goes on to the client and is typed.
 
-### A portrait the client was not ready to give
+### The empty portrait on the target frame
+
+Still open, and worth writing down at length because two explanations have
+already been ruled out and a third was acted on too early.
 
 oUF sets a portrait model once, when the unit changes, and never asks again.
-That is enough for the player and the pet, whose models are loaded because
-they are standing there. It is not enough for a target picked up in a dungeon,
-and the difference is not what it first looked like.
-
+The player's and the pet's are filled; the target's is empty inside a dungeon.
 Measured in *Der Steinerne Kern* on 20 September 2026:
 
 ```
@@ -512,31 +512,43 @@ portrait player: model: readable — 878772
 portrait pet:    model: readable — 1266661
 ```
 
-Both halves of oUF's `UnitIsConnected and UnitIsVisible` readable and true, so
-it took the real branch and called `SetUnit` — and the client answered with
-nothing. **Nothing is hidden here.** The first two explanations were both
-wrong: not the restricted-value regime, which hands over both conditions in
-the clear and loads the other two models in the same instance, and not the
-column, which is explicitly placed and does not care what the unit is. The
-model had simply not streamed in yet, and oUF's one shot was already spent.
+**Not the restricted-value regime.** Both halves of oUF's condition come back
+in the clear, and two models load in the same instance.
 
-`IsUnitModelReadyForUI` is the client's own word for that state, and
-DialogueUI answers it the way this now does: when the model is not ready it
-keeps the unit and comes back to it a moment later. The retry goes through the
-element's own `ForceUpdate`, so oUF still sets the model and this file does
-not grow a second copy of that code.
+**Not the portrait column.** One style builds all three frames, and the frame,
+its ground and its tint are explicitly placed and do not care what the unit
+is.
 
-It is bounded, and only runs while the client says the model is still coming:
-five attempts, four tenths of a second apart. A unit that will never have a
-model must not leave a timer behind it. One flag on the element keeps it to
-one chain, because the `ForceUpdate` comes back through the same callback that
-started it — and clearing that flag when the chain ends is what lets the next
-target have a chain of its own.
+**Not player versus creature.** The pet is a creature and its model loads.
+That one is worth stating because it is the obvious next guess.
 
-**How to read it in the client:** the portrait fills a moment after the target
-is picked up rather than staying empty. An empty one that never fills means
-the model is not merely late, and `/uuf check` will still say `model: nil`
-with both conditions true.
+So oUF took the real branch, called `SetUnit`, and the client answered with
+nothing — for this unit and not for the other two.
+
+**A retry was written on that and did not fix it.** The reasoning was that the
+model had not streamed in yet and oUF's one shot was already spent, which
+`IsUnitModelReadyForUI` and DialogueUI's queue-and-retry made plausible. The
+retry was then **gated on that same function**, which is the actual mistake:
+if the client answers "ready" while handing over nothing, the chain never
+starts, and the next run came back `model: nil` exactly as before — from a
+fix that had very likely never run. A gate on an unmeasured API is the thing
+this file keeps warning about, applied to a diagnostic.
+
+It now runs on the symptom alone and says so through `Umbra:Debug`, so that a
+chain which never started and one which ran and failed stop looking alike.
+`/uuf check` asks `IsUnitModelReadyForUI` as a question of its own, along with
+`GetDisplayInfo` — a creature is set by display rather than by file, so a
+display with no file would mean `GetModelFileID` was the wrong question all
+along and the portrait is failing somewhere else entirely.
+
+What the next run separates:
+
+| | means |
+| :--- | :--- |
+| debug says the chain never started | `ModelPending` is wrong about the symptom |
+| `ready: false` | the model really is still coming, and the retry is too short |
+| `ready: true`, display info set | the model is there and something else hides it |
+| `ready: true`, no display info | `SetUnit` refuses this unit, and the cause is upstream of all of this |
 
 ### Incoming healing and absorbs
 
@@ -652,10 +664,10 @@ quietly rather than erroring, which is why none of them announced itself.
    hunter carries none of its own, and the two runs so far produced no
    shielded unit to point at. The remaining question is only whether oUF's
    values arrive, not whether the surfaces work.
-5. **The 3D portrait on the target frame.** Cause found, fix written, not yet
-   confirmed. See *A portrait the client was not ready to give* — the retry
-   needs one dungeon pull to prove, and the way to read it is that the
-   portrait fills a moment late rather than never.
+5. **The 3D portrait on the target frame.** Open. Three explanations ruled
+   out, one acted on too early and withdrawn. See *The empty portrait on the
+   target frame* for the table of what the next `/uuf check` separates, and
+   run `/uuf debug` beside it.
 
 
 Settled since this list was written: auras inside an instance, the side a row

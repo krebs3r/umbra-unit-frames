@@ -349,6 +349,41 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 				report(label .. ': model', function()
 					return model:GetModelFileID()
 				end)
+
+				--[[ What separates the explanations that are still standing
+				A retry that waits for the model to stream in was written on
+				the strength of `model: nil` alone and did not fix it, so the
+				"not loaded yet" reading is either wrong or was never given a
+				chance. These three say which.
+
+				`ready` is the client's own answer to whether it still has
+				work to do — asked here rather than believed, which is the
+				mistake the retry made. `display info` is the other way of
+				asking what a model holds, and a creature is set by display
+				rather than by file, so a display with no file would mean
+				`GetModelFileID` is simply the wrong question. `is player`
+				settles nothing on its own but is cheap and keeps the split
+				honest: the pet is a creature too, and its model loads.
+				--]]
+				if type(_G.IsUnitModelReadyForUI) == 'function' then
+					report(label .. ': ready', function()
+						return IsUnitModelReadyForUI(unit)
+					end)
+				else
+					print(PREFIX .. label .. ': ready — no such function')
+				end
+
+				if model.GetDisplayInfo then
+					report(label .. ': display info', function()
+						return model:GetDisplayInfo()
+					end)
+				else
+					print(PREFIX .. label .. ': display info — cannot be asked')
+				end
+
+				report(label .. ': is player', function()
+					return UnitIsPlayer(unit)
+				end)
 			end
 		end
 
