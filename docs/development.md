@@ -543,6 +543,32 @@ Forever launches **4 November 2026**. Known beta behaviour: saved variables are
 written but never read back, and `/reload UI` is protected while `/reload` is
 not.
 
+**The beta client is installed** as of 20 September 2026, under the same root
+as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
+`wow_classic_beta`, with `WowB.exe`. That is the folder
+`.	ools\install.ps1 -Flavor forever` already targets, and `tools/.wowpath`
+holds the shared root, so the flavour alone picks the client and neither
+overwrites the other.
+
+It has **not been launched yet**: there is no `Interface\AddOns` under it, and
+the client creates that on first start, so the install would fail with
+"AddOns folder not found" until then. First run is therefore: start the client
+once, quit, install with `-Flavor forever`, start again.
+
+Nothing in `Compat/Forever.lua` has ever run against the real thing. The
+things to look at first, because each is written down here as an assumption
+rather than a measurement:
+
+- `Umbra.isForever` keys off interface 16000–16999. Whether the beta reports
+  that, and whether `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE` holds there.
+- `loadstring_untainted` missing, which `Umbra.hasSecureSnippets` guards.
+- Whether `CreateFrame('AuraContainer')` and
+  `AuraButton:AddDispelTypeTexture` exist at all — `/uuf check` answers the
+  second as `aura underline`, and `/uuf debug` reports what the build refused.
+- Whether saved variables really are written and never read, which decides
+  whether `/uuf layout`, `/uuf auras` and the dragged positions survive a
+  reload there at all.
+
 ---
 
 ## Working on it
