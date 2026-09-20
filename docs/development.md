@@ -28,10 +28,11 @@ Alongside them: two layout sets, the class-power row, a cast bar, a frame
 mover, a switch for Blizzard's own aura display, an addon-list icon and
 packaging.
 
-The aura underline is **verified in the open world**, geometry and color both,
-by sampling screenshots pixel by pixel — the measurements are under *Auras*.
-What is still open there is the same check **inside an instance**, where the
-container and its buttons gain forbidden aspects.
+The aura underline is **verified in the open world and inside an instance**,
+geometry and color both, by sampling screenshots pixel by pixel — the
+measurements are under *Auras*. Nothing about the containers is refused where
+they gain forbidden aspects; `/uuf debug` came back silent on a build run from
+inside *Der Flammenschlund*.
 
 Two principles are open: hatched absorbs with ghosted incoming healing, and
 range shown through fading.
@@ -372,20 +373,25 @@ with a static fallback. `Compat/Forever.lua` already exposes
 Written and installed, never confirmed in the client. Each one degrades
 quietly rather than erroring, which is why none of them announced itself.
 
-1. **Auras inside an instance.** The container and its buttons gain forbidden
-   aspects there, and `initializeFrame` runs before that takes effect. This is
-   the one that matters; everything else about auras is measured and holds.
-2. **Turning an aura row round on a layout switch.** `/uuf layout` re-anchors
-   the containers and calls `SetFlowLayoutAnchorPoint` and
-   `SetFlowLayoutGrowthDirection` again, both in `pcall`. If a row lands on
-   the right side of the frame but fills the wrong way, those calls do not
-   take after creation, and the containers have to be rebuilt on a switch
-   instead of turned.
-3. **`/uuf auras both`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
+1. **Which way a row fills after a layout switch.** The *side* is confirmed:
+   `/uuf layout` moved the real containers from under the frame to above it
+   without a reload, in an instance. What that does not show is the fill
+   direction, because eight fit in a row and the character carried six. It
+   takes a ninth aura to see whether `SetFlowLayoutAnchorPoint` and
+   `SetFlowLayoutGrowthDirection` take after creation, or whether the
+   containers have to be rebuilt on a switch instead of turned. The stand-ins
+   prove nothing here: Umbra packs those itself.
+2. **`/uuf auras both`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
    back, and whether those two names survived the 12.0 rework. `/uuf debug`
    reports a name it cannot find.
-4. **Power colors without the atlas.** Rage, energy and focus now take their
-   flat `PowerBarColor` instead of a texture. Only mana has been looked at.
+3. **Energy.** Rage and focus are confirmed — focus measured on 20 September
+   2026 at `239/138/85` on the hairline against the client's `255/128/64` with
+   the gloss over it, and the percentage above it orange at `195/128/97`
+   rather than the `141/151/171` it would fall back to. Only energy is left,
+   which wants a rogue, a monk or a druid in cat form.
+
+Settled since this list was written: auras inside an instance, the side a row
+lands on after a switch, and the frame positions in both sets.
 
 ### Remaining single frames
 
