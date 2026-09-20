@@ -2,113 +2,21 @@ local _, ns = ...
 local Umbra = ns.Umbra
 local oUF = ns.oUF
 
-local layout, colors, media = Umbra.layout, Umbra.colors, Umbra.media
+local colors = Umbra.colors
 
---[[ Geometry rule
-Every widget gets an explicit size and a single anchor to the frame itself.
+local CreateColorLayer = Umbra.Widgets.ColorLayer
+local CreateText = Umbra.Widgets.Text
+local CreateBar = Umbra.Widgets.Bar
 
-Nothing may derive its size from a widget that receives unit data. A widget
-handed a hidden value reports hidden geometry, and that spreads along the
-anchor chain: oUF asks the health bar for its width on every update, and a bar
-sized by anchors to a tag'd font string answers with a value it cannot do
-arithmetic on. Explicit sizes keep that question answerable.
+--[[ The Umbra style
+One style for every single frame. What differs between them lives in
+Umbra.frames as a config, and anything a config does not name falls back to
+the shared layout through its metatable.
+
+The widgets themselves are in Layouts/Widgets.lua, the tags in Layouts/Tags.lua
+and the aura containers in Layouts/Auras.lua. The geometry rule that all of
+them follow is written down in Widgets.lua.
 --]]
-
-local DECIMAL = _G.DECIMAL_SEPERATOR or '.'
-
-local function Decimal(number)
-	local text = ('%.1f'):format(number)
-
-	if DECIMAL ~= '.' then
-		text = text:gsub('%.', DECIMAL, 1)
-	end
-
-	return text
-end
-
---[[ FormatHealth(value)
-Health at a glance: three significant digits and a magnitude.
-
-The client's own helpers are not dependable for this. AbbreviateNumbers works
-off locale-specific breakpoints and hands back the raw digits in locales that
-have no thousands step, which is how a bar came to read 29408.
---]]
-local function FormatHealth(value)
-	if value >= 1e6 then
-		return Decimal(value / 1e6) .. 'M'
-	elseif value >= 1e3 then
-		return Decimal(value / 1e3) .. 'k'
-	end
-
-	return ('%d'):format(value)
-end
-
---[[ CreateColorLayer(parent, alpha)
-A flat, single-color surface that can carry a class color.
-
-Inside an instance a unit's class is hidden and C_ClassColor answers with a
-hidden color. SetStatusBarColor takes those; SetColorTexture and SetVertexColor
-have no such guarantee. So anything tinted by class identity is a StatusBar
-pinned to full rather than a plain texture.
---]]
-local function CreateColorLayer(parent, alpha)
-	local bar = CreateFrame('StatusBar', nil, parent)
-	bar:SetStatusBarTexture(media.bar)
-	bar:SetMinMaxValues(0, 1)
-	bar:SetValue(1)
-	bar:SetStatusBarColor(unpack(colors.muted))
-
-	if alpha then
-		bar:SetAlpha(alpha)
-	end
-
-	return bar
-end
-
-local function CreateText(parent, justify, size)
-	local fs = parent:CreateFontString(nil, 'OVERLAY')
-	fs:SetFont(media.font, size or layout.fontSize)
-	fs:SetJustifyH(justify)
-	fs:SetJustifyV('MIDDLE')
-	fs:SetTextColor(unpack(colors.text))
-
-	-- Text sits on top of filled bars, whose color is not ours to choose in
-	-- every case. A shadow keeps it legible without an outline font.
-	fs:SetShadowColor(0, 0, 0, 0.85)
-	fs:SetShadowOffset(1, -1)
-
-	return fs
-end
-
-local function CreateBar(parent, color)
-	local bar = CreateFrame('StatusBar', nil, parent)
-	bar:SetStatusBarTexture(media.bar)
-	bar:SetStatusBarColor(unpack(color))
-
-	local background = bar:CreateTexture(nil, 'BACKGROUND')
-	background:SetAllPoints()
-	background:SetColorTexture(unpack(colors.border))
-
-	-- A flat fill reads as paint rather than as a bar. The shading lies over
-	-- the whole bar rather than over the fill, because the fill's geometry
-	-- follows a hidden value and must not be anchored to. Sublevel 1 puts it
-	-- above the fill and still below the labels.
-	if layout.barShade > 0 then
-		local shade = bar:CreateTexture(nil, 'ARTWORK', nil, 1)
-		shade:SetAllPoints()
-		shade:SetColorTexture(1, 1, 1, 1)
-
-		-- Without the gradient this is a white block over the bar, so it only
-		-- stays if the gradient took.
-		if not pcall(shade.SetGradient, shade, 'VERTICAL',
-			CreateColor(0, 0, 0, layout.barShade),
-			CreateColor(1, 1, 1, layout.barGloss)) then
-			shade:Hide()
-		end
-	end
-
-	return bar
-end
 
 local function UpdateIdentity(element, unit)
 	local color = Umbra.Secrets.UnitColor(unit)
@@ -163,18 +71,33 @@ local function Style(self, unit)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
+	-- Every number on the right edge shares this inset, so they stack into one
+	-- column. The health percentage needs it because it sits inside its own
+	-- bar and has to clear the bar's edge; the power percentage sits in the
+	-- header with no bar around it and would otherwise sit an inset further
+	-- out than the number directly below it.
+	local valueRight = l.inset * 2
+
 	local nameWidth = columnWidth
 
 	-- Power is a hairline and cannot hold a label, so the number goes in the
 	-- header where there is room for it. Only worth the space on the player.
 	if config.powerValue then
-		nameWidth = columnWidth - l.valueWidth - l.gap
+		-- The name stops a gap short of the number column.
+		nameWidth = (width - valueRight - l.valueWidth - l.gap) - columnX
 
 		local powerValue = CreateText(self, 'RIGHT', l.fontSize)
-		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -l.inset, 0)
+		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, 0)
 		powerValue:SetSize(l.valueWidth, l.nameHeight)
 		powerValue:SetTextColor(unpack(colors.muted))
-		self:Tag(powerValue, '[perpp]%')
+
+		-- The number reads in the color of the bar it belongs to. oUF's
+		-- powercolor tag opens a color escape from the client's own
+		-- PowerBarColor, the same route [umbra:identity] takes for a class
+		-- color, so nothing has to be read off a hidden value. The muted
+		-- color above stays as what shows if the escape ever comes back
+		-- empty.
+		self:Tag(powerValue, '[powercolor][perpp]%|r')
 	end
 
 	local name = CreateText(self, 'LEFT', l.fontSize)
@@ -196,17 +119,17 @@ local function Style(self, unit)
 	healthValue:SetSize(columnWidth - l.valueWidth - l.inset * 2, l.healthHeight)
 
 	local healthPercent = CreateText(health, 'RIGHT', l.fontSize)
-	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -(l.inset * 2), healthY)
+	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, healthY)
 	healthPercent:SetSize(l.valueWidth, l.healthHeight)
 
-	-- Power colors come from the client's own PowerBarColor table, and where
-	-- Blizzard ships a texture for a resource, colorPowerAtlas uses that
-	-- rather than a flat approximation of it.
+	-- Power colors come from oUF's table, which Core/Defaults.lua restates
+	-- where Umbra disagrees with the client. No colorPowerAtlas: a bar painted
+	-- with one of Blizzard's textures has no color for the number above it to
+	-- match, and at four pixels tall there is no texture to see anyway.
 	local power = CreateBar(self, colors.muted)
 	power:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, powerY)
 	power:SetSize(columnWidth, l.powerHeight)
 	power.colorPower = true
-	power.colorPowerAtlas = true
 	self.Power = power
 
 	if config.classPower then
@@ -255,73 +178,15 @@ local function Style(self, unit)
 		self.Castbar = castbar
 	end
 
+	-- Kept so that a set switch can re-anchor this frame's rows later
+	-- without having to work out which config it was built from.
+	self.umbraConfig = config
+
+	Umbra:AddAuras(self, unit, config)
+
 	self:Tag(name, '[umbra:identity][name]|r')
 	self:Tag(healthValue, '[umbra:health]')
 	self:Tag(healthPercent, '[perhp]%')
 end
-
---[[ Abbreviating a value we are not allowed to read
-AbbreviateNumbers shortens hidden values, because the client does the work
-natively rather than handing the number to us first. What it will not do is
-invent a thousands step for a locale that has none, and German has none, which
-is why health read as an unbroken run of digits for so long.
-
-Passing our own breakpoints fixes that. The shape mirrors what
-C_StringUtil.GetDefaultAbbreviationBreakpoints returns: the client divides by
-significandDivisor, floors, divides by fractionDivisor, and appends the
-abbreviation. abbreviationIsGlobal false means the text is literal rather than
-the name of a global holding a localized string.
---]]
-local abbreviation
-
-local function AbbreviationOptions()
-	if abbreviation then return abbreviation end
-
-	abbreviation = {
-		breakpointData = {
-			{breakpoint = 1000000, abbreviation = 'M', significandDivisor = 10000,
-				fractionDivisor = 100, abbreviationIsGlobal = false},
-			{breakpoint = 1000, abbreviation = 'K', significandDivisor = 100,
-				fractionDivisor = 10, abbreviationIsGlobal = false},
-			{breakpoint = 1, abbreviation = '', significandDivisor = 1,
-				fractionDivisor = 1, abbreviationIsGlobal = false},
-		},
-	}
-
-	if CreateAbbreviateConfig then
-		abbreviation.config = CreateAbbreviateConfig(abbreviation.breakpointData)
-	end
-
-	return abbreviation
-end
-
-oUF.Tags.Methods['umbra:health'] = function(unit)
-	local current = UnitHealth(unit)
-
-	if not AbbreviateNumbers then
-		return Umbra.Secrets.Is(current) and current or FormatHealth(current)
-	end
-
-	local ok, text = pcall(AbbreviateNumbers, current, AbbreviationOptions())
-	if ok then return text end
-
-	-- Our breakpoints were refused; the client's own still beat raw digits.
-	return AbbreviateNumbers(current)
-end
-
-oUF.Tags.Events['umbra:health'] = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION'
-
---[[ Tag: umbra:identity
-Opens a color escape for the unit's class or reaction color.
-
-GenerateHexColorMarkup works on a hidden color, which is why the name can stay
-class-colored inside an instance even though we cannot read the class.
---]]
-oUF.Tags.Methods['umbra:identity'] = function(unit)
-	local color = Umbra.Secrets.UnitColor(unit)
-	return color and color:GenerateHexColorMarkup() or ''
-end
-
-oUF.Tags.Events['umbra:identity'] = 'UNIT_FACTION UNIT_FLAGS'
 
 oUF:RegisterStyle('Umbra', Style)

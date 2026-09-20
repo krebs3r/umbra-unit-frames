@@ -18,8 +18,12 @@ Core\Init.lua
 Core\Defaults.lua
 Core\Secrets.lua
 Core\Mover.lua
+Core\Blizzard.lua
 
 Compat\Forever.lua
 
+Layouts\Widgets.lua
+Layouts\Tags.lua
+Layouts\Auras.lua
 Layouts\Shared.lua
 Layouts\Single.lua

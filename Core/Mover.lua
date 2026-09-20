@@ -13,11 +13,26 @@ combat, so unlocking is refused there rather than failing halfway.
 local movers = {}
 Umbra.locked = true
 
+--[[ Positions()
+Where dragged frames are remembered, for the set in force.
+
+Each set is a different arrangement of the same frames, so a frame dragged in
+one has nothing to say about where it belongs in the other. Keyed by set, a
+switch goes back to what that set was left looking like.
+--]]
+local function Positions()
+	local name = Umbra:LayoutName()
+
+	UmbraUnitFramesDB.positions[name] = UmbraUnitFramesDB.positions[name] or {}
+
+	return UmbraUnitFramesDB.positions[name]
+end
+
 local function SavePosition(frame)
 	local point, _, relativePoint, x, y = frame:GetPoint()
 	if not point then return end
 
-	UmbraUnitFramesDB.positions[frame.umbraKey] = {
+	Positions()[frame.umbraKey] = {
 		point = point,
 		relativePoint = relativePoint,
 		x = math.floor(x + 0.5),
@@ -25,20 +40,31 @@ local function SavePosition(frame)
 	}
 end
 
---[[ Umbra:PlaceFrame(frame, key, default)
-Anchors a frame to its saved position, or to the layout default.
---]]
-function Umbra:PlaceFrame(frame, key, default)
-	frame.umbraKey = key
+--[[ Umbra:AnchorFrame(frame)
+Puts a frame where it belongs: its saved position, or what the set says.
 
-	local saved = UmbraUnitFramesDB.positions[key]
+Separate from PlaceFrame because switching sets runs this again on frames that
+already exist, and must not build a second mover overlay for them.
+--]]
+function Umbra:AnchorFrame(frame)
+	local saved = Positions()[frame.umbraKey]
 
 	frame:ClearAllPoints()
+
 	if saved then
 		frame:SetPoint(saved.point, UIParent, saved.relativePoint, saved.x, saved.y)
 	else
-		frame:SetPoint(unpack(default))
+		frame:SetPoint(unpack(self:ActiveLayout().points[frame.umbraKey]))
 	end
+end
+
+--[[ Umbra:PlaceFrame(frame, key)
+Anchors a frame and makes it draggable.
+--]]
+function Umbra:PlaceFrame(frame, key)
+	frame.umbraKey = key
+
+	self:AnchorFrame(frame)
 
 	frame:SetMovable(true)
 	frame:SetClampedToScreen(true)
@@ -54,7 +80,7 @@ function Umbra:PlaceFrame(frame, key, default)
 	fill:SetColorTexture(self.colors.accent[1], self.colors.accent[2], self.colors.accent[3], 0.25)
 
 	local label = overlay:CreateFontString(nil, 'OVERLAY')
-	label:SetFont(self.media.font, self.layout.fontSize)
+	label:SetFont(self.media.font, self.metrics.fontSize)
 	label:SetPoint('CENTER')
 	label:SetText(key)
 	label:SetShadowColor(0, 0, 0, 0.85)
@@ -65,17 +91,30 @@ function Umbra:PlaceFrame(frame, key, default)
 end
 
 --[[ Umbra:ResetPositions()
-Puts every frame back where the layout wanted it. The way out of having
-dragged a frame off the edge of the screen.
+Puts every frame back where the set wanted it. The way out of having dragged a
+frame off the edge of the screen.
+
+Only the set in force is forgotten; the other one keeps what it was left
+looking like.
 --]]
 function Umbra:ResetPositions()
-	wipe(UmbraUnitFramesDB.positions)
+	wipe(Positions())
+	self:ApplyLayout()
+end
 
+--[[ Umbra:ApplyLayout()
+Re-anchors every frame, and every aura row on it, to the set in force.
+
+Nothing is created here, so switching sets needs no reload: the containers
+already exist and only have to be told where to hang and which way to grow.
+--]]
+function Umbra:ApplyLayout()
 	for _, frame in ipairs(movers) do
-		local config = self.frames[frame.umbraKey]
+		self:AnchorFrame(frame)
 
-		frame:ClearAllPoints()
-		frame:SetPoint(unpack(config.point))
+		if frame.umbraConfig then
+			self:AnchorAuras(frame, frame.umbraConfig)
+		end
 	end
 end
 

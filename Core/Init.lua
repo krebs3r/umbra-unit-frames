@@ -50,6 +50,11 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 
 	UmbraUnitFramesDB = UmbraUnitFramesDB or {}
 	UmbraUnitFramesDB.positions = UmbraUnitFramesDB.positions or {}
+	UmbraUnitFramesDB.layout = UmbraUnitFramesDB.layout or Umbra.defaultLayout
+
+	if UmbraUnitFramesDB.hideBlizzardAuras == nil then
+		UmbraUnitFramesDB.hideBlizzardAuras = false
+	end
 end)
 
 SLASH_UMBRAUNITFRAMES1 = '/uuf'
@@ -93,12 +98,52 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		report('tag [umbra:health]', function()
 			return ns.oUF.Tags.Methods['umbra:health']('player')
 		end)
+
+		-- oUF writes both of these as string.format('%d', ...) over a
+		-- percentage. If the percentage is hidden and string.format refuses
+		-- it, the frames throw on every health tick rather than misprinting,
+		-- so these two ask the real tag rather than reasoning about it.
+		report('tag [perhp]', function()
+			return ns.oUF.Tags.Methods['perhp']('player')
+		end)
+		report('tag [perpp]', function()
+			return ns.oUF.Tags.Methods['perpp']('player')
+		end)
+
+		-- Whether the aura underline can be colored at all: without the
+		-- PreserveAsset style the client has no way to hand a dispel color to
+		-- a texture of ours, and every line stays neutral.
+		print(PREFIX .. 'aura underline: ' .. (Umbra.hasAuraUnderline and
+			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
+
+	elseif input:find('^layout') then
+		local name = input:match('^layout%s+(%S+)$')
+
+		if not name then
+			print(PREFIX .. 'layout: ' .. Umbra:LayoutName())
+			print(PREFIX .. 'classic — top left, pet above the player')
+			print(PREFIX .. 'modern — lower third, buffs above the frame')
+		elseif not Umbra.layouts[name] then
+			print(PREFIX .. 'no such layout: ' .. name)
+		else
+			UmbraUnitFramesDB.layout = name
+			Umbra:ApplyLayout()
+			print(PREFIX .. 'layout: ' .. name)
+		end
+	elseif input == 'blizzard' then
+		local hide = not UmbraUnitFramesDB.hideBlizzardAuras
+		UmbraUnitFramesDB.hideBlizzardAuras = hide
+
+		Umbra:SetBlizzardAuras(not hide)
+		print(PREFIX .. (hide
+			and "Blizzard's buff and debuff frames hidden."
+			or "Blizzard's buff and debuff frames restored."))
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off'))
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
-		print(PREFIX .. 'unlock · lock · reset · check · debug')
+		print(PREFIX .. 'layout · unlock · lock · reset · blizzard · check · debug')
 	end
 end
