@@ -6,7 +6,6 @@ externals:
     tag: latest
 
 ignore:
-  - .claude
   - .github
   - docs
   - assets

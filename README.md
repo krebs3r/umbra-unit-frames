@@ -84,7 +84,7 @@ Copying the clone directly into `AddOns` does not work, and it fails silently: t
 `tools/install.ps1` handles both. Pass the WoW path once; it is remembered afterwards.
 
 ```powershell
-.\tools\install.ps1 -WowPath "E:\Battle.net\World of Warcraft"
+.\tools\install.ps1 -WowPath "C:\Games\World of Warcraft"
 ```
 
 ```powershell

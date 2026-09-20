@@ -11,7 +11,7 @@ and leaves out everything that does not belong in an addon folder.
 The WoW path is remembered in tools/.wowpath after the first run.
 
 .EXAMPLE
-.\tools\install.ps1 -WowPath "E:\Battle.net\World of Warcraft"
+.\tools\install.ps1 -WowPath "C:\Games\World of Warcraft"
 
 .EXAMPLE
 .\tools\install.ps1 -Flavor forever
@@ -35,7 +35,7 @@ if (-not $WowPath) {
 	if (Test-Path $pathFile) {
 		$WowPath = (Get-Content $pathFile -Raw).Trim()
 	} else {
-		throw "No WoW path known. Pass -WowPath once, for example: .\tools\install.ps1 -WowPath 'E:\Battle.net\World of Warcraft'"
+		throw "No WoW path known. Pass -WowPath once, for example: .\tools\install.ps1 -WowPath 'C:\Games\World of Warcraft'"
 	}
 }
 
