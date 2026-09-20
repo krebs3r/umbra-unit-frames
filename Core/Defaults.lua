@@ -189,6 +189,15 @@ Umbra.frames = {
 		-- to look at it.
 		auras = {helpful = 8, harmful = 16},
 	},
+	-- A focus is a unit you chose to keep watching, and almost always because
+	-- of what it is casting, so the castbar is the point of the frame rather
+	-- than a decoration on it. One row of harmful auras, because what is on
+	-- it is the other reason to have picked it.
+	focus = {
+		castbar = true,
+		auras = {harmful = 8},
+	},
+
 	-- The shared width, so the two line up, but shorter: a pet is something
 	-- you glance at, not something you read.
 	pet = {
@@ -197,7 +206,41 @@ Umbra.frames = {
 		portrait = 28,
 		fontSize = 11,
 	},
+
+	-- Who the target is looking at, which is one question — is it on the tank
+	-- or on me — and never worth more than a glance. So it is cut like the
+	-- pet: same width, shorter, no castbar and no auras.
+	targettarget = {
+		nameHeight = 11,
+		healthHeight = 14,
+		portrait = 28,
+		fontSize = 11,
+	},
 }
+
+--[[ As many boss frames as this client has
+`MAX_BOSS_FRAMES` is the client's own answer and has changed between
+expansions. A number written here would be wrong on the patch that changes it,
+and wrong in whichever direction hurts: too few leaves a boss unshown, too
+many spawns a frame for a unit that will never exist.
+
+They are identical on purpose. An encounter shows between one and five of
+them, and a frame differing from its neighbours in anything but its unit would
+be saying something about that boss which nothing here knows. Each keeps its
+castbar, which on a boss is the most useful line on the frame, and carries no
+aura rows: five stacked frames with rows between them would be a wall.
+--]]
+Umbra.bossCount = type(_G.MAX_BOSS_FRAMES) == 'number' and MAX_BOSS_FRAMES or 5
+
+for index = 1, Umbra.bossCount do
+	Umbra.frames['boss' .. index] = {
+		castbar = true,
+		nameHeight = 11,
+		healthHeight = 14,
+		portrait = 28,
+		fontSize = 11,
+	}
+end
 
 -- A frame may override any metric; anything it does not name falls back.
 for _, config in pairs(Umbra.frames) do
@@ -398,7 +441,30 @@ have to know which corner it is in.
 --]]
 do
 	local player, pet = Umbra.frames.player, Umbra.frames.pet
+	local target, glance = Umbra.frames.target, Umbra.frames.targettarget
 	local petHeight = Umbra:FrameHeight(pet)
+
+	--[[ The boss column
+	The right edge, stacked downwards, and the same in both sets. An encounter
+	frame is not part of the arrangement you chose; it is something the fight
+	brings with it, and it belongs where nothing of yours is.
+
+	The step is each frame's whole reach — its box and the castbar under it —
+	plus a gap, asked rather than written down, so a boss frame that grows
+	takes its neighbours down with it instead of landing on them.
+	--]]
+	local function BossPoints(set)
+		local boss = Umbra.frames.boss1
+		if not boss then return end
+
+		local step = Umbra:FrameHeight(boss)
+			+ Umbra:StackOffset(boss, set, 'below') + boss.gap * 2
+
+		for index = 1, Umbra.bossCount do
+			set.points['boss' .. index] = {'TOPRIGHT', UIParent, 'TOPRIGHT',
+				-16, -(200 + (index - 1) * step)}
+		end
+	end
 
 	do
 		local set = Umbra.layouts.classic
@@ -412,11 +478,26 @@ do
 		-- them has to read as a gap and not as a seam between two blocks.
 		local column = 64
 
+		local targetX = inset + player.width + column
+
 		set.points = {
 			pet = {'TOPLEFT', UIParent, 'TOPLEFT', inset, -inset},
 			player = {'TOPLEFT', UIParent, 'TOPLEFT', inset, playerY},
-			target = {'TOPLEFT', UIParent, 'TOPLEFT', inset + player.width + column, playerY},
+			target = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, playerY},
+
+			-- Above the target the way the pet sits above the player. In this
+			-- set nothing else is up there — the aura rows both hang below —
+			-- and the small frame belonging to the big one reads best
+			-- directly over it.
+			targettarget = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, -inset},
+
+			-- A third column. There is no room to the left of the player
+			-- here, because the set is anchored into the corner, so the only
+			-- outside this arrangement has is further right.
+			focus = {'TOPLEFT', UIParent, 'TOPLEFT', targetX + player.width + column, playerY},
 		}
+
+		BossPoints(set)
 	end
 
 	do
@@ -428,10 +509,27 @@ do
 		-- moves when the pet changes height, and asks the same stack.
 		local petY = baseline - Umbra:StackOffset(player, set, 'below', 'pet') - petHeight
 
+		--[[ Beside, because neither side is free here
+		Both frames have their buffs above and their castbar and debuffs
+		below, so the only room left is sideways — and sideways is always
+		free, because every row is exactly as wide as its frame and nothing
+		hangs off the edges.
+
+		Tops aligned rather than bottoms. These points fix the bottom edge and
+		the small frame is shorter, so sharing a bottom would leave it
+		floating at the wrong end of its neighbour.
+		--]]
+		local beside = player.width + player.gap * 4
+		local glanceY = baseline + Umbra:FrameHeight(target) - Umbra:FrameHeight(glance)
+
 		set.points = {
 			player = {'BOTTOM', UIParent, 'BOTTOM', -spread, baseline},
 			target = {'BOTTOM', UIParent, 'BOTTOM', spread, baseline},
 			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, petY},
+			targettarget = {'BOTTOM', UIParent, 'BOTTOM', spread + beside, glanceY},
+			focus = {'BOTTOM', UIParent, 'BOTTOM', -(spread + beside), baseline},
 		}
+
+		BossPoints(set)
 	end
 end

@@ -40,6 +40,7 @@ read_globals = {
 	'UnitClass', 'UnitName', 'UnitExists', 'UnitIsUnit', 'UnitInRange',
 	'UnitIsPlayer', 'UnitReaction', 'C_ClassColor',
 	'UnitIsVisible', 'UnitIsConnected', 'IsUnitModelReadyForUI',
+	'MAX_BOSS_FRAMES',
 	'SetPortraitTexture',
 
 	-- Secret values, added in 12.0

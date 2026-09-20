@@ -77,9 +77,29 @@ function Umbra:AnchorFrame(frame)
 
 	if saved then
 		frame:SetPoint(saved.point, UIParent, saved.relativePoint, saved.x, saved.y)
-	else
-		frame:SetPoint(unpack(self:ActiveLayout().points[frame.umbraKey]))
+
+		return
 	end
+
+	--[[ A set that does not name this frame
+	Every frame a set spawns should have a place in it, and one missing is a
+	fault in Core/Defaults.lua rather than anything the client did. But it is
+	found here, at PLAYER_LOGIN, in the middle of building every frame — and
+	unpacking nil would take the rest of that build down with it.
+
+	So it is reported and parked in the middle, where it can be seen and
+	dragged somewhere better, and the frames after it still get built.
+	--]]
+	local point = self:ActiveLayout().points[frame.umbraKey]
+
+	if not point then
+		self:Debug('no place in this layout for', frame.umbraKey)
+		frame:SetPoint('CENTER')
+
+		return
+	end
+
+	frame:SetPoint(unpack(point))
 end
 
 --[[ Snapping, and the guides that show it

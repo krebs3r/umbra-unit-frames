@@ -18,7 +18,8 @@ them work against the API.
 
 ## Status
 
-Done: the project foundation, and the player, target and pet frames, verified
+Done: the project foundation, and every single frame — player, target, pet,
+focus, target-of-target and the boss column — the first three verified
 inside an instance under the restricted-value regime with error capture
 installed, and **loading and drawing on the Forever beta client** — see
 *Forever* for what that run settled.
@@ -361,6 +362,71 @@ the bar so they draw above it, but anchored to the frame.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.
+
+### The rest of the single frames
+
+Focus, target-of-target and the boss column, which cost almost nothing once
+the pet frame's pattern exists: a config in `Umbra.frames`, a point in each
+set, and oUF does the rest. What each one is for decided how it was cut.
+
+- **Focus** keeps its castbar, because a focus is nearly always a unit you
+  picked in order to watch what it casts. One row of harmful auras, since
+  what you have put on it is the other reason to have picked it.
+- **Target-of-target** is one question — is it on the tank or on me — and is
+  cut like the pet: the shared width so it lines up, shorter, no castbar and
+  no auras.
+- **The boss frames** keep a castbar, which is the most useful line on a boss,
+  and carry no aura rows: five stacked frames with rows between them would be
+  a wall.
+
+**How many boss frames is the client's question**, not ours.
+`MAX_BOSS_FRAMES` has changed between expansions, and a number written here
+would be wrong in whichever direction hurts — too few leaves a boss unshown,
+too many spawns a frame for a unit that can never exist. They are identical to
+each other on purpose: an encounter shows between one and five, and a frame
+differing from its neighbours in anything but its unit would be claiming
+something about that boss that nothing here knows.
+
+**oUF wires all three by itself, differently each time.** `targettarget`
+matches `%w+target` and is handed to `HandleEventlessUnit`, which drives it
+from a half-second timer because no event announces it. `focus` gets
+`PLAYER_FOCUS_CHANGED`, and `boss%d` gets `INSTANCE_ENCOUNTER_ENGAGE_UNIT`
+and `UNIT_TARGETABLE_CHANGED`. Nothing about that had to be asked for.
+
+Where they go is a set decision, and the two sets answer it differently
+because they are anchored to different things:
+
+| | classic | modern |
+| :--- | :--- | :--- |
+| Target-of-target | above the target | beside the target |
+| Focus | a third column | beside the player, outside it |
+| Bosses | right edge, stacked down | right edge, stacked down |
+
+In `classic` the target has nothing above it — both its aura rows hang below —
+so the small frame belonging to the big one sits directly over it, exactly as
+the pet sits over the player, and by the same two units of gap. There is no
+room to the *left* of anything in that set, because it is anchored into the
+corner, so the only outside it has is further right.
+
+In `modern` both sides of both frames are spoken for, buffs above and castbar
+and debuffs below, so the only room left is sideways — and sideways is always
+free, because every row is exactly as wide as its frame and nothing hangs off
+the edges. Tops are aligned rather than bottoms: those points fix the bottom
+edge and the small frame is shorter, so sharing a bottom would leave it
+floating at the wrong end of its neighbour.
+
+The boss column is the same in both, because an encounter frame is not part of
+the arrangement you chose — it is something the fight brings with it, and it
+belongs where nothing of yours is. Its step is each frame's whole reach, box
+and castbar, asked rather than written down, so a boss frame that grows takes
+its neighbours down with it instead of landing on them.
+
+**A frame a set does not name is now survivable.** `AnchorFrame` unpacked that
+point straight into `SetPoint`, which on a missing entry would have thrown at
+`PLAYER_LOGIN`, in the middle of building every frame, and taken the rest of
+the build with it. It reports and parks the frame in the middle instead. The
+fault would be in `Core/Defaults.lua` either way; what changed is that the
+other nine frames still get built.
 
 ### Range fading belongs to the group frames
 
@@ -792,9 +858,10 @@ switch, and the frame positions in both sets.
 
 ### Remaining single frames
 
-Then focus, target-of-target and boss frames, which are cheap once the pet
-frame's pattern exists. Then incoming healing and absorbs through oUF's health
-sub-widgets.
+None. Focus, target-of-target and the boss column are built — see *The rest of
+the single frames* — and incoming healing and absorbs went in through oUF's
+health sub-widgets. What is left of the single frames is looking at the three
+new ones in the client.
 
 ### Group and raid frames
 
