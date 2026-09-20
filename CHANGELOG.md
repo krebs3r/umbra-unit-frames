@@ -39,6 +39,12 @@ First buildable version. Player and target frames, no configuration yet.
   which is where everything interesting happens: during the build at login
 - `/uuf check` also reports whether the client can compile secure snippets,
   which decides whether group frames can have a secure header
+- Incoming healing, damage absorbs and heal absorbs on the health bar: healing
+  ghosted in the bar's own green, an absorb hatched so it reads as a shield
+  laid over the bar rather than as more health, and a heal absorb eating
+  backwards into the health already there
+- `/uuf test` fills the health bar's prediction as well, because an absorb
+  takes someone else to put on you and cannot be waited for
 - `/uuf auras` typed in combat now takes effect when the fight ends, and says
   so, instead of silently doing nothing: the game's two aura frames are
   protected

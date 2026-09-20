@@ -165,6 +165,62 @@ local function Build(frame, config)
 	end
 end
 
+--[[ A health bar with something in front of it
+An absorb cannot be waited for either, and rather less than a full aura row
+can: it takes someone else to put one on you. So `/uuf test` fills the three
+prediction bars as well.
+
+The amounts are the *bars' own* scale rather than the unit's. Each one is
+given `SetMinMaxValues(0, 1)` and a plain fraction, which says the same thing
+to a bar and needs no arithmetic on a hidden value — `max * 0.18` would throw
+in exactly the place this most needs looking at.
+
+Where they start is still the real health, and that is the honest picture: an
+absorb begins where the unit's health actually ends, so the case worth seeing
+is this frame at the health it happens to have.
+
+oUF rewrites all three on every health tick, so the stand-in values go back on
+afterwards through the element's own PostUpdate rather than being written once
+and quietly lost on the next tick.
+--]]
+local PREDICTION = {
+	{'HealingAll', 0.18},
+	{'DamageAbsorb', 0.12},
+	{'HealAbsorb', 0.08},
+}
+
+local function StandInPrediction(element)
+	for _, entry in ipairs(PREDICTION) do
+		local bar = element[entry[1]]
+
+		if bar then
+			bar:SetMinMaxValues(0, 1)
+			bar:SetValue(entry[2])
+		end
+	end
+end
+
+--[[ Umbra:PreviewHealth(show)
+Puts the stand-in prediction on every frame's health bar, or takes it off.
+
+Turning it off restores nothing by itself: the values come back the moment oUF
+updates the element, so each bar is forced through one update rather than
+being written back to by hand.
+--]]
+function Umbra:PreviewHealth(show)
+	for _, frame in ipairs(oUF.objects) do
+		local health = frame.Health
+
+		if health then
+			health.PostUpdate = show and StandInPrediction or nil
+
+			if health.ForceUpdate then
+				health:ForceUpdate()
+			end
+		end
+	end
+end
+
 --[[ Umbra:PlacePreview()
 Re-packs whatever is already built. Called after a set switch, where a row can
 have moved to the other side of the frame and turned round with it.
@@ -215,6 +271,8 @@ function Umbra:SetPreview(show)
 	if show then
 		self:PlacePreview()
 	end
+
+	self:PreviewHealth(show)
 
 	return count
 end

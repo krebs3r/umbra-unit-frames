@@ -7,6 +7,7 @@ local colors = Umbra.colors
 local CreateColorLayer = Umbra.Widgets.ColorLayer
 local CreateText = Umbra.Widgets.Text
 local CreateBar = Umbra.Widgets.Bar
+local CreatePrediction = Umbra.Widgets.Prediction
 
 --[[ The Umbra style
 One style for every single frame. What differs between them lives in
@@ -161,13 +162,68 @@ local function Style(self, unit)
 	health.PostUpdateColor = UpdateIdentity
 	self.Health = health
 
-	-- Parented to the bar so they draw above it, but anchored to the frame so
-	-- that no geometry is routed through a widget that receives unit data.
-	local healthValue = CreateText(health, 'LEFT', l.fontSize)
+	--[[ What is coming to the bar, and what stands in front of it
+	oUF's Health element owns these three and updates them itself, including
+	their width: it sets each one as wide as the health bar on every size
+	change. So only the height and the one anchor are ours.
+
+	**That anchor is the exception to the geometry rule**, and it is the only
+	way the arithmetic can happen at all. Incoming healing starts where
+	current health ends, and `current + incoming` cannot be worked out here:
+	both are hidden, and adding them throws. The client can do it, so the
+	sum is expressed as an anchor — the healing bar begins at the right edge
+	of the health fill, the absorb at the right edge of the healing fill —
+	and the sum never passes through Lua.
+
+	The rule itself is unharmed, because it is about *reading* geometry:
+	nothing asks these bars how wide they came out. oUF sizes them from the
+	health bar, whose rectangle is explicit, and otherwise only calls
+	SetMinMaxValues and SetValue on them, both of which take hidden numbers.
+
+	Each is as wide as the whole bar while starting somewhere inside it, so
+	the overhang is clipped rather than drawn past the frame's edge.
+	--]]
+	health:SetClipsChildren(true)
+
+	local predictionLevel = health:GetFrameLevel() + 1
+
+	local healing = CreatePrediction(health, colors.healPrediction)
+	healing:SetPoint('TOPLEFT', health:GetStatusBarTexture(), 'TOPRIGHT')
+	healing:SetHeight(l.healthHeight)
+	healing:SetFrameLevel(predictionLevel)
+	health.HealingAll = healing
+
+	local absorb = CreatePrediction(health, colors.absorb, true)
+	absorb:SetPoint('TOPLEFT', healing:GetStatusBarTexture(), 'TOPRIGHT')
+	absorb:SetHeight(l.healthHeight)
+	absorb:SetFrameLevel(predictionLevel)
+	health.DamageAbsorb = absorb
+
+	-- The one that runs the other way: a heal absorb stands in front of
+	-- health that is already there, so it fills backwards from the fill's
+	-- own edge into the bar rather than outwards from it.
+	local healAbsorb = CreatePrediction(health, colors.healAbsorb)
+	healAbsorb:SetPoint('TOPRIGHT', health:GetStatusBarTexture(), 'TOPRIGHT')
+	healAbsorb:SetReverseFill(true)
+	healAbsorb:SetHeight(l.healthHeight)
+	healAbsorb:SetFrameLevel(predictionLevel)
+	health.HealAbsorb = healAbsorb
+
+	-- The prediction bars are children of the health bar and therefore draw
+	-- above everything the bar itself carries, its labels included. So the
+	-- numbers move onto a layer above them, and an absorb can never cover the
+	-- value it belongs to. Explicitly sized and anchored to the frame, like
+	-- every other widget here; only the parent decides what draws on top.
+	local labels = CreateFrame('Frame', nil, health)
+	labels:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, healthY)
+	labels:SetSize(columnWidth, l.healthHeight)
+	labels:SetFrameLevel(predictionLevel + 1)
+
+	local healthValue = CreateText(labels, 'LEFT', l.fontSize)
 	healthValue:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX + l.inset, healthY)
 	healthValue:SetSize(columnWidth - l.valueWidth - l.inset * 2, l.healthHeight)
 
-	local healthPercent = CreateText(health, 'RIGHT', l.fontSize)
+	local healthPercent = CreateText(labels, 'RIGHT', l.fontSize)
 	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, healthY)
 	healthPercent:SetSize(l.valueWidth, l.healthHeight)
 

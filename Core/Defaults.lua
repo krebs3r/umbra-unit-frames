@@ -9,6 +9,18 @@ configuration lands, and mirror the schema the design studio exports.
 Umbra.media = {
 	bar = [[Interface\Buttons\WHITE8X8]],
 	font = (GameFontNormal:GetFont()),
+
+	-- The hatching over an absorb. Ours rather than one of Blizzard's, for
+	-- the same reason the signature is a character and not a texture: a path
+	-- into the client's own art cannot be asked whether it survived the last
+	-- patch, and a missing one draws nothing at all. This one ships in the
+	-- addon, so it is there exactly as long as the addon is.
+	--
+	-- 32x32, white, with the stripe repeating every 8 pixels in both
+	-- directions, so the tile meets itself seamlessly whatever size the
+	-- client stretches the region to. White because the color comes from
+	-- SetVertexColor.
+	hatch = [[Interface\AddOns\UmbraUnitFrames\Media\hatch]],
 }
 
 Umbra.colors = {
@@ -31,6 +43,21 @@ Umbra.colors = {
 	-- client paints its own color over a second line on the same rectangle.
 	auraHelpful = {0.553, 0.592, 0.671},
 	auraHarmful = {0.698, 0.365, 0.365},
+
+	--[[ What is coming to the health bar, and what is standing in front of it
+	Three surfaces on the same bar, and they have to be told apart at a
+	glance without reading a number.
+
+	Incoming healing is the health color again, ghosted: it is health that is
+	not there yet, so it belongs to the same quantity rather than beside it.
+	An absorb is not health at all and takes a color of its own, hatched so
+	that it reads as a shield laid over the bar rather than as more of it. A
+	heal absorb is the one that eats backwards into health already there, and
+	is the only one of the three that is bad news, so it is the only red.
+	--]]
+	healPrediction = {0.306, 0.478, 0.333, 0.55},
+	absorb = {0.604, 0.702, 0.839, 0.65},
+	healAbsorb = {0.545, 0.220, 0.259, 0.75},
 
 	background = {0.078, 0.098, 0.145, 0.96},
 	border = {0.043, 0.055, 0.082},

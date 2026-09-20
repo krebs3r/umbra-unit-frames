@@ -23,11 +23,11 @@ inside an instance under the restricted-value regime with error capture
 installed, and **loading and drawing on the Forever beta client** — see
 *Forever* for what that run settled.
 
-Four of the six design principles are implemented — class color at the edge,
-the portrait column, power as a hairline, and auras with an underline.
-Alongside them: two layout sets, the class-power row, a cast bar, a frame
-mover, a switch for Blizzard's own aura display, an addon-list icon and
-packaging.
+Five of the six design principles are implemented — class color at the edge,
+the portrait column, power as a hairline, auras with an underline, and
+hatched absorbs with ghosted incoming healing. Alongside them: two layout
+sets, the class-power row, a cast bar, a frame mover, a switch for Blizzard's
+own aura display, an addon-list icon and packaging.
 
 The aura underline is **verified in the open world and inside an instance**,
 geometry and color both, by sampling screenshots pixel by pixel — the
@@ -35,8 +35,9 @@ measurements are under *Auras*. Nothing about the containers is refused where
 they gain forbidden aspects; `/uuf debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
-Two principles are open: hatched absorbs with ghosted incoming healing, and
-range shown through fading.
+One principle is open: range shown through fading. The absorbs are written
+and installed but **not yet looked at in the client** — see *Waiting to be
+looked at*.
 
 ### Slash commands
 
@@ -46,7 +47,7 @@ range shown through fading.
 | :--- | :--- |
 | `layout classic` · `layout modern` | switch the whole arrangement |
 | `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame |
-| `test` | fill every aura slot with stand-ins |
+| `test` | fill every aura slot with stand-ins, and the health bar's prediction |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `check` | which unit values this client hides, and what the class-power row found |
 | `debug` | print what was refused while building, including before it was on |
@@ -470,6 +471,61 @@ cooldown and the count are pinned to the square at the top and the line sits in
 the strip below. Metrics reach that callback on the element rather than in the
 group options, because the options table goes on to the client and is typed.
 
+### Incoming healing and absorbs
+
+Three surfaces on the health bar, all of them oUF's own: `HealingAll`,
+`DamageAbsorb` and `HealAbsorb` on the Health element, which updates them
+itself and sizes each one to the health bar on every size change. Only the
+height and one anchor are Umbra's.
+
+**That anchor is the one exception to the geometry rule**, and it is what
+makes the arithmetic possible rather than a shortcut around it. Incoming
+healing starts where current health ends, and `current + incoming` cannot be
+worked out in Lua: both are hidden, and adding them throws. The client can do
+it, so the sum is written as an anchor — the healing bar's left edge on the
+right edge of the health fill, the absorb's on the right edge of the healing
+fill — and never passes through us at all.
+
+The rule survives that, because it is about **reading** geometry, not about
+anchoring. Nothing asks these bars how wide they came out. oUF sizes them from
+`Health:GetWidth()`, whose rectangle is explicit, and otherwise only calls
+`SetMinMaxValues` and `SetValue` on them, both of which take hidden numbers.
+Widgets.lua says the same thing about the bar shading, which lies over the
+whole bar rather than over the fill — that one had a choice and this one does
+not.
+
+Each bar is as wide as the whole health bar while starting somewhere inside
+it, so `SetClipsChildren` on the health bar is what keeps the overhang off the
+rest of the frame.
+
+**The numbers had to move.** The prediction bars are children of the health
+bar, so they draw above everything the bar itself carries, and the two labels
+were among that: a large absorb covered the health value it belonged to. The
+labels now sit on a layer of their own above the prediction bars, explicitly
+sized and anchored to the frame like every other widget, with only the parent
+changed.
+
+The hatching is **our own texture**, `Media/hatch.tga`, for the reason the
+signature line is a character rather than an art path: a path into the
+client's own art cannot be asked whether it survived the last patch, and a
+missing one draws nothing. The tile is 32x32 and white, with the stripe
+repeating every 8 pixels in both directions so it meets itself seamlessly
+however far the client stretches the region; `SetHorizTile` repeats it at its
+native size instead of stretching one copy, which is why it is a plain
+texture over the fill rather than the fill itself. The color comes from
+`SetVertexColor`, and if the file ever goes missing the flat fill underneath
+is still the right color at the right width.
+
+**`/uuf test` fills these too.** An absorb takes someone else to put on you,
+so it can be waited for even less than a full aura row. The stand-in amounts
+are the bars' own scale — `SetMinMaxValues(0, 1)` and a plain fraction —
+which says the same thing to a bar and needs no arithmetic on a hidden value:
+`max * 0.18` would throw inside an instance, which is exactly where this
+wants looking at. Where they start is still the real health, and that is the
+honest picture. oUF rewrites all three on every health tick, so the stand-ins
+go back on through the element's own `PostUpdate` rather than being written
+once and lost on the next tick.
+
 ### Relevant to group frames
 
 `loadstring_untainted` is missing on Forever **and** on Retail 12.1. That
@@ -511,6 +567,13 @@ quietly rather than erroring, which is why none of them announced itself.
    the gloss over it, and the percentage above it orange at `195/128/97`
    rather than the `141/151/171` it would fall back to. Only energy is left,
    which wants a rogue, a monk or a druid in cat form.
+4. **Absorbs and incoming healing.** Written, never seen. `/uuf test` fills
+   all three bars, so the look can be judged without waiting for a healer:
+   the ghosted green, the hatching, and the red eating backwards, in that
+   order along the bar. What the stand-ins do *not* answer is whether the
+   client accepts the anchors to the health fill inside an instance, where
+   that fill's geometry comes from a hidden value — and that is the one thing
+   this design rests on. The open world is not enough here.
 
 Settled since this list was written: auras inside an instance, the side a row
 lands on after a switch, and the frame positions in both sets.

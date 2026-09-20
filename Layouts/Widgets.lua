@@ -55,6 +55,45 @@ function Widgets.Text(parent, justify, size)
 	return fs
 end
 
+--[[ Widgets.Prediction(parent, color, hatched)
+A bar for health that is not there yet, or for something standing in front of
+it: incoming healing, a damage absorb, a heal absorb.
+
+No ground and no shading, unlike Widgets.Bar. These lie *on* the health bar
+rather than beside it, and each is as wide as that bar while starting
+somewhere in the middle of it — a ground of its own would paint over the rest
+of the health bar with nothing in it.
+
+`hatched` lays the stripe tile over the fill, which is how an absorb says it
+is not health. The tile is a plain texture rather than the bar's own fill, so
+that `SetHorizTile` repeats it at its native size instead of stretching one
+copy across the whole region. It is white and takes its color here, and if the
+file is ever missing the flat fill underneath is still the right color and the
+right width.
+--]]
+function Widgets.Prediction(parent, color, hatched)
+	local bar = CreateFrame('StatusBar', nil, parent)
+	bar:SetStatusBarTexture(media.bar)
+	bar:SetStatusBarColor(unpack(color))
+
+	if hatched then
+		local hatch = bar:CreateTexture(nil, 'OVERLAY')
+		hatch:SetTexture(media.hatch, 'REPEAT', 'REPEAT')
+		hatch:SetHorizTile(true)
+		hatch:SetVertTile(true)
+		hatch:SetVertexColor(1, 1, 1, 0.45)
+
+		-- The one anchor in this file that goes to a fill. The region it has
+		-- to cover is the one the client computed from a hidden value, and
+		-- nothing here ever asks it how big that turned out to be.
+		hatch:SetAllPoints(bar:GetStatusBarTexture())
+
+		bar.Hatch = hatch
+	end
+
+	return bar
+end
+
 function Widgets.Bar(parent, color)
 	local bar = CreateFrame('StatusBar', nil, parent)
 	bar:SetStatusBarTexture(media.bar)
