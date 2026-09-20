@@ -34,17 +34,12 @@ secure `unit` attribute. Handing our frames to it threw
 `bad argument #1 to GetUnit` on every hover, because what reached
 `C_TooltipInfo.GetUnit` was nil.
 
-So the unit is asked for where oUF actually keeps it. `__unit` is preferred
-over the attribute because it follows a vehicle swap, where the attribute
-still names the seat's owner.
+So the unit is asked for through `Umbra:FrameUnit`, which knows where oUF
+actually keeps it.
 --]]
-local function TooltipUnit(frame)
-	return frame.__unit or frame:GetAttribute('unit')
-end
-
 local function Tooltip(frame)
 	frame:SetScript('OnEnter', function(self)
-		local unit = TooltipUnit(self)
+		local unit = Umbra:FrameUnit(self)
 
 		-- A frame for a unit that is not there is normally hidden by
 		-- RegisterUnitWatch, so this is the guard for the case that put the

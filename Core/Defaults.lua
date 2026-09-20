@@ -109,6 +109,11 @@ Umbra.metrics = {
 	fontSize = 12,
 	rangeAlpha = 0.45,
 
+	-- How near a dragged edge has to come to another one before it is taken
+	-- to mean it. Far enough to catch a hand that was aiming for the line,
+	-- near enough that a frame deliberately set a little off stays there.
+	snapDistance = 8,
+
 	-- How far the vertical shading darkens the bottom of a bar. Zero leaves
 	-- the fill exactly as its color says, which matters for the power bar,
 	-- where the color is really one of Blizzard's own textures.

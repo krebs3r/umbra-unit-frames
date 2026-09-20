@@ -44,7 +44,7 @@ range shown through fading.
 | | |
 | :--- | :--- |
 | `layout classic` · `layout modern` | switch the whole arrangement |
-| `unlock` · `lock` · `reset` | move frames, per layout set |
+| `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame |
 | `test` | fill every aura slot with stand-ins |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `check` | which unit values this client hides |
@@ -169,6 +169,54 @@ Two things follow from having sets at all:
 
 The metrics table is `Umbra.metrics`; `Umbra.layouts` holds the sets. It used
 to be `Umbra.layout`, which would have read as the singular of the other.
+
+### Unlocking has to show what it asks you to place
+
+**oUF calls `RegisterUnitWatch` on every frame it spawns**, so a frame whose
+unit is not there is hidden. With no target and no pet, `/uuf unlock` used to
+offer the player frame and nothing else — the two frames most likely to be in
+the wrong place were the two you could not reach.
+
+Unlocking therefore lets go of the watch and shows every frame, and locking
+takes it back. Both calls reach the secure side and are refused in combat.
+Unlocking is already refused there; locking is not, because leaving someone
+with frames they can still drag is worse than finishing the tidy-up at
+`PLAYER_REGEN_ENABLED`.
+
+It also turns the stand-ins on, because placing a frame means placing all of
+it: the aura rows reach further than the box does, and a frame dragged by its
+middle lands wherever its rows happen to be empty. Locking puts the stand-ins
+back to whatever they were before, rather than simply off.
+
+### Dragging lands on a line, and stays on screen
+
+**`SetClampedToScreen` clamps the box and nothing else.** A frame dragged to
+the bottom edge therefore takes its castbar and its debuff row off the screen
+with it, exactly the reach `Umbra:StackOffset` already answers for.
+`SetClampRectInsets` fixes that, and its convention is worth writing down
+because guessing it costs a reload: **each inset is added to the coordinate of
+its own edge**, with +x to the right and +y up. So expanding upwards is a
+positive `top` and expanding downwards a negative `bottom`, which is
+`(0, 0, above, -below)` here. Two addons on this machine call it the same way
+— `DialogueUI` uses `(-4, 4, 4, -4)` for an even four-unit margin and
+`(-4, 4, 56, -4)` when something hangs above. The sides stay at zero because
+the rows are exactly as wide as the frame.
+
+A set switch changes both reaches, so the insets are set in
+`Umbra:AnchorFrame` rather than once in `PlaceFrame`.
+
+**Dragged by hand, a frame lands a unit or two off the one beside it**, and
+that reads as a mistake rather than a choice. While a frame is dragged, its
+two edges and its middle are compared on each axis against the same three
+lines on every other frame and against the middle of the screen; anything
+within `snapDistance` lights a guide, and releasing puts the frame on it.
+
+The move happens on release, not during the drag. A dragged frame follows the
+cursor, so moving it underneath makes it stick and fight rather than snap.
+
+Asking a frame for its own rectangle is allowed here, and it is the geometry
+rule that makes it so: every frame is explicitly sized and anchored to
+UIParent, so nothing in its rectangle came from a unit.
 
 ### Frames reach past their own box
 

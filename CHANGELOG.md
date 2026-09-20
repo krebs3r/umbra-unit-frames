@@ -21,6 +21,12 @@ First buildable version. Player and target frames, no configuration yet.
 - The target frame shows its power percentage, the way the player frame does
 - `/uuf test` fills every aura slot with stand-ins, to look at a full row
   without waiting for one
+- `/uuf unlock` shows every frame, including ones with no unit behind them,
+  and fills their aura rows, so what you drag is the whole extent
+- Dragged frames snap to each other's edges and middles and to the middle of
+  the screen, with a guide showing what they are about to line up on
+- A frame cannot be dragged so far that its castbar or its aura rows leave the
+  screen, not just its own box
 - Pointing at a frame shows the unit's tooltip, the way pointing at the unit
   in the world does
 - `/uuf auras umbra` puts away the game's own buff and debuff frames, `/uuf

@@ -55,7 +55,7 @@ printing decides what is colored and the table only says what is true.
 local COMMANDS = {
 	{'layout', {'classic', 'modern'}, 'the whole arrangement'},
 	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
-	{'unlock', nil, 'drag the frames where you want them'},
+	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
 	{'test', nil, 'fill every aura slot with stand-ins'},
@@ -85,6 +85,18 @@ at PLAYER_LOGIN — before anyone can type the command that turns this on. A
 switch that did not outlive the reload could therefore never show the one
 thing it exists for.
 --]]
+--[[ Umbra:FrameUnit(frame)
+Which unit a frame stands for, asked where oUF actually keeps it.
+
+An oUF frame has no `unit` field. `__unit` is what `Private.UpdateUnits` keeps
+current and follows a vehicle swap; the secure `unit` attribute is what the
+frame was told to watch and still names the seat's owner. Reaching for
+`frame.unit` is what made the tooltip throw on every hover.
+--]]
+function Umbra:FrameUnit(frame)
+	return frame.__unit or frame:GetAttribute('unit')
+end
+
 function Umbra:Debug(...)
 	if not self.debug then return end
 	print(PREFIX, ...)
@@ -117,8 +129,8 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 
 	if input == 'unlock' then
 		if Umbra:SetLocked(false) then
-			print(PREFIX .. 'frames unlocked, drag them where you want them. '
-				.. Value('/uuf lock') .. ' when done.')
+			print(PREFIX .. 'every frame shown and filled out, drag them where '
+				.. 'you want them. ' .. Value('/uuf lock') .. ' when done.')
 		else
 			print(PREFIX .. 'frames cannot be moved in combat.')
 		end
