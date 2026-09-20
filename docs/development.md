@@ -619,8 +619,22 @@ line down whether or not anyone is listening, and switching the flag on hands
 over what it missed. That asks nothing of the client and works the same on
 both.
 
-Still unmeasured here: what that buffer actually contains after a build, and
-whether `loadstring_untainted` is missing as recorded.
+- **`secure snippets: unavailable`.** `loadstring_untainted` is missing here,
+  as the record said. So group frames on this client need the static fallback,
+  and `Umbra.hasSecureSnippets` is false by measurement rather than by a file
+  that failed to load.
+
+**One thing does not add up yet.** `/uuf debug` answered `nothing has been
+refused since login` on a run where `secure snippets: unavailable` — but that
+is exactly the condition under which `Compat/Forever.lua` calls `Umbra:Debug`
+two lines further down. The buffer should have held at least that one line.
+
+So either the compat file is not running to the end, or the buffer is not
+being filled, and until that is told apart an empty buffer proves nothing
+about what the build refused. `/uuf check` now reports `compat:` for exactly
+this: `Forever.lua ran` is the file confirming it reached its last line, and
+`none` on this client would mean it did not. On Retail `none` is the expected
+answer, because no compatibility file is loaded there at all.
 
 ---
 

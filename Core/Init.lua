@@ -246,6 +246,14 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		print(PREFIX .. 'secure snippets: ' .. (Umbra.hasSecureSnippets and
 			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
 
+		-- Whether a compatibility file ran all the way through. Retail loads
+		-- none and says so; on Forever, `none` would mean the file that
+		-- reports this client's deviations never finished, which makes an
+		-- empty debug buffer mean nothing at all.
+		print(PREFIX .. 'compat: ' .. (Umbra.compat
+			and ('|cff88cc88' .. Umbra.compat .. '.lua ran|r')
+			or '|cff88cc88none|r'))
+
 		-- The class-power row is reserved on the player frame whatever the
 		-- class, and oUF fills it only for a spec that owns such a resource:
 		-- chi on a windwalker monk but not on a brewmaster, who has none to
