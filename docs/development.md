@@ -1023,6 +1023,14 @@ first run.
 **When `/reload` is enough:** for Lua changes. TOC changes — icon, version,
 interface, file list — need a full client restart.
 
+**Releasing.** A tag — any tag — triggers `.github/workflows/release.yml`,
+which runs the BigWigs packager. Measured on the `0.1` tag: it builds **one**
+package carrying both TOC files, not one per flavor, and writes a
+`release.json` beside it naming every interface they answer for, which is what
+an addon manager reads to pick. It also decides the GitHub release type
+itself and **clears a prerelease flag set beforehand**, so `gh release edit
+<tag> --prerelease` belongs after the run, not before it.
+
 **Checking before shipping:** syntax can be checked without the client;
 semantics cannot. Luacheck runs in CI.
 

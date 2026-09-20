@@ -16,8 +16,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Builds one package per TOC flavor: _Mainline for Retail, _Camelot for
-      # Forever. Forever cannot be uploaded to WoWInterface.
+      # Builds ONE package carrying both TOC files, not one per flavor —
+      # measured on the 0.1 tag, which produced a single UmbraUnitFrames zip
+      # and a release.json declaring mainline 120100, mainline 120105 and
+      # forever 16001. An addon manager reads that and picks for itself.
+      #
+      # It also decides the GitHub release type itself and will clear a
+      # prerelease flag set beforehand, so that flag has to be set after the
+      # run rather than when the release is created.
       - uses: BigWigsMods/packager@master
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
