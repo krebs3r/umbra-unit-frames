@@ -20,7 +20,8 @@ them work against the API.
 
 Done: the project foundation, and the player, target and pet frames, verified
 inside an instance under the restricted-value regime with error capture
-installed.
+installed, and **loading and drawing on the Forever beta client** — see
+*Forever* for what that run settled.
 
 Four of the six design principles are implemented — class color at the edge,
 the portrait column, power as a hairline, and auras with an underline.
@@ -550,24 +551,39 @@ as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
 holds the shared root, so the flavour alone picks the client and neither
 overwrites the other.
 
-It has **not been launched yet**: there is no `Interface\AddOns` under it, and
-the client creates that on first start, so the install would fail with
-"AddOns folder not found" until then. First run is therefore: start the client
-once, quit, install with `-Flavor forever`, start again.
+`Interface\AddOns` does not exist until the client has been started once, so a
+first install has to wait for that.
 
-Nothing in `Compat/Forever.lua` has ever run against the real thing. The
-things to look at first, because each is written down here as an assumption
-rather than a measurement:
+### What the Forever client actually did
 
-- `Umbra.isForever` keys off interface 16000–16999. Whether the beta reports
-  that, and whether `WOW_PROJECT_ID == WOW_PROJECT_MAINLINE` holds there.
-- `loadstring_untainted` missing, which `Umbra.hasSecureSnippets` guards.
-- Whether `CreateFrame('AuraContainer')` and
-  `AuraButton:AddDispelTypeTexture` exist at all — `/uuf check` answers the
-  second as `aura underline`, and `/uuf debug` reports what the build refused.
-- Whether saved variables really are written and never read, which decides
-  whether `/uuf layout`, `/uuf auras` and the dragged positions survive a
-  reload there at all.
+Run on 20 September 2026 against build `1.60.1.69913`, standing in Deathknell
+on a level 1 warlock. **Umbra loads and draws.**
+
+- **The TOC is picked up.** The `_Camelot` suffix is real rather than a guess:
+  MinimapButtonButton ships one too and declares the same
+  `## Interface: 16001`, which is what the build number resolves to.
+- **`issecretvalue` is true here as well.** The restricted-value regime is not
+  a Retail-only thing, which had been an open assumption.
+- **The same values are hidden, and none of them throws.** `UnitHealth`
+  hidden, `UnitHealthMax` readable at 63, `UnitHealthPercent` hidden, and all
+  three tags — `[umbra:health]`, `[perhp]`, `[perpp]` — hidden rather than
+  erroring. The reasoning under *Hidden values reach further than documented*
+  holds on both clients.
+- **`aura underline: available`.** `Enum.CustomAuraButtonDispelTypeTextureStyle`
+  and its `PreserveAsset` exist here, so the dispel coloring is not Retail-only
+  either. The containers were built and the rows drew.
+- **The chat font carries U+2665**, so the signature line reads as intended.
+
+One deviation found in passing: **`GetSpecializationInfo` answers with the
+class name.** On the warlock it returned *Hexenmeister* for spec 1, where
+Retail names the specialization. It only reaches a diagnostic line, so nothing
+is built on it.
+
+Still unmeasured here: what `/uuf debug` reports during a build, whether
+`Umbra.isForever` actually matches, whether `loadstring_untainted` is missing
+as recorded, and whether saved variables really are written but never read —
+which decides whether `/uuf layout`, `/uuf auras` and the dragged positions
+survive a reload on this client at all.
 
 ---
 
