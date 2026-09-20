@@ -23,6 +23,20 @@ it, and Ctrl+C is the part the game leaves to you. Saying so on the button is
 better than a button called Copy that silently does half of that.
 --]]
 
+--[[ Reachable without typing
+`Bindings.xml` offers the report as a key binding, which the client picks up
+from the addon folder without a TOC entry. The names of the two entries in
+Blizzard's own key binding panel are globals it looks for by convention.
+
+This exists because of how the window first failed: it kept the keyboard when
+it was hidden, and chat then accepted nothing at all — including the `/reload`
+that would have loaded the repair. A diagnostic that can only be reached by
+typing is unreachable in exactly the case where typing has stopped working,
+and the key binding panel is worked with the mouse.
+--]]
+_G.BINDING_HEADER_UMBRAUNITFRAMES = 'Umbra Unit Frames'
+_G.BINDING_NAME_UMBRAUNITFRAMES_CHECK = 'Open the check report'
+
 local WIDTH, HEIGHT = 620, 440
 local PADDING = 14
 local TITLE_HEIGHT = 26

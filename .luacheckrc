@@ -20,6 +20,7 @@ globals = {
 	'SLASH_UMBRAUNITFRAMES1',
 	'SlashCmdList',
 	'UmbraUnitFramesDB',
+	'BINDING_HEADER_UMBRAUNITFRAMES', 'BINDING_NAME_UMBRAUNITFRAMES_CHECK',
 }
 
 read_globals = {

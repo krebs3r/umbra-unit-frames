@@ -526,6 +526,12 @@ It stays an EditBox because selecting text is the only copying the game
 offers, so typing into it is undone rather than prevented, with the selection
 put back where it was.
 
+**The lesson outlived the bug.** A diagnostic reachable only by typing is
+unreachable in exactly the case where typing has stopped working, and that is
+the case it is most wanted in. So `Bindings.xml` offers the report as a key
+binding as well — the client picks that file up from the addon folder without
+a TOC entry, and Blizzard key binding panel is worked with the mouse.
+
 The frame carries no unit data — it is handed strings that were formatted
 before it existed — so the geometry rule has nothing to say about it, and its
 widgets may size themselves however they like. Both the close button and the

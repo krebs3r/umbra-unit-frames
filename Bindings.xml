@@ -1,0 +1,19 @@
+<Bindings>
+	<!--
+		A way to the report that does not go through the chat frame.
+
+		The first version of the report window kept the keyboard when it was
+		hidden, which left chat accepting nothing — including the /reload that
+		would have loaded the fix. That is fixed, but the lesson stands: a
+		diagnostic reachable only by typing is unreachable exactly when
+		something has gone wrong with typing.
+
+		The client loads Bindings.xml from an addon's own folder without it
+		being listed in the TOC.
+	-->
+	<Binding name="UMBRAUNITFRAMES_CHECK" header="UMBRAUNITFRAMES" category="AddOns">
+		if SlashCmdList and SlashCmdList.UMBRAUNITFRAMES then
+			SlashCmdList.UMBRAUNITFRAMES('check')
+		end
+	</Binding>
+</Bindings>
