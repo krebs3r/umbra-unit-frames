@@ -22,40 +22,48 @@ them follow is written down in Widgets.lua.
 The tooltip you get from pointing at a unit in the world, on the frame that
 stands for it.
 
-oUF leaves this to the layout. It builds a SecureUnitButton, sets the click
-attributes and no `OnEnter` at all; the only tooltips it brings are the ones
-single elements put on themselves. So a frame without this is a frame you can
-click but not read.
+oUF leaves this to the layout, which is easy to miss because it does set the
+click attributes: it builds a SecureUnitButton with `*type1 = target` and no
+`OnEnter` at all, and the only tooltips in the library are ones single
+elements put on themselves.
 
-The client's own handler is preferred over anything written here, because it
-carries what the default frames do and Umbra would otherwise have to copy:
-the setting that hides tooltips in combat, the refresh while the pointer
-rests, and what happens when a spell is waiting for a target. Forever is
-missing parts of the Retail surface, so it is asked for rather than assumed,
-and what is left over says the one thing that matters.
+**Blizzard's own `UnitFrame_OnEnter` cannot be used here.** It reads
+`self.unit`, and an oUF frame has no such field: the unit lives in
+`frame.__unit`, which `Private.UpdateUnits` keeps current, and again as the
+secure `unit` attribute. Handing our frames to it threw
+`bad argument #1 to GetUnit` on every hover, because what reached
+`C_TooltipInfo.GetUnit` was nil.
+
+So the unit is asked for where oUF actually keeps it. `__unit` is preferred
+over the attribute because it follows a vehicle swap, where the attribute
+still names the seat's owner.
 --]]
+local function TooltipUnit(frame)
+	return frame.__unit or frame:GetAttribute('unit')
+end
+
 local function Tooltip(frame)
-	if type(_G.UnitFrame_OnEnter) == 'function'
-		and type(_G.UnitFrame_OnLeave) == 'function' then
-
-		frame:SetScript('OnEnter', UnitFrame_OnEnter)
-		frame:SetScript('OnLeave', UnitFrame_OnLeave)
-		return
-	end
-
-	Umbra:Debug('no UnitFrame_OnEnter, falling back to our own tooltip')
-
 	frame:SetScript('OnEnter', function(self)
-		if not self.unit or GameTooltip:IsForbidden() then return end
+		local unit = TooltipUnit(self)
+
+		-- A frame for a unit that is not there is normally hidden by
+		-- RegisterUnitWatch, so this is the guard for the case that put the
+		-- error here in the first place rather than an expected state.
+		if not unit or not UnitExists(unit) then
+			Umbra:Debug('no unit to show a tooltip for')
+			return
+		end
+
+		if GameTooltip:IsForbidden() then return end
 
 		-- SetDefaultAnchor puts the tooltip where the client's own setting
-		-- says it goes. A plain owner is what is left when that helper is
-		-- missing as well, which on this path it may be.
+		-- says it goes, including "anchored to the cursor". A plain owner is
+		-- what is left where that helper is missing, as it may be on Forever.
 		if not pcall(GameTooltip_SetDefaultAnchor, GameTooltip, self) then
 			GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
 		end
 
-		GameTooltip:SetUnit(self.unit)
+		GameTooltip:SetUnit(unit)
 	end)
 
 	frame:SetScript('OnLeave', function()

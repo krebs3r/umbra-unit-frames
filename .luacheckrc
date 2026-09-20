@@ -47,10 +47,9 @@ read_globals = {
 	-- Namespaced API
 	'C_AddOns', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
 
-	-- Tooltips. oUF sets no unit tooltip of its own, so the layout hands the
-	-- frame to the client's own handler where there is one.
+	-- Tooltips. oUF sets no unit tooltip of its own, and Blizzard's handler
+	-- cannot be borrowed for one, so the layout brings its own.
 	'GameTooltip', 'GameTooltip_SetDefaultAnchor',
-	'UnitFrame_OnEnter', 'UnitFrame_OnLeave',
 
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',

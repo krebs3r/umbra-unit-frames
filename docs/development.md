@@ -239,12 +239,15 @@ the bar so they draw above it, but anchored to the frame.
   `element.colorPowerAtlas = true` swaps the bar for one of Blizzard's
   textures instead, and then never sets a color — see *Colors that name their
   own source* for why Umbra leaves it off.
-- **oUF sets no unit tooltip.** It builds a `SecureUnitButton`, gives it the
-  click attributes and no `OnEnter` at all; the only tooltips in the library
-  are ones single elements put on themselves. A layout that does not hand the
-  frame to `UnitFrame_OnEnter` gives you a frame you can click but not read.
-  `Layouts/Shared.lua` does, and falls back to `GameTooltip:SetUnit` where
-  that global is missing.
+- **oUF sets no unit tooltip, and Blizzard's handler cannot supply one.** oUF
+  builds a `SecureUnitButton`, gives it the click attributes and no `OnEnter`
+  at all, so without this the frames can be clicked but not read. The obvious
+  fix is wrong: `UnitFrame_OnEnter` reads `self.unit`, and **an oUF frame has
+  no `unit` field**. The unit lives in `frame.__unit`, kept current by
+  `Private.UpdateUnits`, and again as the secure `unit` attribute. Borrowing
+  the handler threw `bad argument #1 to GetUnit` on every hover, nil having
+  reached `C_TooltipInfo.GetUnit`. `Layouts/Shared.lua` brings its own and
+  reads `__unit`, which follows a vehicle swap where the attribute does not.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.
