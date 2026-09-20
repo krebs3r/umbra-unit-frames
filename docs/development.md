@@ -412,9 +412,10 @@ and `AuraPerRow` keeps answering ours. The 2 pixels are the whole difference,
 and neither side is wrong: one is measuring a row that is drawn, the other a
 row that is being filled.
 
-That was the one thing about the auras that had never been looked at with
-real data — the geometry, the colors and the side after a switch all had
-been.
+**Confirmed in the client**: eight real buffs in the row afterwards, same
+character, same dungeon. That was the one thing about the auras that had
+never been looked at with real data — the geometry, the colors and the side
+after a switch all had been.
 
 **A full row can be looked at without waiting for one.** `/uuf test` fills
 every reserved slot with stand-ins, which is the only way to see the case the
@@ -564,6 +565,13 @@ like false and happens to be right, but by accident rather than by
 measurement. A flag that decides whether a whole class of frames can exist
 should not be true or false depending on which file loaded.
 
+**Measured on Retail on 20 September 2026**, standing in *Die Abyssalhallen*:
+`secure snippets: unavailable` beside `compat: none`. So the answer is the
+same one the accident used to give, and it is now an answer: no compatibility
+file ran, and the flag was set by asking the client. `loadstring_untainted` is
+missing on Retail 12.1 as well as on Forever, and group frames need the
+static fallback on both.
+
 ---
 
 ## Next
@@ -596,21 +604,38 @@ quietly rather than erroring, which is why none of them announced itself.
    instance, on a unit whose health is hidden. That is the thing this design
    rests on, and it holds.
 
-   What has still not been seen is a **real** absorb or a real incoming heal.
-   Nothing on that run produced one: a hunter carries no absorb of its own,
-   and incoming-heal prediction needs a cast heal in flight rather than an
-   instant self-heal. So the remaining question is only whether oUF's values
-   arrive, not whether the surfaces work. A shielded tank in the same group,
-   watched on the target frame, answers it.
-5. **3D portraits on an enemy frame inside an instance.** Seen empty there and
-   filled outside, on the same run. The frame, its ground and its tint are
-   explicitly placed and do not care what the unit is, so this has the shape
-   of a restricted value rather than of a broken anchor: oUF chooses between
-   the unit's model and a question mark on `UnitIsConnected and
-   UnitIsVisible`, then calls `SetUnit`. `/uuf check` now reports both of
-   those and the loaded model file, per frame — a model of nil with a
-   readable `UnitIsVisible` means `SetUnit` was reached and answered with
-   nothing, which is a different fault from a branch that never took.
+   Incoming healing then looked right on a later run, reported rather than
+   measured. What has still not been pinned down is a **real** absorb: a
+   hunter carries none of its own, and the two runs so far produced no
+   shielded unit to point at. The remaining question is only whether oUF's
+   values arrive, not whether the surfaces work.
+5. **The 3D portrait on the target frame.** Empty inside an instance while the
+   player's and the pet's are filled — which is the interesting part, because
+   it rules out the first explanation. Measured in *Die Abyssalhallen* on
+   20 September 2026:
+
+   ```
+   portrait player: UnitIsVisible: readable — true, model: readable — 878772
+   portrait pet:    UnitIsVisible: readable — true, model: readable — 1266661
+   ```
+
+   So the restricted-value regime does not break portraits as such, and
+   neither does anything about the column: the same style builds all three
+   frames, and the frame, its ground and its tint are explicitly placed and
+   do not care what the unit is. What is special about the target is that it
+   is the one hostile NPC among them.
+
+   **That run printed no target line at all**, which is the empty debug
+   buffer over again — it could mean the portrait failed, or that nothing was
+   targeted when the command was typed. So `/uuf check` now answers for every
+   frame, naming which of the four states it is in, and asks both halves of
+   oUF's `UnitIsConnected and UnitIsVisible` rather than only the second: on
+   an `and`, asking one half names the wrong culprit half the time.
+
+   oUF's own update path is not in question. `HandleUnit` registers
+   `PLAYER_TARGET_CHANGED` against `UpdateAllElements` for a target frame, and
+   the Portrait element treats any event but `OnUpdate` as a state change, so
+   `SetUnit` is reached on every target switch.
 
 Settled since this list was written: auras inside an instance, the side a row
 lands on after a switch, and the frame positions in both sets.

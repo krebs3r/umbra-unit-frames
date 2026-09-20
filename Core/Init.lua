@@ -313,17 +313,40 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		A model file of nil with a readable `UnitIsVisible` means SetUnit was
 		reached and answered with nothing, which is a different fault from a
 		branch that never took.
+
+		**Every frame answers, including one with nothing behind it.** The
+		first version printed only for frames with a live unit, and the run
+		that mattered came back with no target line at all — which is the
+		empty debug buffer again: silence that could mean the portrait failed,
+		or that nothing was targeted when the command was typed. A diagnostic
+		that can be read two ways is not one.
 		--]]
 		for _, frame in ipairs(ns.oUF.objects) do
 			local unit = Umbra:FrameUnit(frame)
 			local model = frame.Portrait
+			local label = 'portrait ' .. (frame.umbraKey or tostring(unit))
 
-			if unit and model and model.GetModelFileID and UnitExists(unit) then
-				report(('portrait %s: UnitIsVisible'):format(unit), function()
+			if not model then
+				print(PREFIX .. label .. ': |cffcc6666no element|r')
+			elseif not model.GetModelFileID then
+				print(PREFIX .. label .. ': not a model, nothing to ask')
+			elseif not unit then
+				print(PREFIX .. label .. ': no unit on this frame')
+			elseif not UnitExists(unit) then
+				print(PREFIX .. label .. ': nothing to show, no ' .. unit)
+			else
+				-- Both halves of oUF's condition, because it is an `and`: if
+				-- the connected half is the false one, asking only about the
+				-- visible half names the wrong culprit.
+				report(label .. ': UnitIsConnected', function()
+					return UnitIsConnected(unit)
+				end)
+
+				report(label .. ': UnitIsVisible', function()
 					return UnitIsVisible(unit)
 				end)
 
-				report(('portrait %s: model'):format(unit), function()
+				report(label .. ': model', function()
 					return model:GetModelFileID()
 				end)
 			end

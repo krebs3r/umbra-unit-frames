@@ -49,7 +49,9 @@ First buildable version. Player and target frames, no configuration yet.
   every button, so the row width it was given was two pixels short and the
   last icon wrapped out of sight
 - `/uuf check` reports what each frame's portrait was able to load, and
-  whether the client hides the value oUF decides that on
+  whether the client hides either value oUF decides that on — for every
+  frame, including ones with nothing behind them, so a missing line cannot be
+  read two ways
 - `/uuf auras` typed in combat now takes effect when the fight ends, and says
   so, instead of silently doing nothing: the game's two aura frames are
   protected
