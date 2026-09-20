@@ -4,6 +4,7 @@ local Umbra = {}
 ns.Umbra = Umbra
 
 Umbra.addonName = addonName
+Umbra.author = C_AddOns.GetAddOnMetadata(addonName, 'Author')
 
 -- The packager substitutes this token on release; a plain checkout keeps it.
 Umbra.version = C_AddOns.GetAddOnMetadata(addonName, 'Version')
@@ -21,6 +22,19 @@ Umbra.isRetail = Umbra.isMainline and interface >= 100000
 
 local ACCENT = '|cff75dcc4'
 local PREFIX = ACCENT .. 'Umbra|r '
+
+--[[ HEART
+The name comes from the TOC rather than from here, so it stays in one place
+and this line cannot go stale by being a second copy of it.
+
+The heart is U+2665, written as itself. This file is already UTF-8 and the
+command list beside it is full of em dashes that render correctly in the
+client, so the encoding is not in question. A texture would be: there is no
+reliable way to ask whether a path still exists after a patch, and a missing
+one prints nothing at all. Its color is `auraHarmful` from the palette, the
+red this addon already uses.
+--]]
+local HEART = '|cffb25d5d♥|r'
 
 --[[ Value(name) / Values(names)
 A word the reader is meant to type back, in the accent color.
@@ -248,6 +262,10 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 			end
 
 			print(line .. ' — ' .. entry[3])
+		end
+
+		if Umbra.author then
+			print(('  with %s by %s'):format(HEART, Umbra.author))
 		end
 	end
 end

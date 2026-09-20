@@ -50,6 +50,12 @@ range shown through fading.
 | `check` | which unit values this client hides |
 | `debug` | print what was refused while building; saved across reloads |
 
+`/uuf` closes with a line naming the author, which it reads from the TOC
+rather than repeating. The heart in it is U+2665 written as itself: the
+source is UTF-8 and the em dashes beside it already render in the client,
+whereas a texture path has no reliable way of being asked whether it still
+exists after a patch and prints nothing at all when it does not.
+
 ---
 
 ## What the client actually does
