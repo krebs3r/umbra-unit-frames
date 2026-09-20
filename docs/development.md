@@ -19,7 +19,7 @@ them work against the API.
 ## Status
 
 Done: the project foundation, and every single frame — player, target, pet,
-focus, target-of-target and the boss column — the first three verified
+target-of-target and the boss column — the first three verified
 inside an instance under the restricted-value regime with error capture
 installed, and **loading and drawing on the Forever beta client** — see
 *Forever* for what that run settled.
@@ -370,13 +370,16 @@ the bar so they draw above it, but anchored to the frame.
 
 ### The rest of the single frames
 
-Focus, target-of-target and the boss column, which cost almost nothing once
-the pet frame's pattern exists: a config in `Umbra.frames`, a point in each
-set, and oUF does the rest. What each one is for decided how it was cut.
+Target-of-target and the boss column, which cost almost nothing once the pet
+frame's pattern exists: a config in `Umbra.frames`, a point in each set, and
+oUF does the rest. What each one is for decided how it was cut.
 
-- **Focus** keeps its castbar, because a focus is nearly always a unit you
-  picked in order to watch what it casts. One row of harmful auras, since
-  what you have put on it is the other reason to have picked it.
+**There was a focus frame and it was taken out again**, on 20 September 2026,
+because the person it was built for does not use `/focus` and a frame that
+never fills is a frame in the way. It cost a config entry and a point per set,
+and it would cost the same to put back — so this is written down rather than
+kept, which is the cheaper of the two.
+
 - **Target-of-target** is one question — is it on the tank or on me — and is
   cut like the pet in every way, including where it lives: the shared width so
   it lines up, shorter, no castbar, no auras, and a place in the target's own
@@ -395,9 +398,10 @@ something about that boss that nothing here knows.
 
 **oUF wires all three by itself, differently each time.** `targettarget`
 matches `%w+target` and is handed to `HandleEventlessUnit`, which drives it
-from a half-second timer because no event announces it. `focus` gets
-`PLAYER_FOCUS_CHANGED`, and `boss%d` gets `INSTANCE_ENCOUNTER_ENGAGE_UNIT`
-and `UNIT_TARGETABLE_CHANGED`. Nothing about that had to be asked for.
+from a half-second timer because no event announces it, and `boss%d` gets
+`INSTANCE_ENCOUNTER_ENGAGE_UNIT` and `UNIT_TARGETABLE_CHANGED`. Nothing about
+that had to be asked for — which is also why a focus frame would cost nothing
+but its config: `HandleUnit` has `PLAYER_FOCUS_CHANGED` waiting for it.
 
 Where they go is a set decision, and the two sets answer it differently
 because they are anchored to different things:
@@ -405,8 +409,7 @@ because they are anchored to different things:
 | | classic | modern |
 | :--- | :--- | :--- |
 | Target-of-target | above the target | above the target |
-| Focus | a third column | beside the player, outside it |
-| Bosses | right edge, stacked down | right edge, stacked down |
+| Bosses | right edge, centred | right edge, centred |
 
 In `classic` the target has nothing above it — both its aura rows hang below —
 so the small frame belonging to the big one sits directly over it, exactly as
@@ -422,15 +425,17 @@ buff row is pushed up by exactly its height. Neither can land on the other,
 and both positions follow from one count rather than from two numbers kept
 equal by hand.
 
-The focus has no such owner and still goes beside the player in that set,
-where there is always room: every row is exactly as wide as its frame and
-nothing hangs off the edges.
-
 The boss column is the same in both, because an encounter frame is not part of
 the arrangement you chose — it is something the fight brings with it, and it
 belongs where nothing of yours is. Its step is each frame's whole reach, box
 and castbar, asked rather than written down, so a boss frame that grows takes
 its neighbours down with it instead of landing on them.
+
+**It is centred on that edge rather than hung from the top**, which is where
+it started only because 200 was an easy number to write — and 200 down from
+the top right is where the quest tracker already lives. The whole block is
+centred rather than its first frame, so an encounter with one boss and one
+with five sit in the same place on screen.
 
 **A frame a set does not name is now survivable.** `AnchorFrame` unpacked that
 point straight into `SetPoint`, which on a missing entry would have thrown at
@@ -869,7 +874,7 @@ switch, and the frame positions in both sets.
 
 ### Remaining single frames
 
-None. Focus, target-of-target and the boss column are built — see *The rest of
+None. Target-of-target and the boss column are built — see *The rest of
 the single frames* — and incoming healing and absorbs went in through oUF's
 health sub-widgets. What is left of the single frames is looking at the three
 new ones in the client.

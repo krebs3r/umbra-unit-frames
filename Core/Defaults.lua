@@ -193,15 +193,6 @@ Umbra.frames = {
 		-- to look at it.
 		auras = {helpful = 8, harmful = 16},
 	},
-	-- A focus is a unit you chose to keep watching, and almost always because
-	-- of what it is casting, so the castbar is the point of the frame rather
-	-- than a decoration on it. One row of harmful auras, because what is on
-	-- it is the other reason to have picked it.
-	focus = {
-		castbar = true,
-		auras = {harmful = 8},
-	},
-
 	-- The shared width, so the two line up, but shorter: a pet is something
 	-- you glance at, not something you read.
 	pet = {
@@ -457,20 +448,30 @@ do
 	frame is not part of the arrangement you chose; it is something the fight
 	brings with it, and it belongs where nothing of yours is.
 
+	**Centred on the right edge rather than hung from the top.** Measured from
+	the top it landed in the corner the quest tracker already occupies, and it
+	was measured from there only because 200 was easy to write. The middle of
+	that edge is where the eye goes for a frame that is not yours, and the
+	whole block is centred rather than its first frame, so one boss and five
+	sit in the same place on screen.
+
 	The step is each frame's whole reach — its box and the castbar under it —
 	plus a gap, asked rather than written down, so a boss frame that grows
-	takes its neighbours down with it instead of landing on them.
+	takes its neighbours down with it instead of landing on them. The block is
+	the same arithmetic once more: the steps between them, plus the last one's
+	own reach, which has no step after it.
 	--]]
 	local function BossPoints(set)
 		local boss = Umbra.frames.boss1
 		if not boss then return end
 
-		local step = Umbra:FrameHeight(boss)
-			+ Umbra:StackOffset(boss, set, 'below') + boss.gap * 2
+		local reach = Umbra:FrameHeight(boss) + Umbra:StackOffset(boss, set, 'below')
+		local step = reach + boss.gap * 2
+		local half = ((Umbra.bossCount - 1) * step + reach) / 2
 
 		for index = 1, Umbra.bossCount do
-			set.points['boss' .. index] = {'TOPRIGHT', UIParent, 'TOPRIGHT',
-				-16, -(200 + (index - 1) * step)}
+			set.points['boss' .. index] = {'TOPRIGHT', UIParent, 'RIGHT',
+				-16, half - (index - 1) * step}
 		end
 	end
 
@@ -505,11 +506,6 @@ do
 			-- the target here — but it lands there by arithmetic rather than
 			-- by two numbers that would have to be kept equal by hand.
 			targettarget = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, glanceY},
-
-			-- A third column. There is no room to the left of the player
-			-- here, because the set is anchored into the corner, so the only
-			-- outside this arrangement has is further right.
-			focus = {'TOPLEFT', UIParent, 'TOPLEFT', targetX + player.width + column, playerY},
 		}
 
 		BossPoints(set)
@@ -530,12 +526,7 @@ do
 		crowding as a rule rather than as a problem to solve. It is an entry
 		in the target's `above` stack now, nearest the frame, so the buff row
 		is pushed up by exactly its height and neither can land on the other.
-
-		The focus has no such neighbour and still goes beside the player,
-		where there is always room: every row is exactly as wide as its frame
-		and nothing hangs off the edges.
 		--]]
-		local beside = player.width + player.gap * 4
 		local glanceY = baseline + Umbra:FrameHeight(target)
 			+ Umbra:StackOffset(target, set, 'above', 'targettarget')
 
@@ -544,7 +535,6 @@ do
 			target = {'BOTTOM', UIParent, 'BOTTOM', spread, baseline},
 			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, petY},
 			targettarget = {'BOTTOM', UIParent, 'BOTTOM', spread, glanceY},
-			focus = {'BOTTOM', UIParent, 'BOTTOM', -(spread + beside), baseline},
 		}
 
 		BossPoints(set)
