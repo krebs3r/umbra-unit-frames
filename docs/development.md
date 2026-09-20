@@ -546,7 +546,7 @@ not.
 **The beta client is installed** as of 20 September 2026, under the same root
 as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
 `wow_classic_beta`, with `WowB.exe`. That is the folder
-`.	ools\install.ps1 -Flavor forever` already targets, and `tools/.wowpath`
+`.\tools\install.ps1 -Flavor forever` already targets, and `tools/.wowpath`
 holds the shared root, so the flavour alone picks the client and neither
 overwrites the other.
 
