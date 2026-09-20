@@ -35,9 +35,10 @@ measurements are under *Auras*. Nothing about the containers is refused where
 they gain forbidden aspects; `/uuf debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
-One principle is open: range shown through fading. The absorbs are written
-and installed but **not yet looked at in the client** — see *Waiting to be
-looked at*.
+One principle is open: range shown through fading. The absorbs have been seen
+drawing in an instance, on both the player and the target frame, but only as
+stand-ins — see *Waiting to be looked at* for what that does and does not
+settle.
 
 ### Slash commands
 
@@ -589,13 +590,27 @@ quietly rather than erroring, which is why none of them announced itself.
    the gloss over it, and the percentage above it orange at `195/128/97`
    rather than the `141/151/171` it would fall back to. Only energy is left,
    which wants a rogue, a monk or a druid in cat form.
-4. **Absorbs and incoming healing.** Written, never seen. `/uuf test` fills
-   all three bars, so the look can be judged without waiting for a healer:
-   the ghosted green, the hatching, and the red eating backwards, in that
-   order along the bar. What the stand-ins do *not* answer is whether the
-   client accepts the anchors to the health fill inside an instance, where
-   that fill's geometry comes from a hidden value — and that is the one thing
-   this design rests on. The open world is not enough here.
+4. **Absorbs and incoming healing, from real data.** The stand-ins were seen
+   in *Thron der Gezeiten* on 20 September 2026 and drew — including on the
+   target frame, so the anchors to the health fill are accepted inside an
+   instance, on a unit whose health is hidden. That is the thing this design
+   rests on, and it holds.
+
+   What has still not been seen is a **real** absorb or a real incoming heal.
+   Nothing on that run produced one: a hunter carries no absorb of its own,
+   and incoming-heal prediction needs a cast heal in flight rather than an
+   instant self-heal. So the remaining question is only whether oUF's values
+   arrive, not whether the surfaces work. A shielded tank in the same group,
+   watched on the target frame, answers it.
+5. **3D portraits on an enemy frame inside an instance.** Seen empty there and
+   filled outside, on the same run. The frame, its ground and its tint are
+   explicitly placed and do not care what the unit is, so this has the shape
+   of a restricted value rather than of a broken anchor: oUF chooses between
+   the unit's model and a question mark on `UnitIsConnected and
+   UnitIsVisible`, then calls `SetUnit`. `/uuf check` now reports both of
+   those and the loaded model file, per frame — a model of nil with a
+   readable `UnitIsVisible` means `SetUnit` was reached and answered with
+   nothing, which is a different fault from a branch that never took.
 
 Settled since this list was written: auras inside an instance, the side a row
 lands on after a switch, and the frame positions in both sets.

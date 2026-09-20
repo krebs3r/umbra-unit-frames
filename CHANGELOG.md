@@ -48,6 +48,8 @@ First buildable version. Player and target frames, no configuration yet.
 - Aura rows hold the eighth icon again: the client counts a spacing after
   every button, so the row width it was given was two pixels short and the
   last icon wrapped out of sight
+- `/uuf check` reports what each frame's portrait was able to load, and
+  whether the client hides the value oUF decides that on
 - `/uuf auras` typed in combat now takes effect when the fight ends, and says
   so, instead of silently doing nothing: the game's two aura frames are
   protected

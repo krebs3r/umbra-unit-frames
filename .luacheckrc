@@ -38,6 +38,7 @@ read_globals = {
 	'UnitPower', 'UnitPowerMax', 'UnitPowerPercent', 'UnitPowerMissing',
 	'UnitClass', 'UnitName', 'UnitExists', 'UnitIsUnit', 'UnitInRange',
 	'UnitIsPlayer', 'UnitReaction', 'C_ClassColor',
+	'UnitIsVisible', 'UnitIsConnected',
 
 	-- Secret values, added in 12.0
 	'issecretvalue', 'C_Secrets', 'C_CurveUtil', 'C_DurationUtil',

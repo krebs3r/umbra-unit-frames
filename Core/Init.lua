@@ -296,6 +296,39 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 					or ('no specialization yet (spec %s)'):format(tostring(spec))))
 		end
 
+		--[[ Why a portrait column can come up empty
+		The 3D models went missing on the enemy frame *inside* an instance and
+		not outside it, which is the shape of a restricted value rather than
+		of a broken anchor — the frame, its ground and its tint are all
+		explicitly placed and do not care what the unit is.
+
+		oUF chooses between the unit's own model and a question mark on
+		`UnitIsConnected and UnitIsVisible`, then calls `SetUnit`. So the
+		first thing to know is whether either of those two is hidden where
+		this happens, and the second is whether a model was loaded at all.
+		Both go through `report`, because either one may come back hidden and
+		`tostring` on a hidden value is the throw this command exists to
+		avoid.
+
+		A model file of nil with a readable `UnitIsVisible` means SetUnit was
+		reached and answered with nothing, which is a different fault from a
+		branch that never took.
+		--]]
+		for _, frame in ipairs(ns.oUF.objects) do
+			local unit = Umbra:FrameUnit(frame)
+			local model = frame.Portrait
+
+			if unit and model and model.GetModelFileID and UnitExists(unit) then
+				report(('portrait %s: UnitIsVisible'):format(unit), function()
+					return UnitIsVisible(unit)
+				end)
+
+				report(('portrait %s: model'):format(unit), function()
+					return model:GetModelFileID()
+				end)
+			end
+		end
+
 	elseif input:find('^layout') then
 		local name = input:match('^layout%s+(%S+)$')
 
