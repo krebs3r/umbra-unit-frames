@@ -35,6 +35,8 @@ First buildable version. Player and target frames, no configuration yet.
 - `/uuf auras umbra` puts away the game's own buff and debuff frames, `/uuf
   auras both` brings them back
 - `/uuf` on its own lists the commands one to a line, with what each does
+- `/uuf debug` also hands over what was refused before it was switched on,
+  which is where everything interesting happens: during the build at login
 - `Layouts/` split into widgets, tags, auras and the style that assembles them
 - Packages for Retail (`_Mainline`) and WoW: Forever (`_Camelot`) from one source
 - `Compat/Forever.lua` for the deviations found on the Forever beta client

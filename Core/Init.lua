@@ -91,14 +91,6 @@ function Umbra:RegisterEvent(frame, event)
 	return ok
 end
 
---[[ Umbra:Debug(...)
-Prints only when debugging is on, which it survives a reload to be.
-
-Most of what there is to report is refused while the frames are being built,
-at PLAYER_LOGIN — before anyone can type the command that turns this on. A
-switch that did not outlive the reload could therefore never show the one
-thing it exists for.
---]]
 --[[ Umbra:FrameUnit(frame)
 Which unit a frame stands for, asked where oUF actually keeps it.
 
@@ -111,9 +103,43 @@ function Umbra:FrameUnit(frame)
 	return frame.__unit or frame:GetAttribute('unit')
 end
 
+--[[ Umbra:Debug(...)
+Writes a line down always, and prints it only when debugging is on.
+
+Most of what there is to report is refused while the frames are being built,
+at PLAYER_LOGIN, before anyone can type the command that turns printing on.
+Saving the switch was the first answer to that, and it is not enough: **the
+Forever beta writes saved variables but never reads them back**, measured on
+20 September 2026 by setting `/uuf layout classic`, reloading, and finding
+`modern` again. On that client a saved switch is always off at login, which
+is exactly when the build happens.
+
+So the lines are kept whether or not anyone is listening, and `/uuf debug`
+hands over what it already missed. That asks nothing of the client and works
+the same everywhere.
+--]]
+local log = {}
+local LOG_LIMIT = 60
+
 function Umbra:Debug(...)
-	if not self.debug then return end
-	print(PREFIX, ...)
+	local parts = {}
+
+	for index = 1, select('#', ...) do
+		parts[index] = tostring((select(index, ...)))
+	end
+
+	local line = table.concat(parts, ' ')
+
+	log[#log + 1] = line
+
+	-- A run that refuses everything must not grow without end.
+	if #log > LOG_LIMIT then
+		table.remove(log, 1)
+	end
+
+	if self.debug then
+		print(PREFIX .. line)
+	end
 end
 
 -- Forever writes saved variables but never reads them back, so an empty table
@@ -288,10 +314,22 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		Umbra.debug = not Umbra.debug
 		UmbraUnitFramesDB.debug = Umbra.debug
 
-		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off')
-			.. (Umbra.debug
-				and ' — ' .. Value('/reload') .. ' to see what the build refuses.'
-				or ''))
+		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off'))
+
+		-- Switching it on is usually someone asking what already went wrong,
+		-- and that happened at login. No reload needed to find out, which
+		-- matters on a client that forgets the switch anyway.
+		if Umbra.debug then
+			if #log == 0 then
+				print(PREFIX .. 'nothing has been refused since login.')
+			else
+				print(PREFIX .. ('%d line(s) from before this was on:'):format(#log))
+
+				for _, line in ipairs(log) do
+					print('  ' .. line)
+				end
+			end
+		end
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))

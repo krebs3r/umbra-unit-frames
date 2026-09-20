@@ -49,7 +49,7 @@ range shown through fading.
 | `test` | fill every aura slot with stand-ins |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `check` | which unit values this client hides, and what the class-power row found |
-| `debug` | print what was refused while building; saved across reloads |
+| `debug` | print what was refused while building, including before it was on |
 
 `/uuf` closes with a line naming the author, which it reads from the TOC
 rather than repeating. The heart in it is U+2665 written as itself: the
@@ -579,11 +579,26 @@ class name.** On the warlock it returned *Hexenmeister* for spec 1, where
 Retail names the specialization. It only reaches a diagnostic line, so nothing
 is built on it.
 
-Still unmeasured here: what `/uuf debug` reports during a build, whether
-`Umbra.isForever` actually matches, whether `loadstring_untainted` is missing
-as recorded, and whether saved variables really are written but never read —
-which decides whether `/uuf layout`, `/uuf auras` and the dragged positions
-survive a reload on this client at all.
+- **`Umbra.isForever` matches.** `/uuf` names the client `Forever (interface
+  16001)` rather than `unsupported`, so `WOW_PROJECT_ID ==
+  WOW_PROJECT_MAINLINE` holds here and the interface falls in the 16xxx band
+  the check keys off.
+- **Saved variables really are written and never read.** `/uuf layout classic`
+  followed by `/reload` came back as `modern`. So on this client the layout,
+  the aura switch, the dragged positions and the debug flag are all back at
+  their defaults after every reload, and a saved setting is not a way to carry
+  anything into the next session.
+
+That last one broke the one thing it most needed to work. `/uuf debug` exists
+to report what the build refused, the build happens at `PLAYER_LOGIN`, and the
+switch was saved so that it would already be on by then — which on this client
+it never is. **So the lines are buffered instead**: `Umbra:Debug` writes every
+line down whether or not anyone is listening, and switching the flag on hands
+over what it missed. That asks nothing of the client and works the same on
+both.
+
+Still unmeasured here: what that buffer actually contains after a build, and
+whether `loadstring_untainted` is missing as recorded.
 
 ---
 
