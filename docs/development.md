@@ -19,9 +19,8 @@ them work against the API.
 ## Status
 
 Done: the project foundation, and every single frame — player, target, pet,
-target-of-target and the boss column — the first three verified
-inside an instance under the restricted-value regime with error capture
-installed, and **loading and drawing on the Forever beta client** — see
+target-of-target and the boss column — the first three verified inside an
+instance under the restricted-value regime with error capture installed, and **loading and drawing on the Forever beta client** — see
 *Forever* for what that run settled.
 
 Five of the six design principles are implemented — class color at the edge,
@@ -38,10 +37,11 @@ inside *Der Flammenschlund*.
 
 One principle is open: range shown through fading, which oUF's own element
 gates on party membership — see *Range fading belongs to the group frames*
-for why it waits for the group header rather than being half-built now. The absorbs have been seen
-drawing in an instance, on both the player and the target frame, but only as
-stand-ins — see *Waiting to be looked at* for what that does and does not
-settle.
+for why it waits for the group header rather than being half-built now.
+
+The absorbs have been seen drawing in an instance, on both the player and the
+target frame, but only as stand-ins — see *Waiting to be looked at* for what
+that does and does not settle.
 
 ### Slash commands
 
