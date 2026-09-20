@@ -514,6 +514,18 @@ button selects the whole report and focuses it, and Ctrl+C is the part the
 game leaves to the person; the button says so rather than being called Copy
 and doing half of that.
 
+**A focused edit box that is hidden keeps the keyboard.** The select-all
+button focuses it, and the first version did not let go on the way out: Enter
+went on reaching a field nobody could see, so chat accepted nothing at all —
+including the `/reload` that would have escaped it. Hiding now clears the
+focus whichever way the window was closed, Enter and Escape both let go, and
+because the box is multiline, Enter would otherwise have typed a newline into
+the report rather than returning to chat.
+
+It stays an EditBox because selecting text is the only copying the game
+offers, so typing into it is undone rather than prevented, with the selection
+put back where it was.
+
 The frame carries no unit data — it is handed strings that were formatted
 before it existed — so the geometry rule has nothing to say about it, and its
 widgets may size themselves however they like. Both the close button and the

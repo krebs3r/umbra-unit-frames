@@ -70,6 +70,19 @@ local function Build()
 	frame:RegisterForDrag('LeftButton')
 	frame:SetScript('OnDragStart', frame.StartMoving)
 	frame:SetScript('OnDragStop', frame.StopMovingOrSizing)
+
+	--[[ Giving the keyboard back
+	The select-all button focuses the edit box, and a focused edit box that is
+	then hidden keeps the keyboard: Enter goes on reaching a field nobody can
+	see, so chat stops accepting anything — including the command that would
+	have reloaded out of it.
+
+	Hiding therefore clears the focus, whichever way the window was closed.
+	--]]
+	frame:SetScript('OnHide', function(self)
+		if self.Text then self.Text:ClearFocus() end
+	end)
+
 	frame:Hide()
 
 	local border = frame:CreateTexture(nil, 'BACKGROUND')
@@ -133,7 +146,26 @@ local function Build()
 	edit:SetFont(media.font, 12)
 	edit:SetTextColor(unpack(colors.text))
 	edit:SetWidth(WIDTH - PADDING * 2 - 38)
-	edit:SetScript('OnEscapePressed', function() frame:Hide() end)
+
+	-- Multiline, so Enter would otherwise type a newline into the report
+	-- while the person is trying to get back to chat. Both keys let go.
+	edit:SetScript('OnEnterPressed', function(self) self:ClearFocus() end)
+	edit:SetScript('OnEscapePressed', function(self)
+		self:ClearFocus()
+		frame:Hide()
+	end)
+
+	--[[ Read-only without being uncopyable
+	It has to stay an EditBox, because selecting text is the only way the game
+	offers to copy any. So typing into it is undone rather than prevented, and
+	the selection is put back, which is what the person was in the middle of.
+	--]]
+	edit:SetScript('OnTextChanged', function(self, userInput)
+		if not userInput then return end
+
+		self:SetText(frame.report or '')
+		self:HighlightText()
+	end)
 
 	scroll:SetScrollChild(edit)
 	frame.Text = edit
@@ -166,9 +198,12 @@ Puts a list of plain lines in the window and shows it.
 function Umbra:ShowReport(title, lines)
 	frame = frame or Build()
 
+	frame.report = table.concat(lines, '\n')
+
 	frame.Title:SetText(title)
-	frame.Text:SetText(table.concat(lines, '\n'))
+	frame.Text:SetText(frame.report)
 	frame.Text:SetCursorPosition(0)
+	frame.Text:ClearFocus()
 	frame:Show()
 
 	return frame
