@@ -41,13 +41,10 @@ local function Tooltip(frame)
 	frame:SetScript('OnEnter', function(self)
 		local unit = Umbra:FrameUnit(self)
 
-		-- A frame for a unit that is not there is normally hidden by
-		-- RegisterUnitWatch, so this is the guard for the case that put the
-		-- error here in the first place rather than an expected state.
-		if not unit or not UnitExists(unit) then
-			Umbra:Debug('no unit to show a tooltip for')
-			return
-		end
+		-- Normally a frame for a unit that is not there is hidden by
+		-- RegisterUnitWatch. Unlocking lets go of that watch on purpose, so
+		-- pointing at an empty frame is an expected state and says nothing.
+		if not unit or not UnitExists(unit) then return end
 
 		if GameTooltip:IsForbidden() then return end
 

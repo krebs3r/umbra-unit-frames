@@ -229,6 +229,23 @@ In `modern` the player frame therefore offers `-18` and `-83` underneath and
 nothing at `0`, and an entry counts as room for a frame by being a key in
 `Umbra.frames`, which stays true of anything a later set puts in a stack.
 
+**Not offering a line is not the same as refusing it.** That fix alone did not
+hold: laid on the box edge by hand, the pet frame was 18 units from the slot
+below — twice the snap distance — so nothing caught it and it sat on the
+castbar exactly as before. A frame only ever snaps to what is already near.
+
+So an overlap is refused outright. `Bands` writes down the strips a frame
+actually draws — its box, its castbar, each aura block — and what lies between
+them is free, which in `modern` is the space the pet belongs in. On release,
+if the dragged frame would cover any of another's strips, the nearest shift
+that does not is taken, however far away it is; otherwise the ordinary snap
+stands. Refusing only on contact is what keeps this from fighting someone
+arranging frames that never meet, and touching edges do not count as contact.
+
+Frames beside each other are never in the way, so the horizontal ranges are
+compared first — every strip is as wide as its frame, so one comparison
+settles all of them.
+
 The move happens on release, not during the drag. A dragged frame follows the
 cursor, so moving it underneath makes it stick and fight rather than snap.
 

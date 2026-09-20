@@ -239,6 +239,88 @@ local function Candidates(dragged)
 	return xs, ys
 end
 
+--[[ Bands(frame, box, shift)
+The horizontal strips a frame actually draws: its own box, the castbar beneath
+it, and each aura block the set hangs on it.
+
+What lies *between* them is not drawn and is free for another frame to sit in
+— in `modern` that is exactly the space the pet occupies, which is why an
+entry naming a frame contributes no band of its own. Every strip is as wide as
+the frame, so only the vertical extent has to be written down.
+
+`shift` moves them all, for asking where the frame would collide rather than
+where it does.
+--]]
+local function Bands(frame, box, shift)
+	shift = shift or 0
+
+	local bands = {{box.bottom + shift, box.top + shift}}
+	local config = frame.umbraConfig
+
+	if not config then return bands end
+
+	local layout = Umbra:ActiveLayout()
+	local castbar = Umbra:CastbarReach(config)
+
+	if castbar > 0 then
+		bands[#bands + 1] = {box.bottom - castbar + shift, box.bottom + shift}
+	end
+
+	for _, entry in ipairs(layout.below) do
+		local height = not Umbra.frames[entry] and Umbra:StackHeight(config, entry)
+
+		if height then
+			local edge = box.bottom - Umbra:StackOffset(config, layout, 'below', entry) + shift
+
+			bands[#bands + 1] = {edge - height, edge}
+		end
+	end
+
+	for _, entry in ipairs(layout.above) do
+		local height = not Umbra.frames[entry] and Umbra:StackHeight(config, entry)
+
+		if height then
+			local edge = box.top + Umbra:StackOffset(config, layout, 'above', entry) + shift
+
+			bands[#bands + 1] = {edge, edge + height}
+		end
+	end
+
+	return bands
+end
+
+--[[ Collides(dragged, shift)
+Whether the dragged frame, moved by `shift`, would cover anything another
+frame draws.
+
+Touching edges do not count: a frame resting exactly on the bottom of another
+one's debuff row is placed, not overlapping. Frames beside each other are
+never in each other's way, so the horizontal ranges are tested first — every
+strip is as wide as its frame, so that is one comparison for all of them.
+--]]
+local function Collides(dragged, shift)
+	local mine = Box(dragged)
+	if not mine then return false end
+
+	local ours = Bands(dragged, mine, shift)
+
+	for _, frame in ipairs(movers) do
+		if frame ~= dragged and frame:IsShown() then
+			local theirs = Box(frame)
+
+			if theirs and mine.left < theirs.right and theirs.left < mine.right then
+				for _, a in ipairs(ours) do
+					for _, b in ipairs(Bands(frame, theirs)) do
+						if a[1] < b[2] and b[1] < a[2] then return true end
+					end
+				end
+			end
+		end
+	end
+
+	return false
+end
+
 --[[ Nearest(candidates)
 How far to move, and onto what, for the closest pairing inside the snap
 distance. Nil when nothing is near enough.
@@ -289,12 +371,45 @@ local function OnDragUpdate(dragged)
 	ShowGuide(guideY, false, ontoY)
 end
 
+--[[ Clear(dragged, shiftY)
+A vertical shift that covers nothing, starting from the one snapping asked
+for.
+
+Snapping alone is not enough to keep a frame off another one's castbar: laid
+by hand on the box edge, the slot underneath is a whole castbar away, far
+outside the snap distance, so nothing catches it. Only refusing the overlap
+does — but refusing it everywhere would fight someone arranging frames that
+never meet. So the lines are only reached for once the frame would actually
+cover something, and then the nearest one that does not is taken however far
+away it is.
+
+The candidates already hold the slot lines and the one clear of the whole
+reach, so there is always somewhere to go.
+--]]
+local function Clear(dragged, ys, shiftY)
+	if not Collides(dragged, shiftY) then return shiftY end
+
+	local shifts = {}
+
+	for _, candidate in ipairs(ys) do
+		shifts[#shifts + 1] = candidate[2] - candidate[1]
+	end
+
+	table.sort(shifts, function(a, b) return math.abs(a) < math.abs(b) end)
+
+	for _, shift in ipairs(shifts) do
+		if not Collides(dragged, shift) then return shift end
+	end
+
+	return shiftY
+end
+
 local function Snap(dragged)
 	local xs, ys = Candidates(dragged)
 	if not xs then return end
 
 	local shiftX = Nearest(xs) or 0
-	local shiftY = Nearest(ys) or 0
+	local shiftY = Clear(dragged, ys, Nearest(ys) or 0)
 
 	if shiftX == 0 and shiftY == 0 then return end
 

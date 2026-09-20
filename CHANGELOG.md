@@ -25,8 +25,9 @@ First buildable version. Player and target frames, no configuration yet.
   and fills their aura rows, so what you drag is the whole extent
 - Dragged frames snap to each other's matching edges and middles and to the
   middle of the screen, with a guide showing what they are about to line up on
-- A frame stacked under another lands in the slot the layout keeps for it,
-  below the castbar rather than on top of it
+- A frame cannot be dropped on top of what another one draws: dragged onto a
+  castbar or an aura row, it moves to the nearest place that covers nothing —
+  for the pet, the slot the layout keeps for it under the castbar
 - A frame cannot be dragged so far that its castbar or its aura rows leave the
   screen, not just its own box
 - Pointing at a frame shows the unit's tooltip, the way pointing at the unit
