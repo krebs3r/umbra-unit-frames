@@ -99,3 +99,10 @@ foreach ($toc in Get-ChildItem -Path $target -Filter '*.toc') {
 
 Write-Host "Installed to $target as $version"
 Write-Host "Restart the client fully: a newly added addon folder is only read at launch."
+
+# robocopy answers 1 for "files were copied" and git diff --quiet answers 1 for
+# "the tree is dirty". Both are ordinary outcomes here, and both leave
+# $LASTEXITCODE behind as this script's own exit code, which made a successful
+# run look like a failed one. Anything that genuinely went wrong has thrown by
+# this point.
+exit 0
