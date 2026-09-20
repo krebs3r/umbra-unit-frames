@@ -54,6 +54,8 @@ First buildable version. Player and target frames, no configuration yet.
 - A `/uuf` command that runs into an error says so instead of breaking the
   chat frame it was typed into
 - The check report can be opened from a key binding as well as from chat
+- The report window is built from the game's own panel templates, so it
+  looks like the rest of the interface
 - `/uuf check` opens a window instead of filling the chat frame, in plain
   text with a button that selects the whole report for copying. Closing it
   gives the keyboard back, so chat keeps working

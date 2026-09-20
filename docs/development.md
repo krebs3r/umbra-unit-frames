@@ -558,6 +558,16 @@ the case it is most wanted in. So `Bindings.xml` offers the report as a key
 binding as well — the client picks that file up from the addon folder without
 a TOC entry, and Blizzard key binding panel is worked with the mouse.
 
+**It wears the client's own furniture.** A panel that looks like the rest of
+the interface is one less thing to work out, so the border, the title bar, the
+close button, the sunken body, the scroll bar and the button all come from
+Blizzard's templates — `BasicFrameTemplateWithInset` and its neighbours. Each
+is asked for through `pcall` with something plain built here if it is missing,
+because a missing template throws rather than answering nil and Forever is
+missing parts of the Retail surface. The title is set through whichever of
+`SetTitle`, `TitleText` and `TitleContainer.TitleText` that client has, which
+are three names for one thing across versions.
+
 The frame carries no unit data — it is handed strings that were formatted
 before it existed — so the geometry rule has nothing to say about it, and its
 widgets may size themselves however they like. Both the close button and the

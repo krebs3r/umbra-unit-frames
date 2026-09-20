@@ -4,13 +4,21 @@ local Umbra = ns.Umbra
 local colors, media = Umbra.colors, Umbra.media
 
 --[[ A window for output that is too long to read in chat
-`/uuf check` grew past what a chat frame is for: thirty-odd lines pushed
-everything else out of view, and the answer has to be read line against line
-rather than as it scrolls past.
+`/uuf check` answers around thirty lines, and a chat frame is the wrong place
+to read them: everything else is pushed out of view, and the answers have to
+be held against each other rather than watched scrolling past.
 
-So the report gets a window of its own. It carries no unit data at all — it is
-built from strings that were already formatted — so the geometry rule has
-nothing to say about it and the widgets may size themselves however they like.
+It carries no unit data at all — it is handed strings that were formatted
+before it existed — so the geometry rule has nothing to say about it and its
+widgets may size themselves however they like.
+
+**It wears the client's own furniture.** A panel that looks like the rest of
+the interface is one less thing to work out, and Blizzard's templates bring
+the border, the title bar, the close button and the scroll bar for free. Every
+one of them is asked for through `pcall` with something plain built here if it
+is missing, the same care every other client-supplied thing in this addon
+gets: Forever is missing parts of the Retail surface, and a missing template
+throws rather than answering nil.
 
 **The text is plain.** Chat lines carry color escapes to be read at a glance;
 these are meant to be selected and pasted somewhere else, and an escape in
@@ -19,8 +27,7 @@ pasted text is noise. What decides a value is its word — `hidden`, `readable`,
 
 **There is no clipboard API.** No addon can put text on the system clipboard,
 so nothing here pretends to: the button selects the whole report and focuses
-it, and Ctrl+C is the part the game leaves to you. Saying so on the button is
-better than a button called Copy that silently does half of that.
+it, and Ctrl+C is the part the game leaves to you.
 --]]
 
 --[[ Reachable without typing
@@ -28,29 +35,45 @@ better than a button called Copy that silently does half of that.
 from the addon folder without a TOC entry. The names of the two entries in
 Blizzard's own key binding panel are globals it looks for by convention.
 
-This exists because of how the window first failed: it kept the keyboard when
-it was hidden, and chat then accepted nothing at all — including the `/reload`
-that would have loaded the repair. A diagnostic that can only be reached by
-typing is unreachable in exactly the case where typing has stopped working,
-and the key binding panel is worked with the mouse.
+This exists because of how the window first failed: an error in it took the
+chat frame's Enter handling down with it, and chat then accepted nothing at
+all — including the `/reload` that would have loaded the repair. A diagnostic
+that can only be reached by typing is unreachable in exactly the case where
+typing has stopped working, and the key binding panel is worked with the
+mouse.
 --]]
 _G.BINDING_HEADER_UMBRAUNITFRAMES = 'Umbra Unit Frames'
 _G.BINDING_NAME_UMBRAUNITFRAMES_CHECK = 'Open the check report'
 
-local WIDTH, HEIGHT = 620, 440
-local PADDING = 14
-local TITLE_HEIGHT = 26
+local WIDTH, HEIGHT = 620, 460
+local PADDING = 12
+local TITLE_HEIGHT = 24
 local FOOTER_HEIGHT = 30
 
 local window
 
---[[ Button(parent, text, width)
-A flat button in the palette, because the client's own templates are not
-guaranteed on every client this addon loads on.
+--[[ Templated(kind, parent, templates)
+The first of these templates the client will build, or nil.
+
+A missing template throws out of CreateFrame rather than answering nil, so
+each one is tried inside a pcall and the caller gets a plain answer.
 --]]
-local function Button(parent, text, width)
+local function Templated(kind, parent, templates)
+	for _, template in ipairs(templates) do
+		local ok, built = pcall(CreateFrame, kind, nil, parent, template)
+
+		if ok and built then
+			return built
+		end
+	end
+end
+
+--[[ PlainButton(parent, text, width)
+A button in Umbra's palette, for a client with no UIPanelButtonTemplate.
+--]]
+local function PlainButton(parent, text, width)
 	local button = CreateFrame('Button', nil, parent)
-	button:SetSize(width, 20)
+	button:SetSize(width, 22)
 
 	local background = button:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
@@ -62,22 +85,70 @@ local function Button(parent, text, width)
 	label:SetText(text)
 	label:SetTextColor(unpack(colors.text))
 
-	button:SetScript('OnEnter', function()
-		label:SetTextColor(unpack(colors.accent))
-	end)
+	button:SetScript('OnEnter', function() label:SetTextColor(unpack(colors.accent)) end)
+	button:SetScript('OnLeave', function() label:SetTextColor(unpack(colors.text)) end)
 
-	button:SetScript('OnLeave', function()
-		label:SetTextColor(unpack(colors.text))
-	end)
+	button.UmbraLabel = label
 
 	return button
 end
 
+--[[ Title(frame, text)
+Whichever title the template gave us, named differently across versions.
+
+`SetTitle` is the modern one, `TitleText` the older one, and
+`TitleContainer.TitleText` the one in between. A frame built without a
+template has none of them and carries ours instead.
+--]]
+local function Title(frame, text)
+	if frame.SetTitle and pcall(frame.SetTitle, frame, text) then return end
+
+	local fontString = frame.TitleText
+		or (frame.TitleContainer and frame.TitleContainer.TitleText)
+		or frame.UmbraTitle
+
+	if fontString then
+		fontString:SetText(text)
+	end
+end
+
 local function Build()
-	local frame = CreateFrame('Frame', 'UmbraReportFrame', UIParent)
+	-- BasicFrameTemplate brings the border, the title bar and the close
+	-- button. The inset variant also brings a sunken body, which is the
+	-- ordinary look for a panel that holds text.
+	local frame = Templated('Frame', UIParent,
+		{'BasicFrameTemplateWithInset', 'BasicFrameTemplate'})
+
+	local native = frame ~= nil
+
+	if not frame then
+		frame = CreateFrame('Frame', nil, UIParent)
+
+		local border = frame:CreateTexture(nil, 'BACKGROUND')
+		border:SetAllPoints()
+		border:SetColorTexture(unpack(colors.border))
+
+		local background = frame:CreateTexture(nil, 'BACKGROUND', nil, 1)
+		background:SetPoint('TOPLEFT', frame, 'TOPLEFT', 1, -1)
+		background:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -1, 1)
+		background:SetColorTexture(unpack(colors.background))
+
+		local title = frame:CreateFontString(nil, 'OVERLAY')
+		title:SetFont(media.font, 13)
+		title:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, -PADDING)
+		title:SetTextColor(unpack(colors.accent))
+		frame.UmbraTitle = title
+	end
+
+	-- The global name is set here rather than passed to CreateFrame, because
+	-- the templated path builds without one. Escape is told about the frame
+	-- by name, and that is the only reason it has one.
+	_G.UmbraReportFrame = frame
+
 	frame:SetSize(WIDTH, HEIGHT)
 	frame:SetPoint('CENTER')
 	frame:SetFrameStrata('DIALOG')
+	frame:SetToplevel(true)
 	frame:SetClampedToScreen(true)
 	frame:EnableMouse(true)
 	frame:SetMovable(true)
@@ -88,10 +159,7 @@ local function Build()
 	--[[ Giving the keyboard back
 	The select-all button focuses the edit box, and a focused edit box that is
 	then hidden keeps the keyboard: Enter goes on reaching a field nobody can
-	see, so chat stops accepting anything — including the command that would
-	have reloaded out of it.
-
-	Hiding therefore clears the focus, whichever way the window was closed.
+	see. Hiding therefore clears the focus, whichever way it was closed.
 	--]]
 	frame:SetScript('OnHide', function(self)
 		if self.Text then self.Text:ClearFocus() end
@@ -99,48 +167,44 @@ local function Build()
 
 	frame:Hide()
 
-	local border = frame:CreateTexture(nil, 'BACKGROUND')
-	border:SetAllPoints()
-	border:SetColorTexture(unpack(colors.border))
+	local close = frame.CloseButton
 
-	local background = frame:CreateTexture(nil, 'BACKGROUND', nil, 1)
-	background:SetPoint('TOPLEFT', frame, 'TOPLEFT', 1, -1)
-	background:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -1, 1)
-	background:SetColorTexture(unpack(colors.background))
-
-	local title = frame:CreateFontString(nil, 'OVERLAY')
-	title:SetFont(media.font, 13)
-	title:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, -PADDING)
-	title:SetTextColor(unpack(colors.accent))
-	frame.Title = title
-
-	-- The client's own close button where it exists, and a letter where it
-	-- does not. Forever is missing parts of the Retail surface, and a missing
-	-- template throws rather than answering nil.
-	local ok, close = pcall(CreateFrame, 'Button', nil, frame, 'UIPanelCloseButton')
-
-	if ok and close then
+	if not close then
+		close = Templated('Button', frame, {'UIPanelCloseButton'})
+			or PlainButton(frame, 'X', 22)
 		close:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 2, 2)
-	else
-		close = Button(frame, 'X', 20)
-		close:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', -PADDING, -PADDING + 4)
 	end
 
 	close:SetScript('OnClick', function() frame:Hide() end)
 
-	local top = -(PADDING + TITLE_HEIGHT)
-	local body = CreateFrame('Frame', nil, frame)
-	body:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, top)
-	body:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -PADDING, PADDING + FOOTER_HEIGHT)
+	-- The template's own sunken body where there is one, and a frame of our
+	-- own where there is not.
+	local body = frame.Inset
 
-	local bodyBorder = body:CreateTexture(nil, 'BACKGROUND')
-	bodyBorder:SetAllPoints()
-	bodyBorder:SetColorTexture(unpack(colors.border))
+	if body then
+		-- The template's inset reaches nearly to the bottom edge, and the
+		-- footer needs that strip back.
+		body:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -8, PADDING + FOOTER_HEIGHT)
+	else
+		local sunken = Templated('Frame', frame,
+			{'InsetFrameTemplate3', 'InsetFrameTemplate'})
 
-	local scrolled, scroll = pcall(CreateFrame, 'ScrollFrame', nil, body,
-		'UIPanelScrollFrameTemplate')
+		body = sunken or CreateFrame('Frame', nil, frame)
+		body:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, -(PADDING + TITLE_HEIGHT))
+		body:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -PADDING, PADDING + FOOTER_HEIGHT)
 
-	if not scrolled or not scroll then
+		-- Only where the client gave us nothing: a template brings its own
+		-- art, and a ground of ours would lie straight over it.
+		if not sunken then
+			local ground = body:CreateTexture(nil, 'BACKGROUND')
+			ground:SetAllPoints()
+			ground:SetColorTexture(unpack(colors.border))
+		end
+	end
+
+	local scroll = Templated('ScrollFrame', body, {'UIPanelScrollFrameTemplate'})
+
+	if not scroll then
 		scroll = CreateFrame('ScrollFrame', nil, body)
 
 		-- Without the template there is no scroll bar, so the wheel is the
@@ -151,12 +215,14 @@ local function Build()
 		end)
 	end
 
-	scroll:SetPoint('TOPLEFT', body, 'TOPLEFT', 6, -6)
-	scroll:SetPoint('BOTTOMRIGHT', body, 'BOTTOMRIGHT', -26, 6)
+	scroll:SetPoint('TOPLEFT', body, 'TOPLEFT', 8, -8)
+	scroll:SetPoint('BOTTOMRIGHT', body, 'BOTTOMRIGHT', -28, 8)
 
 	local edit = CreateFrame('EditBox', nil, scroll)
 	edit:SetMultiLine(true)
 	edit:SetAutoFocus(false)
+	edit:SetWidth(WIDTH - PADDING * 2 - 44)
+
 	--[[ An EditBox wants the third argument
 	`FontString:SetFont(file, height)` is happy with two, and every other
 	label in this addon is a FontString. An EditBox is not: it answers
@@ -169,7 +235,6 @@ local function Build()
 	end
 
 	edit:SetTextColor(unpack(colors.text))
-	edit:SetWidth(WIDTH - PADDING * 2 - 38)
 
 	-- Multiline, so Enter would otherwise type a newline into the report
 	-- while the person is trying to get back to chat. Both keys let go.
@@ -194,21 +259,30 @@ local function Build()
 	scroll:SetScrollChild(edit)
 	frame.Text = edit
 
-	local select = Button(frame, 'Select all  —  then Ctrl+C', 190)
-	select:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -PADDING, PADDING)
-	select:SetScript('OnClick', function()
+	local copy = Templated('Button', frame, {'UIPanelButtonTemplate'})
+		or PlainButton(frame, 'Select all, then Ctrl+C', 200)
+
+	copy:SetSize(200, 22)
+	copy:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -PADDING, PADDING)
+
+	if copy.SetText then
+		copy:SetText('Select all, then Ctrl+C')
+	end
+
+	copy:SetScript('OnClick', function()
 		edit:SetFocus()
 		edit:HighlightText()
 	end)
 
-	local hint = frame:CreateFontString(nil, 'OVERLAY')
-	hint:SetFont(media.font, 11)
-	hint:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', PADDING, PADDING + 4)
-	hint:SetTextColor(unpack(colors.muted))
-	hint:SetText('Escape closes this. The game allows no addon to reach the clipboard.')
+	local hint = frame:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmall')
+	hint:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', PADDING + 4, PADDING + 6)
+	hint:SetText('Escape closes this. No addon may reach the clipboard.')
 
-	-- Escape has to be told about the frame by name, which is the one reason
-	-- this frame has a global one.
+	if not native then
+		hint:SetTextColor(unpack(colors.muted))
+	end
+
+	-- Escape has to be told about the frame by name.
 	if type(_G.UISpecialFrames) == 'table' then
 		tinsert(UISpecialFrames, 'UmbraReportFrame')
 	end
@@ -250,7 +324,7 @@ function Umbra:ShowReport(title, lines)
 
 	window.report = table.concat(lines, '\n')
 
-	window.Title:SetText(title)
+	Title(window, title)
 	window.Text:SetText(window.report)
 	window.Text:SetCursorPosition(0)
 	window.Text:ClearFocus()

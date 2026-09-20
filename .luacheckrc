@@ -56,7 +56,7 @@ read_globals = {
 	'GameTooltip', 'GameTooltip_SetDefaultAnchor',
 
 	-- The report window
-	'ChatFontNormal', 'UISpecialFrames', 'tinsert',
+	'ChatFontNormal', 'UISpecialFrames', 'tinsert', 'UmbraReportFrame',
 
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
