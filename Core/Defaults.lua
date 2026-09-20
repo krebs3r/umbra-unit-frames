@@ -90,14 +90,17 @@ Umbra.metrics = {
 	castbarHeight = 14,
 	valueWidth = 40,
 
-	-- An icon small enough that a row of them stays under the frame width,
-	-- and a line thick enough to read as a color rather than as an edge.
-	-- Measured rather than chosen: at 22 the duration label filled the icon
-	-- edge to edge, and two neighbours read as one run of text. 26 leaves the
-	-- label room to be legible and still fits seven to a row at this width.
+	-- A line thick enough to read as a color rather than as an edge, and an
+	-- icon measured rather than chosen: at 22 the duration label filled it
+	-- edge to edge and two neighbours read as one run of text. 26 leaves the
+	-- label room to be legible.
 	auraSize = 26,
 	auraSpacing = 2,
 	auraUnderline = 2,
+
+	-- How many icons a row holds, and with that how wide every frame is —
+	-- see `width` below.
+	auraPerRow = 8,
 
 	-- The client's own countdown font is sized for Blizzard's icons and runs
 	-- off both sides of ours, so Umbra brings its own.
@@ -113,30 +116,50 @@ Umbra.metrics = {
 	barGloss = 0.12,
 }
 
--- Width is set by the longest thing a frame has to show, which is an NPC name
--- rather than a player name. Much past this the frame reads as a bar with a
--- lot of empty space in it.
+--[[ The aura row sets the frame width, not the other way round
+Width used to be a number chosen for the longest thing a frame shows, which is
+an NPC name; the aura row was then cut to fit inside it and never came out
+even. Measured on 20 September 2026 at a frame width of 210: the block was
+flush on the left and 16 units short on the right, every row, both frames.
+
+So the chain now runs the other way. The duration label has to fit inside the
+icon, which settles the icon at 26; a row of them is what a frame is for; and
+the width is whatever that row comes to. Nothing is left over on either side,
+and the name column gains the difference.
+--]]
+do
+	local m = Umbra.metrics
+
+	m.width = m.auraPerRow * m.auraSize + (m.auraPerRow - 1) * m.auraSpacing
+end
+
+-- Every frame takes that width, so the rows under them line up with each
+-- other as well as with their own edges.
 Umbra.frames = {
 	player = {
-		width = 210,
 		castbar = true,
 		classPower = true,
 		powerValue = true,
+		-- The pet frame hangs off this one, so it takes a place in the stack
+		-- on whichever side the set puts it. No other frame has one under it.
+		ownsPet = true,
 		-- What you are carrying is worth more rows than what is on you.
-		-- Both are whole rows of seven, so no row is half empty.
-		auras = {helpful = 14, harmful = 7},
+		-- Both are whole rows, so no row is half empty.
+		auras = {helpful = 16, harmful = 8},
 	},
 	target = {
-		width = 210,
 		castbar = true,
+		-- How much the other side has left to spend with is worth the same
+		-- number the player reads about itself. It costs the name the width
+		-- of the column, which is why no other frame carries one.
+		powerValue = true,
 		-- The other way round: what you have put on the target is the reason
 		-- to look at it.
-		auras = {helpful = 7, harmful = 14},
+		auras = {helpful = 8, harmful = 16},
 	},
-	-- Same width as the player frame so the two line up, but shorter: a pet
-	-- is something you glance at, not something you read.
+	-- The shared width, so the two line up, but shorter: a pet is something
+	-- you glance at, not something you read.
 	pet = {
-		width = 210,
 		nameHeight = 11,
 		healthHeight = 14,
 		portrait = 28,
@@ -163,14 +186,34 @@ end
 --[[ Umbra:CastbarReach(config)
 How far the castbar hangs below the frame, gap included. Zero without one.
 
-Both the aura code and FrameExtent need this number, and they have to agree on
-it: one hangs a row under the castbar, the other measures how far the whole
-frame reaches.
+It is where the stack under a frame starts, so the aura rows, the pet frame
+and the reach of the whole side all count from it and cannot disagree.
 --]]
 function Umbra:CastbarReach(config)
 	if not config.castbar then return 0 end
 
 	return config.gap + config.castbarHeight
+end
+
+--[[ Umbra:AuraPerRow(config) / Umbra:AuraButtonHeight(config)
+How many icons fit across this frame, and how tall one of them is.
+
+This still counts rather than answering `auraPerRow`, because a frame may
+override its width and then the row has to follow. At the shared width the
+two agree exactly, by construction: the last icon needs no spacing after it,
+so one spacing's worth is added before the division.
+
+A button is a square icon with the line underneath it, which is why the
+element is given a width and a height rather than a size.
+--]]
+function Umbra:AuraPerRow(config)
+	local step = config.auraSize + config.auraSpacing
+
+	return math.max(1, math.floor((config.width + config.auraSpacing) / step))
+end
+
+function Umbra:AuraButtonHeight(config)
+	return config.auraSize + config.gap + config.auraUnderline
 end
 
 --[[ Umbra:AuraBlockHeight(config, count)
@@ -181,12 +224,9 @@ height that holds every icon the group may create; one sized for a single row
 would clip the second.
 --]]
 function Umbra:AuraBlockHeight(config, count)
-	local step = config.auraSize + config.auraSpacing
-	local perRow = math.max(1, math.floor((config.width + config.auraSpacing) / step))
-	local rows = math.ceil(count / perRow)
-	local buttonHeight = config.auraSize + config.gap + config.auraUnderline
+	local rows = math.ceil(count / self:AuraPerRow(config))
 
-	return rows * (buttonHeight + config.auraSpacing) - config.auraSpacing
+	return rows * (self:AuraButtonHeight(config) + config.auraSpacing) - config.auraSpacing
 end
 
 --[[ Layout sets
@@ -197,25 +237,26 @@ where the frames sit on the screen, which side of a frame each aura row hangs
 on, and whether the pet sits above the player or below it. The pet can only go
 above when nothing else is up there, so the aura rows have to move with it.
 
-`above` and `below` are ordered outwards from the frame: the first entry is
-the one nearest to it.
+`above` and `below` are the stack on each side, ordered outwards from the
+frame: the first entry is the one nearest to it. The pet takes its place in
+that stack the way an aura row does, so that everything on that side is
+counted the same way and nothing can land on top of it.
 --]]
 Umbra.layouts = {
 	-- Top left, where the player frame lived before Dragonflight moved it.
 	-- The pet is the topmost thing in the stack, so both aura rows hang below.
 	classic = {
-		above = {},
+		above = {'pet'},
 		below = {'helpful', 'harmful'},
-		petAbove = true,
 	},
 
 	-- Lower third and centered, the arrangement Dragonflight introduced.
-	-- Buffs go above the frame, which leaves the space under it for the
-	-- castbar, the debuffs and the pet.
+	-- Buffs go above the frame. Under it the pet comes first, close enough to
+	-- the player to read as belonging to it, and the debuffs hang below the
+	-- pet.
 	modern = {
 		above = {'helpful'},
-		below = {'harmful'},
-		petAbove = false,
+		below = {'pet', 'harmful'},
 	},
 }
 
@@ -239,33 +280,53 @@ function Umbra:ActiveLayout()
 	return self.layouts[self:LayoutName()]
 end
 
---[[ Umbra:FrameExtent(config, layout)
-How far a frame reaches past its own box, above it and below it.
-
-A frame is not only the box `FrameHeight` answers for: a castbar hangs below
-it, and each aura row the set puts on a side adds to that side. Anything
-placed next to the frame has to clear the whole reach.
+--[[ Umbra:StackHeight(config, entry)
+How tall one entry of a stack is on this frame, or nil when this frame has no
+such thing: a target frame has no pet under it, and a pet frame carries no
+aura rows.
 --]]
-function Umbra:FrameExtent(config, layout)
-	local above, below = 0, self:CastbarReach(config)
+function Umbra:StackHeight(config, entry)
+	if entry == 'pet' then
+		if not config.ownsPet then return end
 
-	if not config.auras then
-		return above, below
+		return self:FrameHeight(self.frames.pet)
 	end
 
-	for _, filter in ipairs(layout.above) do
-		if config.auras[filter] then
-			above = above + config.gap + self:AuraBlockHeight(config, config.auras[filter])
+	local count = config.auras and config.auras[entry]
+
+	return count and self:AuraBlockHeight(config, count)
+end
+
+--[[ Umbra:StackOffset(config, layout, side, entry)
+How far past the frame's own edge the named entry begins, the gap before it
+included, and nil when this side's stack does not hold it. Named nothing, it
+answers how far the whole side reaches instead — the castbar included, since
+that hangs below the box as well.
+
+Everything on a side asks this rather than adding the heights up for itself,
+which is what keeps the pet frame and the row beside it from drifting apart:
+one count changing moves both. Writing either of them down as a number is how
+the pet once ended up underneath a row of debuffs.
+--]]
+function Umbra:StackOffset(config, layout, side, entry)
+	local offset = side == 'below' and self:CastbarReach(config) or 0
+
+	for _, name in ipairs(layout[side]) do
+		if name == entry then
+			return offset + config.gap
+		end
+
+		local height = self:StackHeight(config, name)
+
+		if height then
+			offset = offset + config.gap + height
 		end
 	end
 
-	for _, filter in ipairs(layout.below) do
-		if config.auras[filter] then
-			below = below + config.gap + self:AuraBlockHeight(config, config.auras[filter])
-		end
-	end
+	-- Asked for something this side does not hold, there is nothing to say.
+	if entry then return end
 
-	return above, below
+	return offset
 end
 
 --[[ Where each set puts its frames
@@ -281,7 +342,6 @@ So each set does its own arithmetic rather than sharing one formula that would
 have to know which corner it is in.
 --]]
 do
-	local gap = Umbra.metrics.gap
 	local player, pet = Umbra.frames.player, Umbra.frames.pet
 	local petHeight = Umbra:FrameHeight(pet)
 
@@ -289,9 +349,9 @@ do
 		local set = Umbra.layouts.classic
 		local inset = 16
 
-		-- The pet is placed first because it is the top of the stack, and the
-		-- player starts a whole pet frame below it.
-		local playerY = -(inset + petHeight + gap)
+		-- The pet is the top of the stack and sits at the inset, so the
+		-- player starts a whole pet frame below that.
+		local playerY = -(inset + Umbra:StackOffset(player, set, 'above', 'pet') + petHeight)
 
 		-- Both frames carry two rows of auras underneath, so the gap between
 		-- them has to read as a gap and not as a seam between two blocks.
@@ -308,14 +368,15 @@ do
 		local set = Umbra.layouts.modern
 		local baseline, spread = 260, 250
 
-		-- The pet is below, so it has to clear everything the player reaches
-		-- down into, and then stand its own height further down again.
-		local _, reach = Umbra:FrameExtent(player, set)
+		-- The pet is the first thing under the player, so it clears the
+		-- castbar and nothing else. The debuff row underneath it is what
+		-- moves when the pet changes height, and asks the same stack.
+		local petY = baseline - Umbra:StackOffset(player, set, 'below', 'pet') - petHeight
 
 		set.points = {
 			player = {'BOTTOM', UIParent, 'BOTTOM', -spread, baseline},
 			target = {'BOTTOM', UIParent, 'BOTTOM', spread, baseline},
-			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, baseline - reach - gap - petHeight},
+			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, petY},
 		}
 	end
 end

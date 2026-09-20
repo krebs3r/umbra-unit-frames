@@ -3,7 +3,8 @@ local Umbra = ns.Umbra
 
 --[[ Blizzard's own aura display
 Once Umbra puts buffs and debuffs on the unit frames, the stack in the top
-right corner says the same thing a second time. `/uuf blizzard` turns it off.
+right corner says the same thing a second time. `/uuf auras umbra` puts it
+away, `/uuf auras both` brings it back.
 
 The frames are neither hidden nor unregistered. `Hide` is undone by the next
 thing that shows them, and `UnregisterAllEvents` cannot be undone at all.

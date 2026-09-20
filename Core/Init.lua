@@ -19,7 +19,49 @@ Umbra.isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 Umbra.isForever = Umbra.isMainline and interface >= 16000 and interface < 17000
 Umbra.isRetail = Umbra.isMainline and interface >= 100000
 
-local PREFIX = '|cff75dcc4Umbra|r '
+local ACCENT = '|cff75dcc4'
+local PREFIX = ACCENT .. 'Umbra|r '
+
+--[[ Value(name) / Values(names)
+A word the reader is meant to type back, in the accent color.
+
+Only the words themselves: the `or` between two of them is prose and stays
+prose, which is what keeps three accented runs on one line from reading as one
+long name.
+--]]
+local function Value(name)
+	return ACCENT .. name .. '|r'
+end
+
+local function Values(names)
+	local out = {}
+
+	for index, name in ipairs(names) do
+		out[index] = Value(name)
+	end
+
+	return table.concat(out, ' or ')
+end
+
+--[[ COMMANDS
+What `/uuf` on its own prints, one to a line: the command, the values it takes
+if it takes any, and what it does.
+
+A run of names separated by dots says what exists and nothing about what any
+of it does, which is no help to the one person who needs the list: someone who
+has forgotten. The values stay a list rather than a sentence, so that the
+printing decides what is colored and the table only says what is true.
+--]]
+local COMMANDS = {
+	{'layout', {'classic', 'modern'}, 'the whole arrangement'},
+	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
+	{'unlock', nil, 'drag the frames where you want them'},
+	{'lock', nil, 'put them back to work'},
+	{'reset', nil, "forget this set's dragged positions"},
+	{'test', nil, 'fill every aura slot with stand-ins'},
+	{'check', nil, 'which unit values this client hides'},
+	{'debug', nil, 'report what the build refused'},
+}
 
 --[[ Umbra:RegisterEvent(frame, event)
 Registers an event, reporting failure instead of aborting the file.
@@ -35,6 +77,14 @@ function Umbra:RegisterEvent(frame, event)
 	return ok
 end
 
+--[[ Umbra:Debug(...)
+Prints only when debugging is on, which it survives a reload to be.
+
+Most of what there is to report is refused while the frames are being built,
+at PLAYER_LOGIN — before anyone can type the command that turns this on. A
+switch that did not outlive the reload could therefore never show the one
+thing it exists for.
+--]]
 function Umbra:Debug(...)
 	if not self.debug then return end
 	print(PREFIX, ...)
@@ -55,6 +105,10 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 	if UmbraUnitFramesDB.hideBlizzardAuras == nil then
 		UmbraUnitFramesDB.hideBlizzardAuras = false
 	end
+
+	-- ADDON_LOADED runs before the frames are built, which is the only place
+	-- this can be picked up in time to report on that build.
+	Umbra.debug = UmbraUnitFramesDB.debug or false
 end)
 
 SLASH_UMBRAUNITFRAMES1 = '/uuf'
@@ -63,7 +117,8 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 
 	if input == 'unlock' then
 		if Umbra:SetLocked(false) then
-			print(PREFIX .. 'frames unlocked, drag them where you want them. /uuf lock when done.')
+			print(PREFIX .. 'frames unlocked, drag them where you want them. '
+				.. Value('/uuf lock') .. ' when done.')
 		else
 			print(PREFIX .. 'frames cannot be moved in combat.')
 		end
@@ -120,30 +175,67 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		local name = input:match('^layout%s+(%S+)$')
 
 		if not name then
-			print(PREFIX .. 'layout: ' .. Umbra:LayoutName())
-			print(PREFIX .. 'classic — top left, pet above the player')
-			print(PREFIX .. 'modern — lower third, buffs above the frame')
+			print(PREFIX .. 'layout: ' .. Value(Umbra:LayoutName()))
+			print(PREFIX .. Value('classic') .. ' — top left, pet above the player')
+			print(PREFIX .. Value('modern')
+				.. ' — lower third, buffs above, pet under the castbar')
 		elseif not Umbra.layouts[name] then
 			print(PREFIX .. 'no such layout: ' .. name)
 		else
 			UmbraUnitFramesDB.layout = name
 			Umbra:ApplyLayout()
-			print(PREFIX .. 'layout: ' .. name)
+			print(PREFIX .. 'layout: ' .. Value(name))
 		end
-	elseif input == 'blizzard' then
-		local hide = not UmbraUnitFramesDB.hideBlizzardAuras
-		UmbraUnitFramesDB.hideBlizzardAuras = hide
+	elseif input == 'test' then
+		local show = not Umbra:PreviewShown()
 
-		Umbra:SetBlizzardAuras(not hide)
-		print(PREFIX .. (hide
-			and "Blizzard's buff and debuff frames hidden."
-			or "Blizzard's buff and debuff frames restored."))
+		if Umbra:SetPreview(show) > 0 then
+			print(PREFIX .. (show
+				and 'every aura slot filled with stand-ins. ' .. Value('/uuf test') .. ' to stop.'
+				or 'stand-ins off.'))
+		else
+			print(PREFIX .. 'nothing to fill — this client refused the aura containers.')
+		end
+	elseif input:find('^auras') then
+		-- Named states rather than a toggle, because a toggle answers the
+		-- question you did not ask: you wanted one of the two, and have to
+		-- read the reply to find out which one you got.
+		local which = input:match('^auras%s+(%S+)$')
+		local current = UmbraUnitFramesDB.hideBlizzardAuras and 'umbra' or 'both'
+
+		if not which then
+			print(PREFIX .. 'auras: ' .. Value(current))
+			print(PREFIX .. Value('umbra') .. ' — only Umbra shows them')
+			print(PREFIX .. Value('both') .. " — the game keeps its own display as well")
+		elseif which ~= 'umbra' and which ~= 'both' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			local hide = which == 'umbra'
+
+			UmbraUnitFramesDB.hideBlizzardAuras = hide
+			Umbra:SetBlizzardAuras(not hide)
+			print(PREFIX .. 'auras: ' .. Value(which))
+		end
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
-		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off'))
+		UmbraUnitFramesDB.debug = Umbra.debug
+
+		print(PREFIX .. 'debug ' .. (Umbra.debug and 'on' or 'off')
+			.. (Umbra.debug
+				and ' — ' .. Value('/reload') .. ' to see what the build refuses.'
+				or ''))
 	else
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
-		print(PREFIX .. 'layout · unlock · lock · reset · blizzard · check · debug')
+
+		for _, entry in ipairs(COMMANDS) do
+			local line = '  ' .. Value('/uuf ' .. entry[1])
+
+			if entry[2] then
+				line = line .. ' ' .. Values(entry[2])
+			end
+
+			print(line .. ' — ' .. entry[3])
+		end
 	end
 end

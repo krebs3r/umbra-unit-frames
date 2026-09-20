@@ -25,3 +25,4 @@ Layouts\Tags.lua
 Layouts\Auras.lua
 Layouts\Shared.lua
 Layouts\Single.lua
+Layouts\Preview.lua

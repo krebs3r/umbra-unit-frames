@@ -44,9 +44,10 @@ range shown through fading.
 | :--- | :--- |
 | `layout classic` · `layout modern` | switch the whole arrangement |
 | `unlock` · `lock` · `reset` | move frames, per layout set |
-| `blizzard` | hide or restore Blizzard's buff and debuff frames |
+| `test` | fill every aura slot with stand-ins |
+| `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `check` | which unit values this client hides |
-| `debug` | print what was refused while building |
+| `debug` | print what was refused while building; saved across reloads |
 
 ---
 
@@ -125,6 +126,12 @@ for the number to agree with: measured on a mana bar, the hairline rendered at
 `PowerBarColor` holds for mana. At four pixels tall the texture is not visible
 anyway, so the atlas is off and the bar takes the color.
 
+The target carries the same percentage, for the same reason: how much the
+other side has left to spend with is worth as much as reading it about
+yourself. It is not free — the number takes `valueWidth` plus a gap out of the
+name column, and the frame width was chosen for the length of an NPC name in
+the first place.
+
 `Umbra.power` then restates the entries where Umbra disagrees with the client,
 by calling `SetRGB` on oUF's existing color object rather than replacing it:
 `colors.power.MANA` and `colors.power[Enum.PowerType.Mana]` are the same
@@ -143,9 +150,9 @@ above when nothing else is up there, so the aura rows move with it.
 | | classic | modern |
 | :--- | :--- | :--- |
 | Anchored | top left | lower third, centered |
-| Pet | above the player | below everything |
+| Pet | above the player | below the castbar |
 | Buffs | below, nearest the frame | above the frame |
-| Debuffs | below, outside the buffs | below the castbar |
+| Debuffs | below, outside the buffs | below the pet |
 
 Two things follow from having sets at all:
 
@@ -165,8 +172,8 @@ to be `Umbra.layout`, which would have read as the singular of the other.
 ### Frames reach past their own box
 
 A frame is not the box `FrameHeight` answers for. A castbar hangs below it and
-both aura rows hang below that, so anything placed underneath has to clear all
-of it. `Umbra:FrameExtent` answers for that distance, per set.
+the aura rows hang below that, so anything placed underneath has to clear all
+of it.
 
 Writing the offset down as a number is what went wrong first: the pet frame's
 default position was correct until a debuff row appeared under the player's
@@ -174,16 +181,31 @@ castbar and landed on top of it, overlapping by 24 units. Deriving it fixed the
 collision, but the pet then kept being pushed further down as the rows below
 the player grew.
 
+**Each side of a frame is one stack, and the pet is an entry in it.** A set's
+`above` and `below` lists name what hangs there, ordered outwards from the
+frame, and `'pet'` stands in them next to `'helpful'` and `'harmful'`.
+`Umbra:StackOffset` walks a list and answers where any one entry begins, or —
+asked for nothing in particular — how far the whole side reaches. So the pet
+frame's default position and the offset of the row beside it are the same
+answer to the same question, and neither can be written down separately from
+the other.
+
+Only the player frame carries a `'pet'` entry, through `ownsPet`; on the
+target frame the same list costs nothing, because `Umbra:StackHeight` answers
+nil for anything that frame does not have.
+
 In `classic` **nothing is placed above a frame** and the pet sits there
 instead, the way ShadowedUnitFrames arranges it: above the box there is no
 castbar and no aura row to clear, so adding a row below the player does not
-move the pet at all. In `modern` the buffs take that space and the pet goes to
-the bottom, where it is furthest from the frame and moves whenever a row below
-grows.
+move the pet at all. In `modern` the buffs take that space, and below the
+frame the pet comes first, with the debuffs under it — so the pet stays near
+the player it belongs to, and the debuff row is what gets pushed down when the
+pet changes height.
 
-Stacking two rows on one side is safe either way, because the block heights are
-reserved from the aura counts rather than from what the unit happens to have
-on it, so the outer row can take a fixed offset from the inner one.
+Stacking several things on one side is safe either way, because the block
+heights are reserved from the aura counts rather than from what the unit
+happens to have on it, so each entry can take a fixed offset from the ones
+before it.
 
 The two sets measure from different corners, and a point names a different
 edge in each: `TOPLEFT` fixes a frame's top edge and everything below counts
@@ -248,8 +270,27 @@ The row cannot overflow the space reserved for it, because `maxFrameCount` and
 `AuraBlockHeight` are handed the same count: more auras than that are not
 created rather than wrapping into a row nothing made room for. Raising the
 count raises the reserved block, and everything under it moves down with it.
-The measured packing matches the computed one — 8 icons per row at a frame
-width of 210 — but that has only been checked at this one width.
+The measured packing matches the computed one — 8 icons per row at the shared
+frame width — and `Umbra:AuraPerRow` is the one place that answers it. This
+paragraph claimed 8 at a width of 210 for a while, left over from when the
+icon was 22 wide, while two others correctly said 7; the width now follows the
+row rather than the row the width, so both are 8 again and by construction.
+
+**A full row can be looked at without waiting for one.** `/uuf test` fills
+every reserved slot with stand-ins, which is the only way to see the case the
+arrangement has to survive — every slot taken, on both frames, in both sets.
+`Layouts/Preview.lua` re-cuts them through `Umbra.AuraButtonLook`, the same
+function that re-cuts a real button, and packs them with `Umbra:AuraPerRow`,
+the same arithmetic that reserves the block. So a real row that disagrees with
+the preview is a finding about that arithmetic rather than about the preview.
+
+What the stand-ins do not speak for: the icon is a question mark, the
+durations are stand-in strings that say nothing about what the client would
+print, and the client packs the real rows itself. Their dispel colors are not
+invented — they cycle through `oUF.colors.dispel`, which is the very table
+handed to `AddDispelTypeTexture`, so the colors are the ones a dispellable
+aura really gets and can be compared out in the open world where the real ones
+cannot be read.
 
 The cooldown frame draws **its own** countdown text, centered, in a font sized
 for Blizzard's icons, so on a small one it overhangs both edges.
@@ -266,9 +307,17 @@ border that was not. The backdrop now fills the button and the spell art is
 inset by one, which keeps the border and leaves the block's edge on the
 frame's edge.
 
-The right edge does not line up and cannot: seven icons of 26 with 2 between
-them come to 194 against a frame width of 210. The row is left-aligned, so the
-slack is all on the right.
+**The right edge lines up too, since the width follows the row.** It did not
+before: at a frame width of 210 the row came to 194 and, being left-aligned,
+left all 16 of the difference on the right. That was measured on 20 September
+2026 off a screenshot at a UI scale of 1.4048 — the block ran x 7..279 against
+frame edges at 6.8 and 301.8, so flush on the left and 21.8 pixels short on
+the right, which is those 16 units exactly, on both frames.
+
+Rather than shrink the icon back towards the size the duration label already
+refused, the frame took the width of the row: `8 · 26 + 7 · 2 = 222`. The name
+column gained the 12 units, the reserved block heights did not move, and the
+aura counts became whole rows of eight.
 
 `Label` clears the anchor oUF already set before placing the label. A second
 point on a font string stretches it rather than moving it, which is what made
@@ -278,8 +327,8 @@ the duration look left-aligned when it was in fact centered.
 the label measured 39 pixels wide against a 42 pixel icon, filling it edge to
 edge, and two neighbouring labels read as one run of text. Both numbers came
 off a screenshot; the label was centered to within half a pixel, so the fix was
-width, not position. 26 with an 11 point font leaves margin, and still fits
-seven icons to a row at a frame width of 210.
+width, not position. 26 with an 11 point font leaves margin, and eight of
+them are what the frame width is now cut from.
 
 That was enough on its own: measured again at 26, the label is 31 pixels on a
 36 pixel icon, centered to within half a pixel.
@@ -332,7 +381,7 @@ quietly rather than erroring, which is why none of them announced itself.
    the right side of the frame but fills the wrong way, those calls do not
    take after creation, and the containers have to be rebuilt on a switch
    instead of turned.
-3. **`/uuf blizzard`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
+3. **`/uuf auras both`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
    back, and whether those two names survived the 12.0 rework. `/uuf debug`
    reports a name it cannot find.
 4. **Power colors without the atlas.** Rage, energy and focus now take their
@@ -353,7 +402,7 @@ matters most.
 ### Blizzard's own aura display
 
 `Core/Blizzard.lua` parents `BuffFrame` and `DebuffFrame` to a frame that is
-never shown, behind `/uuf blizzard`. Not `Hide`, which the next thing that
+never shown, behind `/uuf auras`. Not `Hide`, which the next thing that
 shows them undoes, and not `UnregisterAllEvents`, which cannot be undone at
 all. Reparenting leaves their logic running and is reversible.
 
@@ -367,11 +416,6 @@ Ace3 is not embedded yet. Positions live in a small hand-rolled store in
 When that moves to AceDB and AceConfig, the design studio's profile schema
 (`schemaVersion: 2`) should become the import format. The studio still offers
 `classic|retail` and needs updating to the three real clients first.
-
-The aura rows do not fill the frame width: seven icons of 26 with 2 between
-them come to 194 against 210, and the row is left-aligned so the slack sits on
-the right. Sizes that divide evenly would close it, at the cost of an icon
-size nobody picked for its own sake.
 
 ### Forever
 

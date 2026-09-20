@@ -116,6 +116,10 @@ function Umbra:ApplyLayout()
 			self:AnchorAuras(frame, frame.umbraConfig)
 		end
 	end
+
+	-- A row that changed sides now fills from the other corner, and the
+	-- stand-ins are packed by hand rather than by the container.
+	self:PlacePreview()
 end
 
 --[[ Umbra:SetLocked(locked)

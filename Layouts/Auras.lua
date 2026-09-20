@@ -64,6 +64,7 @@ the metrics come off the element, where they do not travel on to the client.
 --]]
 local function PostCreateButton(element, button)
 	local l = element.umbra
+	if not l then return end
 	local icon = button.Icon
 
 	-- The border grows inwards, not outwards. Hung outside the button it put
@@ -150,7 +151,7 @@ force can change while the game is running and a container has to follow that
 without being rebuilt.
 --]]
 local function Spawn(frame, config, filter, count, harmful, cancel)
-	local buttonHeight = config.auraSize + config.gap + config.auraUnderline
+	local buttonHeight = Umbra:AuraButtonHeight(config)
 
 	-- Core/Defaults.lua owns this, because the frame positions are derived
 	-- from the same number and the two must not drift apart.
@@ -220,12 +221,14 @@ end
 Hangs the frame's aura rows where the set in force wants them.
 
 Creates nothing, so a set switch can run it again on frames that already
-exist. Rows are walked outwards from the frame, each one offset by the height
-of the ones before it.
+exist. Each row asks the stack where it begins rather than counting what came
+before it, which is the same answer the pet frame gets for its own place in
+that stack — so a row and the frame beside it cannot land on each other.
 
-That fixed offset is safe because the block heights are reserved from the aura
-counts rather than from what the unit happens to be carrying: a frame with no
-buffs keeps the row empty instead of letting the debuffs slide up into it.
+A fixed offset is safe at all because the block heights are reserved from the
+aura counts rather than from what the unit happens to be carrying: a frame
+with no buffs keeps the row empty instead of letting the debuffs slide up into
+it.
 --]]
 function Umbra:AnchorAuras(frame, config)
 	local containers = frame.UmbraAuras
@@ -233,35 +236,35 @@ function Umbra:AnchorAuras(frame, config)
 
 	local layout = self:ActiveLayout()
 
-	local above = config.gap
-
 	for _, filter in ipairs(layout.above) do
 		local element = containers[filter]
 
 		if element then
 			element:ClearAllPoints()
-			element:SetPoint('BOTTOMLEFT', frame, 'TOPLEFT', 0, above)
+			element:SetPoint('BOTTOMLEFT', frame, 'TOPLEFT', 0,
+				self:StackOffset(config, layout, 'above', filter))
 			Grow(element, true)
-
-			above = above + self:AuraBlockHeight(config, config.auras[filter]) + config.gap
 		end
 	end
-
-	-- Below whatever the castbar takes up, which may be nothing.
-	local below = self:CastbarReach(config) + config.gap
 
 	for _, filter in ipairs(layout.below) do
 		local element = containers[filter]
 
 		if element then
 			element:ClearAllPoints()
-			element:SetPoint('TOPLEFT', frame, 'BOTTOMLEFT', 0, -below)
+			element:SetPoint('TOPLEFT', frame, 'BOTTOMLEFT', 0,
+				-self:StackOffset(config, layout, 'below', filter))
 			Grow(element, false)
-
-			below = below + self:AuraBlockHeight(config, config.auras[filter]) + config.gap
 		end
 	end
 end
+
+-- Layouts/Preview.lua re-cuts its stand-ins through this, so that what the
+-- preview shows is the real button geometry rather than a second copy of it
+-- that could drift. It hands over a stand-in element rather than a container,
+-- and a plain frame with no AddDispelTypeTexture, which is what stops at the
+-- return above: the client will not register a texture on one.
+Umbra.AuraButtonLook = PostCreateButton
 
 --[[ Umbra:AddAuras(frame, unit, config)
 One container per filter, then handed to AnchorAuras to be placed.
