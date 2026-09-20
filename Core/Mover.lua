@@ -135,9 +135,9 @@ function Umbra:SetLocked(locked)
 			frame.umbraOverlay:Hide()
 		else
 			frame:SetScript('OnDragStart', frame.StartMoving)
-			frame:SetScript('OnDragStop', function(self)
-				self:StopMovingOrSizing()
-				SavePosition(self)
+			frame:SetScript('OnDragStop', function(dragged)
+				dragged:StopMovingOrSizing()
+				SavePosition(dragged)
 			end)
 			frame.umbraOverlay:Show()
 		end

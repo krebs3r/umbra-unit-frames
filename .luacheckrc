@@ -4,6 +4,11 @@ max_line_length = 120
 exclude_files = {
 	'Libs/',
 	'.release/',
+
+	-- The lint workflow installs luarocks into the workspace, and `luacheck .`
+	-- walks straight into it: 244 warnings out of LuaRocks' own source, which
+	-- failed the run no matter what this project's files looked like.
+	'.luarocks/',
 }
 
 ignore = {
