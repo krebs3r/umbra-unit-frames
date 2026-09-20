@@ -1,8 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.1 — 20 September 2026
 
-First buildable version. Player and target frames, no configuration yet.
+First release, and a pre-release on purpose. Every single frame is built and
+five of the six design principles are implemented, verified in the client
+where it says so below. What is not here yet: any configuration beyond the
+slash commands, group and raid frames, and range fading with them.
+
+Built against Retail 12.1 and the WoW: Forever beta (interface 16001); the
+Forever package carries the deviations found on that client.
 
 - Player and target frames as an oUF layout: class color on a 3px edge, portrait
   in its own column, neutral health bar, power as a hairline, castbar
