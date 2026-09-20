@@ -51,6 +51,8 @@ First buildable version. Player and target frames, no configuration yet.
 - The portrait column is no longer empty for a target inside a dungeon: the
   client withholds a hostile unit's model there, so the game's own 2D
   portrait stands in until a real model can be had
+- `/uuf check` opens a window instead of filling the chat frame, in plain
+  text with a button that selects the whole report for copying
 - `/uuf check` reports what each frame's portrait was able to load, and
   whether the client hides either value oUF decides that on — for every
   frame, including ones with nothing behind them, so a missing line cannot be

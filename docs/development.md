@@ -50,7 +50,7 @@ settle.
 | `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame |
 | `test` | fill every aura slot with stand-ins, and the health bar's prediction |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
-| `check` | which unit values this client hides, and what the class-power row found |
+| `check` | opens a report window: which unit values this client hides, what the class-power row found, and what each portrait could load |
 | `debug` | print what was refused while building, including before it was on |
 
 `/uuf` closes with a line naming the author, which it reads from the TOC
@@ -495,6 +495,32 @@ cooldown and the count are pinned to the square at the top and the line sits in
 the strip below. Metrics reach that callback on the element rather than in the
 group options, because the options table goes on to the client and is typed.
 
+### Output that outgrew the chat frame
+
+`/uuf check` answers around thirty lines now, and a chat frame is the wrong
+place to read them: everything else is pushed out of view, and the answers
+have to be held against each other rather than watched scrolling past. It
+opens a window instead, `Core/Report.lua`.
+
+The text in it is **plain**. The colors existed to be glanced at in chat;
+these lines are meant to be selected and pasted somewhere else, and an escape
+code in a pasted report is noise. What decides a value is its word — `hidden`,
+`readable`, `nil` — never its color. The report also carries its own first
+line, naming the build and the client, because pasted anywhere else it has no
+other context.
+
+**No addon can reach the clipboard**, so the window does not pretend to. The
+button selects the whole report and focuses it, and Ctrl+C is the part the
+game leaves to the person; the button says so rather than being called Copy
+and doing half of that.
+
+The frame carries no unit data — it is handed strings that were formatted
+before it existed — so the geometry rule has nothing to say about it, and its
+widgets may size themselves however they like. Both the close button and the
+scroll frame are taken from the client's templates through `pcall`, with a
+plain one built here if the template is missing, which is the same care every
+other client-supplied thing in this addon gets.
+
 ### The client keeps a hostile unit's model to itself
 
 **Settled.** A target's 3D portrait is empty inside a dungeon and filled in the
@@ -506,13 +532,20 @@ portrait target: UnitIsConnected: readable — true
 portrait target: UnitIsVisible:   readable — true
 portrait target: ready:           readable — true
 portrait target: model:        readable — nil
-portrait target: display info: readable — 0
-portrait player: model:        readable — 878772
-portrait pet:    model:        readable — 1266661
+portrait player: model:           readable — 878772
+portrait pet:    model:           readable — 1266661
 ```
 
-`ready` true and `display info` 0 together are the whole answer: the client has
-no work left to do and has assigned no model. It is not late, it is withheld.
+`ready` true with no model is the answer: the client has no work left to do and
+has still assigned nothing. It is not late, it is withheld — which is why a
+retry could never have helped, whatever it had been gated on.
+
+**`display info` was not evidence, and this file claimed it was.** It reads 0
+on the target, and a later run showed it reads 0 on the player and on the pet
+as well, whose models load. It is simply not what `SetUnit` fills in. What
+carries the finding is `GetModelFileID` — a number on the two units that are
+yours, nil on the one that is not — together with the same kind of target
+having a model out in the open world.
 
 This **is** the restricted-value regime, and saying it was not — which these
 notes did, on the strength of two conditions coming back in the clear — was
@@ -532,6 +565,9 @@ keeping because each was reasonable and wrong:
   had measured, so the first attempt could not even have run. A gate on an
   unmeasured assumption in front of a measurement is the exact mistake this
   file exists to prevent, committed while chasing it.
+- **And `display info` proved nothing**, though it was read as proof for a
+  while. Two wrong readings off one run, both from taking a number for an
+  answer without first checking what it says on the cases that work.
 
 Nothing here can fix a client that declines, so the column stops being empty
 instead. `SetPortraitTexture` — Blizzard's own 2D portrait, asked for the same

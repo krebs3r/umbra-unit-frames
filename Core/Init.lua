@@ -198,6 +198,26 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		Umbra:ResetPositions()
 		print(PREFIX .. 'positions reset.')
 	elseif input == 'check' then
+		--[[ Collected rather than printed
+		This outgrew the chat frame: thirty-odd lines push everything else out
+		of view, and the answers have to be read against each other rather
+		than as they scroll past. So they go into a window, and go there as
+		plain text — the colors were there to be glanced at, and an escape
+		code in a pasted report is noise.
+		--]]
+		local lines = {}
+
+		local function add(text)
+			lines[#lines + 1] = text
+		end
+
+		-- Pasted anywhere else this loses every scrap of context, so it
+		-- carries its own: which build answered, and on which client.
+		add(('%s — %s (interface %d)'):format(Umbra.version,
+			Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail'
+				or 'unsupported', interface))
+		add('')
+
 		-- Which unit values this client hands over in the clear decides how
 		-- much of the display can be formatted at all, and the tag's own
 		-- output says whether that reasoning survives contact with oUF.
@@ -205,15 +225,15 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 			local ok, value = pcall(getter)
 
 			if not ok then
-				print(PREFIX .. label .. ': |cffcc6666errors|r — ' .. tostring(value))
+				add(label .. ': errors — ' .. tostring(value))
 			elseif Umbra.Secrets.Is(value) then
-				print(PREFIX .. label .. ': |cffcc6666hidden|r')
+				add(label .. ': hidden')
 			else
-				print(PREFIX .. label .. ': |cff88cc88readable|r — ' .. tostring(value))
+				add(label .. ': readable — ' .. tostring(value))
 			end
 		end
 
-		print(PREFIX .. 'issecretvalue: ' .. tostring(type(_G.issecretvalue) == 'function'))
+		add('issecretvalue: ' .. tostring(type(_G.issecretvalue) == 'function'))
 		report('UnitHealth', function() return UnitHealth('player') end)
 		report('UnitHealthMax', function() return UnitHealthMax('player') end)
 		report('UnitHealthPercent', function()
@@ -237,22 +257,22 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		-- Whether the aura underline can be colored at all: without the
 		-- PreserveAsset style the client has no way to hand a dispel color to
 		-- a texture of ours, and every line stays neutral.
-		print(PREFIX .. 'aura underline: ' .. (Umbra.hasAuraUnderline and
-			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
+		add('aura underline: ' .. (Umbra.hasAuraUnderline and
+			'available' or 'unavailable'))
 
 		-- What decides whether group frames can have a secure header or need
 		-- a static fallback. Asked here rather than reasoned about, because
 		-- the answer has changed between clients and patches.
-		print(PREFIX .. 'secure snippets: ' .. (Umbra.hasSecureSnippets and
-			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
+		add('secure snippets: ' .. (Umbra.hasSecureSnippets and
+			'available' or 'unavailable'))
 
 		-- Whether a compatibility file ran all the way through. Retail loads
 		-- none and says so; on Forever, `none` would mean the file that
 		-- reports this client's deviations never finished, which makes an
 		-- empty debug buffer mean nothing at all.
-		print(PREFIX .. 'compat: ' .. (Umbra.compat
-			and ('|cff88cc88' .. Umbra.compat .. '.lua ran|r')
-			or '|cff88cc88none|r'))
+		add('compat: ' .. (Umbra.compat
+			and (Umbra.compat .. '.lua ran')
+			or 'none'))
 
 		-- The class-power row is reserved on the player frame whatever the
 		-- class, and oUF fills it only for a spec that owns such a resource:
@@ -271,7 +291,7 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		local pips = player and player.ClassPower
 
 		if not pips then
-			print(PREFIX .. 'class power: |cffcc6666no element|r')
+			add('class power: no element')
 		else
 			local shown = 0
 
@@ -291,7 +311,7 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 				name = nil
 			end
 
-			print(PREFIX .. ('class power: %d of %d pips, %s'):format(shown, #pips,
+			add(('class power: %d of %d pips, %s'):format(shown, #pips,
 				name and ('%s (spec %s)'):format(name, tostring(spec))
 					or ('no specialization yet (spec %s)'):format(tostring(spec))))
 		end
@@ -327,13 +347,13 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 			local label = 'portrait ' .. (frame.umbraKey or tostring(unit))
 
 			if not model then
-				print(PREFIX .. label .. ': |cffcc6666no element|r')
+				add(label .. ': no element')
 			elseif not model.GetModelFileID then
-				print(PREFIX .. label .. ': not a model, nothing to ask')
+				add(label .. ': not a model, nothing to ask')
 			elseif not unit then
-				print(PREFIX .. label .. ': no unit on this frame')
+				add(label .. ': no unit on this frame')
 			elseif not UnitExists(unit) then
-				print(PREFIX .. label .. ': nothing to show, no ' .. unit)
+				add(label .. ': nothing to show, no ' .. unit)
 			else
 				-- Both halves of oUF's condition, because it is an `and`: if
 				-- the connected half is the false one, asking only about the
@@ -370,7 +390,7 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 						return IsUnitModelReadyForUI(unit)
 					end)
 				else
-					print(PREFIX .. label .. ': ready — no such function')
+					add(label .. ': ready — no such function')
 				end
 
 				if model.GetDisplayInfo then
@@ -378,7 +398,7 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 						return model:GetDisplayInfo()
 					end)
 				else
-					print(PREFIX .. label .. ': display info — cannot be asked')
+					add(label .. ': display info — cannot be asked')
 				end
 
 				report(label .. ': is player', function()
@@ -388,11 +408,14 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 				-- Which of the two the column is actually showing, so the
 				-- claim that it is never empty is measurable rather than
 				-- asserted.
-				print(PREFIX .. label .. ': showing ' ..
+				add(label .. ': showing ' ..
 					((model.umbraFlat and model.umbraFlat:IsShown())
 						and '2D stand-in' or '3D model'))
 			end
 		end
+
+
+		Umbra:ShowReport('Umbra — check', lines)
 
 	elseif input:find('^layout') then
 		local name = input:match('^layout%s+(%S+)$')
