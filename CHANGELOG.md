@@ -45,6 +45,9 @@ First buildable version. Player and target frames, no configuration yet.
   backwards into the health already there
 - `/uuf test` fills the health bar's prediction as well, because an absorb
   takes someone else to put on you and cannot be waited for
+- Aura rows hold the eighth icon again: the client counts a spacing after
+  every button, so the row width it was given was two pixels short and the
+  last icon wrapped out of sight
 - `/uuf auras` typed in combat now takes effect when the fight ends, and says
   so, instead of silently doing nothing: the game's two aura frames are
   protected

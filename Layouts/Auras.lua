@@ -163,7 +163,11 @@ local function Spawn(frame, config, filter, count, harmful, cancel)
 		initialAnchor = 'TOPLEFT',
 		growthX = 'RIGHT',
 		growthY = 'DOWN',
-		layoutLimit = config.width,
+		-- Not the frame width: the client counts a spacing after every
+		-- button, including the last one, and two pixels short of that cost
+		-- the eighth icon its place in the row. Core/Defaults.lua owns the
+		-- arithmetic and says what was measured.
+		layoutLimit = Umbra:AuraRowLimit(config),
 	})
 
 	if not ok then

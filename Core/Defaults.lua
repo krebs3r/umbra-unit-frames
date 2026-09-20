@@ -244,6 +244,29 @@ function Umbra:AuraPerRow(config)
 	return math.max(1, math.floor((config.width + config.auraSpacing) / step))
 end
 
+--[[ Umbra:AuraRowLimit(config)
+The line width to hand the client's flow layout, which is not the frame width.
+
+`layoutLimit` reaches `SetFlowLayoutMaximumLineSize`, a width in pixels, and
+the client fills a line by adding a button *and its spacing* until the next
+one would not fit. It therefore asks for `n · (icon + spacing)`, while the
+frame is exactly `n · icon + (n - 1) · spacing` wide — the same row without
+the gap after the last icon, which nothing draws.
+
+Handing it the frame width was a 2 pixel shortfall on a 222 pixel frame, and
+**that cost a whole icon**: eight came to 224 against a limit of 222, so seven
+fitted and the eighth wrapped into the next line. Measured in *Thron der
+Gezeiten* on 20 September 2026, seven buffs where the reserved block holds
+eight, and the preview showed eight the whole time because Umbra packs those
+itself with `AuraPerRow` — the arithmetic that adds the trailing spacing back
+before dividing.
+
+So both sides now say eight, and each says it the way its own side counts.
+--]]
+function Umbra:AuraRowLimit(config)
+	return self:AuraPerRow(config) * (config.auraSize + config.auraSpacing)
+end
+
 function Umbra:AuraButtonHeight(config)
 	return config.auraSize + config.gap + config.auraUnderline
 end

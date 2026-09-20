@@ -387,11 +387,33 @@ The row cannot overflow the space reserved for it, because `maxFrameCount` and
 `AuraBlockHeight` are handed the same count: more auras than that are not
 created rather than wrapping into a row nothing made room for. Raising the
 count raises the reserved block, and everything under it moves down with it.
-The measured packing matches the computed one — 8 icons per row at the shared
-frame width — and `Umbra:AuraPerRow` is the one place that answers it. This
-paragraph claimed 8 at a width of 210 for a while, left over from when the
-icon was 22 wide, while two others correctly said 7; the width now follows the
-row rather than the row the width, so both are 8 again and by construction.
+`Umbra:AuraPerRow` is the one place that answers how many fit. This paragraph
+claimed 8 at a width of 210 for a while, left over from when the icon was 22
+wide, while two others correctly said 7; the width now follows the row rather
+than the row the width, so both are 8 again and by construction.
+
+**The client counts a row differently, and that cost an icon.** Measured in
+*Thron der Gezeiten* on 20 September 2026: seven real buffs in a block
+reserved for eight, while `/uuf test` had been showing eight all along. The
+preview proved nothing here and said so — it packs its stand-ins with
+`AuraPerRow`, and the client packs the real row itself.
+
+`layoutLimit` reaches `SetFlowLayoutMaximumLineSize`, which is a width in
+pixels, and the client fills a line by adding each button *together with its
+spacing* until the next one would not fit. So it asks for `n · (icon +
+spacing)` — 8 · 28 = 224 — where the frame is `n · icon + (n - 1) · spacing`
+= 222 wide, the same row without the gap after the last icon, which nothing
+draws. Handed the frame width, eight needed 224 against a limit of 222, seven
+fitted, and the eighth wrapped into the next line.
+
+`Umbra:AuraRowLimit` answers the client's question in the client's own terms,
+and `AuraPerRow` keeps answering ours. The 2 pixels are the whole difference,
+and neither side is wrong: one is measuring a row that is drawn, the other a
+row that is being filled.
+
+That was the one thing about the auras that had never been looked at with
+real data — the geometry, the colors and the side after a switch all had
+been.
 
 **A full row can be looked at without waiting for one.** `/uuf test` fills
 every reserved slot with stand-ins, which is the only way to see the case the
