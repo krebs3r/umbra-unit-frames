@@ -338,8 +338,17 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 			local hide = which == 'umbra'
 
 			UmbraUnitFramesDB.hideBlizzardAuras = hide
-			Umbra:SetBlizzardAuras(not hide)
-			print(PREFIX .. 'auras: ' .. Value(which))
+
+			-- Both frames are protected, so in combat this is a promise
+			-- rather than a result, and saying so beats reporting a state
+			-- the screen does not show yet.
+			if Umbra:SetBlizzardAuras(not hide) then
+				print(PREFIX .. 'auras: ' .. Value(which))
+			else
+				print(PREFIX .. 'auras: ' .. Value(which)
+					.. ' — the game keeps its frames protected in combat, so this '
+					.. 'takes effect when the fight ends.')
+			end
 		end
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug

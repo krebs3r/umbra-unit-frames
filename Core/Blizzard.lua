@@ -47,13 +47,53 @@ local function Conceal(name, conceal)
 	end
 end
 
+--[[ Waiting for the fight to end
+Both frames are protected, so `SetParent` on them is refused in combat the way
+any other secure call is. That refusal used to be swallowed by the `pcall` in
+Conceal and never made good: `/uuf auras umbra` typed during a fight did
+nothing, said it had worked, and nothing happened when the fight ended either.
+
+So a refusal is not a failure, it is a wait. EnhanceQoLSkinner reaches the same
+two frames and does the same thing — it checks `InCombatLockdown` against
+`IsProtected` and picks the work up again at PLAYER_REGEN_ENABLED.
+
+Only the last answer is kept. Asked for both states during one fight, what
+should happen at the end of it is whatever was asked for last.
+--]]
+local pending
+local waiter = CreateFrame('Frame')
+
+waiter:SetScript('OnEvent', function(self)
+	self:UnregisterEvent('PLAYER_REGEN_ENABLED')
+
+	local shown = pending
+	pending = nil
+
+	if shown ~= nil then
+		Umbra:SetBlizzardAuras(shown)
+	end
+end)
+
 --[[ Umbra:SetBlizzardAuras(shown)
 Shows or conceals Blizzard's buff and debuff frames.
+
+Answers whether it happened now. False means it is waiting for combat to end,
+not that it was refused for good.
 --]]
 function Umbra:SetBlizzardAuras(shown)
+	if InCombatLockdown() then
+		pending = shown
+		waiter:RegisterEvent('PLAYER_REGEN_ENABLED')
+		self:Debug('blizzard auras held until combat ends, wanted shown:', shown)
+
+		return false
+	end
+
 	for _, name in ipairs(FRAMES) do
 		Conceal(name, not shown)
 	end
+
+	return true
 end
 
 -- ADDON_LOADED has run by now, so the setting is there to read. On Forever it

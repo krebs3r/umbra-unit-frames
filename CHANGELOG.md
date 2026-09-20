@@ -39,6 +39,9 @@ First buildable version. Player and target frames, no configuration yet.
   which is where everything interesting happens: during the build at login
 - `/uuf check` also reports whether the client can compile secure snippets,
   which decides whether group frames can have a secure header
+- `/uuf auras` typed in combat now takes effect when the fight ends, and says
+  so, instead of silently doing nothing: the game's two aura frames are
+  protected
 - `Layouts/` split into widgets, tags, auras and the style that assembles them
 - Packages for Retail (`_Mainline`) and WoW: Forever (`_Camelot`) from one source
 - `Compat/Forever.lua` for the deviations found on the Forever beta client

@@ -503,8 +503,9 @@ quietly rather than erroring, which is why none of them announced itself.
    containers have to be rebuilt on a switch instead of turned. The stand-ins
    prove nothing here: Umbra packs those itself.
 2. **`/uuf auras both`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
-   back, and whether those two names survived the 12.0 rework. `/uuf debug`
-   reports a name it cannot find.
+   back. The names themselves are settled on Retail — see *Blizzard's own aura
+   display* — so what is left is one trip through Edit Mode with the frames
+   concealed. `/uuf debug` reporting a name it cannot find is Forever.
 3. **Energy.** Rage and focus are confirmed — focus measured on 20 September
    2026 at `239/138/85` on the hairline against the client's `255/128/64` with
    the gloss over it, and the percentage above it orange at `195/128/97`
@@ -533,8 +534,24 @@ never shown, behind `/uuf auras`. Not `Hide`, which the next thing that
 shows them undoes, and not `UnregisterAllEvents`, which cannot be undone at
 all. Reparenting leaves their logic running and is reversible.
 
-Unverified: whether Edit Mode puts them back, and whether the two names are
-still the right ones after the 12.0 rework.
+**Both names are still right on Retail 12.x**, established without the client
+by reading addons on this machine that reach the same two frames:
+EnhanceQoLSkinner hides `_G.BuffFrame` and `_G.DebuffFrame` by those names,
+and EnhanceQoL's Edit Mode library lists both as Edit Mode systems and finds
+a `.Selection` on each. So `/uuf debug` reporting a name it cannot find is a
+Forever finding, not a Retail one.
+
+**They are protected, and that was a real defect.** The same addon bails out
+of hiding them on `InCombatLockdown() and frame:IsProtected()` and picks the
+work up again at `PLAYER_REGEN_ENABLED`. Umbra's `SetParent` sat inside a
+`pcall` that swallowed the refusal: `/uuf auras umbra` typed during a fight
+did nothing, printed that it had worked, and nothing happened when the fight
+ended either. A refusal is now a wait — the last state asked for is kept,
+applied at `PLAYER_REGEN_ENABLED`, and the command says it is waiting rather
+than reporting a state the screen does not show yet.
+
+Still unverified: whether Edit Mode puts the frames back. That is what
+`/uuf auras both` followed by a trip through Edit Mode answers.
 
 ### Configuration
 
