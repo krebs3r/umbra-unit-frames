@@ -55,7 +55,8 @@ First buildable version. Player and target frames, no configuration yet.
   chat frame it was typed into
 - The check report can be opened from a key binding as well as from chat
 - The report window is built from the game's own panel templates, so it
-  looks like the rest of the interface
+  looks like the rest of the interface, and colors the verdicts it reports
+  while still handing over plain text to copy
 - `/uuf check` opens a window instead of filling the chat frame, in plain
   text with a button that selects the whole report for copying. Closing it
   gives the keyboard back, so chat keeps working

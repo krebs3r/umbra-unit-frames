@@ -735,15 +735,27 @@ quietly rather than erroring, which is why none of them announced itself.
    `SetFlowLayoutGrowthDirection` take after creation, or whether the
    containers have to be rebuilt on a switch instead of turned. The stand-ins
    prove nothing here: Umbra packs those itself.
-2. **`/uuf auras both`.** Whether Edit Mode puts `BuffFrame` and `DebuffFrame`
-   back. The names themselves are settled on Retail — see *Blizzard's own aura
-   display* — so what is left is one trip through Edit Mode with the frames
-   concealed. `/uuf debug` reporting a name it cannot find is Forever.
-3. **Energy.** Rage and focus are confirmed — focus measured on 20 September
-   2026 at `239/138/85` on the hairline against the client's `255/128/64` with
-   the gloss over it, and the percentage above it orange at `195/128/97`
-   rather than the `141/151/171` it would fall back to. Only energy is left,
-   which wants a rogue, a monk or a druid in cat form.
+
+   The reserved space is not the question — the player frame holds 16 helpful
+   and 8 harmful, two rows and one. The question is which row is the *first*
+   one after a switch. Above the frame a block has to fill from its bottom
+   edge upwards, so that the row nearest the frame is the one that fills
+   first; if `SetFlowLayoutAnchorPoint` did not take, the near row stays empty
+   until the far one is full and the block reads as floating away from the
+   frame. With eight or fewer auras there is only one row and nothing to tell
+   apart.
+2. **`/uuf auras both` — confirmed working** on 20 September 2026, reported
+   rather than measured, and nothing about it misbehaved in use. The worry was
+   narrower than the command: reparenting is reversible, but Edit Mode also
+   moves `BuffFrame` and `DebuffFrame`, and whether it would take them back
+   from a parent of ours was never established. It has not misbehaved, so this
+   stops being a question and becomes something to watch for.
+3. **Energy — confirmed** on a druid on 20 September 2026, reported rather
+   than sampled. Rage and focus were already confirmed, focus measured at
+   `239/138/85` on the hairline against the client's `255/128/64` with the
+   gloss over it, and the percentage above it orange at `195/128/97` rather
+   than the `141/151/171` it would fall back to. **All four resources now
+   answer**, so nothing is left of this one.
 4. **Absorbs and incoming healing, from real data.** The stand-ins were seen
    in *Thron der Gezeiten* on 20 September 2026 and drew — including on the
    target frame, so the anchors to the health fill are accepted inside an
@@ -755,11 +767,12 @@ quietly rather than erroring, which is why none of them announced itself.
    hunter carries none of its own, and the two runs so far produced no
    shielded unit to point at. The remaining question is only whether oUF's
    values arrive, not whether the surfaces work.
-5. **The 2D stand-in for a portrait the client withholds.** Why it is withheld
-   is settled — see *The client keeps a hostile unit's model to itself*. What
-   has not been looked at is the stand-in itself: whether
-   `SetPortraitTexture` is allowed where the model was not, and how the
-   client's square portrait art reads cropped into this column.
+5. **The 2D stand-in — confirmed, and confirmed to be the design.** Seen on
+   20 September 2026: 2D inside an instance, 3D out in the open world. That
+   is not a fault to be chased but the two halves of one rule — the client
+   withholds a hostile unit's model inside an instance and hands it over
+   outside, so the column shows whichever it can get. `SetPortraitTexture` is
+   allowed where the model was not, which was the open half of it.
 
 
 Settled since this list was written: auras inside an instance, the side a row

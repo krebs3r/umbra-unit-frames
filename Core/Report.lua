@@ -20,10 +20,11 @@ is missing, the same care every other client-supplied thing in this addon
 gets: Forever is missing parts of the Retail surface, and a missing template
 throws rather than answering nil.
 
-**The text is plain.** Chat lines carry color escapes to be read at a glance;
-these are meant to be selected and pasted somewhere else, and an escape in
-pasted text is noise. What decides a value is its word — `hidden`, `readable`,
-`nil` — not its color.
+**It holds the report twice.** An EditBox copies what it holds rather than
+what it draws, so coloring the verdicts and copying the result would put
+`|cffb25d5d` in every pasted line. The colored version is what you read and
+the plain one is what you copy, and the button swaps between them — see
+*Colorizing a report that still has to paste cleanly*.
 
 **There is no clipboard API.** No addon can put text on the system clipboard,
 so nothing here pretends to: the button selects the whole report and focuses
@@ -51,6 +52,73 @@ local TITLE_HEIGHT = 24
 local FOOTER_HEIGHT = 30
 
 local window
+
+--[[ Hex(color)
+A palette entry as the escape code the client understands.
+--]]
+local function Hex(color)
+	return ('|cff%02x%02x%02x'):format(
+		math.floor(color[1] * 255 + 0.5),
+		math.floor(color[2] * 255 + 0.5),
+		math.floor(color[3] * 255 + 0.5))
+end
+
+--[[ Colorizing a report that still has to paste cleanly
+An EditBox copies **what it holds**, not what it draws, so a color escape put
+in for readability lands in the paste as `|cffb25d5d` and has to be picked out
+of it by hand. That is why these lines were made plain in the first place.
+
+So the window keeps two versions of the same report: a colored one to look at
+and a plain one to copy. The button swaps to plain before it selects, and
+letting go of the text puts the colors back — see the button and
+`OnEditFocusLost` below.
+
+Only the verdict is colored, never the number beside it. `hidden` and
+`readable` are the words the eye is hunting for; `394262` is read by whoever
+asked for it, and painting it would say something about a value that Umbra
+has no opinion on.
+--]]
+local VERDICTS = {
+	hidden = colors.auraHarmful,
+	errors = colors.auraHarmful,
+	unavailable = colors.auraHarmful,
+	readable = colors.accent,
+	available = colors.accent,
+	none = colors.accent,
+}
+
+local function Colorize(line)
+	if line == '' then return line end
+
+	-- Greedy up to the last colon: a label may hold one of its own, as
+	-- `tag [umbra:health]` and `portrait player: UnitIsVisible` both do.
+	local label, value = line:match('^(.*): (.*)$')
+
+	if not label then
+		-- The heading, which names the build and the client.
+		return Hex(colors.accent) .. line .. '|r'
+	end
+
+	local verdict = value:match('^%a+')
+	local tone = verdict and VERDICTS[verdict]
+
+	if tone then
+		value = Hex(tone) .. verdict .. '|r' .. value:sub(#verdict + 1)
+	end
+
+	return Hex(colors.muted) .. label .. ':|r ' .. value
+end
+
+--[[ Report(frame, plain)
+Which of the two versions the box is holding, and puts one there.
+--]]
+local function Report(frame, plain)
+	frame.plain = plain and true or false
+
+	if frame.Text then
+		frame.Text:SetText((plain and frame.report or frame.display) or '')
+	end
+end
 
 --[[ Templated(kind, parent, templates)
 The first of these templates the client will build, or nil.
@@ -252,8 +320,15 @@ local function Build()
 	edit:SetScript('OnTextChanged', function(self, userInput)
 		if not userInput then return end
 
-		self:SetText(frame.report or '')
+		Report(frame, frame.plain)
 		self:HighlightText()
+	end)
+
+	-- Letting go of the text puts the colors back, whether the person clicked
+	-- away or the window was closed under them.
+	edit:SetScript('OnEditFocusLost', function(self)
+		Report(frame, false)
+		self:SetCursorPosition(0)
 	end)
 
 	scroll:SetScrollChild(edit)
@@ -269,14 +344,18 @@ local function Build()
 		copy:SetText('Select all, then Ctrl+C')
 	end
 
+	-- Plain first, then select: what gets copied is what the box holds, and
+	-- an escape code in a pasted report is the thing this avoids.
 	copy:SetScript('OnClick', function()
+		Report(frame, true)
 		edit:SetFocus()
 		edit:HighlightText()
 	end)
 
 	local hint = frame:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmall')
 	hint:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', PADDING + 4, PADDING + 6)
-	hint:SetText('Escape closes this. No addon may reach the clipboard.')
+	hint:SetText('Escape closes this. Copying hands over plain text — no addon '
+		.. 'may reach the clipboard.')
 
 	if not native then
 		hint:SetTextColor(unpack(colors.muted))
@@ -322,10 +401,17 @@ function Umbra:ShowReport(title, lines)
 		return
 	end
 
+	local colored = {}
+
+	for index, line in ipairs(lines) do
+		colored[index] = Colorize(line)
+	end
+
 	window.report = table.concat(lines, '\n')
+	window.display = table.concat(colored, '\n')
 
 	Title(window, title)
-	window.Text:SetText(window.report)
+	Report(window, false)
 	window.Text:SetCursorPosition(0)
 	window.Text:ClearFocus()
 	window:Show()
