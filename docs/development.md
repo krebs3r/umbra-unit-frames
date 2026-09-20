@@ -583,11 +583,27 @@ is built on it.
   16001)` rather than `unsupported`, so `WOW_PROJECT_ID ==
   WOW_PROJECT_MAINLINE` holds here and the interface falls in the 16xxx band
   the check keys off.
-- **Saved variables really are written and never read.** `/uuf layout classic`
-  followed by `/reload` came back as `modern`. So on this client the layout,
-  the aura switch, the dragged positions and the debug flag are all back at
-  their defaults after every reload, and a saved setting is not a way to carry
-  anything into the next session.
+- **Saved variables really are written and never read**, and the two halves of
+  that are worth keeping apart, because only one of them is broken.
+  `/uuf layout classic` followed by `/reload` came back as `modern`. The file
+  on disk says why: `WTF/Account/<id>/SavedVariables/UmbraUnitFrames.lua`, and
+  its `.bak` beside it, are one generation apart and read
+
+  ```
+  .bak      layout = "classic", debug = true, positions for both sets
+  current   layout = "modern",  no debug,     positions for modern only
+  ```
+
+  So the **write is correct**. What the reload does not do is read it back:
+  `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the
+  next save writes those defaults over the real settings. Every reload
+  destroys a generation, and the `.bak` is the only thing still holding the
+  previous one.
+
+  Nothing on this side can fix that, and nothing should try. A store of our
+  own — custom CVars, say — would be a second mechanism carried forever for a
+  beta that cannot load files every addon depends on. Worth revisiting only if
+  it is still broken near the 4 November launch.
 
 That last one broke the one thing it most needed to work. `/uuf debug` exists
 to report what the build refused, the build happens at `PLAYER_LOGIN`, and the
