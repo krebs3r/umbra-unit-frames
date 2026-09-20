@@ -348,7 +348,11 @@ the bar so they draw above it, but anchored to the frame.
   windwalker monk, nothing on a brewmaster, and nothing at all before a
   specialization is chosen. `/uuf check` names the spec for exactly that
   reason: measured on a level 3 monk it answered `0 of 10 pips`, which is
-  correct and looks like a fault until the spec is named beside it.
+  correct and looks like a fault until the spec is named beside it. That
+  character reports **index 5**, which is none of the three monk specs, and
+  `C_SpecializationInfo.GetSpecializationInfo(5)` answers for it with an id
+  and an **empty name** rather than nothing at all — so a nil check alone
+  prints a blank and calls it a specialization.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.

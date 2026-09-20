@@ -223,13 +223,20 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 			end
 
 			-- A character below the level that chooses one still answers with
-			-- an index, and it is not one of the real specs.
+			-- an index, and it is not one of the real specs. Measured on a
+			-- level 3 monk: index 5, and GetSpecializationInfo answers for it
+			-- with an id but an **empty name** rather than nothing at all, so
+			-- a plain nil check prints a blank and calls it a specialization.
 			local spec = C_SpecializationInfo.GetSpecialization()
 			local ok, _, name = pcall(C_SpecializationInfo.GetSpecializationInfo, spec)
 
+			if not ok or name == nil or name == '' then
+				name = nil
+			end
+
 			print(PREFIX .. ('class power: %d of %d pips, %s'):format(shown, #pips,
-				(ok and name) and ('%s (spec %d)'):format(name, spec)
-					or 'no specialization yet'))
+				name and ('%s (spec %s)'):format(name, tostring(spec))
+					or ('no specialization yet (spec %s)'):format(tostring(spec))))
 		end
 
 	elseif input:find('^layout') then
