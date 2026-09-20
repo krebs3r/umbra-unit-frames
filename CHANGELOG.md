@@ -9,7 +9,8 @@ First buildable version. Player and target frames, no configuration yet.
 - Auras with an underline: buffs above the frame, debuffs below, each icon on a
   slim line the client colors by dispel type
 - Focus, target-of-target and a boss column, placed by each layout set and
-  as many boss frames as the client says it has
+  as many boss frames as the client says it has. The target-of-target sits
+  above the target in both sets, and the buff row moves up to make room
 - Two layout sets, `/uuf layout classic` and `/uuf layout modern`: top left
   with the pet above the player, or lower third with buffs above the frame and
   the pet between the castbar and the debuffs. Each set remembers its own

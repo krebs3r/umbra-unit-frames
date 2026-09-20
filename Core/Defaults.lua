@@ -173,14 +173,18 @@ Umbra.frames = {
 		classPower = true,
 		powerValue = true,
 		-- The pet frame hangs off this one, so it takes a place in the stack
-		-- on whichever side the set puts it. No other frame has one under it.
-		ownsPet = true,
+		-- on whichever side the set puts it.
+		owns = {pet = true},
 		-- What you are carrying is worth more rows than what is on you.
 		-- Both are whole rows, so no row is half empty.
 		auras = {helpful = 16, harmful = 8},
 	},
 	target = {
 		castbar = true,
+		-- The same arrangement the player has with its pet: the small frame
+		-- belonging to this one takes a place in this one's stack, so the
+		-- aura row beside it moves rather than being landed on.
+		owns = {targettarget = true},
 		-- How much the other side has left to spend with is worth the same
 		-- number the player reads about itself. It costs the name the width
 		-- of the column, which is why no other frame carries one.
@@ -344,7 +348,7 @@ Umbra.layouts = {
 	-- Top left, where the player frame lived before Dragonflight moved it.
 	-- The pet is the topmost thing in the stack, so both aura rows hang below.
 	classic = {
-		above = {'pet'},
+		above = {'pet', 'targettarget'},
 		below = {'helpful', 'harmful'},
 	},
 
@@ -353,7 +357,7 @@ Umbra.layouts = {
 	-- the player to read as belonging to it, and the debuffs hang below the
 	-- pet.
 	modern = {
-		above = {'helpful'},
+		above = {'targettarget', 'helpful'},
 		below = {'pet', 'harmful'},
 	},
 }
@@ -380,14 +384,18 @@ end
 
 --[[ Umbra:StackHeight(config, entry)
 How tall one entry of a stack is on this frame, or nil when this frame has no
-such thing: a target frame has no pet under it, and a pet frame carries no
-aura rows.
+such thing: a pet frame carries no aura rows, and nothing but the target has a
+target-of-target hanging off it.
+
+An entry names either a frame or an aura block, and `owns` is what says which
+frames this one is responsible for. It used to be a single `ownsPet` flag with
+the pet's name written into this function, which was the only reason a second
+frame could not be put in a stack without editing the function that measures
+stacks.
 --]]
 function Umbra:StackHeight(config, entry)
-	if entry == 'pet' then
-		if not config.ownsPet then return end
-
-		return self:FrameHeight(self.frames.pet)
+	if config.owns and config.owns[entry] then
+		return self:FrameHeight(self.frames[entry])
 	end
 
 	local count = config.auras and config.auras[entry]
@@ -480,16 +488,23 @@ do
 
 		local targetX = inset + player.width + column
 
+		-- Its top edge, counting up from the target's top edge: past the gap
+		-- the stack keeps, and then its own height.
+		local glanceY = playerY
+			+ Umbra:StackOffset(target, set, 'above', 'targettarget')
+			+ Umbra:FrameHeight(glance)
+
 		set.points = {
 			pet = {'TOPLEFT', UIParent, 'TOPLEFT', inset, -inset},
 			player = {'TOPLEFT', UIParent, 'TOPLEFT', inset, playerY},
 			target = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, playerY},
 
-			-- Above the target the way the pet sits above the player. In this
-			-- set nothing else is up there — the aura rows both hang below —
-			-- and the small frame belonging to the big one reads best
-			-- directly over it.
-			targettarget = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, -inset},
+			-- Derived from the target's own stack, the way the player's
+			-- position is derived from the pet's. In this set that lands it
+			-- at the inset, level with the pet, because nothing else is above
+			-- the target here — but it lands there by arithmetic rather than
+			-- by two numbers that would have to be kept equal by hand.
+			targettarget = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, glanceY},
 
 			-- A third column. There is no room to the left of the player
 			-- here, because the set is anchored into the corner, so the only
@@ -509,24 +524,26 @@ do
 		-- moves when the pet changes height, and asks the same stack.
 		local petY = baseline - Umbra:StackOffset(player, set, 'below', 'pet') - petHeight
 
-		--[[ Beside, because neither side is free here
-		Both frames have their buffs above and their castbar and debuffs
-		below, so the only room left is sideways — and sideways is always
-		free, because every row is exactly as wide as its frame and nothing
-		hangs off the edges.
+		--[[ Above the target, with the buffs moving up to make room
+		It belongs over the frame it speaks for, the way the pet belongs under
+		the player, and putting it beside instead was reading the set's
+		crowding as a rule rather than as a problem to solve. It is an entry
+		in the target's `above` stack now, nearest the frame, so the buff row
+		is pushed up by exactly its height and neither can land on the other.
 
-		Tops aligned rather than bottoms. These points fix the bottom edge and
-		the small frame is shorter, so sharing a bottom would leave it
-		floating at the wrong end of its neighbour.
+		The focus has no such neighbour and still goes beside the player,
+		where there is always room: every row is exactly as wide as its frame
+		and nothing hangs off the edges.
 		--]]
 		local beside = player.width + player.gap * 4
-		local glanceY = baseline + Umbra:FrameHeight(target) - Umbra:FrameHeight(glance)
+		local glanceY = baseline + Umbra:FrameHeight(target)
+			+ Umbra:StackOffset(target, set, 'above', 'targettarget')
 
 		set.points = {
 			player = {'BOTTOM', UIParent, 'BOTTOM', -spread, baseline},
 			target = {'BOTTOM', UIParent, 'BOTTOM', spread, baseline},
 			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, petY},
-			targettarget = {'BOTTOM', UIParent, 'BOTTOM', spread + beside, glanceY},
+			targettarget = {'BOTTOM', UIParent, 'BOTTOM', spread, glanceY},
 			focus = {'BOTTOM', UIParent, 'BOTTOM', -(spread + beside), baseline},
 		}
 

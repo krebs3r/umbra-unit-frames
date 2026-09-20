@@ -286,9 +286,14 @@ frame's default position and the offset of the row beside it are the same
 answer to the same question, and neither can be written down separately from
 the other.
 
-Only the player frame carries a `'pet'` entry, through `ownsPet`; on the
-target frame the same list costs nothing, because `Umbra:StackHeight` answers
-nil for anything that frame does not have.
+**Which frames hang off which is a set of keys, not a flag.** A config's
+`owns` names the frames it is responsible for — `player` owns the pet,
+`target` owns the target-of-target — and `Umbra:StackHeight` looks the entry
+up there before treating it as an aura block. It used to be a single
+`ownsPet` boolean with the pet's name written into that function, which was
+the one reason a second frame could not be put into a stack without editing
+the function that measures stacks. A set's list costs a frame nothing for
+entries it does not own, because `StackHeight` answers nil for them.
 
 In `classic` **nothing is placed above a frame** and the pet sits there
 instead, the way ShadowedUnitFrames arranges it: above the box there is no
@@ -373,8 +378,9 @@ set, and oUF does the rest. What each one is for decided how it was cut.
   picked in order to watch what it casts. One row of harmful auras, since
   what you have put on it is the other reason to have picked it.
 - **Target-of-target** is one question — is it on the tank or on me — and is
-  cut like the pet: the shared width so it lines up, shorter, no castbar and
-  no auras.
+  cut like the pet in every way, including where it lives: the shared width so
+  it lines up, shorter, no castbar, no auras, and a place in the target's own
+  stack rather than a position of its own.
 - **The boss frames** keep a castbar, which is the most useful line on a boss,
   and carry no aura rows: five stacked frames with rows between them would be
   a wall.
@@ -398,7 +404,7 @@ because they are anchored to different things:
 
 | | classic | modern |
 | :--- | :--- | :--- |
-| Target-of-target | above the target | beside the target |
+| Target-of-target | above the target | above the target |
 | Focus | a third column | beside the player, outside it |
 | Bosses | right edge, stacked down | right edge, stacked down |
 
@@ -408,12 +414,17 @@ the pet sits over the player, and by the same two units of gap. There is no
 room to the *left* of anything in that set, because it is anchored into the
 corner, so the only outside it has is further right.
 
-In `modern` both sides of both frames are spoken for, buffs above and castbar
-and debuffs below, so the only room left is sideways — and sideways is always
-free, because every row is exactly as wide as its frame and nothing hangs off
-the edges. Tops are aligned rather than bottoms: those points fix the bottom
-edge and the small frame is shorter, so sharing a bottom would leave it
-floating at the wrong end of its neighbour.
+In `modern` the target already has buffs above it, and the first attempt read
+that crowding as a rule and put the small frame beside instead. It belongs
+over the frame it speaks for, the way the pet belongs under the player — so
+it became an entry in the target's `above` stack, nearest the frame, and the
+buff row is pushed up by exactly its height. Neither can land on the other,
+and both positions follow from one count rather than from two numbers kept
+equal by hand.
+
+The focus has no such owner and still goes beside the player in that set,
+where there is always room: every row is exactly as wide as its frame and
+nothing hangs off the edges.
 
 The boss column is the same in both, because an encounter frame is not part of
 the arrangement you chose — it is something the fight brings with it, and it
