@@ -21,6 +21,8 @@ First buildable version. Player and target frames, no configuration yet.
 - The target frame shows its power percentage, the way the player frame does
 - `/uuf test` fills every aura slot with stand-ins, to look at a full row
   without waiting for one
+- Pointing at a frame shows the unit's tooltip, the way pointing at the unit
+  in the world does
 - `/uuf auras umbra` puts away the game's own buff and debuff frames, `/uuf
   auras both` brings them back
 - `/uuf` on its own lists the commands one to a line, with what each does

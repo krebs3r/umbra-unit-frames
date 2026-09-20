@@ -239,6 +239,12 @@ the bar so they draw above it, but anchored to the frame.
   `element.colorPowerAtlas = true` swaps the bar for one of Blizzard's
   textures instead, and then never sets a color — see *Colors that name their
   own source* for why Umbra leaves it off.
+- **oUF sets no unit tooltip.** It builds a `SecureUnitButton`, gives it the
+  click attributes and no `OnEnter` at all; the only tooltips in the library
+  are ones single elements put on themselves. A layout that does not hand the
+  frame to `UnitFrame_OnEnter` gives you a frame you can click but not read.
+  `Layouts/Shared.lua` does, and falls back to `GameTooltip:SetUnit` where
+  that global is missing.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.

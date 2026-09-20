@@ -18,6 +18,53 @@ and the aura containers in Layouts/Auras.lua. The geometry rule that all of
 them follow is written down in Widgets.lua.
 --]]
 
+--[[ Tooltip(frame)
+The tooltip you get from pointing at a unit in the world, on the frame that
+stands for it.
+
+oUF leaves this to the layout. It builds a SecureUnitButton, sets the click
+attributes and no `OnEnter` at all; the only tooltips it brings are the ones
+single elements put on themselves. So a frame without this is a frame you can
+click but not read.
+
+The client's own handler is preferred over anything written here, because it
+carries what the default frames do and Umbra would otherwise have to copy:
+the setting that hides tooltips in combat, the refresh while the pointer
+rests, and what happens when a spell is waiting for a target. Forever is
+missing parts of the Retail surface, so it is asked for rather than assumed,
+and what is left over says the one thing that matters.
+--]]
+local function Tooltip(frame)
+	if type(_G.UnitFrame_OnEnter) == 'function'
+		and type(_G.UnitFrame_OnLeave) == 'function' then
+
+		frame:SetScript('OnEnter', UnitFrame_OnEnter)
+		frame:SetScript('OnLeave', UnitFrame_OnLeave)
+		return
+	end
+
+	Umbra:Debug('no UnitFrame_OnEnter, falling back to our own tooltip')
+
+	frame:SetScript('OnEnter', function(self)
+		if not self.unit or GameTooltip:IsForbidden() then return end
+
+		-- SetDefaultAnchor puts the tooltip where the client's own setting
+		-- says it goes. A plain owner is what is left when that helper is
+		-- missing as well, which on this path it may be.
+		if not pcall(GameTooltip_SetDefaultAnchor, GameTooltip, self) then
+			GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+		end
+
+		GameTooltip:SetUnit(self.unit)
+	end)
+
+	frame:SetScript('OnLeave', function()
+		if GameTooltip:IsForbidden() then return end
+
+		GameTooltip:Hide()
+	end)
+end
+
 local function UpdateIdentity(element, unit)
 	local color = Umbra.Secrets.UnitColor(unit)
 	if not color then return end
@@ -41,6 +88,8 @@ local function Style(self, unit)
 
 	self:SetSize(width, height)
 	self:RegisterForClicks('AnyUp')
+
+	Tooltip(self)
 
 	local background = self:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
