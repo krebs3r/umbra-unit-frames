@@ -514,6 +514,32 @@ button selects the whole report and focuses it, and Ctrl+C is the part the
 game leaves to the person; the button says so rather than being called Copy
 and doing half of that.
 
+**A slash command runs inside the chat edit box's own Enter handling.** That
+is the single most important thing this window taught, and it was learned by
+breaking the client. `EditBox:SetFont` wants a third argument where a
+FontString does not; `Build` threw on it; and an error thrown out of a slash
+command does not merely fail — it takes `SendText` down with it. The typed
+text stays in the box and the key looks broken, which from the outside is
+indistinguishable from a dead keyboard. The way out, `/reload`, is also typed,
+so the client had to be restarted and the repair installed from outside the
+game.
+
+Two things follow, and neither is about fonts:
+
+- **The window is optional and chat is the floor.** `Build` is called through
+  `pcall`, only a window that came back whole is kept, and a report that has
+  no window to go in is printed instead. A diagnostic that cannot be shown is
+  still worth having.
+- **A failed command stops at the command.** The whole `/uuf` handler is
+  wrapped, so a fault is caught and named rather than reaching the frame that
+  was only trying to send a line of text. It still reaches error capture; it
+  no longer reaches the chat frame.
+
+The first diagnosis of this was wrong twice over — a focus that was never
+stuck, then a retry that could not have run — and what settled it was not
+reasoning but `!BugGrabber.lua` on disk, which had the file, the line and the
+whole stack the entire time. **Read the error log before theorising.**
+
 **A focused edit box that is hidden keeps the keyboard.** The select-all
 button focuses it, and the first version did not let go on the way out: Enter
 went on reaching a field nobody could see, so chat accepted nothing at all —
@@ -893,6 +919,13 @@ overrides any layout value through its metatable.
 built from and writes down the geometry rule; `Layouts/Tags.lua` the tags;
 `Layouts/Auras.lua` the aura containers; `Layouts/Shared.lua` the style that
 assembles them.
+
+**Read the error log first.** `!BugGrabber.lua` under
+`WTF/Account/<id>/SavedVariables/` holds every captured fault with its file,
+its line, its locals and its whole stack, and it survives the session. One
+reading of it settled a question that two rounds of reasoning had got wrong in
+two different directions — and it can be read from outside the game, which
+matters on the day the game is the thing that is broken.
 
 **Look rather than reason.** The most expensive mistakes here came from
 plausible assumptions about the API. What helps: reading the oUF source under

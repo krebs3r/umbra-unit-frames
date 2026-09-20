@@ -181,7 +181,7 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 end)
 
 SLASH_UMBRAUNITFRAMES1 = '/uuf'
-SlashCmdList.UMBRAUNITFRAMES = function(input)
+local function Command(input)
 	input = strtrim(input or ''):lower()
 
 	if input == 'unlock' then
@@ -508,5 +508,31 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		if Umbra.author then
 			print(('  with %s by %s'):format(HEART, Umbra.author))
 		end
+	end
+end
+
+--[[ A failed command must not take the chat frame with it
+A slash command runs inside the chat edit box's own Enter handling. An error
+thrown out of here therefore does not merely fail: it takes the submit down
+with it, the typed text stays in the box, and the key looks broken — which is
+indistinguishable, from the outside, from a dead keyboard.
+
+Measured the hard way on 20 September 2026. `EditBox:SetFont` wants a third
+argument where a FontString does not; the report window threw on being built,
+and from that moment nothing could be entered at all, `/reload` included. The
+client had to be restarted to get the fix in, and the fix could only be
+installed from outside the game.
+
+So a fault is caught, named, and stops here. It still reaches error capture as
+a printed message and through the debug buffer, and it no longer reaches the
+frame that was only trying to send a line of text.
+--]]
+SlashCmdList.UMBRAUNITFRAMES = function(input)
+	local ok, err = pcall(Command, input)
+
+	if not ok then
+		print(PREFIX .. 'that command ran into an error, and the rest of the '
+			.. 'interface is fine: ' .. tostring(err))
+		Umbra:Debug('command failed:', err)
 	end
 end

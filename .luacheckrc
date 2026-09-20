@@ -55,6 +55,9 @@ read_globals = {
 	-- cannot be borrowed for one, so the layout brings its own.
 	'GameTooltip', 'GameTooltip_SetDefaultAnchor',
 
+	-- The report window
+	'ChatFontNormal', 'UISpecialFrames', 'tinsert',
+
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
 	'SecureHandlerSetFrameRef', 'loadstring_untainted',

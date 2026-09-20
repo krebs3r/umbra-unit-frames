@@ -42,7 +42,7 @@ local PADDING = 14
 local TITLE_HEIGHT = 26
 local FOOTER_HEIGHT = 30
 
-local frame
+local window
 
 --[[ Button(parent, text, width)
 A flat button in the palette, because the client's own templates are not
@@ -74,7 +74,7 @@ local function Button(parent, text, width)
 end
 
 local function Build()
-	frame = CreateFrame('Frame', 'UmbraReportFrame', UIParent)
+	local frame = CreateFrame('Frame', 'UmbraReportFrame', UIParent)
 	frame:SetSize(WIDTH, HEIGHT)
 	frame:SetPoint('CENTER')
 	frame:SetFrameStrata('DIALOG')
@@ -157,7 +157,17 @@ local function Build()
 	local edit = CreateFrame('EditBox', nil, scroll)
 	edit:SetMultiLine(true)
 	edit:SetAutoFocus(false)
-	edit:SetFont(media.font, 12)
+	--[[ An EditBox wants the third argument
+	`FontString:SetFont(file, height)` is happy with two, and every other
+	label in this addon is a FontString. An EditBox is not: it answers
+	`bad argument #3 to 'SetFont'` and throws, which is how this window broke
+	the chat frame — see Umbra:ShowReport for why a throw here was so much
+	worse than a missing window.
+	--]]
+	if not pcall(edit.SetFont, edit, media.font, 12, '') then
+		edit:SetFontObject(ChatFontNormal)
+	end
+
 	edit:SetTextColor(unpack(colors.text))
 	edit:SetWidth(WIDTH - PADDING * 2 - 38)
 
@@ -207,18 +217,44 @@ local function Build()
 end
 
 --[[ Umbra:ShowReport(title, lines)
-Puts a list of plain lines in the window and shows it.
+Puts a list of plain lines in the window and shows it, or prints them.
+
+**A slash command runs inside the chat edit box's own Enter handling.** So an
+error thrown from here does not merely fail to open a window: it takes the
+submit down with it, the typed text stays in the box, and the key looks
+broken. That is exactly how this window first went wrong — `SetFont` on an
+EditBox wants a third argument, `Build` threw, and from then on nothing could
+be entered at all, including the `/reload` that would have loaded the repair.
+
+So the window is optional and chat is the floor. `Build` is called through
+`pcall` and only a window that came back whole is kept, which also means a
+failed build is not half-remembered and tried again in a different broken
+state.
 --]]
 function Umbra:ShowReport(title, lines)
-	frame = frame or Build()
+	if not window then
+		local ok, built = pcall(Build)
 
-	frame.report = table.concat(lines, '\n')
+		if ok then
+			window = built
+		end
+	end
 
-	frame.Title:SetText(title)
-	frame.Text:SetText(frame.report)
-	frame.Text:SetCursorPosition(0)
-	frame.Text:ClearFocus()
-	frame:Show()
+	if not window or not window.Text then
+		for _, line in ipairs(lines) do
+			print(line)
+		end
 
-	return frame
+		return
+	end
+
+	window.report = table.concat(lines, '\n')
+
+	window.Title:SetText(title)
+	window.Text:SetText(window.report)
+	window.Text:SetCursorPosition(0)
+	window.Text:ClearFocus()
+	window:Show()
+
+	return window
 end
