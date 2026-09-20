@@ -10,12 +10,9 @@ it does on Retail; what follows are the deviations found on the beta client
 working once Blizzard fixes it.
 --]]
 
--- Secure snippets do not compile without loadstring_untainted. That takes down
--- state drivers, RunAttribute, initialConfigFunction and click-casting, which
--- the group header in Layouts/Group.lua depends on. Frames fall back to a
--- static layout while this is missing.
-Umbra.hasSecureSnippets = type(_G.loadstring_untainted) == 'function'
-
+-- Core/Init.lua asks whether loadstring_untainted is there, because the answer
+-- matters on every client and this file loads on one. All that is left here is
+-- saying so out loud on the client where it was first found missing.
 if not Umbra.hasSecureSnippets then
 	Umbra:Debug('loadstring_untainted missing, secure snippets disabled')
 end

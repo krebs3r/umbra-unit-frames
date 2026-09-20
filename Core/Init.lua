@@ -91,6 +91,23 @@ function Umbra:RegisterEvent(frame, event)
 	return ok
 end
 
+--[[ Umbra.hasSecureSnippets
+Whether the client can compile a secure snippet at all.
+
+`loadstring_untainted` is what turns a string of Lua into a function without
+tainting it, and the whole secure-snippet machinery rests on it: state
+drivers, `RunAttribute`, `initialConfigFunction` — which is to say secure
+group headers and click-casting. Without it, group frames need a static
+fallback.
+
+This asks the question on **every** client, not only on Forever. It used to
+live in `Compat/Forever.lua`, which returns early on anything else and is not
+even listed in the Retail TOC, so on Retail the flag was nil: false by
+accident rather than by measurement, and it would have stayed false if Retail
+ever got the function back.
+--]]
+Umbra.hasSecureSnippets = type(_G.loadstring_untainted) == 'function'
+
 --[[ Umbra:FrameUnit(frame)
 Which unit a frame stands for, asked where oUF actually keeps it.
 
@@ -221,6 +238,12 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		-- PreserveAsset style the client has no way to hand a dispel color to
 		-- a texture of ours, and every line stays neutral.
 		print(PREFIX .. 'aura underline: ' .. (Umbra.hasAuraUnderline and
+			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
+
+		-- What decides whether group frames can have a secure header or need
+		-- a static fallback. Asked here rather than reasoned about, because
+		-- the answer has changed between clients and patches.
+		print(PREFIX .. 'secure snippets: ' .. (Umbra.hasSecureSnippets and
 			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
 
 		-- The class-power row is reserved on the player frame whatever the

@@ -475,9 +475,15 @@ group options, because the options table goes on to the client and is typed.
 `loadstring_untainted` is missing on Forever **and** on Retail 12.1. That
 affects secure snippets, state drivers, `RunAttribute` and
 `initialConfigFunction` — precisely what secure group headers and click-casting
-rest on. Every snippet site belongs inside `if loadstring_untainted then … end`
-with a static fallback. `Compat/Forever.lua` already exposes
-`Umbra.hasSecureSnippets` for this.
+rest on. Every snippet site belongs inside `if Umbra.hasSecureSnippets then …
+end` with a static fallback.
+
+That flag is set in `Core/Init.lua` and reported by `/uuf check`. It used to be
+set in `Compat/Forever.lua`, which returns early on anything but Forever and is
+not listed in the Retail TOC at all — so on Retail it was nil, which behaves
+like false and happens to be right, but by accident rather than by
+measurement. A flag that decides whether a whole class of frames can exist
+should not be true or false depending on which file loaded.
 
 ---
 
