@@ -46,6 +46,7 @@ read_globals = {
 
 	-- Namespaced API
 	'C_AddOns', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
+	'C_SpecializationInfo',
 
 	-- Tooltips. oUF sets no unit tooltip of its own, and Blizzard's handler
 	-- cannot be borrowed for one, so the layout brings its own.

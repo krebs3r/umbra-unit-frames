@@ -47,7 +47,7 @@ range shown through fading.
 | `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame |
 | `test` | fill every aura slot with stand-ins |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
-| `check` | which unit values this client hides |
+| `check` | which unit values this client hides, and what the class-power row found |
 | `debug` | print what was refused while building; saved across reloads |
 
 `/uuf` closes with a line naming the author, which it reads from the TOC
@@ -337,6 +337,18 @@ the bar so they draw above it, but anchored to the frame.
   the handler threw `bad argument #1 to GetUnit` on every hover, nil having
   reached `C_TooltipInfo.GetUnit`. `Layouts/Shared.lua` brings its own and
   reads `__unit`, which follows a vehicle swap where the attribute does not.
+- **The ClassPower callback takes five arguments, not the four its own
+  documentation lists.** The comment above it says
+  `PostUpdate(cur, max, hasMaxChanged, powerType)`; the call is
+  `element:PostUpdate(cur, max, hasCurChanged, hasMaxChanged, powerType, ...)`.
+  Believing the comment would have had Umbra read `hasCurChanged` as
+  `hasMaxChanged` and lay the pips out on every tick or none. The element also
+  gives each StatusBar pip `SetMinMaxValues(0, 1)` itself, so a pip is full at
+  1, and it fills the row only for a spec that owns a resource — chi on a
+  windwalker monk, nothing on a brewmaster, and nothing at all before a
+  specialization is chosen. `/uuf check` names the spec for exactly that
+  reason: measured on a level 3 monk it answered `0 of 10 pips`, which is
+  correct and looks like a fault until the spec is named beside it.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.

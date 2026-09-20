@@ -197,6 +197,41 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 		print(PREFIX .. 'aura underline: ' .. (Umbra.hasAuraUnderline and
 			'|cff88cc88available|r' or '|cffcc6666unavailable|r'))
 
+		-- The class-power row is reserved on the player frame whatever the
+		-- class, and oUF fills it only for a spec that owns such a resource:
+		-- chi on a windwalker monk but not on a brewmaster, who has none to
+		-- show, and none at all before a specialization is chosen. So an
+		-- empty row is two questions, and the spec has to be named or the
+		-- answer is a number to be puzzled over.
+		local player
+
+		for _, frame in ipairs(ns.oUF.objects) do
+			if Umbra:FrameUnit(frame) == 'player' then
+				player = frame
+			end
+		end
+
+		local pips = player and player.ClassPower
+
+		if not pips then
+			print(PREFIX .. 'class power: |cffcc6666no element|r')
+		else
+			local shown = 0
+
+			for index = 1, #pips do
+				if pips[index]:IsShown() then shown = shown + 1 end
+			end
+
+			-- A character below the level that chooses one still answers with
+			-- an index, and it is not one of the real specs.
+			local spec = C_SpecializationInfo.GetSpecialization()
+			local ok, _, name = pcall(C_SpecializationInfo.GetSpecializationInfo, spec)
+
+			print(PREFIX .. ('class power: %d of %d pips, %s'):format(shown, #pips,
+				(ok and name) and ('%s (spec %d)'):format(name, spec)
+					or 'no specialization yet'))
+		end
+
 	elseif input:find('^layout') then
 		local name = input:match('^layout%s+(%S+)$')
 
