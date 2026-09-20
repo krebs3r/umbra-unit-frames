@@ -352,10 +352,20 @@ local function Build()
 		edit:HighlightText()
 	end)
 
+	--[[ The hint has to stop where the button starts
+	A FontString with one anchor sizes itself to its text and keeps going, and
+	the button is a child frame, so it draws over the end of the sentence
+	rather than pushing it aside — which reads as text mysteriously cut off.
+
+	A second point gives it a width, so it ends at the button and the client
+	shortens it with an ellipsis if it ever has to. The sentence lost its
+	second half as well: what the button does is written on the button.
+	--]]
 	local hint = frame:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmall')
 	hint:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', PADDING + 4, PADDING + 6)
-	hint:SetText('Escape closes this. Copying hands over plain text — no addon '
-		.. 'may reach the clipboard.')
+	hint:SetPoint('RIGHT', copy, 'LEFT', -8, 0)
+	hint:SetJustifyH('LEFT')
+	hint:SetText('Escape closes this. Copying hands over plain text.')
 
 	if not native then
 		hint:SetTextColor(unpack(colors.muted))

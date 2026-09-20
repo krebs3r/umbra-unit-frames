@@ -727,56 +727,43 @@ static fallback on both.
 Written and installed, never confirmed in the client. Each one degrades
 quietly rather than erroring, which is why none of them announced itself.
 
-1. **Which way a row fills after a layout switch.** The *side* is confirmed:
-   `/uuf layout` moved the real containers from under the frame to above it
-   without a reload, in an instance. What that does not show is the fill
-   direction, because eight fit in a row and the character carried six. It
-   takes a ninth aura to see whether `SetFlowLayoutAnchorPoint` and
-   `SetFlowLayoutGrowthDirection` take after creation, or whether the
-   containers have to be rebuilt on a switch instead of turned. The stand-ins
-   prove nothing here: Umbra packs those itself.
-
-   The reserved space is not the question — the player frame holds 16 helpful
-   and 8 harmful, two rows and one. The question is which row is the *first*
-   one after a switch. Above the frame a block has to fill from its bottom
-   edge upwards, so that the row nearest the frame is the one that fills
-   first; if `SetFlowLayoutAnchorPoint` did not take, the near row stays empty
-   until the far one is full and the block reads as floating away from the
-   frame. With eight or fewer auras there is only one row and nothing to tell
-   apart.
-2. **`/uuf auras both` — confirmed working** on 20 September 2026, reported
-   rather than measured, and nothing about it misbehaved in use. The worry was
-   narrower than the command: reparenting is reversible, but Edit Mode also
-   moves `BuffFrame` and `DebuffFrame`, and whether it would take them back
-   from a parent of ours was never established. It has not misbehaved, so this
-   stops being a question and becomes something to watch for.
-3. **Energy — confirmed** on a druid on 20 September 2026, reported rather
-   than sampled. Rage and focus were already confirmed, focus measured at
-   `239/138/85` on the hairline against the client's `255/128/64` with the
-   gloss over it, and the percentage above it orange at `195/128/97` rather
-   than the `141/151/171` it would fall back to. **All four resources now
-   answer**, so nothing is left of this one.
-4. **Absorbs and incoming healing, from real data.** The stand-ins were seen
-   in *Thron der Gezeiten* on 20 September 2026 and drew — including on the
-   target frame, so the anchors to the health fill are accepted inside an
-   instance, on a unit whose health is hidden. That is the thing this design
-   rests on, and it holds.
-
+1. **A real absorb.** The surfaces are confirmed: the stand-ins were seen in
+   *Thron der Gezeiten* on 20 September 2026 and drew on the target frame
+   too, so the anchors to the health fill are accepted inside an instance on
+   a unit whose health is hidden — which is the thing this design rests on.
    Incoming healing then looked right on a later run, reported rather than
-   measured. What has still not been pinned down is a **real** absorb: a
-   hunter carries none of its own, and the two runs so far produced no
-   shielded unit to point at. The remaining question is only whether oUF's
-   values arrive, not whether the surfaces work.
-5. **The 2D stand-in — confirmed, and confirmed to be the design.** Seen on
-   20 September 2026: 2D inside an instance, 3D out in the open world. That
-   is not a fault to be chased but the two halves of one rule — the client
-   withholds a hostile unit's model inside an instance and hands it over
-   outside, so the column shows whichever it can get. `SetPortraitTexture` is
-   allowed where the model was not, which was the open half of it.
+   measured.
 
+   What has not been pinned down is a **real** damage absorb, because none of
+   the runs so far produced one: a hunter carries no absorb of its own. The
+   remaining question is whether oUF's values arrive, not whether the
+   surfaces work, and a shielded tank in the target frame answers it.
 
-Settled since this list was written: auras inside an instance, the side a row
-lands on after a switch, and the frame positions in both sets.
+Settled on 20 September 2026, all reported from the client:
+
+- **Which way a row fills after a layout switch.** Nine buffs were the test
+  the earlier runs could not give it. `modern` fills upwards, `classic`
+  downwards, both correct — so `SetFlowLayoutAnchorPoint` and
+  `SetFlowLayoutGrowthDirection` do take after creation, and a set switch
+  needs no rebuild.
+- **`/uuf auras both`**, working in use. The narrower worry — Edit Mode also
+  moves `BuffFrame` and `DebuffFrame`, and might take them back from a parent
+  of ours — has not shown itself, so it stops being a question and becomes
+  something to watch for.
+- **Energy**, on a druid. Rage and focus were already confirmed, focus
+  measured at `239/138/85` on the hairline against the client's `255/128/64`
+  with the gloss over it, and the percentage above it orange at `195/128/97`
+  rather than the `141/151/171` it would fall back to. All four resources
+  answer.
+- **The 2D portrait stand-in**, and that it *is* the design: 2D inside an
+  instance, 3D in the open world. Not a fault to chase but the two halves of
+  one rule — the client withholds a hostile unit's model inside an instance
+  and hands it over outside, so the column shows whichever it can get.
+  `SetPortraitTexture` is allowed where the model was not, which was the open
+  half of it.
+
+Settled earlier: auras inside an instance, the side a row lands on after a
+switch, and the frame positions in both sets.
 
 ### Remaining single frames
 
