@@ -23,8 +23,10 @@ First buildable version. Player and target frames, no configuration yet.
   without waiting for one
 - `/uuf unlock` shows every frame, including ones with no unit behind them,
   and fills their aura rows, so what you drag is the whole extent
-- Dragged frames snap to each other's edges and middles and to the middle of
-  the screen, with a guide showing what they are about to line up on
+- Dragged frames snap to each other's matching edges and middles and to the
+  middle of the screen, with a guide showing what they are about to line up on
+- A frame stacked under another lands in the slot the layout keeps for it,
+  below the castbar rather than on top of it
 - A frame cannot be dragged so far that its castbar or its aura rows leave the
   screen, not just its own box
 - Pointing at a frame shows the unit's tooltip, the way pointing at the unit

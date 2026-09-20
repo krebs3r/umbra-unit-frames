@@ -206,10 +206,28 @@ A set switch changes both reaches, so the insets are set in
 `Umbra:AnchorFrame` rather than once in `PlaceFrame`.
 
 **Dragged by hand, a frame lands a unit or two off the one beside it**, and
-that reads as a mistake rather than a choice. While a frame is dragged, its
-two edges and its middle are compared on each axis against the same three
-lines on every other frame and against the middle of the screen; anything
-within `snapDistance` lights a guide, and releasing puts the frame on it.
+that reads as a mistake rather than a choice. So while a frame is dragged,
+lines on it are compared against lines on every other frame; anything within
+`snapDistance` lights a guide, and releasing puts the frame on it.
+
+**The pairings are named rather than crossed**, and the first version got this
+wrong: crossing every line with every other offered *pet top to player box
+bottom*, which put the pet frame on top of the player's castbar. A frame's box
+is not the end of it.
+
+- **Aligning** is edge to *matching* edge — left to left, middle to middle,
+  top to top. Two frames read as a row only when the same edges agree.
+- **Beside** is left edge to right edge, and only sideways: nothing hangs off
+  the sides, because the aura rows are exactly as wide as the frame.
+- **Stacking** goes to a slot and never to a box edge. `Slots` reads two kinds
+  out of the set: where it keeps room for *another frame* — an entry naming
+  one, so the pet's place between the castbar and the debuffs — and clear of
+  the whole reach. An aura row is never a slot, because a frame put on one
+  covers it.
+
+In `modern` the player frame therefore offers `-18` and `-83` underneath and
+nothing at `0`, and an entry counts as room for a frame by being a key in
+`Umbra.frames`, which stays true of anything a later set puts in a stack.
 
 The move happens on release, not during the drag. A dragged frame follows the
 cursor, so moving it underneath makes it stick and fight rather than snap.

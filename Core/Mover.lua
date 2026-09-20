@@ -118,37 +118,120 @@ end
 
 local guideX, guideY = Guide(), Guide()
 
---[[ Lines(frame)
-The three lines a frame can be aligned by, on each axis: its two edges and its
-middle. Nil before the frame has been laid out.
+--[[ Box(frame)
+The rectangle a frame occupies, and the middle of it. Nil before the frame has
+been laid out.
+
+Asking a frame for its own rectangle is allowed here, though the geometry rule
+forbids deriving size from a widget that carries unit data. It is allowed
+because of that rule: every frame is explicitly sized and anchored to UIParent,
+so nothing in this rectangle came from a unit.
 --]]
-local function Lines(frame)
+local function Box(frame)
 	local left, right = frame:GetLeft(), frame:GetRight()
 	local bottom, top = frame:GetBottom(), frame:GetTop()
 
 	if not left or not bottom then return end
 
-	return {left, (left + right) / 2, right}, {bottom, (bottom + top) / 2, top}
+	return {
+		left = left, right = right, midX = (left + right) / 2,
+		bottom = bottom, top = top, midY = (bottom + top) / 2,
+	}
 end
 
---[[ Targets(dragged)
-Every line the dragged frame may align itself to: the same three on each of
-the other frames, and the middle of the screen.
+--[[ Slots(frame, box)
+The lines another frame may be stacked onto, above and below this one.
 
-A hidden frame is left out. Unlocking shows them all, so in practice this only
-skips one that could not be revealed in combat.
+**A frame's box is not the end of it.** A castbar hangs below it and the aura
+rows below that, so offering the box edge as a place to stack onto is offering
+to cover them — which is exactly how a pet frame ended up on top of the
+player's castbar.
+
+Two kinds of line come out of the stack instead:
+
+- Where the set keeps room for *another frame*, which is an entry naming one:
+  in `modern` the pet sits between the castbar and the debuffs, and that slot
+  is where a dragged pet belongs. An aura row is never such a slot, because a
+  frame put on one covers it.
+- Clear of everything this frame draws for itself, which is the whole reach.
+
+A frame with neither, the pet among them, offers its own edges, since for it
+the box really is the end.
 --]]
-local function Targets(dragged)
-	local xs = {UIParent:GetWidth() / 2}
-	local ys = {UIParent:GetHeight() / 2}
+local function Slots(frame, box)
+	local config = frame.umbraConfig
+
+	if not config then
+		return {box.bottom}, {box.top}
+	end
+
+	local layout = Umbra:ActiveLayout()
+	local under, over = {}, {}
+
+	-- An entry that names a frame is room for one. Asking Umbra.frames keeps
+	-- this true of any frame a later set puts in a stack.
+	for _, entry in ipairs(layout.below) do
+		if Umbra.frames[entry] and Umbra:StackHeight(config, entry) then
+			under[#under + 1] = box.bottom - Umbra:StackOffset(config, layout, 'below', entry)
+		end
+	end
+
+	for _, entry in ipairs(layout.above) do
+		if Umbra.frames[entry] and Umbra:StackHeight(config, entry) then
+			over[#over + 1] = box.top + Umbra:StackOffset(config, layout, 'above', entry)
+		end
+	end
+
+	under[#under + 1] = box.bottom - Umbra:StackOffset(config, layout, 'below')
+	over[#over + 1] = box.top + Umbra:StackOffset(config, layout, 'above')
+
+	return under, over
+end
+
+--[[ Candidates(dragged)
+Every pairing of a line on the dragged frame with a line it could land on, per
+axis, as `{mine, theirs}`.
+
+The pairings are named rather than crossed. Aligning is edge to *matching*
+edge — two frames read as a row only when the same edges agree — and stacking
+goes to a slot, never to a box edge. Crossing every line with every other is
+what offered the pet a place on the castbar.
+--]]
+local function Candidates(dragged)
+	local mine = Box(dragged)
+	if not mine then return end
+
+	local xs, ys = {}, {}
+
+	local function pair(axis, line, onto)
+		axis[#axis + 1] = {line, onto}
+	end
+
+	pair(xs, mine.midX, UIParent:GetWidth() / 2)
+	pair(ys, mine.midY, UIParent:GetHeight() / 2)
 
 	for _, frame in ipairs(movers) do
 		if frame ~= dragged and frame:IsShown() then
-			local fx, fy = Lines(frame)
+			local theirs = Box(frame)
 
-			if fx then
-				for _, value in ipairs(fx) do xs[#xs + 1] = value end
-				for _, value in ipairs(fy) do ys[#ys + 1] = value end
+			if theirs then
+				pair(xs, mine.left, theirs.left)
+				pair(xs, mine.midX, theirs.midX)
+				pair(xs, mine.right, theirs.right)
+
+				-- Beside it, and only sideways: nothing hangs off the sides,
+				-- because the aura rows are exactly as wide as the frame.
+				pair(xs, mine.left, theirs.right)
+				pair(xs, mine.right, theirs.left)
+
+				pair(ys, mine.bottom, theirs.bottom)
+				pair(ys, mine.midY, theirs.midY)
+				pair(ys, mine.top, theirs.top)
+
+				local under, over = Slots(frame, theirs)
+
+				for _, line in ipairs(under) do pair(ys, mine.top, line) end
+				for _, line in ipairs(over) do pair(ys, mine.bottom, line) end
 			end
 		end
 	end
@@ -156,22 +239,20 @@ local function Targets(dragged)
 	return xs, ys
 end
 
---[[ Nearest(lines, targets)
+--[[ Nearest(candidates)
 How far to move, and onto what, for the closest pairing inside the snap
 distance. Nil when nothing is near enough.
 --]]
-local function Nearest(lines, targets)
+local function Nearest(candidates)
 	local shift, onto
 
-	for _, line in ipairs(lines) do
-		for _, target in ipairs(targets) do
-			local delta = target - line
+	for _, candidate in ipairs(candidates) do
+		local delta = candidate[2] - candidate[1]
 
-			if math.abs(delta) <= Umbra.metrics.snapDistance
-				and (not shift or math.abs(delta) < math.abs(shift)) then
+		if math.abs(delta) <= Umbra.metrics.snapDistance
+			and (not shift or math.abs(delta) < math.abs(shift)) then
 
-				shift, onto = delta, target
-			end
+			shift, onto = delta, candidate[2]
 		end
 	end
 
@@ -198,24 +279,22 @@ local function ShowGuide(line, vertical, at)
 end
 
 local function OnDragUpdate(dragged)
-	local lx, ly = Lines(dragged)
-	if not lx then return end
+	local xs, ys = Candidates(dragged)
+	if not xs then return end
 
-	local xs, ys = Targets(dragged)
-	local _, ontoX = Nearest(lx, xs)
-	local _, ontoY = Nearest(ly, ys)
+	local _, ontoX = Nearest(xs)
+	local _, ontoY = Nearest(ys)
 
 	ShowGuide(guideX, true, ontoX)
 	ShowGuide(guideY, false, ontoY)
 end
 
 local function Snap(dragged)
-	local lx, ly = Lines(dragged)
-	if not lx then return end
+	local xs, ys = Candidates(dragged)
+	if not xs then return end
 
-	local xs, ys = Targets(dragged)
-	local shiftX = Nearest(lx, xs) or 0
-	local shiftY = Nearest(ly, ys) or 0
+	local shiftX = Nearest(xs) or 0
+	local shiftY = Nearest(ys) or 0
 
 	if shiftX == 0 and shiftY == 0 then return end
 
