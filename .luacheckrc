@@ -39,6 +39,7 @@ read_globals = {
 	'UnitClass', 'UnitName', 'UnitExists', 'UnitIsUnit', 'UnitInRange',
 	'UnitIsPlayer', 'UnitReaction', 'C_ClassColor',
 	'UnitIsVisible', 'UnitIsConnected', 'IsUnitModelReadyForUI',
+	'SetPortraitTexture',
 
 	-- Secret values, added in 12.0
 	'issecretvalue', 'C_Secrets', 'C_CurveUtil', 'C_DurationUtil',

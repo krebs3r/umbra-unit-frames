@@ -48,9 +48,9 @@ First buildable version. Player and target frames, no configuration yet.
 - Aura rows hold the eighth icon again: the client counts a spacing after
   every button, so the row width it was given was two pixels short and the
   last icon wrapped out of sight
-- Target portraits are asked for again when the client hands back no model,
-  bounded and reported — the empty portrait on a dungeon target is not
-  solved yet, and this is what measures it
+- The portrait column is no longer empty for a target inside a dungeon: the
+  client withholds a hostile unit's model there, so the game's own 2D
+  portrait stands in until a real model can be had
 - `/uuf check` reports what each frame's portrait was able to load, and
   whether the client hides either value oUF decides that on — for every
   frame, including ones with nothing behind them, so a missing line cannot be

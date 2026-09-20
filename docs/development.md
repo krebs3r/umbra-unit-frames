@@ -495,60 +495,61 @@ cooldown and the count are pinned to the square at the top and the line sits in
 the strip below. Metrics reach that callback on the element rather than in the
 group options, because the options table goes on to the client and is typed.
 
-### The empty portrait on the target frame
+### The client keeps a hostile unit's model to itself
 
-Still open, and worth writing down at length because two explanations have
-already been ruled out and a third was acted on too early.
-
-oUF sets a portrait model once, when the unit changes, and never asks again.
-The player's and the pet's are filled; the target's is empty inside a dungeon.
-Measured in *Der Steinerne Kern* on 20 September 2026:
+**Settled.** A target's 3D portrait is empty inside a dungeon and filled in the
+open world, on the same character against the same kind of unit. Measured in
+*Der Steinerne Kern* on 20 September 2026:
 
 ```
 portrait target: UnitIsConnected: readable — true
 portrait target: UnitIsVisible:   readable — true
-portrait target: model: readable — nil
-portrait player: model: readable — 878772
-portrait pet:    model: readable — 1266661
+portrait target: ready:           readable — true
+portrait target: model:        readable — nil
+portrait target: display info: readable — 0
+portrait player: model:        readable — 878772
+portrait pet:    model:        readable — 1266661
 ```
 
-**Not the restricted-value regime.** Both halves of oUF's condition come back
-in the clear, and two models load in the same instance.
+`ready` true and `display info` 0 together are the whole answer: the client has
+no work left to do and has assigned no model. It is not late, it is withheld.
 
-**Not the portrait column.** One style builds all three frames, and the frame,
-its ground and its tint are explicitly placed and do not care what the unit
-is.
+This **is** the restricted-value regime, and saying it was not — which these
+notes did, on the strength of two conditions coming back in the clear — was
+reading the regime too narrowly. It does not only hand back opaque numbers; it
+also declines. What a creature looks like *is* its identity, and identity is
+what the client holds back about a hostile unit inside an instance. The three
+frames line up exactly with that: the player is yours, the pet is yours, and
+the target is not.
 
-**Not player versus creature.** The pet is a creature and its model loads.
-That one is worth stating because it is the obvious next guess.
+That also disposes of the guesses made along the way, and they are worth
+keeping because each was reasonable and wrong:
 
-So oUF took the real branch, called `SetUnit`, and the client answered with
-nothing — for this unit and not for the other two.
+- **Not the column.** One style builds all three frames.
+- **Not player versus creature.** The pet is a creature and loads.
+- **Not streaming.** A bounded retry was written for that reading and changed
+  nothing — and worse, it was gated on `IsUnitModelReadyForUI`, an API nobody
+  had measured, so the first attempt could not even have run. A gate on an
+  unmeasured assumption in front of a measurement is the exact mistake this
+  file exists to prevent, committed while chasing it.
 
-**A retry was written on that and did not fix it.** The reasoning was that the
-model had not streamed in yet and oUF's one shot was already spent, which
-`IsUnitModelReadyForUI` and DialogueUI's queue-and-retry made plausible. The
-retry was then **gated on that same function**, which is the actual mistake:
-if the client answers "ready" while handing over nothing, the chain never
-starts, and the next run came back `model: nil` exactly as before — from a
-fix that had very likely never run. A gate on an unmeasured API is the thing
-this file keeps warning about, applied to a diagnostic.
+Nothing here can fix a client that declines, so the column stops being empty
+instead. `SetPortraitTexture` — Blizzard's own 2D portrait, asked for the same
+unit — is laid **over** the model rather than swapped for it, because a hidden
+PlayerModel does not load and hiding it would cost the real model its chance
+to turn up. The stand-in goes up the moment there is nothing to show and comes
+down the moment there is, so a target in the open world is 3D and one in a
+dungeon is 2D, without either case knowing about the other.
 
-It now runs on the symptom alone and says so through `Umbra:Debug`, so that a
-chain which never started and one which ran and failed stop looking alike.
-`/uuf check` asks `IsUnitModelReadyForUI` as a question of its own, along with
-`GetDisplayInfo` — a creature is set by display rather than by file, so a
-display with no file would mean `GetModelFileID` was the wrong question all
-along and the portrait is failing somewhere else entirely.
+The bounded retry stays, and now has an honest job: a model that really is
+still streaming upgrades the column from 2D to 3D instead of the column
+sitting empty while it waits. `/uuf check` reports which of the two is
+showing.
 
-What the next run separates:
-
-| | means |
-| :--- | :--- |
-| debug says the chain never started | `ModelPending` is wrong about the symptom |
-| `ready: false` | the model really is still coming, and the retry is too short |
-| `ready: true`, display info set | the model is there and something else hides it |
-| `ready: true`, no display info | `SetUnit` refuses this unit, and the cause is upstream of all of this |
+What is still unmeasured: whether the client declines `SetPortraitTexture` for
+the same unit it declined a model for. If it does, the stand-in is its
+question mark, which is a worse picture but still an honest one — and the
+`showing` line says which happened.
 
 ### Incoming healing and absorbs
 
@@ -664,10 +665,11 @@ quietly rather than erroring, which is why none of them announced itself.
    hunter carries none of its own, and the two runs so far produced no
    shielded unit to point at. The remaining question is only whether oUF's
    values arrive, not whether the surfaces work.
-5. **The 3D portrait on the target frame.** Open. Three explanations ruled
-   out, one acted on too early and withdrawn. See *The empty portrait on the
-   target frame* for the table of what the next `/uuf check` separates, and
-   run `/uuf debug` beside it.
+5. **The 2D stand-in for a portrait the client withholds.** Why it is withheld
+   is settled — see *The client keeps a hostile unit's model to itself*. What
+   has not been looked at is the stand-in itself: whether
+   `SetPortraitTexture` is allowed where the model was not, and how the
+   client's square portrait art reads cropped into this column.
 
 
 Settled since this list was written: auras inside an instance, the side a row

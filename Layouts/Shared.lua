@@ -155,13 +155,39 @@ The ForceUpdate inside the chain comes back through here, which is what the
 flag is for: without it each attempt would start a chain of its own. Clearing
 it when the chain ends is what lets the next target have its own.
 --]]
+--[[ StandIn(element, unit)
+Covers the model with the client's own 2D portrait, or uncovers it.
+
+`SetPortraitTexture` is what Blizzard's own unit frames use, and it is asked
+for the same unit the model was asked for, so nothing is invented here: if the
+client will not name this unit either, the stand-in is its question mark and
+that is still an honest answer.
+--]]
+local function StandIn(element, unit, show)
+	local flat = element.umbraFlat
+	if not flat then return end
+
+	if show and unit and type(_G.SetPortraitTexture) == 'function' then
+		pcall(SetPortraitTexture, element.umbraFlatArt, unit)
+	end
+
+	flat:SetShown(show and true or false)
+end
+
 local function PortraitPostUpdate(element, unit)
+	local missing = ModelPending(element)
+
+	-- Covered the moment there is nothing to show, uncovered the moment there
+	-- is. A column that is briefly 2D and then 3D is better than one that is
+	-- briefly empty, and the retry below is what makes the second half happen.
+	StandIn(element, unit, missing and unit and UnitExists(unit))
+
 	if element.umbraWaiting then return end
 	if not unit or not UnitExists(unit) then return end
-	if not ModelPending(element) then return end
+	if not missing then return end
 
 	element.umbraWaiting = true
-	Umbra:Debug('portrait missing for', unit, '— waiting for it')
+	Umbra:Debug('portrait missing for', unit, '— standing in for it')
 	RetryPortrait(element, 1)
 end
 
@@ -215,10 +241,40 @@ local function Style(self, unit)
 	portrait.PostUpdate = PortraitPostUpdate
 	self.Portrait = portrait
 
+	--[[ The 2D stand-in
+	Laid over the model rather than swapped for it. A PlayerModel that is
+	hidden does not load, so hiding it would take away the chance of the real
+	model ever turning up; this sits a level above and covers it while there
+	is nothing to see.
+
+	The client's portrait art is square and this column is not, so the texture
+	is cropped rather than stretched: the full height, and as much width as
+	that height allows, taken from the middle where the face is.
+	--]]
+	local flat = CreateFrame('Frame', nil, self)
+	flat:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
+	flat:SetSize(l.portrait, height)
+	flat:SetFrameLevel(portrait:GetFrameLevel() + 1)
+	flat:Hide()
+
+	local flatArt = flat:CreateTexture(nil, 'ARTWORK')
+	flatArt:SetAllPoints(flat)
+
+	do
+		local trim = 0.08
+		local span = 1 - trim * 2
+		local half = span * (l.portrait / height) / 2
+
+		flatArt:SetTexCoord(0.5 - half, 0.5 + half, trim, 1 - trim)
+	end
+
+	portrait.umbraFlat = flat
+	portrait.umbraFlatArt = flatArt
+
 	local tint = CreateColorLayer(self, 0.13)
 	tint:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	tint:SetSize(l.portrait, height)
-	tint:SetFrameLevel(portrait:GetFrameLevel() + 1)
+	tint:SetFrameLevel(portrait:GetFrameLevel() + 2)
 	self.PortraitTint = tint
 
 	-- Every number on the right edge shares this inset, so they stack into one

@@ -384,6 +384,13 @@ SlashCmdList.UMBRAUNITFRAMES = function(input)
 				report(label .. ': is player', function()
 					return UnitIsPlayer(unit)
 				end)
+
+				-- Which of the two the column is actually showing, so the
+				-- claim that it is never empty is measurable rather than
+				-- asserted.
+				print(PREFIX .. label .. ': showing ' ..
+					((model.umbraFlat and model.umbraFlat:IsShown())
+						and '2D stand-in' or '3D model'))
 			end
 		end
 
