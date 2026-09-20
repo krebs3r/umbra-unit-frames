@@ -35,7 +35,9 @@ measurements are under *Auras*. Nothing about the containers is refused where
 they gain forbidden aspects; `/uuf debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
-One principle is open: range shown through fading. The absorbs have been seen
+One principle is open: range shown through fading, which oUF's own element
+gates on party membership — see *Range fading belongs to the group frames*
+for why it waits for the group header rather than being half-built now. The absorbs have been seen
 drawing in an instance, on both the player and the target frame, but only as
 stand-ins — see *Waiting to be looked at* for what that does and does not
 settle.
@@ -359,6 +361,29 @@ the bar so they draw above it, but anchored to the frame.
 - `oUF:Factory(func)` runs at `PLAYER_LOGIN`, `frame:UpdateTags()` forces a tag
   refresh, and `oUF.objects` lists every frame.
 - The addon metadata namespace is `C_AddOns`, plural.
+
+### Range fading belongs to the group frames
+
+The sixth principle, and it cannot be built on the frames that exist today.
+
+**oUF's `Range` element fades only party members.** It asks
+`UnitIsConnected(unit) and UnitInParty(unit)` and, for anything that fails
+that, simply sets `insideAlpha` and returns. On a target, a pet or a focus it
+is not a no-op by accident but by construction, because `UnitInRange` itself
+only answers for units in your party or raid — for anyone else the client has
+no distance to give an addon.
+
+Range to an arbitrary unit therefore has to be asked a different way:
+`C_Spell.IsSpellInRange` against a spell the character actually has, which
+means a per-class table of one harmful and one helpful spell, kept current
+across expansions. That is a real piece of work and a real maintenance
+burden, and it buys the least on exactly the frames it would be built for —
+you can see your own target.
+
+So this waits for the group header rather than being half-built now.
+`Umbra.metrics.rangeAlpha` is already there, unused on purpose, and the raid
+is where fading earns its place: twenty frames where the ones you cannot
+reach should step back without being hidden.
 
 ### Auras
 
