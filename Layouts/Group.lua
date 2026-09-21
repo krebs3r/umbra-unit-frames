@@ -193,10 +193,10 @@ local function BuildParty()
 	local pitch = Umbra:GroupSlotHeight(config) + config.groupSpacing
 
 	for index = 1, Umbra.partyCount do
-		local ok, frame = pcall(oUF.Spawn, oUF, 'party' .. index,
+		local spawned, frame = pcall(oUF.Spawn, oUF, 'party' .. index,
 			'UmbraPartyStandIn' .. index)
 
-		if not ok then
+		if not spawned then
 			Umbra:Debug('party stand-in not created:', index, tostring(frame))
 			break
 		end

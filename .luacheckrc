@@ -43,6 +43,18 @@ read_globals = {
 	'MAX_BOSS_FRAMES',
 	'SetPortraitTexture',
 
+	-- A unit's identity, which is what `Model:SetUnit` is gated on, and the
+	-- role a person signed up as, which the party column marks.
+	'UnitGUID', 'UnitGroupRolesAssigned',
+
+	-- The group itself, and where the run is taking place. Both reports ask.
+	'IsInRaid', 'IsInGroup', 'GetNumGroupMembers', 'IsInInstance',
+	'MAX_PARTY_MEMBERS',
+
+	-- Atlas art, asked for before it is shown: SetAtlas on a name this
+	-- client does not have leaves the texture as it was rather than refusing.
+	'C_Texture',
+
 	-- Secret values, added in 12.0
 	'issecretvalue', 'C_Secrets', 'C_CurveUtil', 'C_DurationUtil',
 	'CreateUnitHealPredictionCalculator', 'UnitGetDetailedHealPrediction',
@@ -62,4 +74,5 @@ read_globals = {
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
 	'SecureHandlerSetFrameRef', 'loadstring_untainted',
+	'RegisterAttributeDriver',
 }
