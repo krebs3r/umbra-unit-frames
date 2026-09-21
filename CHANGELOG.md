@@ -1,42 +1,59 @@
 # Changelog
 
-## Unreleased
+## 0.2 — 22 September 2026
 
+The group frames. A party column on the client's own secure group header —
+children it creates, assigns and re-sorts, in the Umbra style — carrying
+everything a frame in this addon has: the portrait column, class color at the
+edge, power as a hairline, debuffs, a cast bar and the role each member signed
+up as. Range fading comes with it, which is the sixth design principle and the
+one that was waiting for exactly this.
+
+Still a pre-release, and for the same reason as 0.1: there is no configuration
+beyond the slash commands. Raid frames are not here yet, and neither is Clique
+support.
+
+- A party column, built on a real `SecureGroupHeaderTemplate` rather than four
+  fixed frames: the client creates the children, assigns their units and re-
+  sorts them, in combat as well as out of it. It is dragged by a mover of its
+  own rather than by the header, because what a secure header does with a
+  child that is not one of its unit buttons is not something this addon has
+  measured. Unlocking shows four stand-ins in its place, which are real frames
+  on `party1..party4` rather than boxes of the same size
+- The party column carries each member's debuffs: one row under the frame,
+  icons at 14 pixels rather than the 26 a single frame uses, with the same
+  dispel underline and no duration label — at that size the label covers the
+  icon it belongs to. The count is what fits the frame's width rather than a
+  number written down, so the row ends where the frame does. Buffs stay off
+- The party column marks each member's role with the client's own icon, left
+  of the name — tank, healer and damage alike. Only NONE draws nothing,
+  because that one is an absence. The space is reserved on every group frame
+  whether or not there is an icon in it, so the names stay in one column
+  when somebody changes role
 - Party frames have a cast bar, the same one the single frames carry: full
   width under the frame, spell name at the left and the time at the right.
   It cost one line — the stack below a frame already began with the
   castbar's reach, so the debuff row moved down by its height and the column
   grew with it, from 53 to 69 per member
+- Range fading, the last of the six design principles. A unit out of range
+  fades with its portrait and its rows instead of being replaced by a grey
+  copy of itself — oUF gates its own element on group membership, which is why
+  it waited for the column rather than being half-built on the single frames
+- The header's spacing, the column's height and the stand-ins shown while it
+  is unlocked now ask one function how much room a member takes. A row
+  hanging under each frame was the first thing that could make the three
+  disagree, and three numbers derived separately is how the pet once ended
+  up under a row of debuffs
+- In the modern set the party column is centred on the left edge instead of
+  standing on the set's baseline. It grew by a debuff row per member while
+  its bottom edge stayed put, so all of that growth went upward from a line
+  that was already low
 - `/uuf group umbra` puts the client's own group panel away, `/uuf group
   both` brings it back. It goes the way Blizzard's aura stack already went —
   parented to a frame that is never shown, so nothing of its own is
   overwritten and the panel shows itself again unharmed. Default is `both`:
   the panel carries the raid markers and the way out of a group, and the
   column was placed to clear it rather than to replace it
-- The party column marks each member's role with the client's own icon, left
-  of the name — tank, healer and damage alike. Only NONE draws nothing,
-  because that one is an absence. The space is reserved on every group frame
-  whether or not there is an icon in it, so the names stay in one column
-  when somebody changes role
-- In the modern set the party column is centred on the left edge instead of
-  standing on the set's baseline. It grew by a debuff row per member while
-  its bottom edge stayed put, so all of that growth went upward from a line
-  that was already low
-- `/uuf dev party` says what each member signed up as, whether the client
-  answered in the clear, whether the run was taken inside an instance, and
-  whether this client has the art. The role is a fact about a person in your
-  group rather than about a unit in the world, so that it survives inside an
-  instance had to be measured before anything was drawn from it
-- The party column carries each member's debuffs: one row under the frame,
-  icons at 14 pixels rather than the 26 a single frame uses, with the same
-  dispel underline and no duration label — at that size the label covers the
-  icon it belongs to. The count is what fits the frame's width rather than a
-  number written down, so the row ends where the frame does. Buffs stay off
-- The header's spacing, the column's height and the stand-ins shown while it
-  is unlocked now ask one function how much room a member takes. A row
-  hanging under each frame was the first thing that could make the three
-  disagree, and three numbers derived separately is how the pet once ended
-  up under a row of debuffs
 - `/uuf health class` colors the health bar by the unit — class for a player,
   reaction for everything else, the same color the edge already carries — and
   `/uuf health plain` puts it back to the one neutral green. The incoming-heal
@@ -50,6 +67,12 @@
   dimming a class color means arithmetic on three numbers that are secret
   inside an instance — and it leaves the 3-pixel edge at full strength, so
   identity still reads loudest where the principle puts it
+- A portrait no longer spends four seconds waiting for a model the client has
+  refused to hand over. Since 12.0.5 `Model:SetUnit` takes no unit token for a
+  unit with a secret identity, so that is now the question asked: a classified
+  unit gets the 2D stand-in and nothing else, and the retry is kept for a
+  model that really is still on its way. Hidden frames — the four party
+  stand-ins while the column is locked — no longer start a chain at all
 - The target-of-target frame no longer throws on every model change in the
   world. oUF asks the client for permission to compare two unit tokens and
   treats a yes as a guarantee; inside a delve the permission comes back in the
@@ -57,6 +80,15 @@
   one run. Umbra now asks the question instead of asking permission, and where
   the client will not answer it settles the portrait on a timer rather than
   reloading it for every model in the world
+- `/uuf dev check` says per frame whether the unit's identity is secret, which
+  is what separates a refusal from a model that has not arrived. It also names
+  frames by name where two of them share a unit: the party header's child and
+  the party stand-in both answer for `party1` and printed the same label
+- `/uuf dev party` says what each member signed up as, whether the client
+  answered in the clear, whether the run was taken inside an instance, and
+  whether this client has the art. The role is a fact about a person in your
+  group rather than about a unit in the world, so that it survives inside an
+  instance had to be measured before anything was drawn from it
 - `/uuf check` reports both halves of that comparison per frame — whether the
   client says the two tokens may be compared, and what comparing them actually
   answers. In a delve those two lines read `readable — true` and `hidden` on
@@ -64,16 +96,6 @@
 - `/uuf debug` says when the client refused to name the unit behind an event,
   once per frame, so a quiet log means the guard never had to act rather than
   that it was never installed
-- A portrait no longer spends four seconds waiting for a model the client has
-  refused to hand over. Since 12.0.5 `Model:SetUnit` takes no unit token for a
-  unit with a secret identity, so that is now the question asked: a classified
-  unit gets the 2D stand-in and nothing else, and the retry is kept for a
-  model that really is still on its way. Hidden frames — the four party
-  stand-ins while the column is locked — no longer start a chain at all
-- `/uuf dev check` says per frame whether the unit's identity is secret, which
-  is what separates a refusal from a model that has not arrived. It also names
-  frames by name where two of them share a unit: the party header's child and
-  the party stand-in both answer for `party1` and printed the same label
 
 ## 0.1 — 20 September 2026
 

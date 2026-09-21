@@ -23,11 +23,17 @@ target-of-target and the boss column — the first three verified inside an
 instance under the restricted-value regime with error capture installed, and **loading and drawing on the Forever beta client** — see
 *Forever* for what that run settled.
 
-Five of the six design principles are implemented — class color at the edge,
-the portrait column, power as a hairline, auras with an underline, and
-hatched absorbs with ghosted incoming healing. Alongside them: two layout
-sets, the class-power row, a cast bar, a frame mover, a switch for Blizzard's
-own aura display, a switch for class-colored health bars, an addon-list icon and packaging.
+**The party column is built**, on the client's own secure header, with a
+debuff row, a cast bar and a role marker — see *Group and raid frames*. Raid
+frames are the next thing on that header.
+
+All six design principles are implemented — class color at the edge, the
+portrait column, power as a hairline, auras with an underline, hatched absorbs
+with ghosted incoming healing, and range shown through fading, which arrived
+with the group frames it was waiting for. Alongside them: two layout sets, the
+class-power row, a cast bar, a frame mover, a switch for Blizzard's own aura
+display, one for its group panel, a switch for class-colored health bars, an
+addon-list icon and packaging.
 
 The aura underline is **verified in the open world and inside an instance**,
 geometry and color both, by sampling screenshots pixel by pixel — the
@@ -35,9 +41,10 @@ measurements are under *Auras*. Nothing about the containers is refused where
 they gain forbidden aspects; `/uuf dev debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
-One principle is open: range shown through fading, which oUF's own element
-gates on party membership — see *Range fading belongs to the group frames*
-for why it waits for the group header rather than being half-built now.
+**Range fading is written and not yet seen.** oUF's own element gates on party
+membership, which is why it waited for the group header — see *Range fading
+belongs to the group frames*. It is on the column now, and nobody has walked
+out of range of a group member to watch it happen.
 
 The absorbs have been seen drawing in an instance, on both the player and the
 target frame, but only as stand-ins — see *Waiting to be looked at* for what
