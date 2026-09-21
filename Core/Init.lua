@@ -405,6 +405,24 @@ local function Command(input)
 					return UnitIsPlayer(unit)
 				end)
 
+				--[[ The two halves of a comparison that is allowed to lie
+				oUF guards every unit comparison with
+				`C_Secrets.CanCompareUnitTokens` and hands the answer
+				straight to a boolean test. Issue #1 is that guard saying
+				yes and the comparison coming back hidden anyway, on this
+				pair, inside a delve. So both are asked here and printed
+				next to each other: a `readable — true` above a `hidden`
+				below it is that contradiction, measured rather than
+				inferred from a stack trace.
+				--]]
+				report(label .. ': may compare with player', function()
+					return C_Secrets.CanCompareUnitTokens(unit, 'player')
+				end)
+
+				report(label .. ': same as player', function()
+					return UnitIsUnit(unit, 'player')
+				end)
+
 				-- Which of the two the column is actually showing, so the
 				-- claim that it is never empty is measurable rather than
 				-- asserted.

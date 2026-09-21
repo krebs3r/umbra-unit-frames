@@ -43,6 +43,12 @@ The absorbs have been seen drawing in an instance, on both the player and the
 target frame, but only as stand-ins — see *Waiting to be looked at* for what
 that does and does not settle.
 
+One fault has been found in use, fixed and **confirmed in the client**: the
+target-of-target frame threw 716 errors in one delve run, out of oUF's own
+unit comparison. See *Permission to compare two units is not an answer* — it
+is also the first thing group frames would have walked into, and the finding
+under it has a longer reach than the bug did.
+
 ### Slash commands
 
 `/uuf` on its own prints the version and the list.
@@ -743,10 +749,154 @@ still streaming upgrades the column from 2D to 3D instead of the column
 sitting empty while it waits. `/uuf check` reports which of the two is
 showing.
 
+**It holds in a delve too**, measured on 21 September 2026 on the same
+character within minutes: `model: readable — 1100258` and `showing 3D model`
+outside, `model: readable — nil` and `showing 2D stand-in` on a target inside.
+A delve is solo and has no encounter, so whatever withholds the model is not
+waiting for a group or a boss fight — the instance is enough.
+
 What is still unmeasured: whether the client declines `SetPortraitTexture` for
 the same unit it declined a model for. If it does, the stand-in is its
 question mark, which is a worse picture but still an honest one — and the
 `showing` line says which happened.
+
+### Permission to compare two units is not an answer
+
+**Settled, and it is a defect in oUF.** Every comparison of two unit tokens in
+the library goes through one function:
+
+```lua
+function Private.unitIsUnit(unit1, unit2)
+	return C_Secrets.CanCompareUnitTokens(unit1, unit2) and UnitIsUnit(unit1, unit2)
+end
+```
+
+The permission is asked, and then the result is handed straight to a boolean
+test at eleven call sites. **The permission can be granted and the answer
+still come back hidden.** Measured on Retail on 21 September 2026, inside a
+delve — so an instance without a group, which is the cheapest way to reach the
+restricted-value regime:
+
+```
+Libs/oUF/elements/portrait.lua:48: attempt to perform boolean test on a
+secret boolean value (execution tainted by 'UmbraUnitFrames')
+  self.__unit = "targettarget"   unit = "player"   count 716
+```
+
+The captured stack says which of the two calls did it, and it is worth
+spelling out because the two readings lead to different fixes. `UnitIsUnit`
+sits in tail position, so a hidden *permission* would have thrown inside the
+`and`, named `private.lua:34`, and kept that frame on the stack. Instead the
+top of the stack is `portrait.lua:48` with the tail call already collapsed:
+permission granted in the clear, answer hidden.
+
+So oUF's guard is not one, and a call site cannot be made safe by asking
+nicer. What works is asking the question and looking at what came back —
+`Umbra.Secrets.SameUnit`, which answers true, false, or **nil for "the client
+will not say"**, needs no `C_Secrets` at all, and therefore behaves the same on
+a client that has none.
+
+`/uuf check` prints both halves side by side, per frame, and a third run on 21
+September 2026 — in a delve, with a creature targeted that had a target of its
+own — **measured the contradiction itself**:
+
+```
+portrait targettarget: may compare with player: readable — true
+portrait targettarget: same as player:          hidden
+```
+
+Permission granted in the clear, answer hidden. Exactly what the stack said,
+now from the client rather than from a reading of it.
+
+**And the client is not protecting a secret here.** Two lines above, in the
+same block, stands `targettarget: is player: readable — false`. If the
+target-of-target is not a player, it cannot be the player unit, so the answer
+`UnitIsUnit` refuses to give is already deducible from a value the client hands
+over in the clear one question earlier. **The refusal is structural on the
+shape of the question, not derived from what the answer would reveal.**
+
+That is the finding with the longest reach. It means no amount of reasoning
+about *what* ought to be secret will predict which calls are safe, because
+this one is not hiding anything. Only asking does — which is what
+`Secrets.SameUnit` was built to do, and why oUF's permission check was never
+going to be enough.
+
+The two runs before it, the open world and the same delve, settle one half and
+narrow the other. The permission is readable in both places:
+
+```
+                 open world                      delve
+target: may compare with player   readable — true       readable — true
+target: same as player            readable — false      readable — false
+target: model                     readable — 1100258    readable — nil
+target: showing                   3D model              2D stand-in
+```
+
+So **the hiding is not a blanket rule for instances.** `target` against
+`player` answers in the clear inside a delve, on the same run where the same
+target's model is withheld. Whatever is hidden is narrower than "comparisons
+under the restricted-value regime".
+
+**The likely shape of it, still a hypothesis.** The pair that threw is
+`targettarget` against `player`, and in a solo delve that comparison has a
+specific meaning: *is that creature targeting me?* Which unit an NPC has
+picked is threat information, and threat is the kind of thing the regime holds
+back. `target` against `player` leaks nothing by comparison — it is your own
+choice, and you made it.
+
+Those two missed the pair itself, because neither was typed while anything had
+a target of its own — the block is gated on the unit existing, which is right
+for the model questions and is why it took a third run.
+
+**The fix holds.** Session 71 is the delve run above, with the guard in place
+and `same as player` coming back hidden — the exact condition that threw 716
+times in session 70. Its log was flushed at 16:35 and carries **no
+`portrait.lua` entry at all**; the 716 did not grow. The target-of-target
+column came up on its 2D stand-in, which is the right answer for a hostile
+model withheld inside an instance.
+
+**Why only that one frame.** `targettarget` is a derived token, so oUF spawns
+it *eventless* — a 0.5s tick instead of events (`ouf.lua:405`). Two events are
+let through anyway because the portrait has nothing else to go on, and being
+on an eventless frame they are registered **without a unit filter**
+(`events.lua:99`). So that single frame is told about every portrait and every
+model change in the world, and compares each one against its own token. Every
+other frame compares its token with itself, which nothing refuses: the proof
+is the same session, where this frame's own tick made that comparison
+thousands of times and produced none of the 716 errors.
+
+The fix stands in front of the handler rather than replacing the element. oUF
+keeps its event handlers in plain fields on the frame, `self[event]`, so a
+wrapper costs a closure and leaves the portrait still being set by oUF's own
+code. Three answers, three things to do: not ours, drop it; ours, hand it on
+naming the frame's own token; refused, settle it on a 0.5s timer through
+`ForceUpdate`, because "some model somewhere changed" arriving several times a
+second must not reload ours several times a second.
+
+All five of the portrait's unit events are guarded, not only the two that
+threw. The other three — `UNIT_CONNECTION` and the two `PARTY_MEMBER_*` — are
+shared with Health and Power, so the field holds a list rather than a single
+handler, and the portrait's entry is picked out of it by identity: the same
+function is registered for all five, and `UNIT_PORTRAIT_UPDATE` is the one
+field where it is still alone. **Health and Power need no guard of their own.**
+They gate on `self.__unit ~= unit`, a plain string comparison no client can
+hide. The portrait is the only element in oUF that asks the client to compare
+two tokens for it.
+
+**The other ten call sites are not reached from here**, and it is worth
+knowing why rather than trusting it. All ten ask `unitIsUnit(unit, 'player')`
+from elements that only exist on the player frame, where the token *is*
+`player` and the comparison is the one nothing refuses. The exception is a
+vehicle, where the frame's token becomes `vehicle` — untested, and the first
+place to look if class power or the resting indicator ever throws this.
+
+It is installed through `oUF:RegisterInitCallback`, which runs for every
+spawned object — **including header children**, which is what matters next:
+`partyNtarget` and `raidNtarget` take the same eventless path (`suffix ==
+'target'`, `ouf.lua:423`), so the group frames would have walked into exactly
+this.
+
+Not reported upstream yet.
 
 ### Incoming healing and absorbs
 
@@ -811,6 +961,13 @@ affects secure snippets, state drivers, `RunAttribute` and
 rest on. Every snippet site belongs inside `if Umbra.hasSecureSnippets then …
 end` with a static fallback.
 
+A second thing they rest on is already answered: `partyNtarget` and
+`raidNtarget` frames are spawned eventless and hear about every model in the
+world, which is the fault issue #1 was — see *Permission to compare two units
+is not an answer*. The guard for it is installed through
+`oUF:RegisterInitCallback`, so header children get it without the group code
+having to remember.
+
 That flag is set in `Core/Init.lua` and reported by `/uuf check`. It used to be
 set in `Compat/Forever.lua`, which returns early on anything but Forever and is
 not listed in the Retail TOC at all — so on Retail it was nil, which behaves
@@ -845,6 +1002,21 @@ quietly rather than erroring, which is why none of them announced itself.
    the runs so far produced one: a hunter carries no absorb of its own. The
    remaining question is whether oUF's values arrive, not whether the
    surfaces work, and a shielded tank in the target frame answers it.
+
+Settled on 21 September 2026, measured in a delve:
+
+- **The portrait guard**, issue #1 — see *Permission to compare two units is
+  not an answer*. The run that confirms it is the one where `same as player`
+  came back hidden, which is the condition that threw 716 times before it, and
+  its log carries no `portrait.lua` entry at all.
+
+  One half of it is reported rather than measured, and is the half that can
+  fail quietly: whether the target-of-target column keeps **following** what
+  the target is looking at. The fix trades an immediate refresh for one on a
+  0.5s timer wherever the client refuses to answer, and a snapshot cannot tell
+  a column that follows from one that is merely correct at the moment it was
+  looked at. `unit comparison refused:` in the debug buffer says the settling
+  branch was reached; whether it settles on the right unit is watched for.
 
 Settled on 20 September 2026, all reported from the client:
 

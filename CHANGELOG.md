@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- The target-of-target frame no longer throws on every model change in the
+  world. oUF asks the client for permission to compare two unit tokens and
+  treats a yes as a guarantee; inside a delve the permission comes back in the
+  clear and the comparison itself comes back hidden, which cost 716 errors in
+  one run. Umbra now asks the question instead of asking permission, and where
+  the client will not answer it settles the portrait on a timer rather than
+  reloading it for every model in the world
+- `/uuf check` reports both halves of that comparison per frame — whether the
+  client says the two tokens may be compared, and what comparing them actually
+  answers. In a delve those two lines read `readable — true` and `hidden` on
+  the same frame, one under the other
+- `/uuf debug` says when the client refused to name the unit behind an event,
+  once per frame, so a quiet log means the guard never had to act rather than
+  that it was never installed
+
 ## 0.1 — 20 September 2026
 
 First release, and a pre-release on purpose. Every single frame is built and

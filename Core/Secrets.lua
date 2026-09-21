@@ -67,3 +67,43 @@ function Secrets.UnitColor(unit)
 		return colors.reaction[reaction]
 	end
 end
+
+--[[ Secrets.SameUnit(unit1, unit2)
+Whether two unit tokens stand for the same unit: true, false, or **nil when
+the client will not say**.
+
+oUF asks `C_Secrets.CanCompareUnitTokens` first and treats a yes as a
+guarantee that the comparison itself will answer in the clear:
+
+	function Private.unitIsUnit(unit1, unit2)
+		return C_Secrets.CanCompareUnitTokens(unit1, unit2) and UnitIsUnit(unit1, unit2)
+	end
+
+**That guarantee does not hold**, which is issue #1. Measured on Retail inside
+a delve on 21 September 2026: `unitIsUnit('targettarget', 'player')`
+handed back a secret boolean, and `not` on it threw 716 times in one session.
+The captured stack says which half did it. `UnitIsUnit` sits in tail position,
+so a throw inside the `and` would have named `private.lua:34` and kept that
+frame; instead the top of the stack is `portrait.lua:48` with the tail call
+already collapsed. So the permission was granted in the clear and the answer
+came back hidden anyway.
+
+Asking permission and asking the question are two different things, and only
+the second one has an answer worth looking at. So this asks the question and
+looks at what came back, which also means it needs no `C_Secrets` at all and
+behaves the same on a client that has none.
+
+Identical tokens are answered without asking. No client can refuse that one,
+it is the comparison every `ForceUpdate` goes through, and the frames that
+never threw are the ones that only ever make it.
+--]]
+function Secrets.SameUnit(unit1, unit2)
+	if not unit1 or not unit2 then return false end
+	if unit1 == unit2 then return true end
+
+	local ok, same = pcall(UnitIsUnit, unit1, unit2)
+
+	if not ok or Secrets.Is(same) then return nil end
+
+	return same and true or false
+end

@@ -191,6 +191,150 @@ local function PortraitPostUpdate(element, unit)
 	RetryPortrait(element, 1)
 end
 
+--[[ The frame that is told about every model in the world
+`targettarget` is a derived token, so oUF spawns it **eventless**: a 0.5s tick
+instead of events, `ouf.lua:405`. Two events are let through anyway, because
+the portrait has nothing else to go on — and being on an eventless frame they
+are registered without a unit filter, `events.lua:99`. So this one frame hears
+UNIT_PORTRAIT_UPDATE and UNIT_MODEL_CHANGED for every unit in the world, and
+oUF's portrait element opens by asking whether the unit that changed is ours.
+
+**That question is what throws.** Issue #1, measured on Retail inside a delve: `portrait.lua:48: attempt to perform boolean test on a secret boolean
+value`, 716 times in one session. Why the comparison comes back hidden despite
+oUF asking permission first is written down in `Secrets.SameUnit`.
+
+**A token compared with itself is refused by nothing**, and that is what the
+whole guard below rests on, so it is worth saying where it was measured rather
+than assumed: the same session. Every other frame only ever makes that
+comparison, and this frame's own 0.5s tick makes it too — thousands of times
+in the run that produced the 716 errors, without producing one of them.
+
+So the handler is wrapped rather than the element replaced. oUF keeps its
+event handlers in plain fields on the frame, `self[event]`, and calls them
+through `onEvent`; standing in front of one costs a closure and leaves the
+portrait still being set by oUF's own code rather than by a second copy of it
+that could drift — the same reason `RetryPortrait` goes through `ForceUpdate`.
+
+Three answers, three things to do. The event is not ours: drop it, which is
+what oUF meant to do. The event is ours: hand it on, naming the frame's own
+token so that the comparison oUF makes next is the one it cannot refuse. The
+client will not say: settle it on a timer, because "some model somewhere
+changed" arriving a few times a second must not reload ours a few times a
+second, and one refresh answers all of them.
+--]]
+local PORTRAIT_SETTLE = 0.5
+
+--[[ Every unit event the portrait element takes
+The first two are what issue #1 arrived through, because they are the two an
+eventless frame is allowed to keep. The other three reach `portrait.lua:48`
+along the same line and have simply not been seen to throw — which is no
+reason to leave a line that is known to be unsafe reachable three more ways.
+
+**The portrait is the only element that compares units this way.** Health and
+Power gate on `self.__unit ~= unit`, a plain string comparison that no client
+can hide, so the three events they share with the portrait are safe for them
+and unsafe for it in the same breath. That is what the identity match below is
+for: those three fields hold a list of handlers, and only one entry in it is
+the portrait's.
+
+`PORTRAITS_UPDATED` is deliberately not here. It is registered unitless and
+arrives with no unit at all, which oUF already drops a line above the
+comparison.
+--]]
+local GUARDED_EVENTS = {
+	'UNIT_PORTRAIT_UPDATE',
+	'UNIT_MODEL_CHANGED',
+	'UNIT_CONNECTION',
+	'PARTY_MEMBER_ENABLE',
+	'PARTY_MEMBER_DISABLE',
+}
+
+local function SettlePortrait(frame, element)
+	if element.umbraSettling then return end
+	element.umbraSettling = true
+
+	C_Timer.After(PORTRAIT_SETTLE, function()
+		element.umbraSettling = nil
+
+		local unit = Umbra:FrameUnit(frame)
+
+		if not unit or not UnitExists(unit) then return end
+		if not frame:IsVisible() then return end
+
+		element:ForceUpdate()
+	end)
+end
+
+local function GuardPortraitEvents(frame)
+	local element = frame.Portrait
+	if not element then return end
+
+	--[[ Which handler is the portrait's
+	One function is registered for all five events, so whichever field still
+	holds it alone names it, and identity picks it out of the lists the other
+	events share. UNIT_PORTRAIT_UPDATE is that field: the portrait element is
+	the only thing in oUF that asks for it.
+
+	Anything else there is a frame this cannot reason about, and a guess is
+	worth less than saying so.
+	--]]
+	local path = frame.UNIT_PORTRAIT_UPDATE
+
+	if type(path) ~= 'function' then
+		return Umbra:Debug('portrait guard found no handler on',
+			tostring(Umbra:FrameUnit(frame)))
+	end
+
+	local function guard(self, event, unit, ...)
+		local own = Umbra:FrameUnit(self)
+		local same = Umbra.Secrets.SameUnit(own, unit)
+
+		if same == false then return end
+
+		if same == nil then
+			--[[ Once, and only once
+			A guard that does its job silently and one that was never
+			reached are the same empty log, and that is the reading-two-ways
+			trap this project keeps walking into. So the first refusal on
+			each element writes itself down — `/uuf debug` then says whether
+			the settling branch was ever taken, without needing a live
+			target-of-target at the moment `/uuf check` is typed.
+
+			Once per element rather than per event: this fires for every
+			model in the world, and a 60-line buffer is there to hold what
+			the build refused, not a transcript.
+			--]]
+			if not element.umbraRefused then
+				element.umbraRefused = true
+				Umbra:Debug('unit comparison refused:', tostring(own), 'against',
+					tostring(unit), '— settling the portrait on a timer')
+			end
+
+			return SettlePortrait(self, element)
+		end
+
+		return path(self, event, own, ...)
+	end
+
+	for _, name in ipairs(GUARDED_EVENTS) do
+		local handler = frame[name]
+
+		if handler == path then
+			frame[name] = guard
+		elseif type(handler) == 'table' then
+			-- `next` rather than `ipairs`: unregistering one handler out of a
+			-- list leaves a hole in it, and a hole stops ipairs early.
+			for index, func in next, handler do
+				if func == path then
+					handler[index] = guard
+				end
+			end
+		end
+	end
+end
+
+oUF:RegisterInitCallback(GuardPortraitEvents)
+
 local function UpdateIdentity(element, unit)
 	local color = Umbra.Secrets.UnitColor(unit)
 	if not color then return end
