@@ -187,7 +187,11 @@ local function Spawn(frame, config, filter, count, harmful, cancel)
 	element.height = buttonHeight
 
 	element.showCount = true
-	element.showDuration = true
+
+	-- Off where the icon is too small to carry the label — the party
+	-- column asks for that. Absent from a config it stays on, so the
+	-- single frames never learn about this.
+	element.showDuration = config.auraDuration ~= false
 	element.cancelButton = cancel
 	element.PostCreateButton = PostCreateButton
 

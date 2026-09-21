@@ -110,6 +110,11 @@ Umbra.metrics = {
 	gap = 2,
 	inset = 4,
 
+	-- Between two frames of a group column. Wider than `gap`, which separates
+	-- the rows inside one frame: the same distance for both would make four
+	-- frames read as one tall frame with twelve rows.
+	groupSpacing = 6,
+
 	nameHeight = 13,
 	healthHeight = 20,
 	powerHeight = 4,
@@ -134,6 +139,22 @@ Umbra.metrics = {
 	auraFontSize = 11,
 
 	fontSize = 12,
+
+	-- How much of the bar's color shows while it carries a unit's — the
+	-- fill's own alpha, so the dark behind it mutes whatever color the
+	-- client handed over. Muting the color itself would mean arithmetic on
+	-- three numbers that are secret inside an instance; an alpha never
+	-- touches them.
+	-- It is also what makes the two numbers on the bar legible: the text
+	-- is near-white, and so are priest white, rogue yellow and monk green
+	-- at full strength.
+	classBarAlpha = 0.6,
+
+	-- What those two numbers are cut with. Off: an outline at this size
+	-- reads as a heavier font rather than as a rim, which is why the bar
+	-- is muted instead. 'OUTLINE' or 'THICKOUTLINE' bring it back, and the
+	-- shadow under the text is there either way.
+	barLabelOutline = '',
 	rangeAlpha = 0.45,
 
 	-- How near a dragged edge has to come to another one before it is taken
@@ -211,7 +232,66 @@ Umbra.frames = {
 		portrait = 28,
 		fontSize = 11,
 	},
+
+	--[[ The party column
+	Keyed `party` rather than `party1`, and that is not a shorthand: `party`
+	is the unit oUF guesses for a header child and hands to the style. One
+	config answers for every frame the header makes, however many that turns
+	out to be and whoever is standing in it — which is the whole point of
+	letting the client create them.
+
+	Cut like the pet and the target's target: the shared width, so the column
+	lines up with everything else, and short, because four stacked frames are
+	already a lot of screen. No castbar, because four of those is a wall of
+	moving bars, and no aura rows for the reason the boss column has none.
+	--]]
+	party = {
+		--[[ Not a frame to spawn
+		This config has to live in `Umbra.frames` for the style to find it,
+		because `party` is the unit oUF hands a header child. But everything
+		else in this table is spawned as a single frame by `Layouts/Single.lua`,
+		which would put a second frame under the same name and the same saved
+		position as the column — and it did, drawing a stray row that looked
+		like a child in the wrong place.
+		--]]
+		header = true,
+
+		-- A cast bar like the single frames have, and it costs nothing
+		-- to place: the stack below a frame starts with the castbar's
+		-- reach, so the debuff row moves down by exactly its height
+		-- and the column grows with it. One member is 69 tall now
+		-- rather than 53.
+		castbar = true,
+
+		nameHeight = 11,
+		healthHeight = 14,
+		portrait = 28,
+		fontSize = 11,
+
+		-- Debuffs only, and at half the size the single frames use. A
+		-- party frame is 33 pixels tall; a 26-pixel icon under it
+		-- would read as a second row of frames. At 14 the block is 18
+		-- tall, near enough to the health bar it hangs under to belong
+		-- to it.
+		--
+		-- No duration text: at 14 pixels the label the single frames
+		-- carry would cover the icon it belongs to. The stack count
+		-- stays — it is one glyph, and it is the one that changes what
+		-- you do.
+		auraSize = 14,
+		auraDuration = false,
+		auras = {harmful = 8},
+	},
 }
+
+--[[ As many party frames as this client has
+`MAX_PARTY_MEMBERS` is the client's own answer, the way `MAX_BOSS_FRAMES` is
+for the boss column, and it is asked for the same reason: a number written
+here is wrong on the patch that changes it. Nothing spawns from this — the
+header decides how many children there are — it is only how tall the box that
+holds them comes out, which has to be known before anyone stands in it.
+--]]
+Umbra.partyCount = type(_G.MAX_PARTY_MEMBERS) == 'number' and MAX_PARTY_MEMBERS or 4
 
 --[[ As many boss frames as this client has
 `MAX_BOSS_FRAMES` is the client's own answer and has changed between
@@ -259,6 +339,44 @@ How far the castbar hangs below the frame, gap included. Zero without one.
 It is where the stack under a frame starts, so the aura rows, the pet frame
 and the reach of the whole side all count from it and cannot disagree.
 --]]
+--[[ Umbra:ColumnHeight(config, count)
+How tall a column of `count` frames of this kind comes to, the spacing between
+them counted and none left hanging off the end.
+
+A group header positions its own children, so this is not what places them: it
+is what the box around them has to be, for the frame mover to have something
+to drag and for a column dragged to the bottom edge to stop while all of it is
+still on screen.
+--]]
+--[[ Umbra:GroupSlotHeight(config)
+How much room one member of a group column takes: the frame itself and
+everything hanging off either side of it.
+
+Three things have to agree on this number — the header's own spacing,
+the column's height, and the stand-ins that stand in for the column
+while it is unlocked — and they would disagree the moment a debuff row
+appeared under each member. So all three ask here.
+
+It reads the set in force rather than assuming a side. Today both sets
+hang a party frame's debuffs below it and neither puts anything above,
+so the answer is the same either way; that is a fact about the two sets,
+not something this is allowed to rely on.
+--]]
+function Umbra:GroupSlotHeight(config)
+	local layout = self:ActiveLayout()
+
+	return self:StackOffset(config, layout, 'above')
+		+ self:FrameHeight(config)
+		+ self:StackOffset(config, layout, 'below')
+end
+
+function Umbra:ColumnHeight(config, count)
+	if count < 1 then return 0 end
+
+	return count * self:GroupSlotHeight(config)
+		+ (count - 1) * config.groupSpacing
+end
+
 function Umbra:CastbarReach(config)
 	if not config.castbar then return 0 end
 
@@ -281,6 +399,19 @@ function Umbra:AuraPerRow(config)
 
 	return math.max(1, math.floor((config.width + config.auraSpacing) / step))
 end
+
+--[[ The party row is as long as the frame it hangs under
+The single frames pick a count and the shared width follows from it:
+`width` is eight 26-pixel icons, by construction. A party frame is that
+same width with icons half the size, so any count written down by hand
+ends the row somewhere in the middle of the frame — which reads as a row
+that failed rather than as a row of what there is.
+
+So it is asked instead of chosen, and the row ends where the frame ends
+whatever the icon size becomes. It is a cap, not a promise: fourteen is
+how many would fit, not how many anyone carries.
+--]]
+Umbra.frames.party.auras.harmful = Umbra:AuraPerRow(Umbra.frames.party)
 
 --[[ Umbra:AuraRowLimit(config)
 The line width to hand the client's flow layout, which is not the frame width.
@@ -506,6 +637,17 @@ do
 			-- the target here — but it lands there by arithmetic rather than
 			-- by two numbers that would have to be kept equal by hand.
 			targettarget = {'TOPLEFT', UIParent, 'TOPLEFT', targetX, glanceY},
+
+			--[[ Under the player's whole left-hand block
+			Not under the player *frame*: under the frame, its castbar and
+			both aura rows, which is what `StackOffset` answers for a side.
+			The column is its own block rather than an entry in that stack,
+			so it keeps the wider gap the two columns keep from each other
+			instead of the gap rows keep inside one frame.
+			--]]
+			party = {'TOPLEFT', UIParent, 'TOPLEFT', inset,
+				playerY - Umbra:FrameHeight(player)
+					- Umbra:StackOffset(player, set, 'below') - column},
 		}
 
 		BossPoints(set)
@@ -514,6 +656,13 @@ do
 	do
 		local set = Umbra.layouts.modern
 		local baseline, spread = 260, 250
+
+		-- Its own, because each set does its own arithmetic. The first
+		-- version of the party column reached for the one in the block
+		-- above, which is local to that block: it read as nil, the client
+		-- took nil for zero, and the column sat flush against the edge of
+		-- the screen instead of at the inset. Nothing erred.
+		local inset = 16
 
 		-- The pet is the first thing under the player, so it clears the
 		-- castbar and nothing else. The debuff row underneath it is what
@@ -535,6 +684,29 @@ do
 			target = {'BOTTOM', UIParent, 'BOTTOM', spread, baseline},
 			pet = {'BOTTOM', UIParent, 'BOTTOM', -spread, petY},
 			targettarget = {'BOTTOM', UIParent, 'BOTTOM', spread, glanceY},
+
+			--[[ The left edge, on its own line
+			This set gathers everything about you into the lower middle,
+			and a party column does not belong in that gathering: it is
+			about four other people. So it goes to the left, where this
+			set has left room.
+
+			**Centred on that edge rather than standing on the set's
+			baseline.** Sharing the baseline was the tidier idea and sat
+			too low in use — the column grew by a debuff row per member
+			and the bottom edge stayed put, so all of that growth went
+			upward from a line that was already low. Centred, the column
+			keeps clear of the client's own group panel above it and of
+			the chat frame below, whatever the screen height, and it no
+			longer has to know what the player and the target are doing
+			at the other end of the screen.
+
+			`/uuf dev party` prints the screen height and where the
+			client's panel reaches, so a column that still sits wrong
+			can be answered with a number rather than with another
+			guess.
+			--]]
+			party = {'LEFT', UIParent, 'LEFT', inset, 0},
 		}
 
 		BossPoints(set)

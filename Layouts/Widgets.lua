@@ -42,7 +42,11 @@ end
 
 function Widgets.Text(parent, justify, size)
 	local fs = parent:CreateFontString(nil, 'OVERLAY')
-	fs:SetFont(media.font, size or metrics.fontSize)
+
+	-- Kept because `SetFont` takes all three at once: anything that wants to
+	-- add or drop an outline later has to hand back the size it found.
+	fs.umbraSize = size or metrics.fontSize
+	fs:SetFont(media.font, fs.umbraSize)
 	fs:SetJustifyH(justify)
 	fs:SetJustifyV('MIDDLE')
 	fs:SetTextColor(unpack(colors.text))
@@ -53,6 +57,20 @@ function Widgets.Text(parent, justify, size)
 	fs:SetShadowOffset(1, -1)
 
 	return fs
+end
+
+--[[ Widgets.Outline(fs, outline)
+Re-cut a font string with or without an outline, keeping its size. `nil`
+is the plain face.
+
+The shadow underneath stays either way. A shadow darkens two edges of a
+glyph, which is enough over a bar whose color this addon chose and not
+enough over one it did not — and which of the two a bar is cannot be
+worked out from the color itself: inside an instance it is a secret
+value, and brightness is arithmetic.
+--]]
+function Widgets.Outline(fs, outline)
+	fs:SetFont(media.font, fs.umbraSize or metrics.fontSize, outline)
 end
 
 --[[ Widgets.Prediction(parent, color, hatched)

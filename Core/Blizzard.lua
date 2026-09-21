@@ -1,16 +1,18 @@
 local _, ns = ...
 local Umbra = ns.Umbra
 
---[[ Blizzard's own aura display
-Once Umbra puts buffs and debuffs on the unit frames, the stack in the top
-right corner says the same thing a second time. `/uuf auras umbra` puts it
-away, `/uuf auras both` brings it back.
+--[[ The client's own displays, put away
+Two of them say a second time what Umbra already says. The buff and debuff
+stack in the top right is one, and the group panel on the left edge is the
+other: `/uuf auras umbra` and `/uuf group umbra` put them away, `both`
+brings them back.
 
 The frames are neither hidden nor unregistered. `Hide` is undone by the next
-thing that shows them, and `UnregisterAllEvents` cannot be undone at all.
-Instead they are parented to a frame that is never shown: their own logic keeps
-running untouched, nothing of theirs is overwritten, and putting the original
-parent back restores them.
+thing that shows them — and the group panel shows itself again every time
+the roster changes — while `UnregisterAllEvents` cannot be undone at all.
+Instead they are parented to a frame that is never shown: their own logic
+keeps running untouched, nothing of theirs is overwritten, and putting the
+original parent back restores them.
 --]]
 
 local holder = CreateFrame('Frame')
@@ -19,7 +21,15 @@ holder:Hide()
 -- Which frames were taken, and what to give them back to.
 local taken = {}
 
-local FRAMES = {'BuffFrame', 'DebuffFrame'}
+--[[ What each switch reaches
+The group panel is one frame and the raid frames are inside it, so taking
+the panel takes the container with it. That is the whole of the client's
+group display and exactly what the Umbra column replaces.
+--]]
+local FRAMES = {
+	auras = {'BuffFrame', 'DebuffFrame'},
+	group = {'CompactRaidFrameManager'},
+}
 
 local function Conceal(name, conceal)
 	local frame = _G[name]
@@ -48,52 +58,65 @@ local function Conceal(name, conceal)
 end
 
 --[[ Waiting for the fight to end
-Both frames are protected, so `SetParent` on them is refused in combat the way
-any other secure call is. That refusal used to be swallowed by the `pcall` in
-Conceal and never made good: `/uuf auras umbra` typed during a fight did
-nothing, said it had worked, and nothing happened when the fight ended either.
+Every frame these switches reach is protected, so `SetParent` on one is
+refused in combat the way any other secure call is. That refusal used to be
+swallowed by the `pcall` in Conceal and never made good: `/uuf auras umbra`
+typed during a fight did nothing, said it had worked, and nothing happened
+when the fight ended either.
 
-So a refusal is not a failure, it is a wait. EnhanceQoLSkinner reaches the same
-two frames and does the same thing — it checks `InCombatLockdown` against
-`IsProtected` and picks the work up again at PLAYER_REGEN_ENABLED.
-
-Only the last answer is kept. Asked for both states during one fight, what
-should happen at the end of it is whatever was asked for last.
+So a refusal is not a failure, it is a wait. EnhanceQoLSkinner reaches the
+two aura frames and does the same thing — it checks `InCombatLockdown`
+against `IsProtected` and picks the work up again at PLAYER_REGEN_ENABLED.
 --]]
-local pending
+local pending = {}
 local waiter = CreateFrame('Frame')
+
+local Apply
 
 waiter:SetScript('OnEvent', function(self)
 	self:UnregisterEvent('PLAYER_REGEN_ENABLED')
 
-	local shown = pending
-	pending = nil
+	local wanted = pending
+	pending = {}
 
-	if shown ~= nil then
-		Umbra:SetBlizzardAuras(shown)
+	for key, shown in pairs(wanted) do
+		Apply(key, shown)
 	end
 end)
 
---[[ Umbra:SetBlizzardAuras(shown)
-Shows or conceals Blizzard's buff and debuff frames.
+--[[ Apply(key, shown) — and the two names it answers to
+Shows or conceals one of the client's displays. Answers whether it happened
+now: false means it is waiting for combat to end, not that it was refused
+for good.
 
-Answers whether it happened now. False means it is waiting for combat to end,
-not that it was refused for good.
+Only the last answer per switch is kept. Asked for both states during one
+fight, what should happen at the end of it is whatever was asked for last —
+and the two switches wait independently, because a fight is no reason for
+one of them to decide the other.
 --]]
-function Umbra:SetBlizzardAuras(shown)
+function Apply(key, shown)
 	if InCombatLockdown() then
-		pending = shown
+		pending[key] = shown
 		waiter:RegisterEvent('PLAYER_REGEN_ENABLED')
-		self:Debug('blizzard auras held until combat ends, wanted shown:', shown)
+		Umbra:Debug('blizzard', key, 'held until combat ends, wanted shown:',
+			shown)
 
 		return false
 	end
 
-	for _, name in ipairs(FRAMES) do
+	for _, name in ipairs(FRAMES[key]) do
 		Conceal(name, not shown)
 	end
 
 	return true
+end
+
+function Umbra:SetBlizzardAuras(shown)
+	return Apply('auras', shown)
+end
+
+function Umbra:SetBlizzardGroup(shown)
+	return Apply('group', shown)
 end
 
 -- ADDON_LOADED has run by now, so the setting is there to read. On Forever it
@@ -104,5 +127,9 @@ applier:RegisterEvent('PLAYER_LOGIN')
 applier:SetScript('OnEvent', function()
 	if UmbraUnitFramesDB.hideBlizzardAuras then
 		Umbra:SetBlizzardAuras(false)
+	end
+
+	if UmbraUnitFramesDB.hideBlizzardGroup then
+		Umbra:SetBlizzardGroup(false)
 	end
 end)

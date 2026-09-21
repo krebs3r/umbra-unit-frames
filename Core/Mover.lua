@@ -547,7 +547,17 @@ local function Reveal(revealed)
 	pendingReveal = nil
 
 	for _, frame in ipairs(movers) do
-		if revealed then
+		--[[ A frame that is not shown by a unit watch
+		A group column is one box standing in for children the client makes
+		and hides on its own, and `RegisterUnitWatch` on it would tie a
+		header with no unit of its own to a unit that is never there. What
+		reveals it is a different thing, so the frame carries its own way of
+		being revealed and this loop asks for it rather than knowing which
+		frames are which.
+		--]]
+		if frame.umbraReveal then
+			frame.umbraReveal(frame, revealed)
+		elseif revealed then
 			if pcall(UnregisterUnitWatch, frame) then
 				frame:Show()
 			else

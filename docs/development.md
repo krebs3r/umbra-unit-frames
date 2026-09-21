@@ -27,12 +27,12 @@ Five of the six design principles are implemented — class color at the edge,
 the portrait column, power as a hairline, auras with an underline, and
 hatched absorbs with ghosted incoming healing. Alongside them: two layout
 sets, the class-power row, a cast bar, a frame mover, a switch for Blizzard's
-own aura display, an addon-list icon and packaging.
+own aura display, a switch for class-colored health bars, an addon-list icon and packaging.
 
 The aura underline is **verified in the open world and inside an instance**,
 geometry and color both, by sampling screenshots pixel by pixel — the
 measurements are under *Auras*. Nothing about the containers is refused where
-they gain forbidden aspects; `/uuf debug` came back silent on a build run from
+they gain forbidden aspects; `/uuf dev debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
 One principle is open: range shown through fading, which oUF's own element
@@ -56,11 +56,28 @@ under it has a longer reach than the bug did.
 | | |
 | :--- | :--- |
 | `layout classic` · `layout modern` | switch the whole arrangement |
-| `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame |
-| `test` | fill every aura slot with stand-ins, and the health bar's prediction |
+| `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame, and a group column against stand-ins for every slot |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
-| `check` | opens a report window: which unit values this client hides, what the class-power row found, and what each portrait could load |
-| `debug` | print what was refused while building, including before it was on |
+| `group umbra` · `group both` | who shows your party: the Umbra column alone, or the client's panel as well |
+| `health class` · `health plain` | whether the health bar takes the unit's color too, or leaves it to the edge |
+| `dev` | the measurements, listed behind that word |
+
+**The measurements moved behind `/uuf dev` on 21 September 2026.** None of them
+changes how anything looks; they report, and the list someone reaches for when
+they have forgotten a command should be about the frames.
+
+| | |
+| :--- | :--- |
+| `dev test` | fill every aura slot with stand-ins, and the health bar's prediction |
+| `dev check` | opens a report window: which unit values this client hides, what the class-power row found, and per frame whether the unit's identity is secret and what its portrait could load |
+| `dev header` | whether a secure group header works on this client, layer by layer |
+| `dev party` | what the party column is made of, child by child, with each top edge in screen coordinates |
+| `dev debug` | print what was refused while building, including before it was on |
+
+A bare `/uuf check` and its four neighbours answer with their new address
+rather than with the whole list, because five commands moved at once and the
+old ones are in the fingers of the only person who uses this. The changelog
+keeps the old names throughout: that is what those releases shipped.
 
 `/uuf` closes with a line naming the author, which it reads from the TOC
 rather than repeating. The heart in it is U+2665 written as itself: the
@@ -81,7 +98,7 @@ instances, Mythic+ and PvP. Arithmetic, comparison and `tostring` on a hidden
 value throw.
 
 **`UnitHealthMax` is not hidden**, and **`UnitHealthPercent` is** — both the
-other way round from what this file claimed until the `/uuf check` run of
+other way round from what this file claimed until the `/uuf dev check` run of
 20 September 2026, standing in the open world on Retail 120100:
 
 ```
@@ -363,7 +380,7 @@ the bar so they draw above it, but anchored to the frame.
   gives each StatusBar pip `SetMinMaxValues(0, 1)` itself, so a pip is full at
   1, and it fills the row only for a spec that owns a resource — chi on a
   windwalker monk, nothing on a brewmaster, and nothing at all before a
-  specialization is chosen. `/uuf check` names the spec for exactly that
+  specialization is chosen. `/uuf dev check` names the spec for exactly that
   reason: measured on a level 3 monk it answered `0 of 10 pips`, which is
   correct and looks like a fault until the spec is named beside it. That
   character reports **index 5**, which is none of the three monk specs, and
@@ -508,7 +525,7 @@ than the row the width, so both are 8 again and by construction.
 
 **The client counts a row differently, and that cost an icon.** Measured in
 *Thron der Gezeiten* on 20 September 2026: seven real buffs in a block
-reserved for eight, while `/uuf test` had been showing eight all along. The
+reserved for eight, while `/uuf dev test` had been showing eight all along. The
 preview proved nothing here and said so — it packs its stand-ins with
 `AuraPerRow`, and the client packs the real row itself.
 
@@ -530,7 +547,7 @@ character, same dungeon. That was the one thing about the auras that had
 never been looked at with real data — the geometry, the colors and the side
 after a switch all had been.
 
-**A full row can be looked at without waiting for one.** `/uuf test` fills
+**A full row can be looked at without waiting for one.** `/uuf dev test` fills
 every reserved slot with stand-ins, which is the only way to see the case the
 arrangement has to survive — every slot taken, on both frames, in both sets.
 `Layouts/Preview.lua` re-cuts them through `Umbra.AuraButtonLook`, the same
@@ -610,7 +627,7 @@ group options, because the options table goes on to the client and is typed.
 
 ### Output that outgrew the chat frame
 
-`/uuf check` answers around thirty lines now, and a chat frame is the wrong
+`/uuf dev check` answers around thirty lines now, and a chat frame is the wrong
 place to read them: everything else is pushed out of view, and the answers
 have to be held against each other rather than watched scrolling past. It
 opens a window instead, `Core/Report.lua`.
@@ -746,7 +763,7 @@ dungeon is 2D, without either case knowing about the other.
 
 The bounded retry stays, and now has an honest job: a model that really is
 still streaming upgrades the column from 2D to 3D instead of the column
-sitting empty while it waits. `/uuf check` reports which of the two is
+sitting empty while it waits. `/uuf dev check` reports which of the two is
 showing.
 
 **It holds in a delve too**, measured on 21 September 2026 on the same
@@ -754,6 +771,102 @@ character within minutes: `model: readable — 1100258` and `showing 3D model`
 outside, `model: readable — nil` and `showing 2D stand-in` on a target inside.
 A delve is solo and has no encounter, so whatever withholds the model is not
 waiting for a group or a boss fight — the instance is enough.
+
+**But the instance is not the condition.** Patch 12.0.5's API notes name it
+outright: `Model:SetUnit` and `ModelSceneActor:SetModelByUnit` no longer accept
+a unit token for a unit whose identity is secret, and they do not throw — they
+hand back nil where they used to hand back success. An instance is a place
+where that condition is met, not the thing being tested. Every sentence above
+that reads *inside an instance* should be read as *where identity is secret*,
+and the measurements still stand — they were the right readings of a narrower
+question than the one being answered.
+
+**Settled by measurement, both directions, on 21 September 2026** — Retail
+120100, the same character minutes apart, so that only the place changed:
+
+```
+                              open world             inside
+target:       identity     in the clear           secret
+target:       model        readable — 6253063     readable — nil
+target:       showing      3D model               2D stand-in
+targettarget: identity     in the clear           secret
+targettarget: model        readable — 878772      readable — nil
+targettarget: showing      3D model               2D stand-in
+player:       identity     in the clear           in the clear
+player:       model        readable — 878772      readable — 878772
+pet:          identity     in the clear           in the clear
+pet:          model        readable — 1266661     readable — 1266661
+party1:       identity     —                      in the clear
+party1:       model        —                      readable — 3049179
+```
+
+Identity and model move together in every row, and nothing else moves at all:
+`ready` is true in all twelve, `UnitIsVisible` and `UnitIsConnected` are true
+in all twelve, and `display info` is 0 in all twelve. The column is 2D exactly
+where the client will not say who it is looking at.
+
+**The party member settles the wider claim inside a single run.** Brann is a
+creature, in an instance, in the same report as a target with no model — and
+he is in the clear and his model loads. So the instance is not what withholds
+anything. Being neither yours nor your group's is.
+
+So the retry is now gated on it, in `PortraitPostUpdate`: a secret identity
+puts the stand-in up and stops there, because eight tries over four seconds at
+a question already answered is four seconds of asking a client that has
+refused. A model missing from a unit in the clear still starts the chain,
+which is the case the chain was written for.
+
+**The open world half of the report is not reproduced, and the obvious
+explanations are now used up.** The column was seen 2D on the target and the
+target-of-target outside an instance, which is what started all of this.
+Three runs outside since say otherwise, and the third was aimed at the gap the
+first two left — a target-of-target that is somebody else:
+
+```
+targettarget: identity  in the clear
+targettarget: model     readable — 4207724
+targettarget: is player readable — true
+targettarget: same as player: readable — false
+```
+
+A foreign player, out in the open world, in the clear with a model. So it is
+not "a unit that is not yours" either: outside, a creature and another player
+both load. Whatever produced the sighting is narrower than anything measured
+here, and a report cannot be run backwards over it — `/uuf dev check` has to
+be typed while the 2D column is on screen. The identity line will name it in
+one go when it is.
+
+Until then this section describes instances, which is where it has been
+measured.
+
+**Issue #1's contradiction turned up again**, on the target-of-target inside,
+and this time without a delve:
+
+```
+targettarget: may compare with player: readable — true
+targettarget: same as player:          hidden
+```
+
+Permission granted, answer withheld, on exactly the pair that threw 716 times
+— so the guard under *Permission to compare two units is not an answer* is
+standing on a condition that still occurs, rather than on one delve.
+
+**Two different frames answered to `party1`, and now they say which they are.**
+The header's child and the hidden party stand-in both point at the unit, and
+with the token for a name they printed the same label over different answers.
+Named, the pair reads correctly:
+
+```
+UmbraPartyHeaderUnitButton1: model readable — 3049179 · showing 3D model
+UmbraPartyStandIn1:          model readable — nil     · showing 3D model
+```
+
+The stand-in's empty answer is itself right: a hidden `PlayerModel` does not
+load, so it reports a missing model for as long as it stays hidden. That is
+the second gate in `PortraitPostUpdate` — without it the four locked stand-ins
+each started a retry chain that could not end any other way. It also explains
+the `showing 3D model` next to a missing one: nothing covers a frame nobody
+can see.
 
 What is still unmeasured: whether the client declines `SetPortraitTexture` for
 the same unit it declined a model for. If it does, the stand-in is its
@@ -796,7 +909,7 @@ nicer. What works is asking the question and looking at what came back —
 will not say"**, needs no `C_Secrets` at all, and therefore behaves the same on
 a client that has none.
 
-`/uuf check` prints both halves side by side, per frame, and a third run on 21
+`/uuf dev check` prints both halves side by side, per frame, and a third run on 21
 September 2026 — in a delve, with a creature targeted that had a target of its
 own — **measured the contradiction itself**:
 
@@ -943,7 +1056,7 @@ texture over the fill rather than the fill itself. The color comes from
 `SetVertexColor`, and if the file ever goes missing the flat fill underneath
 is still the right color at the right width.
 
-**`/uuf test` fills these too.** An absorb takes someone else to put on you,
+**`/uuf dev test` fills these too.** An absorb takes someone else to put on you,
 so it can be waited for even less than a full aura row. The stand-in amounts
 are the bars' own scale — `SetMinMaxValues(0, 1)` and a plain fraction —
 which says the same thing to a bar and needs no arithmetic on a hidden value:
@@ -956,7 +1069,7 @@ once and lost on the next tick.
 ### Relevant to group frames
 
 **The secure group header works, and these notes were wrong about that.**
-Measured on Retail on 21 September 2026 with `/uuf header`, which spawns one
+Measured on Retail on 21 September 2026 with `/uuf dev header`, which spawns one
 real header with `showSolo` and reports what the child came out as:
 
 ```
@@ -966,6 +1079,25 @@ children: 2
 child 1: oUF-guessUnit: party   umbraProbeRan: yes   unit: player   styled: true
 child 2: oUF-guessUnit: party   umbraProbeRan: yes   unit: party1   styled: true
 ```
+
+That run did not write down the roster, which left the child count unusable:
+two children could have been a party or a header inventing frames. **Asked
+again solo on 21 September 2026**, twice in a row so the second reading came
+after the client's own layout pass:
+
+```
+group: solo, 0 member(s)
+children: 1
+child 1: oUF-guessUnit: party   umbraProbeRan: yes   unit attribute: player
+child 1: __unit: player   styled: true   shown: false  (first run)
+child 1: ...                             shown: true   (second run)
+```
+
+One child solo, two in a party, so the header follows the roster. `shown`
+turning true on the second run is `RegisterUnitWatch` and the client's layout
+pass doing their work unasked. The child machinery is measured whole: created,
+unit assigned from outside any snippet, oUF's snippet run, ours run inside it,
+style applied, shown. The probe pushes nothing.
 
 `oUF-guessUnit` is set from **inside** the restricted environment, by oUF's
 own `initialConfigFunction`. `umbraProbeRan` is set by a second snippet the
@@ -977,6 +1109,53 @@ So group frames can be **real** group frames: children created, units
 assigned and re-sorted by the client's own machinery, during a fight and
 after it. Not four fixed frames for `party1..party4` waiting for combat to
 end, which is what this section used to say was the only option left.
+
+**The visibility driver works too, and took three askings to say so.**
+`header:SetVisibility('solo,party')`
+returns without erroring and oUF stores the conditional it built —
+`[@player,exists,nogroup:party] show;[group:party,nogroup:raid] show;hide` —
+but `state-visibility` reads back nil, both at registration and on a later
+run. Which decides *when* a header appears, and can give out on its own.
+
+Two readings fit that, and they are opposites: the driver machinery does not
+work for this frame, or visibility is handled apart from the attribute and
+writes none. `pcall` returning true separates neither, and neither does
+`IsShown()` on a header something else has shown — the first version of this
+probe called `Show()` right after registering, which left a header that looked
+driven and was only pushed. It no longer shows anything by hand.
+
+What tells them apart is a second driver on an attribute name that is ours and
+special to nobody: `RegisterAttributeDriver(header, 'umbraProbeDriver',
+'[@player,exists] yes; no')`. It answered **`yes`, at registration and after**,
+on the same run where `state-visibility` stayed empty.
+
+So the machinery is there and evaluates on the spot. Visibility is simply
+steered apart from the attribute, and Show and Hide are the only place it
+shows. Which leaves one more thing that cannot be read off a shown header: a
+frame stands visible from the moment it is created, so a driver doing nothing
+at all leaves exactly the picture a working one leaves. `header shown: true`
+is not evidence and is no longer reported as any.
+
+What cannot be faked is the header going **away** on a condition it cannot
+meet. `/uuf dev header` ends by registering `[group:raid] show;hide` while solo,
+reading `IsShown()`, putting the real condition back and reading again:
+
+```
+visibility driven: hidden by [group:raid] solo: true
+                   back on solo,party: true
+```
+
+**So the header is driven, and nothing about group frames rests on a proxy
+any more.** Children created, units assigned and followed, both snippets run,
+style applied, and the client deciding when the whole thing is on screen.
+
+Three askings for one answer, and each round the reading looked complete at
+the time: `pcall` said true, the attribute said nothing, the frame said shown.
+The first was a call not erroring, the second an attribute visibility does not
+use, the third a frame that is visible from birth. Only the fourth asked for
+something a broken driver cannot produce. That is the third time this file
+records the same lesson in a week, and the cheapest form of it: **ask for the
+thing that cannot happen unless the answer is yes.**
 
 **Why the assumption was wrong, which is the part worth keeping.**
 `loadstring_untainted` is what an *addon* calls to turn a string into a
@@ -1003,7 +1182,7 @@ is not an answer*. The guard for it is installed through
 `oUF:RegisterInitCallback`, so header children get it without the group code
 having to remember.
 
-That flag is set in `Core/Init.lua` and reported by `/uuf check`. It used to be
+That flag is set in `Core/Init.lua` and reported by `/uuf dev check`. It used to be
 set in `Compat/Forever.lua`, which returns early on anything but Forever and is
 not listed in the Retail TOC at all — so on Retail it was nil, which behaves
 like false and happens to be right, but by accident rather than by
@@ -1070,12 +1249,14 @@ Settled on 20 September 2026, all reported from the client:
   with the gloss over it, and the percentage above it orange at `195/128/97`
   rather than the `141/151/171` it would fall back to. All four resources
   answer.
-- **The 2D portrait stand-in**, and that it *is* the design: 2D inside an
-  instance, 3D in the open world. Not a fault to chase but the two halves of
-  one rule — the client withholds a hostile unit's model inside an instance
-  and hands it over outside, so the column shows whichever it can get.
+- **The 2D portrait stand-in**, and that it *is* the design: 2D where the
+  client has classified the unit, 3D where it has not. Not a fault to chase
+  but the two halves of one rule — `SetUnit` takes no token for a secret
+  identity, so the column shows whichever of the two it can get.
   `SetPortraitTexture` is allowed where the model was not, which was the open
-  half of it.
+  half of it. Instances are where that happens, not what causes it: a party
+  member inside one is in the clear and his model loads — see *The client
+  keeps a hostile unit's model to itself*.
 
 Settled earlier: auras inside an instance, the side a row lands on after a
 switch, and the frame positions in both sets.
@@ -1089,9 +1270,111 @@ new ones in the client.
 
 ### Group and raid frames
 
-Secure group header with the `loadstring_untainted` guard, Clique support, and
-range fading verified here through oUF's `Range` element — the raid is where it
-matters most.
+**The party column is built**, on a real secure header: `Layouts/Group.lua`.
+Children the client creates, assigns and re-sorts, in the Umbra style, keyed
+`party` because that is the unit oUF hands a header child. Confirmed drawing
+in a delve on 21 September 2026 with two members — `/uuf dev party` reports the
+column child by child, with each top edge in screen coordinates so a row in a
+screenshot can be matched to the frame that drew it.
+
+**And a cast bar**, the one the single frames have, at full width under the
+frame. It took one line in the config: `StackOffset` opens a frame's lower
+side with `CastbarReach`, so the debuff row moved down by exactly the
+castbar's height and `GroupSlotHeight` carried that into the header's spacing,
+the column's height and the stand-ins without any of the three being told. A
+member is 69 tall now — 33 of frame, 16 of castbar, 20 of debuff row — and the
+column is 294 for four of them.
+
+**Each member carries a debuff row**, and the form was the decision rather
+than the switch. The single frames' row is 26-pixel icons eight across; a
+party frame is 33 pixels tall, so that row under one of them reads as a second
+column of frames. Party icons are 14, which puts the block at 18 — the health
+bar's own height plus its gap and underline — and the duration label is off,
+because at 14 pixels it covers the icon it belongs to. The stack count stays:
+one glyph, and the one that changes what you do. How many icons is asked
+rather than chosen — at that size `AuraPerRow` answers fourteen, and fourteen
+of them with their spacing are exactly the 222 pixels a frame is wide, so the
+row ends where the frame ends instead of stopping somewhere in the middle of
+it. Buffs are off; what is dispellable is the information, and the underline
+already carries it.
+
+ShadowedUnitFrames answers the same question with buffs at the frame's top
+left and debuffs at its bottom left, 16 pixels, one row of up to ten, both
+growing right, with auras you cast yourself drawn 30% larger — the same
+arrangement for party as for everything else. Read as evidence, not copied: it
+carries no license (decision 3).
+
+**One number now answers how much room a member takes.**
+`Umbra:GroupSlotHeight` is the frame plus whatever hangs off either side of
+it, and the header's `yOffset`, `ColumnHeight` and the unlock stand-ins all
+ask it. Before the debuff row the three agreed by accident, because nothing
+hung off a party frame at all; the first row under one would have put the next
+member on top of it.
+
+**The tank and the healer are marked, and the role survives the instance.**
+Measured in a five-man party inside one on 21 September 2026: all four
+children answered `readable` to `UnitGroupRolesAssigned` — TANK, DAMAGER,
+DAMAGER, HEALER — with `roleicon-tiny-healer` known to the client. That was
+worth asking before drawing anything from it: a role is what a person signed
+up as, not a property of a unit in the world, and this client has been
+withholding exactly that kind of thing. The first run of the same report
+proved less than it looked like it did, because it did not say where it had
+been taken; it does now.
+
+All three roles are drawn. The first build marked only the tank and the
+healer, reasoning that a mark on three rows out of four is not a mark and that
+damage is named by carrying nothing. It reads well and it was wrong in use: an
+empty space says "no role" and "damage" in the same breath, and in a column of
+four the gap is never explained. NONE still draws nothing — that one is an
+absence. The space is reserved on every
+group frame regardless, the way the pip row is reserved on the player frame:
+four names starting at one x with two marks beside them is a column, and names
+that move sideways when somebody re-queues is a fault. The art is the client's
+own atlas, checked before it is shown, because `SetAtlas` on a name this
+client does not have leaves the texture as it was instead of refusing — the
+one failure that would draw a blank square and say nothing.
+
+Three faults came out of that first run, and all three failed silently:
+
+1. **A stray second frame.** `Layouts/Single.lua` spawns one frame per entry
+   in `Umbra.frames`, and the party config lives there because the style looks
+   its configs up by unit. So an unmanaged single frame for the unit `party`
+   was spawned beside the column, under the same mover name and the same saved
+   position. The config carries `header = true` now and `Single.lua` skips it.
+2. **The column could not be dragged.** Every other mover is a unit button and
+   takes the mouse by being one; this one is a plain frame, which receives no
+   mouse input until told to. It listens and rises a strata while unlocked,
+   and gives both back on locking — an invisible box over a party column would
+   swallow every click meant for the people in it.
+3. **`inset` did not exist in the `modern` block.** It is a local of the
+   `classic` block above it. The point read nil, the client took nil for zero,
+   and the column sat flush against the screen edge — on top of
+   `CompactRaidFrameManager`, which the client shows for exactly as long as
+   you are in a group, which is exactly as long as the column exists. It has
+   its own `inset` now and stands on `baseline`, the line the player and
+   target frames stand on.
+
+**The player is not in the column.** Decided on 21 September 2026: the column
+is about the other four. `showSolo` and `showPlayer` are switched on only
+while frames are being placed, so there is something to drag and something to
+see the style on when you are alone.
+
+**Range fading is in**, on group frames only, which is where oUF's `Range`
+element works at all: it gates on `UnitInParty` and sets the inside alpha for
+anything else. On a single frame it would be a no-op that always reports "in
+range". It fades through `SetAlphaFromBoolean`, so the answer is never tested
+— but `UnitIsConnected(unit) and UnitInParty(unit)` above it is, and that is
+the shape issue #1 threw 716 times on. On party members rather than on a
+hostile unit, so it is watched in the error log rather than guarded in
+advance.
+
+Still to build: raid frames, and Clique support.
+
+**Open, and not urgent: pets of group members.** Two shapes are in the
+running and neither has been argued out yet — under each member's own frame,
+the way the player's pet hangs under the player, or at half size beside it.
+In a five-man one or two people bring one and it is rarely what you react to,
+so nothing is lost by deciding this after the column has been used in anger.
 
 ### Blizzard's own aura display
 
@@ -1104,7 +1387,7 @@ all. Reparenting leaves their logic running and is reversible.
 by reading addons on this machine that reach the same two frames:
 EnhanceQoLSkinner hides `_G.BuffFrame` and `_G.DebuffFrame` by those names,
 and EnhanceQoL's Edit Mode library lists both as Edit Mode systems and finds
-a `.Selection` on each. So `/uuf debug` reporting a name it cannot find is a
+a `.Selection` on each. So `/uuf dev debug` reporting a name it cannot find is a
 Forever finding, not a Retail one.
 
 **They are protected, and that was a real defect.** The same addon bails out
@@ -1194,7 +1477,7 @@ is built on it.
   beta that cannot load files every addon depends on. Worth revisiting only if
   it is still broken near the 4 November launch.
 
-That last one broke the one thing it most needed to work. `/uuf debug` exists
+That last one broke the one thing it most needed to work. `/uuf dev debug` exists
 to report what the build refused, the build happens at `PLAYER_LOGIN`, and the
 switch was saved so that it would already be on by then — which on this client
 it never is. **So the lines are buffered instead**: `Umbra:Debug` writes every
@@ -1207,16 +1490,16 @@ both.
   rather than by a file that failed to load. What that was taken to mean for
   group frames was wrong, and is corrected under *Relevant to group frames* —
   the header on Retail works without it. Whether the same holds on Forever is
-  one `/uuf header` away and has not been run there yet.
+  one `/uuf dev header` away and has not been run there yet.
 
-**One thing does not add up yet.** `/uuf debug` answered `nothing has been
+**One thing does not add up yet.** `/uuf dev debug` answered `nothing has been
 refused since login` on a run where `secure snippets: unavailable` — but that
 is exactly the condition under which `Compat/Forever.lua` calls `Umbra:Debug`
 two lines further down. The buffer should have held at least that one line.
 
 So either the compat file is not running to the end, or the buffer is not
 being filled, and until that is told apart an empty buffer proves nothing
-about what the build refused. `/uuf check` now reports `compat:` for exactly
+about what the build refused. `/uuf dev check` now reports `compat:` for exactly
 this: `Forever.lua ran` is the file confirming it reached its last line, and
 `none` on this client would mean it did not. On Retail `none` is the expected
 answer, because no compatibility file is loaded there at all.

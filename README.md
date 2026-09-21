@@ -33,7 +33,7 @@ Color, shape, and placement should make different kinds of information easy to d
 
 | Principle | Approach and purpose |
 | :--- | :--- |
-| **Class color at the edge** | A **3-pixel edge** and the character's name carry the class color. The health bar stays **neutral green** by default. Class identity and health each have a distinct visual role. |
+| **Class color at the edge** | A **3-pixel edge** and the character's name carry the class color. The health bar stays **neutral green** by default, and `/uuf health class` gives it the unit's color as well for anyone who would rather have it there. Class identity and health each have a distinct visual role. |
 | **A dedicated portrait column** | A narrow, **rectangular character portrait** sits to the left of the name and bars—including on the target frame. Subtle class tinting replaces circular medallions, glowing portrait rings, and images behind the numbers. |
 | **Resources as a hairline** | Mana, energy, and rage use a thin line rather than a second dominant bar. Health remains the primary information. |
 | **Auras with an underline** | A slim colored line beneath each icon replaces a prominent full border. Personal and important effects should be easy to identify without cluttering the grid. |

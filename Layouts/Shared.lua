@@ -120,6 +120,27 @@ local function ModelPending(element)
 	return ok and not Umbra.Secrets.Is(file) and file == nil
 end
 
+--[[ WithheldIdentity(unit)
+Whether the client has classified this unit, which is what `SetUnit` is
+gated on since 12.0.5: it takes no token for a unit with a secret
+identity, and it does not throw about it — it answers nil where it used
+to answer success.
+
+A unit's GUID is its identity, so this is the same question asked of a
+value we are allowed to hold. Measured on Retail 120100 on 21 September
+2026, the same character minutes apart: the target and the
+target-of-target read `in the clear` with a model in the open world and
+`secret` with none inside an instance, while a party member inside the
+same instance is in the clear and loads. Both directions, and the
+instance on both sides of it, so identity is the condition rather than a
+companion of it.
+--]]
+local function WithheldIdentity(unit)
+	local ok, guid = pcall(UnitGUID, unit)
+
+	return ok and Umbra.Secrets.Is(guid)
+end
+
 local function RetryPortrait(element, tries)
 	C_Timer.After(PORTRAIT_DELAY, function()
 		local frame = element.__owner
@@ -185,6 +206,25 @@ local function PortraitPostUpdate(element, unit)
 	if element.umbraWaiting then return end
 	if not unit or not UnitExists(unit) then return end
 	if not missing then return end
+
+	-- A chain that cannot succeed. The client has refused this unit, so
+	-- every try would ask the same question and get the same nothing,
+	-- eight of them over four seconds, for every hostile unit in an
+	-- instance. The stand-in above is already up; there is nothing here
+	-- to wait for.
+	if WithheldIdentity(unit) then
+		return Umbra:Debug('portrait withheld for', unit,
+			'— identity is secret, not waiting for one')
+	end
+
+	-- And a chain that cannot be read. A hidden PlayerModel does not
+	-- load, which is why the stand-in covers the model rather than
+	-- replacing it — so a hidden frame reports a missing model forever
+	-- and would start a chain on every update. The four party stand-ins
+	-- are exactly that while the frames are locked.
+	local frame = element.__owner
+
+	if frame and not frame:IsVisible() then return end
 
 	element.umbraWaiting = true
 	Umbra:Debug('portrait missing for', unit, '— standing in for it')
@@ -335,18 +375,222 @@ end
 
 oUF:RegisterInitCallback(GuardPortraitEvents)
 
-local function UpdateIdentity(element, unit)
-	local color = Umbra.Secrets.UnitColor(unit)
-	if not color then return end
+--[[ UpdateIdentity(element, unit, color)
+Where a unit's identity is painted. oUF hands this the color it used,
+which is nothing here — no color flag is set on the element — so the
+color is asked for again through `Secrets.UnitColor`, which answers
+class for a player and reaction for everything else, and answers with a
+secret color where the class itself is secret.
 
+The edge and the portrait tint carry it. **The bar does not**, and that
+is the design principle rather than an omission: one green on every unit
+means a color on a frame is identity and nothing else.
+
+`/uuf health class` spends that on purpose. The bar takes the same
+color, and the incoming-heal ghost follows it — a ghost left in the old
+green over a class-colored bar reads as a second quantity arriving
+rather than as more of the same one. Nothing else moves, and with the
+setting off this is the three lines it has always been.
+--]]
+local function MuteFill(bar, alpha)
+	local fill = bar and bar:GetStatusBarTexture()
+
+	if fill then fill:SetAlpha(alpha) end
+end
+
+local function UpdateIdentity(element, unit, _)
+	local color = Umbra.Secrets.UnitColor(unit)
 	local frame = element.__owner
-	frame.ClassEdge:SetStatusBarColor(color:GetRGB())
-	frame.PortraitTint:SetStatusBarColor(color:GetRGB())
+
+	if color then
+		frame.ClassEdge:SetStatusBarColor(color:GetRGB())
+		frame.PortraitTint:SetStatusBarColor(color:GetRGB())
+	end
+
+	local ghost = element.HealingAll
+
+	if color and UmbraUnitFramesDB and UmbraUnitFramesDB.classHealth then
+		-- The color goes on at full strength and the fill is faded
+		-- instead, which is the only way to mute a class color at all:
+		-- dimming one means arithmetic on its three numbers, and inside an
+		-- instance those are secret. An alpha belongs to the texture
+		-- rather than to the color, so it never touches them.
+		--
+		-- It also keeps the edge the loud one. Muted on the bar and full
+		-- on the 3-pixel edge is the same information at two volumes,
+		-- which is what the principle asks for even where the bar has been
+		-- allowed to carry it.
+		element:SetStatusBarColor(color:GetRGB())
+		MuteFill(element, Umbra.metrics.classBarAlpha)
+
+		if ghost then
+			ghost:SetStatusBarColor(color:GetRGB())
+			MuteFill(ghost, Umbra.metrics.classBarAlpha
+				* colors.healPrediction[4])
+		end
+	else
+		element:SetStatusBarColor(unpack(colors.health))
+		MuteFill(element, 1)
+
+		if ghost then
+			-- The ghost's own alpha rides in its color here, where the
+			-- bar is a color this addon chose and nothing has to be
+			-- faded around it.
+			ghost:SetStatusBarColor(unpack(colors.healPrediction))
+			MuteFill(ghost, 1)
+		end
+	end
+end
+
+--[[ Umbra:ApplyHealthColors()
+Repaint every frame that already stands there, for the one moment the
+setting changes. Everything else reaches the color through oUF's own
+update, which is why this is the only caller.
+
+A frame with no unit is left alone rather than reset: it is showing
+nothing, and the first thing that happens when a unit arrives is the
+update that colors it correctly.
+--]]
+--[[ LabelOutline(element)
+The two numbers that sit inside the health fill, cut to match whatever
+is behind them. They are the only text in the frame with a colored
+surface under it — the name and the power number sit on the frame's own
+background, which is dark by construction.
+
+Outlined only while the bar carries the unit's color, because that is
+the only time the surface can be bright. The default green was chosen
+with white text on it and needs nothing.
+--]]
+local function LabelOutline(element)
+	if not element.umbraLabels then return end
+
+	local wanted = UmbraUnitFramesDB and UmbraUnitFramesDB.classHealth
+		and Umbra.metrics.barLabelOutline or nil
+
+	for _, fs in ipairs(element.umbraLabels) do
+		Umbra.Widgets.Outline(fs, wanted)
+	end
+end
+
+function Umbra:ApplyHealthStyle()
+	for _, frame in ipairs(oUF.objects) do
+		local unit = Umbra:FrameUnit(frame)
+
+		if frame.Health then
+			LabelOutline(frame.Health)
+
+			-- The color needs a unit to read; the outline does not, which is
+			-- why one of the two is inside this and the other is not.
+			if unit then
+				UpdateIdentity(frame.Health, unit)
+			end
+		end
+	end
+end
+
+--[[ What someone signed up as
+`UnitGroupRolesAssigned` answers TANK, HEALER, DAMAGER or NONE, and —
+measured in a five-man party inside an instance on 21 September 2026 —
+it answers in the clear where it matters. That was not a given: a role
+is a fact about a person in your group rather than about a unit in the
+world, which is the kind of thing this client has been withholding.
+
+All three roles are drawn. The first build marked only the tank and the
+healer, on the argument that a mark on three rows out of four is not a
+mark and that damage is named by carrying nothing — which reads well and
+was wrong in use: a blank space says "no role" and "damage" in the same
+breath, and the column has four rows where the gap is never explained.
+NONE still draws nothing, because that one really is an absence.
+
+The art is the client's own atlas, so the icon in the column is the same
+icon as everywhere else in the game rather than a second drawing of the
+same idea. A hidden role draws nothing: the table is indexed with the
+answer, and indexing with a secret is one of the things that throws.
+--]]
+local ROLE_ATLAS = {
+	TANK = 'roleicon-tiny-tank',
+	HEALER = 'roleicon-tiny-healer',
+	DAMAGER = 'roleicon-tiny-dps',
+}
+
+local function UpdateRole(self)
+	local element = self.UmbraRole
+	if not element then return end
+
+	local unit = Umbra:FrameUnit(self)
+	local atlas
+
+	if unit and UnitExists(unit)
+		and type(_G.UnitGroupRolesAssigned) == 'function' then
+
+		local ok, role = pcall(UnitGroupRolesAssigned, unit)
+
+		if ok and role ~= nil and not Umbra.Secrets.Is(role) then
+			atlas = ROLE_ATLAS[role]
+		end
+	end
+
+	-- An atlas this client does not have is the one failure that would
+	-- not announce itself: `SetAtlas` on an unknown name leaves the
+	-- texture as it was rather than refusing, so a blank square would
+	-- stand where the mark should be. The healer's name is measured,
+	-- the tank's is not.
+	if atlas and C_Texture and C_Texture.GetAtlasInfo
+		and not C_Texture.GetAtlasInfo(atlas) then
+
+		Umbra:Debug('role art missing:', atlas)
+		atlas = nil
+	end
+
+	if atlas and pcall(element.SetAtlas, element, atlas) then
+		element:Show()
+	else
+		element:Hide()
+	end
+end
+
+--[[ EnableRole(self) / DisableRole(self)
+Both events are unitless and say so, which is what keeps them off oUF's
+per-unit registration: the roster changing is news about the group, not
+about one member of it. Everything else arrives through oUF's own update
+of every element, which is what catches a header child being handed a
+different unit.
+--]]
+local function EnableRole(self)
+	if not self.UmbraRole then return end
+
+	self:RegisterEvent('PLAYER_ROLES_ASSIGNED', UpdateRole, true)
+	self:RegisterEvent('GROUP_ROSTER_UPDATE', UpdateRole, true)
+
+	return true
+end
+
+local function DisableRole(self)
+	if not self.UmbraRole then return end
+
+	self:UnregisterEvent('PLAYER_ROLES_ASSIGNED', UpdateRole)
+	self:UnregisterEvent('GROUP_ROSTER_UPDATE', UpdateRole)
 end
 
 local function Style(self, unit)
-	-- Frame configs fall back to the shared layout, so `l` answers for both.
-	local config = Umbra.frames[unit] or Umbra.frames.player
+	--[[ Which config this frame is built from
+	Named exactly where one exists, which covers every single frame and the
+	boss column, whose frames really are `boss1` through `boss5` and differ
+	from each other in nothing but their unit.
+
+	Numbered down to its bare name otherwise. A group header hands the style
+	`party`, but a frame pointed at one slot of that group is `party1`, and
+	both have to arrive at the same config or the stand-ins for placing the
+	column would come out as four player frames — full size, castbar, class
+	power and all. The fallback to `player` stays underneath as the answer
+	for a unit nothing here has ever named.
+
+	Frame configs fall back to the shared layout through their metatable, so
+	`l` answers for a metric as well as for a frame's own override.
+	--]]
+	local config = Umbra.frames[unit]
+		or Umbra.frames[unit:gsub('%d+$', '')]
+		or Umbra.frames.player
 	local l = config
 
 	local width, height = config.width, Umbra:FrameHeight(config)
@@ -428,13 +672,21 @@ local function Style(self, unit)
 	-- out than the number directly below it.
 	local valueRight = l.inset * 2
 
-	local nameWidth = columnWidth
+	-- Room for the role, reserved on every group frame whether or not
+	-- there is one to draw. Four names starting at the same x and two
+	-- of them carrying a mark reads as a column; names that shift
+	-- sideways when somebody changes role reads as a fault. The pip
+	-- row on the player frame is reserved for the same reason.
+	local roleWidth = config.header and (l.nameHeight + l.gap) or 0
+	local nameX = columnX + roleWidth
+
+	local nameWidth = columnWidth - roleWidth
 
 	-- Power is a hairline and cannot hold a label, so the number goes in the
 	-- header where there is room for it. Only worth the space on the player.
 	if config.powerValue then
 		-- The name stops a gap short of the number column.
-		nameWidth = (width - valueRight - l.valueWidth - l.gap) - columnX
+		nameWidth = (width - valueRight - l.valueWidth - l.gap) - nameX
 
 		local powerValue = CreateText(self, 'RIGHT', l.fontSize)
 		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, 0)
@@ -451,8 +703,17 @@ local function Style(self, unit)
 	end
 
 	local name = CreateText(self, 'LEFT', l.fontSize)
-	name:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
+	name:SetPoint('TOPLEFT', self, 'TOPLEFT', nameX, 0)
 	name:SetSize(nameWidth, l.nameHeight)
+
+	if roleWidth > 0 then
+		local role = self:CreateTexture(nil, 'OVERLAY')
+		role:SetSize(l.nameHeight, l.nameHeight)
+		role:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, 0)
+		role:Hide()
+
+		self.UmbraRole = role
+	end
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
 	-- never evaluates a curve against a hidden value.
@@ -527,6 +788,9 @@ local function Style(self, unit)
 	healthPercent:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, healthY)
 	healthPercent:SetSize(l.valueWidth, l.healthHeight)
 
+	health.umbraLabels = {healthValue, healthPercent}
+	LabelOutline(health)
+
 	-- Power colors come from oUF's table, which Core/Defaults.lua restates
 	-- where Umbra disagrees with the client. No colorPowerAtlas: a bar painted
 	-- with one of Blizzard's textures has no color for the number above it to
@@ -583,6 +847,30 @@ local function Style(self, unit)
 		self.Castbar = castbar
 	end
 
+	--[[ Range, which only a group frame can answer
+	The sixth principle: a unit out of reach fades rather than disappearing,
+	so the column keeps its shape and you can still see who is where.
+
+	It waited for the header rather than being half-built on the single
+	frames, and oUF's element says why in one line — it gates on
+	`UnitInParty`, and for anything that is not a group member it sets the
+	inside alpha and stops. On the player frame it would be a no-op that
+	quietly always reports "in range", which is the kind of half-working
+	thing that gets believed.
+
+	`SetAlphaFromBoolean` is what it fades with, so the answer never has to
+	be tested. `UnitIsConnected(unit) and UnitInParty(unit)` above it is
+	tested though, and that is the exact shape issue #1 threw 716 times on —
+	on a hostile unit, where this one only ever asks about party members.
+	Watched in the error log rather than guarded against in advance.
+	--]]
+	if config.header then
+		self.Range = {
+			insideAlpha = 1,
+			outsideAlpha = l.rangeAlpha,
+		}
+	end
+
 	-- Kept so that a set switch can re-anchor this frame's rows later
 	-- without having to work out which config it was built from.
 	self.umbraConfig = config
@@ -594,4 +882,5 @@ local function Style(self, unit)
 	self:Tag(healthPercent, '[perhp]%')
 end
 
+oUF:AddElement('UmbraRole', UpdateRole, EnableRole, DisableRole)
 oUF:RegisterStyle('Umbra', Style)

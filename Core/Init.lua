@@ -69,14 +69,38 @@ printing decides what is colored and the table only says what is true.
 local COMMANDS = {
 	{'layout', {'classic', 'modern'}, 'the whole arrangement'},
 	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
+	{'health', {'class', 'plain'}, 'what colors the health bars'},
+	{'group', {'umbra', 'both'}, "who shows your party"},
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
+	{'dev', nil, 'measurements and diagnostics, listed behind that word'},
+}
+
+--[[ DEV
+The same shape, kept apart for one reason: none of these changes how anything
+looks. They report what the client hides, what a header came out as, what the
+column is made of, and what the build refused — questions this addon asks
+while it is being built, and noise to someone who wants their frames somewhere
+else.
+
+They stay listed rather than hidden, and `/uuf dev` on its own prints them. A
+measurement nobody can find is one that gets guessed at instead, which is the
+mistake this project keeps paying for.
+--]]
+local DEV = {
 	{'test', nil, 'fill every aura slot with stand-ins'},
 	{'check', nil, 'which unit values this client hides'},
 	{'header', nil, 'whether a secure group header works on this client'},
+	{'party', nil, 'what the party column is made of, child by child'},
 	{'debug', nil, 'report what the build refused'},
 }
+
+local DEV_NAMES = {}
+
+for _, entry in ipairs(DEV) do
+	DEV_NAMES[entry[1]] = true
+end
 
 --[[ Umbra:RegisterEvent(frame, event)
 Registers an event, reporting failure instead of aborting the file.
@@ -188,14 +212,74 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 		UmbraUnitFramesDB.hideBlizzardAuras = false
 	end
 
+	-- Off, because the neutral bar is the design and this spends it. The
+	-- edge and the portrait tint carry identity either way.
+	if UmbraUnitFramesDB.classHealth == nil then
+		UmbraUnitFramesDB.classHealth = false
+	end
+
+	-- The client's group panel stays by default: it carries the raid markers
+	-- and the way out of a group, and the column was placed to clear it
+	-- rather than to replace it.
+	if UmbraUnitFramesDB.hideBlizzardGroup == nil then
+		UmbraUnitFramesDB.hideBlizzardGroup = false
+	end
+
 	-- ADDON_LOADED runs before the frames are built, which is the only place
 	-- this can be picked up in time to report on that build.
 	Umbra.debug = UmbraUnitFramesDB.debug or false
 end)
 
 SLASH_UMBRAUNITFRAMES1 = '/uuf'
+
+local function PrintCommands(entries, prefix)
+	for _, entry in ipairs(entries) do
+		local line = '  ' .. Value(prefix .. entry[1])
+
+		if entry[2] then
+			line = line .. ' ' .. Values(entry[2])
+		end
+
+		print(line .. ' — ' .. entry[3])
+	end
+end
+
 local function Command(input)
 	input = strtrim(input or ''):lower()
+
+	--[[ `dev` is a prefix, not a command of its own
+	It is stripped here and the rest of this function never learns about it,
+	so every command stays one branch of one chain. Dispatching the
+	measurements separately would mean a second place to add a command to,
+	and a second place to forget one in.
+
+	A bare name that has moved is answered rather than refused. Five commands
+	changed address at once, and `/uuf check` is in the fingers of the only
+	person who uses this — being told where it went costs one line and beats
+	the command list scrolling past for the fourth time.
+	--]]
+	if input == 'dev' or input:find('^dev%s') then
+		input = strtrim(input:sub(4))
+
+		if input == '' then
+			print(PREFIX .. 'measurements — they report, they change nothing.')
+			PrintCommands(DEV, '/uuf dev ')
+
+			return
+		end
+
+		if not DEV_NAMES[input] then
+			print(PREFIX .. 'no such measurement: ' .. input)
+			PrintCommands(DEV, '/uuf dev ')
+
+			return
+		end
+	elseif DEV_NAMES[input] then
+		print(PREFIX .. Value('/uuf ' .. input) .. ' is now '
+			.. Value('/uuf dev ' .. input) .. '.')
+
+		return
+	end
 
 	if input == 'unlock' then
 		if Umbra:SetLocked(false) then
@@ -358,7 +442,17 @@ local function Command(input)
 		for _, frame in ipairs(ns.oUF.objects) do
 			local unit = Umbra:FrameUnit(frame)
 			local model = frame.Portrait
-			local label = 'portrait ' .. (frame.umbraKey or tostring(unit))
+			--[[ Two frames answered to `party1`
+			Measured inside an instance on 21 September 2026: the header's
+			child and the hidden party stand-in are both pointed at `party1`,
+			and with the unit token for a name they printed the same label
+			with different answers under it — one with a model, one without.
+			A report that has to be guessed at is the thing this command
+			exists not to be, so the frame's own name breaks the tie wherever
+			there is no key.
+			--]]
+			local label = 'portrait ' .. (frame.umbraKey
+				or frame:GetName() or tostring(unit))
 
 			if not model then
 				add(label .. ': no element')
@@ -379,6 +473,44 @@ local function Command(input)
 				report(label .. ': UnitIsVisible', function()
 					return UnitIsVisible(unit)
 				end)
+
+				--[[ The condition SetUnit is actually gated on
+				Patch 12.0.5: `Model:SetUnit` and
+				`ModelSceneActor:SetModelByUnit` no longer accept a unit
+				token for a unit whose identity is secret. They do not throw
+				— they hand back nil where they used to hand back success.
+				So the instance was never the condition, only a place that
+				meets it, and `model: nil` on its own cannot say which of
+				the two happened: the client refused this unit, or the model
+				has not arrived yet.
+
+				A unit's GUID is its identity, so asking whether that is
+				secret asks the same question the API is gated on. Read
+				against `model` below: secret with no model is a refusal, in
+				the clear with no model is one still on its way — and that
+				is the split the bounded retry has been guessing at, eight
+				tries at a time, on every unit the client was never going to
+				name.
+
+				Printed as one word rather than through `report`, because
+				here a hidden value *is* the answer rather than something in
+				the way of reading one, and a GUID in the clear is forty
+				characters of noise next to a one-word finding.
+				--]]
+				local gotGuid, guid = pcall(UnitGUID, unit)
+				local identity
+
+				if not gotGuid then
+					identity = 'errors — ' .. tostring(guid)
+				elseif guid == nil then
+					identity = 'no guid'
+				elseif Umbra.Secrets.Is(guid) then
+					identity = 'secret'
+				else
+					identity = 'in the clear'
+				end
+
+				add(label .. ': identity — ' .. identity)
 
 				report(label .. ': model', function()
 					return model:GetModelFileID()
@@ -503,6 +635,56 @@ local function Command(input)
 					.. 'takes effect when the fight ends.')
 			end
 		end
+	elseif input:find('^health') then
+		-- Named states for the same reason `auras` has them, and because
+		-- what the two do is easier to name than to switch between: one
+		-- puts identity on the bar as well, the other keeps it at the edge.
+		local which = input:match('^health%s+(%S+)$')
+		local current = UmbraUnitFramesDB.classHealth and 'class' or 'plain'
+
+		if not which then
+			print(PREFIX .. 'health: ' .. Value(current))
+			print(PREFIX .. Value('class')
+				.. " — the bar takes the unit's color as well")
+			print(PREFIX .. Value('plain')
+				.. ' — one green for every unit, color only at the edge')
+		elseif which ~= 'class' and which ~= 'plain' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			UmbraUnitFramesDB.classHealth = which == 'class'
+
+			-- Nothing here is protected, so unlike `auras` this is a result
+			-- rather than a promise, in a fight as much as out of one.
+			Umbra:ApplyHealthStyle()
+			print(PREFIX .. 'health: ' .. Value(which))
+		end
+	elseif input:find('^group') then
+		-- The same two words as `auras`, for the same reason: what is being
+		-- chosen is who displays your party, and the answer is one of two
+		-- displays rather than a thing being on or off.
+		local which = input:match('^group%s+(%S+)$')
+		local current = UmbraUnitFramesDB.hideBlizzardGroup and 'umbra' or 'both'
+
+		if not which then
+			print(PREFIX .. 'group: ' .. Value(current))
+			print(PREFIX .. Value('umbra') .. ' — only the Umbra column')
+			print(PREFIX .. Value('both')
+				.. " — the game keeps its group panel, markers and all")
+		elseif which ~= 'umbra' and which ~= 'both' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			local hide = which == 'umbra'
+
+			UmbraUnitFramesDB.hideBlizzardGroup = hide
+
+			if Umbra:SetBlizzardGroup(not hide) then
+				print(PREFIX .. 'group: ' .. Value(which))
+			else
+				print(PREFIX .. 'group: ' .. Value(which)
+					.. ' — the panel is protected in combat, so this takes '
+					.. 'effect when the fight ends.')
+			end
+		end
 	elseif input == 'header' then
 		--[[ One question, asked once
 		Whether the client's secure group header still works without
@@ -512,6 +694,11 @@ local function Command(input)
 		anything is built on it. `Layouts/Group.lua` says why at length.
 		--]]
 		Umbra:ShowReport('Umbra — header', Umbra:ProbeHeader())
+	elseif input == 'party' then
+		-- The probe answers for a header it makes itself. This answers for
+		-- the one that is actually on screen, which is the only one a
+		-- screenshot can be checked against.
+		Umbra:ShowReport('Umbra — party', Umbra:ReportParty())
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		UmbraUnitFramesDB.debug = Umbra.debug
@@ -536,15 +723,7 @@ local function Command(input)
 		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
 		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
 
-		for _, entry in ipairs(COMMANDS) do
-			local line = '  ' .. Value('/uuf ' .. entry[1])
-
-			if entry[2] then
-				line = line .. ' ' .. Values(entry[2])
-			end
-
-			print(line .. ' — ' .. entry[3])
-		end
+		PrintCommands(COMMANDS, '/uuf ')
 
 		if Umbra.author then
 			print(('  with %s by %s'):format(HEART, Umbra.author))
