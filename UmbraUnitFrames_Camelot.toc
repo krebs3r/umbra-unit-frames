@@ -1,4 +1,4 @@
-## Interface: 16001
+﻿## Interface: 16001
 ## Title: Umbra Unit Frames
 ## Notes: Compact, readable unit frames. Class color at the edge, portrait in its own column.
 ## Author: krebs3r
@@ -28,4 +28,5 @@ Layouts\Tags.lua
 Layouts\Auras.lua
 Layouts\Shared.lua
 Layouts\Single.lua
+Layouts\Group.lua
 Layouts\Preview.lua

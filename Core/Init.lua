@@ -74,6 +74,7 @@ local COMMANDS = {
 	{'reset', nil, "forget this set's dragged positions"},
 	{'test', nil, 'fill every aura slot with stand-ins'},
 	{'check', nil, 'which unit values this client hides'},
+	{'header', nil, 'whether a secure group header works on this client'},
 	{'debug', nil, 'report what the build refused'},
 }
 
@@ -92,13 +93,25 @@ function Umbra:RegisterEvent(frame, event)
 end
 
 --[[ Umbra.hasSecureSnippets
-Whether the client can compile a secure snippet at all.
+Whether **we** can compile a snippet ourselves without tainting it.
 
-`loadstring_untainted` is what turns a string of Lua into a function without
-tainting it, and the whole secure-snippet machinery rests on it: state
-drivers, `RunAttribute`, `initialConfigFunction` — which is to say secure
-group headers and click-casting. Without it, group frames need a static
-fallback.
+`loadstring_untainted` is what an addon calls to turn a string of Lua into an
+untainted function. It is missing on both clients, and for a while these notes
+read that as the whole secure-snippet machinery being gone: state drivers,
+`RunAttribute`, `initialConfigFunction`, and with them any hope of a secure
+group header.
+
+**That was wrong, and `/uuf header` measured it wrong.** A header spawns, its
+children get units, and both oUF's `initialConfigFunction` and one handed to
+it by the layout run to completion — on a client where this flag is false.
+Those snippets are compiled by the *client's own* secure code, reached through
+`SetAttribute`, and never touch this global. The two were read as one
+mechanism because both are called "secure snippets" in conversation.
+
+So the flag stays, because it is a true measurement, and it is the name and
+the conclusion around it that were wrong. Nothing here calls
+`loadstring_untainted`, so nothing here is gated on it yet; keep it as what it
+says on the tin, and ask the real question wherever one comes up.
 
 This asks the question on **every** client, not only on Forever. It used to
 live in `Compat/Forever.lua`, which returns early on anything else and is not
@@ -260,10 +273,11 @@ local function Command(input)
 		add('aura underline: ' .. (Umbra.hasAuraUnderline and
 			'available' or 'unavailable'))
 
-		-- What decides whether group frames can have a secure header or need
-		-- a static fallback. Asked here rather than reasoned about, because
-		-- the answer has changed between clients and patches.
-		add('secure snippets: ' .. (Umbra.hasSecureSnippets and
+		-- Whether we could compile a snippet of our own, which is narrower
+		-- than it sounds and is **not** what decides whether a secure group
+		-- header works — `/uuf header` asks that one directly, and answered
+		-- yes on a client where this says no.
+		add('secure snippets (ours): ' .. (Umbra.hasSecureSnippets and
 			'available' or 'unavailable'))
 
 		-- Whether a compatibility file ran all the way through. Retail loads
@@ -489,6 +503,15 @@ local function Command(input)
 					.. 'takes effect when the fight ends.')
 			end
 		end
+	elseif input == 'header' then
+		--[[ One question, asked once
+		Whether the client's secure group header still works without
+		`loadstring_untainted`. It decides whether group frames can sort
+		themselves in a fight or have to be four fixed frames, which is the
+		difference between two different addons, so it is measured before
+		anything is built on it. `Layouts/Group.lua` says why at length.
+		--]]
+		Umbra:ShowReport('Umbra — header', Umbra:ProbeHeader())
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		UmbraUnitFramesDB.debug = Umbra.debug

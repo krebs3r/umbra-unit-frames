@@ -955,11 +955,46 @@ once and lost on the next tick.
 
 ### Relevant to group frames
 
-`loadstring_untainted` is missing on Forever **and** on Retail 12.1. That
-affects secure snippets, state drivers, `RunAttribute` and
-`initialConfigFunction` — precisely what secure group headers and click-casting
-rest on. Every snippet site belongs inside `if Umbra.hasSecureSnippets then …
-end` with a static fallback.
+**The secure group header works, and these notes were wrong about that.**
+Measured on Retail on 21 September 2026 with `/uuf header`, which spawns one
+real header with `showSolo` and reports what the child came out as:
+
+```
+secure snippets (loadstring_untainted): unavailable
+
+children: 2
+child 1: oUF-guessUnit: party   umbraProbeRan: yes   unit: player   styled: true
+child 2: oUF-guessUnit: party   umbraProbeRan: yes   unit: party1   styled: true
+```
+
+`oUF-guessUnit` is set from **inside** the restricted environment, by oUF's
+own `initialConfigFunction`. `umbraProbeRan` is set by a second snippet the
+layout handed the header, which oUF's snippet runs near its end. `styled:
+true` means that snippet reached its last line and called back out. All three
+answer yes on a client where `loadstring_untainted` does not exist.
+
+So group frames can be **real** group frames: children created, units
+assigned and re-sorted by the client's own machinery, during a fight and
+after it. Not four fixed frames for `party1..party4` waiting for combat to
+end, which is what this section used to say was the only option left.
+
+**Why the assumption was wrong, which is the part worth keeping.**
+`loadstring_untainted` is what an *addon* calls to turn a string into a
+function without tainting it. `initialConfigFunction`, attribute drivers and
+state drivers are compiled by the *client's own* secure code, reached through
+`SetAttribute`, and never go near that global. The two were read as one
+mechanism because they are both "secure snippets" in conversation.
+
+This is the same mistake as *Permission to compare two units is not an
+answer*, and it happened in the same week: a proxy question was trusted in
+place of the real one. There the proxy said yes and the answer was no; here
+the proxy said no and the answer is yes. Neither direction is safe. **Ask the
+question you actually need answered.**
+
+`Umbra.hasSecureSnippets` stays, because it is a true measurement — it is the
+label that was wrong. It answers whether *we* can compile a snippet ourselves,
+which nothing here does, and it is not the gate for group headers. `/uuf
+check` reports it as what it is.
 
 A second thing they rest on is already answered: `partyNtarget` and
 `raidNtarget` frames are spawned eventless and hear about every model in the
@@ -972,15 +1007,16 @@ That flag is set in `Core/Init.lua` and reported by `/uuf check`. It used to be
 set in `Compat/Forever.lua`, which returns early on anything but Forever and is
 not listed in the Retail TOC at all — so on Retail it was nil, which behaves
 like false and happens to be right, but by accident rather than by
-measurement. A flag that decides whether a whole class of frames can exist
-should not be true or false depending on which file loaded.
+measurement. A flag should not be true or false depending on which file
+loaded — least of all one that was, at the time, believed to decide whether a
+whole class of frames could exist. It does not; see above.
 
 **Measured on Retail on 20 September 2026**, standing in *Die Abyssalhallen*:
 `secure snippets: unavailable` beside `compat: none`. So the answer is the
 same one the accident used to give, and it is now an answer: no compatibility
 file ran, and the flag was set by asking the client. `loadstring_untainted` is
-missing on Retail 12.1 as well as on Forever, and group frames need the
-static fallback on both.
+missing on Retail 12.1 as well as on Forever — **and that turned out not to
+decide anything about group frames**, which is written up above.
 
 ---
 
@@ -1167,9 +1203,11 @@ over what it missed. That asks nothing of the client and works the same on
 both.
 
 - **`secure snippets: unavailable`.** `loadstring_untainted` is missing here,
-  as the record said. So group frames on this client need the static fallback,
-  and `Umbra.hasSecureSnippets` is false by measurement rather than by a file
-  that failed to load.
+  as the record said, and `Umbra.hasSecureSnippets` is false by measurement
+  rather than by a file that failed to load. What that was taken to mean for
+  group frames was wrong, and is corrected under *Relevant to group frames* —
+  the header on Retail works without it. Whether the same holds on Forever is
+  one `/uuf header` away and has not been run there yet.
 
 **One thing does not add up yet.** `/uuf debug` answered `nothing has been
 refused since login` on a run where `secure snippets: unavailable` — but that
