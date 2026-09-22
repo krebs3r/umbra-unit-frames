@@ -1,6 +1,8 @@
 .release/
 Libs/
 tools/.wowpath
+assets/design/png/
+assets/design/_preview.html
 *.zip
 Thumbs.db
 .DS_Store
