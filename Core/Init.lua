@@ -93,6 +93,7 @@ local DEV = {
 	{'check', nil, 'which unit values this client hides'},
 	{'header', nil, 'whether a secure group header works on this client'},
 	{'party', nil, 'what the party column is made of, child by child'},
+	{'portrait', nil, 'four ways of asking what the portrait column has to draw'},
 	{'debug', nil, 'report what the build refused'},
 }
 
@@ -155,6 +156,19 @@ frame was told to watch and still names the seat's owner. Reaching for
 --]]
 function Umbra:FrameUnit(frame)
 	return frame.__unit or frame:GetAttribute('unit')
+end
+
+--[[ Umbra:Heading()
+Which build answered, and on which client.
+
+Pasted or screenshotted anywhere else a report loses every scrap of context,
+so each one carries this line. It is one line in three windows rather than
+three lines that have to be kept in step.
+--]]
+function Umbra:Heading()
+	return ('%s — %s (interface %d)'):format(Umbra.version,
+		Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail'
+			or 'unsupported', interface)
 end
 
 --[[ Umbra:Debug(...)
@@ -308,11 +322,7 @@ local function Command(input)
 			lines[#lines + 1] = text
 		end
 
-		-- Pasted anywhere else this loses every scrap of context, so it
-		-- carries its own: which build answered, and on which client.
-		add(('%s — %s (interface %d)'):format(Umbra.version,
-			Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail'
-				or 'unsupported', interface))
+		add(Umbra:Heading())
 		add('')
 
 		-- Which unit values this client hands over in the clear decides how
@@ -569,12 +579,21 @@ local function Command(input)
 					return UnitIsUnit(unit, 'player')
 				end)
 
-				-- Which of the two the column is actually showing, so the
-				-- claim that it is never empty is measurable rather than
-				-- asserted.
-				add(label .. ': showing ' ..
+				--[[ Which layer is uncovered, and nothing more
+				This said `showing 3D model` until 22 September 2026, and
+				that was read — here, in these notes, and by the person
+				running it — as *a model is drawn*. It never measured that.
+				It measures whether the 2D stand-in is up, and with the
+				stand-in down an empty model and a full one are the same
+				line. A column that was plainly empty answered `showing 3D
+				model` over a readable file id, which is what retired the
+				wording; `/uuf dev portrait` is where the other question
+				gets asked.
+				--]]
+				add(label .. ': 2D stand-in ' ..
 					((model.umbraFlat and model.umbraFlat:IsShown())
-						and '2D stand-in' or '3D model'))
+						and 'up, over the model'
+						or "down, the square is the model's"))
 			end
 		end
 
@@ -699,6 +718,23 @@ local function Command(input)
 		-- the one that is actually on screen, which is the only one a
 		-- screenshot can be checked against.
 		Umbra:ShowReport('Umbra — party', Umbra:ReportParty())
+	elseif input == 'portrait' then
+		--[[ A box, because the answer is a picture
+		Every other measurement here ends in words, and this one cannot: no
+		value the client hands over says whether the column drew anything —
+		see *A file id is not a drawn model*. So the box asks the four
+		questions itself, in squares next to each other, and the screenshot
+		is the report.
+
+		The rows are gathered where the portrait code lives and drawn where
+		the other window lives, the same split `party` has.
+		--]]
+		local inside, kind = IsInInstance()
+
+		Umbra:ShowPortraits('Umbra — portrait',
+			Umbra:Heading() .. '   ·   ' .. (inside
+				and ('inside — ' .. tostring(kind)) or 'not in an instance'),
+			Umbra:PortraitRows())
 	elseif input == 'debug' then
 		Umbra.debug = not Umbra.debug
 		UmbraUnitFramesDB.debug = Umbra.debug
@@ -720,8 +756,7 @@ local function Command(input)
 			end
 		end
 	else
-		local client = Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail' or 'unsupported'
-		print(PREFIX .. ('%s — %s (interface %d)'):format(Umbra.version, client, interface))
+		print(PREFIX .. Umbra:Heading())
 
 		PrintCommands(COMMANDS, '/uuf ')
 

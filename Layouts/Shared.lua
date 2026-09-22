@@ -231,6 +231,162 @@ local function PortraitPostUpdate(element, unit)
 	RetryPortrait(element, 1)
 end
 
+--[[ What the column has to draw, asked four times in one picture
+`/uuf dev check` answered `showing 3D model` for a column that was plainly
+empty, and it was not lying: that line reported which of the two layers was
+uncovered, which is all it ever measured. It says so in those words now.
+Nothing in here can see whether the model under it drew anything, and the
+file id is not that answer either.
+
+Measured on Retail 120100 on 22 September 2026, on a hostile unit in the open
+world whose identity is in the clear: `model: readable — 124639` over a
+portrait square that holds 53 distinct colors across 1680 pixels, 1183 of
+them the same one — the ground and the reaction tint, with nothing standing
+on them. The player and the pet beside it come back 1732 distinct colors in
+1920. So a file id says a model was named, not that one was drawn, and
+`ModelPending` above reads the first as the second.
+
+So the eye is asked instead, and asked once: `/uuf dev portrait` opens a box
+with the same four attempts on every row, side by side, and the picture holds
+all four answers at once.
+
+	as drawn     the portrait camera and the unit — what the column does
+	whole model  the model's own camera, which brings a body framed outside
+	             the square into view if that is where it is
+	file alone   the file the live element holds, loaded with no unit behind
+	             it, which tells geometry the client owns apart from a unit
+	             it will not build one for
+	2D           SetPortraitTexture for the same unit, on a texture cleared
+	             first, so what comes back is the client's answer and not the
+	             last unit's face
+
+**The target is the question and the player and the pet are the controls.**
+Two units whose models are known to load, in the same picture, on the same
+client, at the same moment: a row that is empty in all four squares is worth
+something only next to a row that is not.
+
+The box itself is in `Core/Report.lua`, next to the other window. What is
+here is what it needs to know, and it is asked the way every measurement in
+this addon is asked: a throw and a hidden value are answers, and neither of
+them is a file.
+--]]
+local PORTRAIT_UNITS = {'target', 'player', 'pet'}
+
+--[[ FileHeld(element)
+What the element says it is holding: a number to load again, and a word to
+print beside it.
+--]]
+local function FileHeld(element)
+	local ok, file = pcall(element.GetModelFileID, element)
+
+	if not ok then return nil, 'file errors — ' .. tostring(file) end
+	if Umbra.Secrets.Is(file) then return nil, 'file hidden' end
+	if file == nil then return nil, 'no file' end
+
+	return file, 'file ' .. tostring(file)
+end
+
+--[[ Answer(name, getter, unit)
+One client answer as one word. A function this client does not have is an
+answer as well, and saying so beats a throw dressed up as a refusal.
+--]]
+local function Answer(name, getter, unit)
+	if type(getter) ~= 'function' then return name .. ' — no such function' end
+
+	local ok, value = pcall(getter, unit)
+
+	if not ok then return name .. ' errors' end
+	if Umbra.Secrets.Is(value) then return name .. ' hidden' end
+
+	return name .. ' ' .. tostring(value)
+end
+
+--[[ Identity(unit)
+Whether the client has classified this unit, which is what `SetUnit` is gated
+on. Printed as one word: a GUID in the clear is forty characters of noise
+next to a one-word finding.
+--]]
+local function Identity(unit)
+	local ok, guid = pcall(UnitGUID, unit)
+
+	if not ok then return 'identity errors' end
+	if guid == nil then return 'no guid' end
+
+	return 'identity ' .. (Umbra.Secrets.Is(guid) and 'secret' or 'in the clear')
+end
+
+--[[ PortraitElement(unit)
+The live column for this unit, so the box loads the file the frames are
+actually holding rather than one it asked for itself. A file asked for again
+is a different measurement, and the empty square on screen belongs to this
+one.
+--]]
+local function PortraitElement(unit)
+	for _, frame in ipairs(oUF.objects) do
+		if Umbra:FrameUnit(frame) == unit and frame:IsVisible()
+			and frame.Portrait and frame.Portrait.GetModelFileID then
+			return frame.Portrait
+		end
+	end
+end
+
+--[[ Umbra:PortraitRows()
+One row per unit the box draws, whether or not there is anything behind it.
+A missing target is a state worth seeing rather than a row left out: the
+question is about a target, and a box that quietly shows two rows instead of
+three is a box that has to be counted.
+--]]
+function Umbra:PortraitRows()
+	local rows = {}
+
+	for _, unit in ipairs(PORTRAIT_UNITS) do
+		local row = {unit = unit}
+
+		if not UnitExists(unit) then
+			row.facts = 'nothing there'
+		else
+			local element = PortraitElement(unit)
+
+			if element then
+				row.file, row.held = FileHeld(element)
+			else
+				row.held = 'no frame of ours is showing this unit'
+			end
+
+			local ok, name = pcall(UnitName, unit)
+
+			row.name = (ok and not Umbra.Secrets.Is(name) and name)
+				or (ok and 'name hidden') or 'name errors'
+
+			row.facts = table.concat({
+				Identity(unit),
+				row.held,
+				Answer('ready', _G.IsUnitModelReadyForUI, unit),
+			}, '   ·   ')
+		end
+
+		rows[#rows + 1] = row
+	end
+
+	--[[ Every row carries the player's own file
+	`SetUnit` hands back the player's model for a unit it will not name, so
+	`holds 878772` can appear on the target's row and mean *you*. The box
+	says so where it happens, and can only say it if every row knows which
+	number that is.
+	--]]
+	local mine
+
+	for _, row in ipairs(rows) do
+		if row.unit == 'player' then mine = row.file end
+	end
+
+	for _, row in ipairs(rows) do
+		row.mine = mine
+	end
+
+	return rows
+end
+
 --[[ The frame that is told about every model in the world
 `targettarget` is a derived token, so oUF spawns it **eventless**: a 0.5s tick
 instead of events, `ouf.lua:405`. Two events are let through anyway, because

@@ -52,6 +52,12 @@ The absorbs have been seen drawing in an instance, on both the player and the
 target frame, but only as stand-ins — see *Waiting to be looked at* for what
 that does and does not settle.
 
+**The portrait column came up empty on a target that answered for it.** Open
+world, identity in the clear, a model file id in hand, and 1183 of 1680 pixels
+one flat color — see *A file id is not a drawn model* for what that report was
+and was not saying, and `/uuf dev portrait` for the box that asks the four
+questions that separate what is left.
+
 One fault has been found in use, fixed and **confirmed in the client**: the
 target-of-target frame threw 716 errors in one delve run, out of oUF's own
 unit comparison. See *Permission to compare two units is not an answer* — it
@@ -81,6 +87,7 @@ they have forgotten a command should be about the frames.
 | `dev check` | opens a report window: which unit values this client hides, what the class-power row found, and per frame whether the unit's identity is secret and what its portrait could load |
 | `dev header` | whether a secure group header works on this client, layer by layer |
 | `dev party` | what the party column is made of, child by child, with each top edge in screen coordinates |
+| `dev portrait` | a box with four attempts at the portrait per unit, for when the column is empty and every value says it should not be |
 | `dev debug` | print what was refused while building, including before it was on |
 
 A bare `/uuf check` and its four neighbours answer with their new address
@@ -877,10 +884,175 @@ each started a retry chain that could not end any other way. It also explains
 the `showing 3D model` next to a missing one: nothing covers a frame nobody
 can see.
 
-What is still unmeasured: whether the client declines `SetPortraitTexture` for
-the same unit it declined a model for. If it does, the stand-in is its
-question mark, which is a worse picture but still an honest one — and the
-`showing` line says which happened.
+Whether the client declines `SetPortraitTexture` for the same unit it declined
+a model for was the open question here, and the portrait box answered it on 22
+September 2026: **it does not.** The stand-in gets the unit's own face, not a
+question mark — see *A refused model is not an empty one*.
+
+### A file id is not a drawn model
+
+**Open, and the instrument for it is built and has been run.** The box works
+and has already settled two other things — see *A refused model is not an
+empty one* — but the run that produced it was inside a dungeon, where the
+target's identity is secret and the file id is nil, which is the case that
+already works. **The case below is still unreproduced in the box: a unit in
+the open world, identity in the clear, a file id in hand, and an empty
+square.** On Retail 120100 on 22 September 2026, in the open world in *Der Altar des Zorns*, a hostile target answered
+`/uuf dev check` with everything that is supposed to mean a portrait:
+
+```
+portrait target: identity — in the clear
+portrait target: model:        readable — 124639
+portrait target: ready:        readable — true
+portrait target: showing 3D model
+```
+
+and the column was empty. Measured off the screenshot, 2000 px wide: the
+target's portrait square holds **53 distinct colors across 1680 pixels, 1183
+of them the same one** — the ground with the reaction tint over it and
+nothing standing on them. The player's square in the same picture holds 1732
+distinct colors in 1920, the pet's 673 in 1120. The ground and the tint are
+both there, so nothing about the column is misplaced or unpainted; what is
+missing is the model.
+
+Three things that report were **not** saying, each of which had been read out
+of it:
+
+- **`showing 3D model` was not "a model is drawn".** It reported which of the
+  two layers was uncovered, which is all it ever claimed — and with the 2D
+  stand-in down, that is the only thing it could report. An empty 3D layer
+  and a full one read the same. The line now says `2D stand-in down, the
+  square is the model's`, which is the thing that was measured.
+- **A file id is not a drawn model either.** `GetModelFileID` answered a
+  number here, and `ModelPending` treats a number as "there is nothing to
+  wait for". That was written when the two known states were *a model* and
+  *nil*, and this is a third.
+- **"no 2D model either" is not a refusal.** The stand-in is only ever raised
+  where the file is nil, so on this unit `SetPortraitTexture` was never
+  asked. Whether the client would have given a face is unmeasured.
+
+What the id is not: oUF's own fallback. Its unavailable branch loads
+`Interface\Buttons\TalkToMeQuestionMark.m2`, which the community listfile
+gives as 130738 — from wago.tools rather than from this client, so it is a
+pointer and not a measurement, but 124639 is not it. oUF took the `SetUnit`
+branch, as its two conditions coming back readable and true already said.
+
+The explanations still standing, none of them separable from the outside:
+
+1. **The client built no model for this unit.** The target was one of the
+   ruin's fallen hunters, up the hill and a long way off; a unit the world is
+   not drawing may have nothing for the UI to borrow, while its display is
+   still named.
+2. **The model is framed out of the square.** `SetPortraitZoom(1)` uses the
+   portrait camera the model file carries, and an old creature file whose
+   camera is missing or degenerate would render off-view rather than nothing
+   at all.
+3. **The file has no geometry to draw**, whatever it is named. **This is the
+   standing reading**, and it is a reading rather than a measurement: an old
+   creature file that the client will name and cannot picture is not a fault
+   in the column, and nothing in the addon could have done better with it.
+   The *file alone* square settles it in one screenshot the next time anyone
+   is standing in front of such a unit.
+4. **The model is there and nearly invisible** — a ghost or otherwise
+   translucent unit. The screenshot arrives here as lossy WebP, which would
+   flatten a very faint model into the uniform block that was measured. The
+   variance carries the finding; the colors do not.
+
+### `/uuf dev portrait`, four attempts in one picture
+
+Nothing the client hands over says whether the column drew anything, so this
+measurement does not end in words: it opens a box and draws. One row per
+unit, four squares each, side by side.
+
+| | |
+| :--- | :--- |
+| as drawn | the portrait camera and the unit — exactly what the column does |
+| whole model | the model's own camera, which brings a body framed outside the square into view if that is where it is |
+| file alone | the file the live element holds, loaded with no unit behind it — geometry the client owns, told apart from a unit it will not build one for |
+| 2D | `SetPortraitTexture` for the same unit, on a texture cleared first, so what comes back is the client's answer and not the last unit's face |
+
+Read against the four explanations above: *whole model* settles 2, *file
+alone* settles 3, and together they settle 1 — a file that draws on its own
+while the unit draws nothing leaves only the unit. *2D* settles what the
+other half of the column would do, and is the one square that is also a
+repair: if the client hands over a portrait for the unit whose model it will
+not build, the stand-in belongs there, and the gate that raises it needs a
+better question than a nil file id.
+
+**The target is the question; the player and the pet are the controls.** Two
+units whose models are known to load, in the same picture, on the same
+client, at the same moment. A row that is empty in all four squares is worth
+something only next to a row that is not — and a row for a unit that is not
+there says so rather than being left out, because a box that quietly shows
+two rows instead of three is a box that has to be counted.
+
+The squares are live `PlayerModel`s, not pictures of one: they ask the client
+the same four questions the frames ask, and the screenshot of them is the
+report. Each caption is read twice, now and a third of a second later,
+because `GetModelFileID` can answer nil in the frame the unit was set in and
+a caption saying `holds nothing` under a square that fills a moment later
+would be this file's own mistake made again.
+
+Two things came out of building it. The window furniture — border, title bar,
+close button, sunken body, each from the client's templates with a plain one
+built where they are missing — is now `Panel` in `Core/Report.lua` and serves
+both windows. And `/uuf dev check` lost the wording that started this:
+`showing 3D model` now reads `2D stand-in down, the square is the model's`,
+which is what it measures.
+
+### A refused model is not an empty one — it is you
+
+**Settled, and it was not what anyone was looking for.** The first run of the
+box, in *Das Verlies* on 22 September 2026, inside with a party, on a target
+whose identity is secret:
+
+```
+target — name hidden      identity secret · no file · ready true
+  as drawn     holds 878772      a dwarf
+  whole model  holds 878772      the same dwarf, whole
+  file alone   no file           empty
+  2D           gave RTPortrait1  a masked human rogue
+player — Donnerbüchse     identity in the clear · file 878772 · ready true
+  as drawn     holds 878772      the same dwarf
+```
+
+`878772` is the player's own file, and the dwarf in the target's squares is
+the dwarf who typed the command. So **`SetUnit` on a unit the client will not
+name does not leave the model empty; it leaves the player standing in it.**
+
+The control for that claim is in the same picture and was not put there for
+it: the target's *file alone* square is a `PlayerModel` that was cleared and
+then given nothing at all, because there was no file to give it — and it is
+empty. A cleared model with nothing set draws nothing, so the dwarf in the
+other two squares came from `SetUnit` itself rather than from the widget
+falling back to what it is named after.
+
+What that costs: the 2D stand-in is not a nicety over an empty square, it is
+the only thing standing between an enemy frame and a portrait of yourself.
+`ModelPending` raises it on a nil file id, which is exactly the shape of this
+case — the element holds no file while the square holds the player — so the
+column was right here, and the live frame in the same screenshot shows the
+rogue's own face. It is the *other* case, a file id over an empty square,
+where the cover never comes up.
+
+**`SetPortraitTexture` is not declined where the model was.** That question
+was left open under *The client keeps a hostile unit's model to itself*, and
+this answers it: the client handed over the target's real portrait —
+a masked human rogue, the unit that was standing there — for a unit whose
+identity it had just refused to name. The stand-in is a true picture of the
+unit, not a question mark, which is worth more than it sounds: the column
+keeps its meaning on exactly the units that need it.
+
+Two things to read correctly in that box, both measured and neither a fault:
+
+- **`file alone` draws white.** A character or creature file loaded by id
+  comes in without its textures — an untextured mesh, the player as a white
+  dwarf and the pet as a white bear. The square answers *is there geometry*,
+  and geometry is all it answers.
+- **`gave RTPortrait1` is not a file id.** `GetTexture` on a portrait comes
+  back with a render-target name, and the same word appears on all three
+  units while the three pictures differ. So the caption says a portrait was
+  given, and nothing about whose.
 
 ### Permission to compare two units is not an answer
 
