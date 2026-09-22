@@ -1,22 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1301" height="874" viewBox="0 0 1301 874" role="img" aria-label="Umbra Unit Frames — the modern set">
+<svg xmlns="http://www.w3.org/2000/svg" width="942" height="744" viewBox="0 0 942 744" role="img" aria-label="Umbra Unit Frames — the modern set">
 <title>Umbra Unit Frames — the modern set</title>
 <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
-<rect width="1301" height="874" fill="rgb(9,11,17)"/>
-<text x="48.00" y="56.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">/UUF LAYOUT MODERN</text>
-<text x="48.00" y="78.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The modern set</text>
-<text x="48.00" y="100.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar and the debuffs under the pet. The party column goes to the</text>
-<text x="48.00" y="117.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">left edge, centred on it: it is about four other people and does not belong in that gathering.</text>
-<rect x="64.00" y="150.00" width="1173.90" height="660.48" fill="rgb(13,16,24)"/>
-<rect x="64.00" y="150.00" width="1173.90" height="660.48" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<line x1="650.95" y1="150.00" x2="650.95" y2="810.48" stroke="rgb(44,52,70)" stroke-width="1.00" stroke-dasharray="3 7"/>
-<line x1="64.00" y1="480.24" x2="1237.90" y2="480.24" stroke="rgb(44,52,70)" stroke-width="1.00" stroke-dasharray="3 7"/>
-<text x="76.00" y="798.48" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(44,52,70)" text-anchor="start" font-weight="400">UIParent 1365 x 768 — the default scale on a 16:9 screen</text>
-<g transform="translate(340.49,546.46) scale(0.8600)">
+<rect width="942" height="744" fill="rgb(9,11,17)"/>
+<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">/UUF LAYOUT MODERN</text>
+<text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The modern set</text>
+<text x="48.00" y="119.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above</text>
+<text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">them, the pet under the cast bar and the debuffs under the pet. The party column goes to the left</text>
+<text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">edge, centred on it: it is about four other people and does not belong in that gathering.</text>
+<rect x="48.00" y="186.00" width="846.30" height="476.16" fill="rgb(13,16,24)"/>
+<rect x="48.00" y="186.00" width="846.30" height="476.16" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<line x1="471.15" y1="186.00" x2="471.15" y2="662.16" stroke="rgb(44,52,70)" stroke-width="1.00" stroke-dasharray="3 7"/>
+<line x1="48.00" y1="424.08" x2="894.30" y2="424.08" stroke="rgb(44,52,70)" stroke-width="1.00" stroke-dasharray="3 7"/>
+<text x="60.00" y="650.16" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="13.4" fill="rgb(44,52,70)" text-anchor="start" font-weight="400">UIParent 1365 x 768 — the default scale on a 16:9 screen</text>
+<g transform="translate(247.33,471.82) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17693"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip17693)" opacity="0.42">
+<clipPath id="clip95262"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip95262)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -45,19 +46,19 @@
 <rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
 <rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(340.49,588.60) scale(0.8600)">
+<g transform="translate(247.33,502.20) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Arcane Blast</text>
 <text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.4</text>
 </g>
-<g transform="translate(770.49,551.62) scale(0.8600)">
+<g transform="translate(557.33,475.54) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="41.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="41.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="38.00" height="41.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17734"><rect x="5.00" y="0" width="38.00" height="41.00"/></clipPath>
-<g clip-path="url(#clip17734)" opacity="0.42">
+<clipPath id="clip95303"><rect x="5.00" y="0" width="38.00" height="41.00"/></clipPath>
+<g clip-path="url(#clip95303)" opacity="0.42">
 <circle cx="24.00" cy="16.40" r="7.22" fill="rgb(199,64,64)"/>
 <ellipse cx="24.00" cy="34.45" rx="17.33" ry="10.83" fill="rgb(199,64,64)"/>
 </g>
@@ -76,19 +77,19 @@
 <rect x="45.00" y="37.00" width="155.70" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(770.49,588.60) scale(0.8600)">
+<g transform="translate(557.33,502.20) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="77.70" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Crush</text>
 <text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">2.8</text>
 </g>
-<g transform="translate(340.49,602.36) scale(0.8600)">
+<g transform="translate(247.33,512.12) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17765"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip17765)" opacity="0.42">
+<clipPath id="clip95334"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95334)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(63,199,235)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(63,199,235)"/>
 </g>
@@ -101,12 +102,12 @@
 <rect x="35.00" y="29.00" width="146.40" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(770.49,521.52) scale(0.8600)">
+<g transform="translate(557.33,453.84) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(198,155,109)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17783"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip17783)" opacity="0.42">
+<clipPath id="clip95352"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95352)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(198,155,109)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(198,155,109)"/>
 </g>
@@ -119,7 +120,7 @@
 <rect x="35.00" y="29.00" width="54.90" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(340.49,491.42) scale(0.8600)">
+<g transform="translate(247.33,432.14) scale(0.6200)">
 <rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
@@ -169,7 +170,7 @@
 <rect x="197.00" y="33.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.180)"/>
 <rect x="196.00" y="60.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
 </g>
-<g transform="translate(340.49,632.46) scale(0.8600)">
+<g transform="translate(247.33,533.82) scale(0.6200)">
 <rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(178,93,93)"/>
@@ -195,7 +196,7 @@
 <rect x="197.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.180)"/>
 <rect x="196.00" y="28.00" width="26.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(770.49,494.00) scale(0.8600)">
+<g transform="translate(557.33,434.00) scale(0.6200)">
 <rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
@@ -221,7 +222,7 @@
 <rect x="197.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.180)"/>
 <rect x="196.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
 </g>
-<g transform="translate(770.49,602.36) scale(0.8600)">
+<g transform="translate(557.33,512.12) scale(0.6200)">
 <rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(178,93,93)"/>
@@ -271,12 +272,12 @@
 <rect x="197.00" y="33.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.180)"/>
 <rect x="196.00" y="60.00" width="26.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(77.76,353.82) scale(0.8600)">
+<g transform="translate(57.92,332.94) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,124,10)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17953"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip17953)" opacity="0.42">
+<clipPath id="clip95522"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95522)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,124,10)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,124,10)"/>
 </g>
@@ -292,17 +293,17 @@
 <rect x="35.00" y="29.00" width="128.10" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(77.76,397.68) scale(0.8600)">
+<g transform="translate(57.92,364.56) scale(0.6200)">
 <rect x="0.00" y="0.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(77.76,418.32) scale(0.8600)">
+<g transform="translate(57.92,379.44) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,255,255)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip17979"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip17979)" opacity="0.42">
+<clipPath id="clip95548"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95548)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,255,255)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,255,255)"/>
 </g>
@@ -319,14 +320,14 @@
 <rect x="35.00" y="29.00" width="128.10" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(77.76,448.42) scale(0.8600)">
+<g transform="translate(57.92,401.14) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="111.00" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Regrowth</text>
 <text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.1</text>
 </g>
-<g transform="translate(77.76,462.18) scale(0.8600)">
+<g transform="translate(57.92,411.06) scale(0.6200)">
 <rect x="0.00" y="0.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
@@ -337,12 +338,12 @@
 <rect x="33.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.230)"/>
 <rect x="32.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(77.76,482.82) scale(0.8600)">
+<g transform="translate(57.92,425.94) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(0,112,221)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18019"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18019)" opacity="0.42">
+<clipPath id="clip95588"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95588)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(0,112,221)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(0,112,221)"/>
 </g>
@@ -358,7 +359,7 @@
 <rect x="35.00" y="29.00" width="128.10" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(77.76,526.68) scale(0.8600)">
+<g transform="translate(57.92,457.56) scale(0.6200)">
 <rect x="0.00" y="0.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
@@ -369,12 +370,12 @@
 <rect x="33.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.230)"/>
 <rect x="32.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(77.76,547.32) scale(0.8600)" opacity="0.45">
+<g transform="translate(57.92,472.44) scale(0.6200)" opacity="0.45">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(135,136,238)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18051"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18051)" opacity="0.42">
+<clipPath id="clip95620"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95620)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(135,136,238)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(135,136,238)"/>
 </g>
@@ -390,7 +391,7 @@
 <rect x="35.00" y="29.00" width="128.10" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(77.76,591.18) scale(0.8600)" opacity="0.45">
+<g transform="translate(57.92,504.06) scale(0.6200)" opacity="0.45">
 <rect x="0.00" y="0.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
@@ -401,12 +402,12 @@
 <rect x="33.00" y="1.00" width="12.00" height="12.00" fill="rgba(141,151,171,0.230)"/>
 <rect x="32.00" y="16.00" width="14.00" height="2.00" fill="rgb(178,93,93)"/>
 </g>
-<g transform="translate(1033.22,368.01) scale(0.8600)">
+<g transform="translate(746.74,343.17) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18083"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18083)" opacity="0.42">
+<clipPath id="clip95652"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95652)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(199,64,64)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(199,64,64)"/>
 </g>
@@ -420,19 +421,19 @@
 <rect x="35.00" y="29.00" width="91.50" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(1033.22,398.11) scale(0.8600)">
+<g transform="translate(746.74,364.87) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="88.80" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Shadow Bolt</text>
 <text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.9</text>
 </g>
-<g transform="translate(1033.22,413.59) scale(0.8600)">
+<g transform="translate(746.74,376.03) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18109"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18109)" opacity="0.42">
+<clipPath id="clip95678"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95678)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(199,64,64)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(199,64,64)"/>
 </g>
@@ -446,12 +447,12 @@
 <rect x="35.00" y="29.00" width="91.50" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(1033.22,459.17) scale(0.8600)">
+<g transform="translate(746.74,408.89) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18128"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18128)" opacity="0.42">
+<clipPath id="clip95697"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95697)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(199,64,64)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(199,64,64)"/>
 </g>
@@ -465,12 +466,12 @@
 <rect x="35.00" y="29.00" width="91.50" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(1033.22,504.75) scale(0.8600)">
+<g transform="translate(746.74,441.75) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18147"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18147)" opacity="0.42">
+<clipPath id="clip95716"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95716)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(199,64,64)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(199,64,64)"/>
 </g>
@@ -484,12 +485,12 @@
 <rect x="35.00" y="29.00" width="91.50" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(1033.22,550.33) scale(0.8600)">
+<g transform="translate(746.74,474.61) scale(0.6200)">
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(199,64,64)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip18166"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip18166)" opacity="0.42">
+<clipPath id="clip95735"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip95735)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(199,64,64)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(199,64,64)"/>
 </g>
@@ -503,13 +504,13 @@
 <rect x="35.00" y="29.00" width="91.50" height="4.00" fill="rgb(35,106,196)"/>
 <rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
 </g>
-<circle cx="64.00" cy="836.48" r="3" fill="rgb(117,220,196)"/>
-<text x="76.00" y="840.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Party column</text>
-<text x="76.00" y="857.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 x 69 + 3 x 6 = 294 tall</text>
-<circle cx="484.00" cy="836.48" r="3" fill="rgb(117,220,196)"/>
-<text x="496.00" y="840.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Boss column</text>
-<text x="496.00" y="857.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">as many as MAX_BOSS_FRAMES, right edge, centred</text>
-<circle cx="904.00" cy="836.48" r="3" fill="rgb(117,220,196)"/>
-<text x="916.00" y="840.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Range fading</text>
-<text x="916.00" y="857.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">out of range at alpha 0.45</text>
+<circle cx="52.00" cy="695.16" r="3.5" fill="rgb(117,220,196)"/>
+<text x="66.00" y="700.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Party column</text>
+<text x="66.00" y="722.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 x 69 + 3 x 6 = 294 tall</text>
+<circle cx="334.10" cy="695.16" r="3.5" fill="rgb(117,220,196)"/>
+<text x="348.10" y="700.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Boss column</text>
+<text x="348.10" y="722.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">as many as MAX_BOSS_FRAMES</text>
+<circle cx="616.20" cy="695.16" r="3.5" fill="rgb(117,220,196)"/>
+<text x="630.20" y="700.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Range fading</text>
+<text x="630.20" y="722.16" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">alpha 0.45, the portrait too</text>
 </svg>

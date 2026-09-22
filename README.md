@@ -60,7 +60,7 @@ Color, shape, and placement should make different kinds of information easy to d
 
 Every frame shares the same anatomy — the portrait column, class color at the edge, the name, a health bar and the power hairline — and is then cut down to what it is for.
 
-![The player frame at three times its size, with every part labelled: the three-pixel class edge, the portrait column, name and power value, health bar, power hairline, class power row and cast bar](assets/design/frame-anatomy.svg)
+![The player frame at twice its size, with every part labelled: the three-pixel class edge, the portrait column, name and power value, health bar, power hairline, class power row and cast bar](assets/design/frame-anatomy.svg)
 
 > The sheets on this page are **drawings, not screenshots**. `tools/mockups.py` redraws the frames from the same metrics `Core/Defaults.lua` lays them out with, deriving the heights and offsets rather than copying them, so what they can show is geometry and color. The fonts, the spell art in an icon and the portrait models belong to the client and stand in here.
 

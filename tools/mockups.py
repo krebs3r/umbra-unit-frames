@@ -228,6 +228,20 @@ def rgb(c, alpha=None):
     return 'rgba(%d,%d,%d,%.3f)' % (r, g, b, a)
 
 
+#[[ Why the annotation type is scaled and the drawings are not
+# A sheet is read where it is embedded, and GitHub fits a README image to a
+# column around 880 wide. A 1420-wide sheet is therefore shown at 0.62, and
+# an 11 px label arrives as 7 px — which is what these sheets were, and what
+# made them unreadable at the one size anyone sees them at.
+#
+# So two things move in opposite directions. The drawings come down a scale
+# step, which takes the canvases to roughly the column width, and the
+# annotation type goes up by TYPE. The UI's own text is untouched: a 12 px
+# label inside a 47 px frame is a fact about the addon, and scaling it would
+# make the sheet claim something false.
+#]]
+TYPE = 1.34
+
 PAPER = (9, 11, 17)
 RULE = (44, 52, 70)
 LABEL = (126, 138, 160)
@@ -491,12 +505,14 @@ def draw_aura_row(sheet, x, y, s, count, *, harmful, size=None, dispel=None,
 
 
 def caption(sheet, x, y, eyebrow, title, body=None, width=340):
-    sheet.text(x, y, eyebrow.upper(), size=10, fill=rgb(C['accent']),
+    sheet.text(x, y, eyebrow.upper(), size=10 * TYPE, fill=rgb(C['accent']),
                weight='600', spacing=1.4)
-    sheet.text(x, y + 22, title, size=16, fill=rgb(C['text']), weight='600')
+    sheet.text(x, y + 26 * TYPE, title, size=17 * TYPE, fill=rgb(C['text']),
+               weight='600')
     if body:
-        for i, line in enumerate(wrap(body, width, 11.5)):
-            sheet.text(x, y + 44 + i * 17, line, size=11.5, fill=rgb(LABEL))
+        for i, line in enumerate(wrap(body, width, 12 * TYPE)):
+            sheet.text(x, y + (50 + i * 18) * TYPE, line, size=12 * TYPE,
+                       fill=rgb(LABEL))
 
 
 def wrap(text, width, size):
@@ -529,33 +545,34 @@ def callout(sheet, x1, y1, x2, label, value=None, label_y=None):
               % (x1, y1, rgb(C['accent'], 0.8)))
     anchor = 'start' if out > 0 else 'end'
     pad = 8 * out
-    sheet.text(x2 + pad, y2 - 1, label, size=11.5, fill=rgb(C['text']),
+    sheet.text(x2 + pad, y2 - 1, label, size=12 * TYPE, fill=rgb(C['text']),
                anchor=anchor)
     if value:
-        sheet.text(x2 + pad, y2 + 14, value, size=10.5, fill=rgb(LABEL),
-                   anchor=anchor, family='mono')
+        sheet.text(x2 + pad, y2 + 16 * TYPE, value, size=11 * TYPE,
+                   fill=rgb(LABEL), anchor=anchor, family='mono')
 
 
 # --- Sheet 1: what a frame is made of -------------------------------------
 
 def sheet_anatomy(out):
-    s = 3
+    s = 2
     c = cfg('player')
     buffs_h = aura_block_height(c, 8)
     above = stack_offset(c, LAYOUTS['modern'], 'above', 'helpful')
 
-    ay = 158
-    fx = 400
+    ay = 200
+    fx = 270
     fy = ay + (buffs_h + above) * s
     fw = c['width'] * s
 
-    sheet = Sheet(1420, 640, 'Umbra Unit Frames — frame anatomy')
+    sheet = Sheet(980, 540, 'Umbra Unit Frames — frame anatomy')
     caption(sheet, 48, 52, 'Umbra Unit Frames',
             'What a frame is made of',
-            'The player frame at 3x, with the buff row above it as the modern '
-            'set hangs it. Every rectangle is the one Layouts/Shared.lua '
-            'places, at the size Core/Defaults.lua gives it — drawn from '
-            'those numbers rather than photographed.', width=1250)
+            'The player frame at twice its size, with the buff row above it '
+            'as the modern set hangs it. Every rectangle is the one '
+            'Layouts/Shared.lua places, at the size Core/Defaults.lua gives '
+            'it — drawn from those numbers rather than photographed.',
+            width=884)
 
     draw_aura_row(sheet, fx, ay, s, 8, harmful=False,
                   dispel={2: CLASS['PRIEST']})
@@ -568,48 +585,49 @@ def sheet_anatomy(out):
 
     h = frame_height(c)
     right = fx + fw
-    left_x, right_x = fx - 52, right + 52
+    left_x, right_x = fx - 44, right + 44
 
-    # Left: the two columns that run the frame's full height, and the row
-    # above it. Right: the rows, in the order they are stacked.
+    # Left: the row above the frame, and the two columns that run its full
+    # height. Right: the rows, in the order they are stacked. A label needs
+    # more room than the row it points at, so the leader bends.
     callout(sheet, fx, ay + (c['auraSize'] / 2) * s, left_x,
-            'Aura icon', '26 px, art inset 1', label_y=ay + 16)
+            'Aura icon', '26 px, art inset 1', label_y=ay + 8)
     callout(sheet, fx, ay + (c['auraSize'] + c['gap']
                              + c['auraUnderline'] / 2) * s, left_x,
-            'Aura underline', '2 px, dispel color', label_y=ay + 74)
+            'Aura underline', '2 px, dispel color', label_y=ay + 52)
     callout(sheet, fx + (c['classEdge'] + c['gap'] + c['portrait'] / 2) * s,
             fy + h * s * 0.32, left_x,
             'Portrait column', '38 x %d px' % h, label_y=fy + 34)
     callout(sheet, fx + c['classEdge'] * s / 2, fy + h * s * 0.72, left_x,
-            'Class edge', '3 px, full height', label_y=fy + 100)
+            'Class edge', '3 px, full height', label_y=fy + 88)
 
     rows = [
         (c['nameHeight'] / 2, 'Name and power value',
-         'name 13 px, value 40 px', fy + 14),
+         'name 13 px, value 40 px', fy + 8),
         (c['nameHeight'] + c['gap'] + c['healthHeight'] / 2, 'Health',
-         '20 px, rgb 78/122/85', fy + 70),
+         '20 px, rgb 78/122/85', fy + 60),
         (c['nameHeight'] + c['gap'] + c['healthHeight'] + c['gap']
-         + c['powerHeight'] / 2, 'Power hairline', '4 px, the unit resource',
-         fy + 118),
+         + c['powerHeight'] / 2, 'Power hairline', '4 px, the resource',
+         fy + 112),
         (h - c['pipHeight'] / 2, 'Class power',
-         '4 px, split by max', fy + 166),
+         '4 px, split by max', fy + 164),
         (h + c['gap'] + c['castbarHeight'] / 2, 'Cast bar',
-         '14 px, the frame width', fy + 214),
+         '14 px, the frame width', fy + 216),
     ]
     for oy, label, value, ly in rows:
         callout(sheet, right, fy + oy * s, right_x, label, value, label_y=ly)
 
     # the width rule, under everything
-    ruler_y = fy + (h + c['gap'] + c['castbarHeight']) * s + 46
+    ruler_y = fy + (h + c['gap'] + c['castbarHeight']) * s + 40
     sheet.line(fx, ruler_y, fx + fw, ruler_y, stroke=rgb(RULE))
     sheet.line(fx, ruler_y - 5, fx, ruler_y + 5, stroke=rgb(RULE))
     sheet.line(fx + fw, ruler_y - 5, fx + fw, ruler_y + 5, stroke=rgb(RULE))
-    sheet.text(fx + fw / 2, ruler_y + 20,
-               'width 222 px = 8 icons x 26 + 7 gaps x 2', size=11.5,
+    sheet.text(fx + fw / 2, ruler_y + 24,
+               'width 222 px = 8 icons x 26 + 7 gaps x 2', size=11 * TYPE,
                fill=rgb(LABEL), anchor='middle', family='mono')
-    sheet.text(fx + fw / 2, ruler_y + 38,
+    sheet.text(fx + fw / 2, ruler_y + 46,
                'The aura row sets the frame width, not the other way round.',
-               size=11.5, fill=rgb(C['muted']), anchor='middle')
+               size=12 * TYPE, fill=rgb(C['muted']), anchor='middle')
 
     sheet.save(os.path.join(out, 'frame-anatomy.svg'))
 
@@ -635,9 +653,9 @@ def resolve(anchor, x, y, w, h):
 def sheet_layout(out, which):
     layout = LAYOUTS[which]
     pts = points(which)
-    s = 0.86
-    ox, oy = 64, 150
-    sheet = Sheet(int(SCREEN_W * s) + 128, int(SCREEN_H * s) + 214,
+    s = 0.62
+    ox, oy = 48, 186
+    sheet = Sheet(int(SCREEN_W * s) + 96, int(SCREEN_H * s) + 268,
                   'Umbra Unit Frames — the %s set' % which)
 
     blurb = {
@@ -651,8 +669,8 @@ def sheet_layout(out, which):
                    'below, and the party column hangs under the player\'s '
                    'whole block rather than under the frame.',
     }[which]
-    caption(sheet, 48, 56, '/uuf layout ' + which,
-            'The %s set' % which, blurb, width=int(SCREEN_W * s) - 40)
+    caption(sheet, 48, 52, '/uuf layout ' + which,
+            'The %s set' % which, blurb, width=int(SCREEN_W * s) - 20)
 
     # the screen
     sheet.rect(ox, oy, SCREEN_W * s, SCREEN_H * s, rgb((13, 16, 24)))
@@ -665,7 +683,7 @@ def sheet_layout(out, which):
                stroke=rgb(RULE), width=1, dash='3 7')
     sheet.text(ox + 12, oy + SCREEN_H * s - 12,
                'UIParent 1365 x 768 — the default scale on a 16:9 screen',
-               size=10.5, fill=rgb(RULE), family='mono')
+               size=10 * TYPE, fill=rgb(RULE), family='mono')
 
     def place(unit, **kw):
         c = cfg(unit if unit in FRAMES else unit.rstrip('0123456789'))
@@ -741,17 +759,19 @@ def sheet_layout(out, which):
                    cast=('Shadow Bolt', '1.9', 0.4) if i == 0 else None)
 
     # a legend for the two columns that are conditional
-    ly = oy + SCREEN_H * s + 30
-    for i, (label, note) in enumerate((
-            ('Party column', '4 x %d + 3 x %d = %d tall'
-             % (slot, party['groupSpacing'], col_h)),
-            ('Boss column', 'as many as MAX_BOSS_FRAMES, right edge, centred'),
-            ('Range fading', 'out of range at alpha %.2f' % M['rangeAlpha']))):
-        x = 64 + i * 420
-        sheet.add('<circle cx="%.2f" cy="%.2f" r="3" fill="%s"/>'
-                  % (x, ly - 4, rgb(C['accent'])))
-        sheet.text(x + 12, ly, label, size=12, fill=rgb(C['text']), weight='600')
-        sheet.text(x + 12, ly + 17, note, size=11, fill=rgb(LABEL))
+    ly = oy + SCREEN_H * s + 38
+    legend = (('Party column', '4 x %d + 3 x %d = %d tall'
+               % (slot, party['groupSpacing'], col_h)),
+              ('Boss column', 'as many as MAX_BOSS_FRAMES'),
+              ('Range fading', 'alpha %.2f, the portrait too' % M['rangeAlpha']))
+    step = (SCREEN_W * s) / len(legend)
+    for i, (label, note) in enumerate(legend):
+        x = 52 + i * step
+        sheet.add('<circle cx="%.2f" cy="%.2f" r="3.5" fill="%s"/>'
+                  % (x, ly - 5, rgb(C['accent'])))
+        sheet.text(x + 14, ly, label, size=12 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        sheet.text(x + 14, ly + 22, note, size=11 * TYPE, fill=rgb(LABEL))
 
     sheet.save(os.path.join(out, 'layout-%s.svg' % which))
 
@@ -759,20 +779,21 @@ def sheet_layout(out, which):
 # --- Sheet 4: the party column --------------------------------------------
 
 def sheet_party(out):
-    s = 3
+    s = 2
     layout = LAYOUTS['modern']
     party = cfg('party')
     slot = group_slot_height(party, layout)
     below = stack_offset(party, layout, 'below', 'harmful')
-    fx, fy = 72, 168
+    fx, fy = 56, 196
 
-    sheet = Sheet(1240,
+    sheet = Sheet(980,
                   int(fy + PARTY_COUNT * (slot + party['groupSpacing']) * s + 40),
                   'Umbra Unit Frames — the party column')
     caption(sheet, 48, 56, '/uuf group', 'The party column',
-            'Four members at 3x. The client creates these children, assigns '
-            'their units and re-sorts them; what Umbra decides is what one '
-            'member looks like and how much room it takes.', width=560)
+            'Four members at twice their size. The client creates these '
+            'children, assigns their units and re-sorts them; what Umbra '
+            'decides is what one member looks like and how much room it '
+            'takes.', width=860)
 
     members = [('Thornhide', CLASS['DRUID'], 'TANK', 0.86, 1.0, 2),
                ('Lightwell', CLASS['PRIEST'], 'HEALER', 0.97, 1.0, 1),
@@ -792,7 +813,7 @@ def sheet_party(out):
                       per_row=aura_per_row(party),
                       dispel={0: CLASS['PRIEST']} if i == 2 else None)
 
-    right = fx + party['width'] * s + 64
+    right = fx + party['width'] * s + 56
     notes = [
         ('Role, left of the name',
          'The client\'s own icon, %d x %d. The space is reserved on every '
@@ -813,11 +834,13 @@ def sheet_party(out):
          'intact rather than going grey.' % M['rangeAlpha']),
     ]
     for i, (title, body) in enumerate(notes):
-        y = 170 + i * 108
-        sheet.line(right - 22, y - 12, right - 10, y - 12, stroke=rgb(C['accent']))
-        sheet.text(right, y - 8, title, size=13, fill=rgb(C['text']), weight='600')
-        for j, line in enumerate(wrap(body, 420, 11.5)):
-            sheet.text(right, y + 12 + j * 17, line, size=11.5, fill=rgb(LABEL))
+        y = 200 + i * 128
+        sheet.line(right - 24, y - 13, right - 10, y - 13, stroke=rgb(C['accent']))
+        sheet.text(right, y - 8, title, size=13 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        for j, line in enumerate(wrap(body, 392, 12 * TYPE)):
+            sheet.text(right, y + 16 + j * 21, line, size=12 * TYPE,
+                       fill=rgb(LABEL))
 
     sheet.save(os.path.join(out, 'party-column.svg'))
 
@@ -825,23 +848,28 @@ def sheet_party(out):
 # --- Sheet 5: the surfaces on a bar, and the lines under an icon ----------
 
 def sheet_states(out):
-    s = 3
+    s = 2
     c = cfg('target')
     column_x = c['classEdge'] + c['gap'] + c['portrait'] + c['gap']
     column_w = c['width'] - column_x - c['inset']
+    bw = column_w * s
 
-    sheet = Sheet(1340, 700, 'Umbra Unit Frames — bar and aura states')
-    caption(sheet, 48, 56, 'Design principles',
+    # The bars take the full width and the underlines go beneath them rather
+    # than beside: side by side, each description had a third of the sheet
+    # and ran to four lines that met the row below.
+    text_w, bar_x = 392, 468
+    sheet = Sheet(980, 832, 'Umbra Unit Frames — bar and aura states')
+    caption(sheet, 48, 52, 'Design principles',
             'Told apart without reading a number',
-            'Three surfaces share the health bar and one line sits under every '
-            'icon. Each is drawn here at the color and size the addon gives '
-            'it.', width=560)
+            'Three surfaces share the health bar, and one line sits under '
+            'every aura icon. Each is drawn here at the color and the size '
+            'the addon gives it.', width=884)
 
     states = [
-        ('Health', 'The bar is one neutral green whatever the unit is. '
-         'Nothing is derived from the value, so it behaves the same inside an '
-         'encounter.', dict(health=0.62)),
-        ('Incoming healing', 'The health color again at 55% — health that is '
+        ('Health', 'One neutral green whatever the unit is. Nothing is '
+         'derived from the value, so the bar behaves the same inside an '
+         'encounter as outside one.', dict(health=0.62)),
+        ('Incoming healing', 'The health color again at 55%: health that is '
          'not there yet belongs to the same quantity.',
          dict(health=0.62, heal=0.2)),
         ('Damage absorb', 'Not health at all, so a color of its own, hatched '
@@ -850,19 +878,21 @@ def sheet_states(out):
         ('Heal absorb', 'The one that eats backwards into health already '
          'there, and the only one of the three that is bad news.',
          dict(health=0.62, heal_absorb=0.22)),
-        ('/uuf health class', 'The unit\'s color on the bar as well, at alpha '
-         '%.1f so the two numbers on it stay legible.' % M['classBarAlpha'],
+        ('/uuf health class', "The unit's color on the bar as well, at alpha "
+         '%.1f, so the two numbers on it stay legible.' % M['classBarAlpha'],
          dict(health=0.62, class_health=True)),
     ]
 
-    bw = column_w * s
     for i, (title, body, kw) in enumerate(states):
-        y = 168 + i * 96
-        sheet.text(48, y - 8, title, size=13, fill=rgb(C['text']), weight='600')
-        for j, line in enumerate(wrap(body, 300, 11)):
-            sheet.text(48, y + 12 + j * 16, line, size=11, fill=rgb(LABEL))
+        y = 208 + i * 90
+        sheet.text(48, y - 8, title, size=12.5 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        for j, line in enumerate(wrap(body, text_w, 11 * TYPE)):
+            sheet.text(48, y + 16 + j * 19, line, size=11 * TYPE,
+                       fill=rgb(LABEL))
 
-        sheet.add('<g transform="translate(%d,%.2f) scale(%d)">' % (400, y - 22, s))
+        sheet.add('<g transform="translate(%d,%.2f) scale(%d)">'
+                  % (bar_x, y - 22, s))
         fill = kw.get('class_health') and CLASS['SHAMAN'] or C['health']
         alpha = M['classBarAlpha'] if kw.get('class_health') else None
         bar(sheet, 0, 0, column_w, c['healthHeight'], fill, kw['health'],
@@ -887,27 +917,29 @@ def sheet_states(out):
                    size=c['fontSize'], fill=rgb(C['text']), anchor='end')
         sheet.add('</g>')
 
-    # the underlines
-    ux, uy = 400 + bw + 86, 168
-    sheet.text(ux, uy - 30, 'The line under an icon', size=13,
+    # the underlines, across the foot of the sheet
+    uy = 700
+    sheet.line(48, uy - 46, 932, uy - 46, stroke=rgb(RULE))
+    sheet.text(48, uy - 18, 'The line under an icon', size=12.5 * TYPE,
                fill=rgb(C['text']), weight='600')
-    lines = [('Helpful', C['auraHelpful'], 'no dispel type reported'),
-             ('Harmful', C['auraHarmful'], 'no dispel type reported'),
-             ('Magic', (51, 147, 255), 'the client paints its own'),
-             ('Poison', (0, 255, 0), 'the client paints its own'),
-             ('Curse', (160, 32, 240), 'the client paints its own')]
+    lines = [('Helpful', C['auraHelpful'], 'no dispel type'),
+             ('Harmful', C['auraHarmful'], 'no dispel type'),
+             ('Magic', (51, 147, 255), "the client's own"),
+             ('Poison', (0, 255, 0), "the client's own"),
+             ('Curse', (160, 32, 240), "the client's own")]
+    step = 884 / len(lines)
     for i, (label, col, note) in enumerate(lines):
-        y = uy + i * 62
-        sheet.add('<g transform="translate(%.2f,%.2f) scale(%d)">' % (ux, y, s))
+        x = 48 + i * step
+        sheet.add('<g transform="translate(%.2f,%.2f) scale(%d)">' % (x, uy, s))
         sheet.rect(0, 0, M['auraSize'], M['auraSize'], rgb(C['border']))
-        sheet.rect(1, 1, M['auraSize'] - 2, M['auraSize'] - 2, rgb(C['muted'], 0.16))
+        sheet.rect(1, 1, M['auraSize'] - 2, M['auraSize'] - 2,
+                   rgb(C['muted'], 0.16))
         sheet.rect(0, M['auraSize'] + M['gap'], M['auraSize'],
                    M['auraUnderline'], rgb(col))
         sheet.add('</g>')
-        sheet.text(ux + M['auraSize'] * s + 16, y + 18, label, size=12,
-                   fill=rgb(C['text']))
-        sheet.text(ux + M['auraSize'] * s + 16, y + 34, note, size=10.5,
-                   fill=rgb(LABEL))
+        lx = x + M['auraSize'] * s + 14
+        sheet.text(lx, uy + 26, label, size=12 * TYPE, fill=rgb(C['text']))
+        sheet.text(lx, uy + 46, note, size=10.5 * TYPE, fill=rgb(LABEL))
 
     sheet.save(os.path.join(out, 'bar-states.svg'))
 

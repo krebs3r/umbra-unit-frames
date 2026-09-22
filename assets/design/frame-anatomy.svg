@@ -1,12 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="640" viewBox="0 0 1420 640" role="img" aria-label="Umbra Unit Frames — frame anatomy">
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="540" viewBox="0 0 980 540" role="img" aria-label="Umbra Unit Frames — frame anatomy">
 <title>Umbra Unit Frames — frame anatomy</title>
 <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
-<rect width="1420" height="640" fill="rgb(9,11,17)"/>
-<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">UMBRA UNIT FRAMES</text>
-<text x="48.00" y="74.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">What a frame is made of</text>
-<text x="48.00" y="96.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The player frame at 3x, with the buff row above it as the modern set hangs it. Every rectangle is the one Layouts/Shared.lua places, at the size Core/Defaults.lua gives it — drawn from those numbers rather</text>
-<text x="48.00" y="113.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">than photographed.</text>
-<g transform="translate(400.00,158.00) scale(3.0000)">
+<rect width="980" height="540" fill="rgb(9,11,17)"/>
+<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">UMBRA UNIT FRAMES</text>
+<text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">What a frame is made of</text>
+<text x="48.00" y="119.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The player frame at twice its size, with the buff row above it as the modern set hangs it. Every</text>
+<text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">rectangle is the one Layouts/Shared.lua places, at the size Core/Defaults.lua gives it — drawn from those</text>
+<text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">numbers rather than photographed.</text>
+<g transform="translate(270.00,200.00) scale(2.0000)">
 <rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
 <rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.130)"/>
 <rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
@@ -40,12 +41,12 @@
 <rect x="196.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
 <text x="209.00" y="17.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400" opacity="0.85">25s</text>
 </g>
-<g transform="translate(400.00,254.00) scale(3.0000)">
+<g transform="translate(270.00,264.00) scale(2.0000)">
 <rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip84026"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip84026)" opacity="0.42">
+<clipPath id="clip61595"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip61595)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -74,52 +75,52 @@
 <rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
 <rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
 </g>
-<g transform="translate(400.00,401.00) scale(3.0000)">
+<g transform="translate(270.00,362.00) scale(2.0000)">
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Arcane Blast</text>
 <text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.4</text>
 </g>
-<polyline points="400.00,197.00 386.00,197.00 360.00,174.00 348.00,174.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="400.00" cy="197.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="340.00" y="173.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Aura icon</text>
-<text x="340.00" y="188.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">26 px, art inset 1</text>
-<polyline points="400.00,245.00 386.00,245.00 360.00,232.00 348.00,232.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="400.00" cy="245.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="340.00" y="231.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Aura underline</text>
-<text x="340.00" y="246.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">2 px, dispel color</text>
-<polyline points="472.00,299.12 458.00,299.12 360.00,288.00 348.00,288.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="472.00" cy="299.12" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="340.00" y="287.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Portrait column</text>
-<text x="340.00" y="302.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">38 x 47 px</text>
-<polyline points="404.50,355.52 390.50,355.52 360.00,354.00 348.00,354.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="404.50" cy="355.52" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="340.00" y="353.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Class edge</text>
-<text x="340.00" y="368.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">3 px, full height</text>
-<polyline points="1066.00,273.50 1080.00,273.50 1106.00,268.00 1118.00,268.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="1066.00" cy="273.50" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="1126.00" y="267.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Name and power value</text>
-<text x="1126.00" y="282.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">name 13 px, value 40 px</text>
-<polyline points="1066.00,329.00 1080.00,329.00 1106.00,324.00 1118.00,324.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="1066.00" cy="329.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="1126.00" y="323.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Health</text>
-<text x="1126.00" y="338.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">20 px, rgb 78/122/85</text>
-<polyline points="1066.00,371.00 1080.00,371.00 1106.00,372.00 1118.00,372.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="1066.00" cy="371.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="1126.00" y="371.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Power hairline</text>
-<text x="1126.00" y="386.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 px, the unit resource</text>
-<polyline points="1066.00,389.00 1080.00,389.00 1106.00,420.00 1118.00,420.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="1066.00" cy="389.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="1126.00" y="419.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Class power</text>
-<text x="1126.00" y="434.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 px, split by max</text>
-<polyline points="1066.00,422.00 1080.00,422.00 1106.00,468.00 1118.00,468.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
-<circle cx="1066.00" cy="422.00" r="2" fill="rgba(117,220,196,0.800)"/>
-<text x="1126.00" y="467.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Cast bar</text>
-<text x="1126.00" y="482.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">14 px, the frame width</text>
-<line x1="400.00" y1="489.00" x2="1066.00" y2="489.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
-<line x1="400.00" y1="484.00" x2="400.00" y2="494.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
-<line x1="1066.00" y1="484.00" x2="1066.00" y2="494.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
-<text x="733.00" y="509.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="11.5" fill="rgb(126,138,160)" text-anchor="middle" font-weight="400">width 222 px = 8 icons x 26 + 7 gaps x 2</text>
-<text x="733.00" y="527.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">The aura row sets the frame width, not the other way round.</text>
+<polyline points="270.00,226.00 256.00,226.00 238.00,208.00 226.00,208.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="270.00" cy="226.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="218.00" y="207.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Aura icon</text>
+<text x="218.00" y="229.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">26 px, art inset 1</text>
+<polyline points="270.00,258.00 256.00,258.00 238.00,252.00 226.00,252.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="270.00" cy="258.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="218.00" y="251.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Aura underline</text>
+<text x="218.00" y="273.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">2 px, dispel color</text>
+<polyline points="318.00,294.08 304.00,294.08 238.00,298.00 226.00,298.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="318.00" cy="294.08" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="218.00" y="297.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Portrait column</text>
+<text x="218.00" y="319.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">38 x 47 px</text>
+<polyline points="273.00,331.68 259.00,331.68 238.00,352.00 226.00,352.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="273.00" cy="331.68" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="218.00" y="351.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">Class edge</text>
+<text x="218.00" y="373.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">3 px, full height</text>
+<polyline points="714.00,277.00 728.00,277.00 746.00,272.00 758.00,272.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="714.00" cy="277.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="766.00" y="271.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Name and power value</text>
+<text x="766.00" y="293.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">name 13 px, value 40 px</text>
+<polyline points="714.00,314.00 728.00,314.00 746.00,324.00 758.00,324.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="714.00" cy="314.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="766.00" y="323.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Health</text>
+<text x="766.00" y="345.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">20 px, rgb 78/122/85</text>
+<polyline points="714.00,342.00 728.00,342.00 746.00,376.00 758.00,376.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="714.00" cy="342.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="766.00" y="375.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Power hairline</text>
+<text x="766.00" y="397.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 px, the resource</text>
+<polyline points="714.00,354.00 728.00,354.00 746.00,428.00 758.00,428.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="714.00" cy="354.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="766.00" y="427.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Class power</text>
+<text x="766.00" y="449.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">4 px, split by max</text>
+<polyline points="714.00,376.00 728.00,376.00 746.00,480.00 758.00,480.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="714.00" cy="376.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="766.00" y="479.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Cast bar</text>
+<text x="766.00" y="501.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">14 px, the frame width</text>
+<line x1="270.00" y1="430.00" x2="714.00" y2="430.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<line x1="270.00" y1="425.00" x2="270.00" y2="435.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<line x1="714.00" y1="425.00" x2="714.00" y2="435.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<text x="492.00" y="454.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="middle" font-weight="400">width 222 px = 8 icons x 26 + 7 gaps x 2</text>
+<text x="492.00" y="476.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">The aura row sets the frame width, not the other way round.</text>
 </svg>
