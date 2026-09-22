@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="700" viewBox="0 0 1340 700" role="img" aria-label="Umbra Unit Frames — bar and aura states">
+<title>Umbra Unit Frames — bar and aura states</title>
+<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
+<rect width="1340" height="700" fill="rgb(9,11,17)"/>
+<text x="48.00" y="56.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">DESIGN PRINCIPLES</text>
+<text x="48.00" y="78.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Told apart without reading a number</text>
+<text x="48.00" y="100.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Three surfaces share the health bar and one line sits under every icon. Each is drawn here at</text>
+<text x="48.00" y="117.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the color and size the addon gives it.</text>
+<text x="48.00" y="160.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Health</text>
+<text x="48.00" y="180.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The bar is one neutral green whatever the unit is.</text>
+<text x="48.00" y="196.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Nothing is derived from the value, so it behaves the</text>
+<text x="48.00" y="212.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">same inside an encounter.</text>
+<g transform="translate(400,146.00) scale(3)">
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="107.26" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="4.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">1.4M</text>
+<text x="165.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">62%</text>
+</g>
+<text x="48.00" y="256.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Incoming healing</text>
+<text x="48.00" y="276.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The health color again at 55% — health that is not</text>
+<text x="48.00" y="292.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">there yet belongs to the same quantity.</text>
+<g transform="translate(400,242.00) scale(3)">
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="107.26" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="107.26" y="0.00" width="34.60" height="20.00" fill="rgba(78,122,85,0.550)"/>
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="4.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">1.4M</text>
+<text x="165.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">62%</text>
+</g>
+<text x="48.00" y="352.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Damage absorb</text>
+<text x="48.00" y="372.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Not health at all, so a color of its own, hatched to</text>
+<text x="48.00" y="388.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">read as a shield laid over the bar.</text>
+<g transform="translate(400,338.00) scale(3)">
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="107.26" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="107.26" y="0.00" width="41.52" height="20.00" fill="rgba(154,179,214,0.650)"/>
+<rect x="107.26" y="0.00" width="41.52" height="20.00" fill="url(#hatch)"/>
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="4.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">1.4M</text>
+<text x="165.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">62%</text>
+</g>
+<text x="48.00" y="448.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Heal absorb</text>
+<text x="48.00" y="468.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The one that eats backwards into health already</text>
+<text x="48.00" y="484.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">there, and the only one of the three that is bad</text>
+<text x="48.00" y="500.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">news.</text>
+<g transform="translate(400,434.00) scale(3)">
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="107.26" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="69.20" y="0.00" width="38.06" height="20.00" fill="rgba(139,56,66,0.750)"/>
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="4.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">1.4M</text>
+<text x="165.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">62%</text>
+</g>
+<text x="48.00" y="544.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf health class</text>
+<text x="48.00" y="564.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The unit's color on the bar as well, at alpha 0.6 so</text>
+<text x="48.00" y="580.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the two numbers on it stay legible.</text>
+<g transform="translate(400,530.00) scale(3)">
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="107.26" height="20.00" fill="rgba(0,112,221,0.600)"/>
+<rect x="0.00" y="0.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="4.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">1.4M</text>
+<text x="165.00" y="14.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">62%</text>
+</g>
+<text x="1005.00" y="138.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The line under an icon</text>
+<g transform="translate(1005.00,168.00) scale(3)">
+<rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
+<rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.160)"/>
+<rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(141,151,171)"/>
+</g>
+<text x="1099.00" y="186.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Helpful</text>
+<text x="1099.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">no dispel type reported</text>
+<g transform="translate(1005.00,230.00) scale(3)">
+<rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
+<rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.160)"/>
+<rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(178,93,93)"/>
+</g>
+<text x="1099.00" y="248.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Harmful</text>
+<text x="1099.00" y="264.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">no dispel type reported</text>
+<g transform="translate(1005.00,292.00) scale(3)">
+<rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
+<rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.160)"/>
+<rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(51,147,255)"/>
+</g>
+<text x="1099.00" y="310.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Magic</text>
+<text x="1099.00" y="326.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the client paints its own</text>
+<g transform="translate(1005.00,354.00) scale(3)">
+<rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
+<rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.160)"/>
+<rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(0,255,0)"/>
+</g>
+<text x="1099.00" y="372.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Poison</text>
+<text x="1099.00" y="388.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the client paints its own</text>
+<g transform="translate(1005.00,416.00) scale(3)">
+<rect x="0.00" y="0.00" width="26.00" height="26.00" fill="rgb(11,14,21)"/>
+<rect x="1.00" y="1.00" width="24.00" height="24.00" fill="rgba(141,151,171,0.160)"/>
+<rect x="0.00" y="28.00" width="26.00" height="2.00" fill="rgb(160,32,240)"/>
+</g>
+<text x="1099.00" y="434.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Curse</text>
+<text x="1099.00" y="450.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the client paints its own</text>
+</svg>
