@@ -20,6 +20,12 @@ local previewWasShown = false
 -- An unfinished reveal, when combat stopped it from being applied.
 local pendingReveal = nil
 
+-- And an unfinished placing, for the same reason. Declared here with the
+-- other one rather than beside the function that sets it: a local declared
+-- after its first use is a global, silently, and both of these are read in
+-- one place and written in another.
+local pendingLayout = nil
+
 --[[ Positions()
 Where dragged frames are remembered, for the set in force.
 
@@ -501,7 +507,11 @@ looking like.
 --]]
 function Umbra:ResetPositions()
 	wipe(Positions())
-	self:ApplyLayout()
+
+	-- Answered rather than assumed, because the placing below it can be
+	-- refused: the positions are forgotten either way, and only the moving
+	-- waits.
+	return self:ApplyLayout()
 end
 
 --[[ Umbra:ApplyLayout()
@@ -509,8 +519,27 @@ Re-anchors every frame, and every aura row on it, to the set in force.
 
 Nothing is created here, so switching sets needs no reload: the containers
 already exist and only have to be told where to hang and which way to grow.
+
+**Refused in combat, and finished when it ends.** Every frame here is a secure
+unit button, and `SetClampRectInsets` on one of those is the client's business
+while a fight is on. Measured on Retail: `/uuf reset` in combat came back as
+`ADDON_ACTION_BLOCKED` for `UmbraBoss5Frame:SetClampRectInsets()`, out of
+`AnchorFrame` — not an error, a refusal, and one that taints the path it was
+called on.
+
+So it is remembered and run at `PLAYER_REGEN_ENABLED`, the way a reveal is.
+Answers false when that happened, so whoever asked can say the frames move
+when the fight ends rather than reporting a move that did not happen.
 --]]
 function Umbra:ApplyLayout()
+	if InCombatLockdown() then
+		pendingLayout = true
+
+		return false
+	end
+
+	pendingLayout = nil
+
 	for _, frame in ipairs(movers) do
 		self:AnchorFrame(frame)
 
@@ -522,6 +551,8 @@ function Umbra:ApplyLayout()
 	-- A row that changed sides now fills from the other corner, and the
 	-- stand-ins are packed by hand rather than by the container.
 	self:PlacePreview()
+
+	return true
 end
 
 --[[ Reveal(revealed)
@@ -580,9 +611,15 @@ end
 local combat = CreateFrame('Frame')
 combat:RegisterEvent('PLAYER_REGEN_ENABLED')
 combat:SetScript('OnEvent', function()
-	if pendingReveal == nil then return end
+	-- Both halves of what combat can refuse, in the order they matter: a
+	-- frame is placed before it is shown.
+	if pendingLayout then
+		Umbra:ApplyLayout()
+	end
 
-	Reveal(pendingReveal)
+	if pendingReveal ~= nil then
+		Reveal(pendingReveal)
+	end
 end)
 
 --[[ Umbra:SetLocked(locked)

@@ -321,8 +321,15 @@ local function Command(input)
 		Umbra:SetLocked(true)
 		print(PREFIX .. 'frames locked.')
 	elseif input == 'reset' then
-		Umbra:ResetPositions()
-		print(PREFIX .. 'positions reset.')
+		-- Forgotten either way; in a fight it is the moving that waits, and
+		-- saying `positions reset` over frames that have not moved is the
+		-- kind of report this addon tries not to make.
+		if Umbra:ResetPositions() then
+			print(PREFIX .. 'positions reset.')
+		else
+			print(PREFIX .. 'positions reset — the frames belong to the '
+				.. 'client while the fight is on, so they move when it ends.')
+		end
 	elseif input == 'check' then
 		--[[ Collected rather than printed
 		This outgrew the chat frame: thirty-odd lines push everything else out
@@ -627,8 +634,14 @@ local function Command(input)
 			print(PREFIX .. 'no such layout: ' .. name)
 		else
 			UmbraUnitFramesDB.layout = name
-			Umbra:ApplyLayout()
-			print(PREFIX .. 'layout: ' .. Value(name))
+
+			if Umbra:ApplyLayout() then
+				print(PREFIX .. 'layout: ' .. Value(name))
+			else
+				print(PREFIX .. 'layout: ' .. Value(name)
+					.. ' — the frames belong to the client while the fight '
+					.. 'is on, so they move when it ends.')
+			end
 		end
 	elseif input == 'test' then
 		local show = not Umbra:PreviewShown()

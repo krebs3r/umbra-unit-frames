@@ -895,6 +895,35 @@ a model for was the open question here, and the portrait box answered it on 22
 September 2026: **it does not.** The stand-in gets the unit's own face, not a
 question mark — see *A refused model is not an empty one*.
 
+### Placing a frame is the client's business in a fight
+
+**Found in an error log rather than in use**, 22 September 2026, on Retail:
+
+```
+[ADDON_ACTION_BLOCKED] AddOn 'UmbraUnitFrames' tried to call the protected
+function 'UmbraBoss5Frame:SetClampRectInsets()'
+  Core/Mover.lua:73  AnchorFrame
+  Core/Mover.lua     ApplyLayout ← ResetPositions ← /uuf reset
+```
+
+Not an error and not a throw: a refusal, and one that taints the path it was
+called on. Every frame Umbra places is a secure unit button, so the insets
+that keep a frame's aura rows on screen cannot be set while a fight is on.
+`/uuf unlock` has always refused in combat and `Reveal` has always waited for
+`PLAYER_REGEN_ENABLED`; placing went through both of their doors without
+either guard, because it runs at login where there is no combat and nobody
+had typed `/uuf reset` mid-fight until then.
+
+So `ApplyLayout` now answers false in combat and finishes at
+`PLAYER_REGEN_ENABLED`, beside the pending reveal — a frame is placed before
+it is shown, so the layout goes first. `/uuf reset` and `/uuf layout` say
+which of the two happened rather than reporting a move that did not take.
+
+One thing nearly went wrong in the writing of it: `local pendingLayout`
+started out declared next to the function that sets it, which is *after* the
+function that reads it — and a local declared after its first use is a global,
+silently, with the two halves then talking past each other.
+
 ### A file id is not a drawn model
 
 **Open, and the instrument for it is built and has been run.** The box works
