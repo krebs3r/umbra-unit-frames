@@ -27,6 +27,12 @@ instance under the restricted-value regime with error capture installed, and **l
 debuff row, a cast bar and a role marker — see *Group and raid frames*. Raid
 frames are the next thing on that header.
 
+**On Retail. Not on Forever.** The first `/uuf dev header` on the beta, 22
+September 2026, came back in the error log rather than in the report window:
+that client's own restricted environment cannot compile the snippet its own
+header machinery runs on a new child, so no secure group header works there,
+by oUF or by anyone — see *The secure header does not work on Forever*.
+
 All six design principles are implemented — class color at the edge, the
 portrait column, power as a hairline, auras with an underline, hatched absorbs
 with ghosted incoming healing, and range shown through fading, which arrived
@@ -1607,6 +1613,110 @@ overwrites the other.
 `Interface\AddOns` does not exist until the client has been started once, so a
 first install has to wait for that.
 
+### The secure header does not work on Forever
+
+**Settled, on the first run of `/uuf dev header` on that client**, 22 September
+2026. The answer did not come back in the report window: it came back in the
+error log, eighty-eight times.
+
+```
+Blizzard_RestrictedAddOnEnvironment/RestrictedExecution.lua:79:
+	attempt to call a nil value
+	with args (body="local header = self:GetParent()", env=<table>, signature="self")
+  ...SecureGroupHeaders.lua:120  (header=UmbraProbeHeader, newChild=…UnitButton1)
+  ...SecureGroupHeaders.lua:495  SecureGroupHeader_Update
+  ...SecureStateDriver.lua:101   state-visibility
+
+Locals: loadstring_untainted = nil
+```
+
+The body being compiled is **oUF's `initialConfigFunction`**, and the code
+compiling it is **Blizzard's own**. `SecureGroupHeaders.lua` configures every
+new child by running a snippet through the restricted environment, the
+restricted environment compiles every snippet with `loadstring_untainted`, and
+on this client that function is not there. So the header creates a child, the
+child cannot be configured, and the state driver comes back and tries again.
+
+**Everything around the snippet works.** The probe run that produced this, on
+the retired-probe build the same afternoon, is otherwise a clean bill:
+
+```
+visibility driver: true    plain driver: true    state now: yes
+header shown: true
+children: 7
+child 1..7: oUF-guessUnit nil · unit attribute nil · __unit nil · styled false
+visibility driven: hidden by [group:raid] solo: true
+                   back on solo,party: true
+```
+
+Drivers register, the client evaluates the conditionals itself and writes the
+answer, and visibility is genuinely driven — hidden on a condition that cannot
+be met and back the moment it can. Macro conditionals are native; only the
+compiling of a snippet body is gone. The header is a complete machine with one
+part missing, and it is the part that gives a child its unit.
+
+**Children, none of them finished.** Seven on the first run, three on a fresh
+one after a reload, solo, where a working header makes one — the client
+creates the button, throws while configuring it, and comes back and makes
+another, so the count is a tally of attempts and says nothing about whether
+the header works. Nothing takes the half-built buttons back, either.
+
+That cost a day's assumption: the first stand-down written here tested
+`#children == 0`, which is the one number Forever does not produce. What
+separates a working header from this one is whether **any child was given a
+unit** — the client's own `unit` attribute, or oUF's `__unit` — and the probe
+and the live column both ask it that way now.
+
+**And the throw cannot be caught, only seen afterwards.** The full stack puts
+it on our own call:
+
+```
+RestrictedExecution.lua:79  attempt to call a nil value   loadstring_untainted = nil
+  SecureGroupHeaders.lua:120 / 176 / 495
+  [C]: Show
+  SecureStateDriver.lua:100 / 164 → RegisterAttributeDriver
+  oUF/ouf.lua:727            header:SetVisibility
+  [C]: pcall
+  Group.lua:647              the probe registering its visibility
+```
+
+Our `pcall` is two frames below the error and the report above it reads
+`visibility driver: true`. The restricted environment hands the error to the
+error handler and carries on, so the call succeeds, the log fills, and no
+caller can tell. A capability probe built on `pcall` would therefore answer
+*yes* on the client where the answer is no — which is why the stand-down reads
+the header's children instead of trying to catch anything.
+
+**This is not the same question as `secure snippets (ours)`, and that line is
+now worth more rather than less.** It reads `unavailable` on Retail too, where
+the party column works perfectly: an addon cannot compile a snippet there, and
+Blizzard's own machinery can. On Forever neither can. The two clients
+therefore separate cleanly:
+
+| | Retail 120100 | Forever 16001 |
+| :--- | :--- | :--- |
+| an addon compiles a snippet | no | no |
+| the client compiles its own | yes | **no** |
+| secure group header | works | cannot configure a child |
+
+Which settles what `/uuf dev header` was built to ask, and settles it the
+wrong way: **no secure group header can work on this client**, by oUF or by
+anyone, because what fails is below every layout. A party column on Forever
+would have to be fixed frames with no sorting and no in-combat changes — which
+is the second addon the header was chosen to avoid being — or wait for the
+client to gain the function before it launches on 4 November 2026.
+
+Two things follow for the code as it stands:
+
+- **Solo it does not bite.** The live header spawns with `showSolo` and
+  `showPlayer` false and a `party` visibility, so it is hidden and configures
+  nothing. The errors above came from the probe, which turns both on to force
+  the question. On Forever the column will fail the moment a party is joined,
+  not at login.
+- **The probe now retires itself.** It gives up its drivers and hides once it
+  has answered, because a driver on a header that cannot build a child is a
+  standing invitation to try again — eighty-eight times in one run. A second
+  `/uuf dev header` arms it again.
 ### What the Forever client actually did
 
 Run on 20 September 2026 against build `1.60.1.69913`, standing in Deathknell

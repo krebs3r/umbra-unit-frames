@@ -133,6 +133,15 @@ Those snippets are compiled by the *client's own* secure code, reached through
 `SetAttribute`, and never touch this global. The two were read as one
 mechanism because both are called "secure snippets" in conversation.
 
+**And on Forever the client's own code cannot compile one either**, measured
+22 September 2026: `RestrictedExecution.lua` calls this same missing function
+to build the snippet `SecureGroupHeaders.lua` runs on every new child, so the
+header creates a child it cannot configure and the state driver comes back to
+try again. The flag is false on both clients and the header works on exactly
+one of them, which is why it decides nothing here — and why what it names is
+worth knowing in both directions. See *The secure header does not work on
+Forever*.
+
 So the flag stays, because it is a true measurement, and it is the name and
 the conclusion around it that were wrong. Nothing here calls
 `loadstring_untainted`, so nothing here is gated on it yet; keep it as what it

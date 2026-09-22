@@ -74,5 +74,5 @@ read_globals = {
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
 	'SecureHandlerSetFrameRef', 'loadstring_untainted',
-	'RegisterAttributeDriver',
+	'RegisterAttributeDriver', 'UnregisterAttributeDriver',
 }

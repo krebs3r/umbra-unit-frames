@@ -272,6 +272,8 @@ function Umbra:ReportParty()
 		return lines
 	end
 
+	add(Umbra:Heading())
+	add('')
 	add('locked: ' .. tostring(Umbra.locked))
 	add('group: '
 		.. (IsInRaid() and 'raid' or IsInGroup() and 'party' or 'solo')
@@ -471,13 +473,72 @@ local function DriveTest(header)
 	return hides, returns
 end
 
+--[[ Retire(header)
+Takes the probe back out of the client's hands once it has answered.
+
+**A header that cannot configure a child keeps being asked to.** Measured on
+Forever on 22 September 2026: the visibility driver re-evaluates, the client
+sets about building the child again, its own snippet compiler is missing, and
+the same error comes back — eighty-eight of them out of one `/uuf dev header`.
+
+The probe exists to answer a question once. So it gives up its drivers and
+hides the moment it has, and a second run arms it again. That is also why the
+drivers are taken away rather than the frame destroyed: a secure frame cannot
+be unmade, and a hidden header with no driver asks the client for nothing.
+--]]
+local function Retire(header)
+	if InCombatLockdown() then return end
+
+	pcall(UnregisterAttributeDriver, header, 'state-visibility')
+	pcall(UnregisterAttributeDriver, header, 'umbraProbeDriver')
+	pcall(header.Hide, header)
+end
+
+--[[ Arm(header)
+Puts back what Retire took, for a second run on the header that already
+exists. Both are pcalled: in combat neither is allowed, and a probe that
+refuses to answer beats one that answers about a frame it could not touch.
+--]]
+local function Arm(header)
+	if InCombatLockdown() then return false end
+
+	local ok = pcall(header.SetVisibility, header, 'solo,party')
+
+	pcall(RegisterAttributeDriver, header, 'umbraProbeDriver',
+		'[@player,exists] yes; no')
+
+	return ok
+end
+
 local probe
+
+--[[ settled
+The run that answered on a client where asking costs errors.
+
+Every registration shows the header, every show builds a child the client
+cannot configure, and every failure is reported — so on Forever a second
+`/uuf dev header` buys nothing and pays the same handful of errors and the
+same handful of abandoned buttons for it. The question is not open there any
+more; what is wanted is the answer, and the answer is already written down.
+
+A reload clears this along with everything else, which is the right way to ask
+again: the probe header cannot be unmade, so a fresh one needs a fresh
+session anyway.
+--]]
+local settled
 
 local function Spawn()
 	-- A secure frame cannot be created in combat, and the header would be
 	-- refused rather than answer the question wrongly.
 	if InCombatLockdown() then return nil, 'in combat' end
-	if probe then return probe end
+
+	-- A second run reads a probe that retired itself at the end of the
+	-- first, so it is armed again before it is asked anything.
+	if probe then
+		Arm(probe)
+
+		return probe
+	end
 
 	-- Asked rather than assumed: `style` is module state in oUF, and putting
 	-- back a name this file happens to know is how a probe quietly decides
@@ -548,6 +609,28 @@ local function Spawn()
 	return header
 end
 
+--[[ RestrictedNote(add)
+Where the answer is, when it cannot be caught here.
+
+The client builds a child from inside its own restricted environment, so what
+fails there never reaches a pcall of ours: it lands in the error log and
+nowhere else. Measured on Forever on 22 September 2026 —
+`RestrictedExecution.lua:79: attempt to call a nil value`, with
+`loadstring_untainted = nil` among the locals, out of
+`SecureGroupHeaders.lua` configuring a new child.
+
+That is Blizzard's own machinery failing to compile Blizzard's own snippet,
+which no layout can work around and which no line of this report can say on
+its own.
+--]]
+local function RestrictedNote(add)
+	add('Read the error log next. The child is built inside the')
+	add("client's restricted environment, so a failure there reaches")
+	add('no pcall here — on Forever it is RestrictedExecution.lua')
+	add('with loadstring_untainted nil, and then no header works on')
+	add('this client at all.')
+end
+
 --[[ Umbra:ProbeHeader()
 What the header actually produced, as lines for the report window.
 
@@ -561,6 +644,32 @@ function Umbra:ProbeHeader()
 	local function add(text)
 		lines[#lines + 1] = text
 	end
+
+	-- Answered already, on a client where asking again costs errors.
+	if settled then
+		add('Asked once on this client, and the asking is what fills the')
+		add('error log: a registration shows the header, the header builds a')
+		add('child it cannot configure, and the client reports that. So this')
+		add('is the run that answered, kept as it was. /reload to ask again.')
+		add('')
+
+		for _, line in ipairs(settled) do
+			add(line)
+		end
+
+		return lines
+	end
+
+	--[[ Which client answered, before anything it answered
+	Three runs of this were pasted out of the beta and read as if they came
+	from Retail, and the only thing naming the client was a line the error
+	logger had put under them. `/uuf dev check` has carried this line from
+	the start and `/uuf dev party` says where it was standing; this one said
+	neither, and it is the one report whose whole point is that two clients
+	disagree.
+	--]]
+	add(Umbra:Heading())
+	add('')
 
 	-- The same measurement `/uuf check` prints, under the same name: whether
 	-- **we** can compile a snippet, which nothing here does and which decides
@@ -627,7 +736,35 @@ function Umbra:ProbeHeader()
 	end
 
 	local children = {header:GetChildren()}
-	add('children: ' .. #children)
+	local configured = 0
+
+	for _, child in ipairs(children) do
+		if child:GetAttribute('unit') or child.__unit then
+			configured = configured + 1
+		end
+	end
+
+	--[[ Counted, because seven of them can mean nothing
+	Forever answers `children: 7` solo, where a working header makes one, and
+	not one of the seven carries a unit. The count on its own reads as a
+	header doing rather more than it was asked; with the second number beside
+	it, it reads as what it is.
+	--]]
+	add('children: ' .. #children .. ', configured: ' .. configured)
+
+	if #children > 0 and configured == 0 then
+		-- Kept, so the next run can be read instead of taken. Filled at the
+		-- end of the function, when the lines below it exist.
+		settled = lines
+
+		add('')
+		add('Children, and not one of them finished: no unit, no snippet, no')
+		add('style. The client makes the button and throws while configuring')
+		add('it, then comes back and makes another. This is the same failure')
+		add('as no children at all, on a client that gets one step further.')
+		add('')
+		RestrictedNote(add)
+	end
 
 	if #children == 0 then
 		add('')
@@ -645,9 +782,12 @@ function Umbra:ProbeHeader()
 		else
 			add('No child at all. The header exists and stands there, so its')
 			add('own machinery never ran.')
+			add('')
+			RestrictedNote(add)
 		end
 
 		addDriveVerdict()
+		Retire(header)
 
 		return lines
 	end
@@ -689,6 +829,7 @@ function Umbra:ProbeHeader()
 	end
 
 	addDriveVerdict()
+	Retire(header)
 
 	return lines
 end
