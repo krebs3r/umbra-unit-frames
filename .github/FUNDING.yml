@@ -1,0 +1,4 @@
+# Displays the Sponsor button on the repository page.
+# GitHub Sponsors is the only platform used here; the other keys
+# supported by GitHub are intentionally left out.
+github: krebs3r

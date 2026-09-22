@@ -10,6 +10,7 @@
 ![Focus · Retail & Forever](https://img.shields.io/badge/Focus-Retail_%26_Forever-C9B888?style=flat-square&labelColor=15191F)
 [![Latest release](https://img.shields.io/github/v/tag/krebs3r/umbra-unit-frames?style=flat-square&label=release&color=75DCC4&labelColor=15191F)](https://github.com/krebs3r/umbra-unit-frames/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-C9B888?style=flat-square&labelColor=15191F)](LICENSE)
+[![Sponsor on GitHub](https://img.shields.io/badge/sponsor-GitHub_Sponsors-C9B888?style=flat-square&labelColor=15191F)](https://github.com/sponsors/krebs3r)
 
 </div>
 
@@ -199,6 +200,8 @@ A bug report should identify the affected frame, selected layout, version, and s
 The sheets in `assets/design/` are generated rather than drawn by hand — `python tools/mockups.py` rebuilds all five. That file keeps its own copy of the metrics, so a number changed in `Core/Defaults.lua` has to be changed there too, or the sheets quietly start claiming something the addon no longer does.
 
 The [development notes](docs/development.md) are where the reasoning lives: what the client actually does, what is built, and what comes next. Please discuss larger changes in an [issue](https://github.com/krebs3r/umbra-unit-frames/issues) first, and document the source and licensing of any code or assets you contribute.
+
+Umbra is free and stays free — nothing here is held back for sponsors. If it earns a place in your interface and you would like to support the work anyway, [GitHub Sponsors](https://github.com/sponsors/krebs3r) is the only channel set up for it.
 
 ## Credits
 
