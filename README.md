@@ -21,7 +21,7 @@ A project for modern, readable unit frames in World of Warcraft Retail and WoW: 
 
 [The idea](#the-idea) · [Design principles](#design-principles) · [The frames](#the-frames) · [Using it](#using-it) · [Installing](#installing) · [Supported clients](#supported-clients) · [Contributing](#contributing)
 
-> **Still a pre-release.** All six design principles are implemented, and every frame in [the table below](#the-frames) that is not marked otherwise. There is no options panel yet — everything is set through `/uuf` — and Clique is not supported yet. Which version is current, the release badge above says; the [changelog](CHANGELOG.md) says what each one settled.
+> **Where it stands.** All six design principles are implemented, and every frame in [the table below](#the-frames) that is not marked otherwise. There is no options panel — everything is set through `/uuf` — and Clique is not supported. Which version is current, the release badge above says; the [changelog](CHANGELOG.md) says what each one settled.
 
 ---
 
@@ -163,13 +163,15 @@ Umbra targets **Retail** and **WoW: Forever**. These are one codebase, because F
 | API surface | 12.1.5 | 12.1.5, minus parts | Vanilla |
 | Secret Values | yes | yes | no |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Vanilla` |
-| Umbra support | yes — verified inside an instance | yes, except the party column | not planned |
+| Umbra support | yes — verified inside an instance | yes, with two exceptions | not planned |
 
 **The party column does not work on the Forever beta**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
 
 Umbra notices and steps back: two seconds after its column would first appear it checks whether any child was given a unit, and if none was, it hides itself, stops asking the client, and hands Blizzard's group panel back whatever `/uuf group` says. Everything else — the single frames, auras, cast bars, portraits — is unaffected.
 
 No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches, or in a later beta. `/uuf dev header` answers where any given client stands.
+
+**And it does not remember.** That client writes its saved variables on exit and never reads them back: `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the next save writes those over what was there. Every reload costs a generation, and the `.bak` beside the file is the only thing still holding the one before. The write is correct — it is the reading that never happens, and a store of our own would be a second mechanism carried forever for a beta. The [development notes](docs/development.md) have the file that proves which half is broken.
 
 Forever launches **4 November 2026**. What its beta client actually did with Umbra — which values it hides, which events it is missing — is written down in the [development notes](docs/development.md).
 

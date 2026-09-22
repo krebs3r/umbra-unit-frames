@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4 — 22 September 2026
+
+The first one that does not call itself a pre-release, and nothing was added
+to earn that. What changed is the promise rather than the addon: there is no
+options window, Clique is not supported, and raid frames are Blizzard's. Those
+are decisions, and they now read as decisions instead of as things this has
+not got round to.
+
+What the CurseForge page did not say, it says now. Two things on the Forever
+beta belong to the client and not to Umbra — the party column cannot be built
+there, and saved variables are written on exit and never read back, so every
+login and every reload starts from the defaults. Someone installing this on
+that client should meet both before they install it rather than afterwards.
+
+- Two printed lines sent the reader to an address that answers nothing.
+  `/uuf dev test` ended with `/uuf test` to stop, and the party report's
+  unbuilt-header line pointed at `/uuf debug`. Both names moved behind `dev`
+  when the measurements did, and the bare form only replies with where it
+  went — the right answer to a typo and the wrong one to follow. They name
+  the command that works
+- The comments that name a command moved with them. They are read by the
+  person deciding what to type next
+- `X-Curse-Project-ID` is in both TOC files, so a tag uploads itself to
+  CurseForge instead of stopping at GitHub
+
 ## 0.3 — 22 September 2026
 
 What this one settled is mostly what the client does, and one of the answers
