@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.3 — 22 September 2026
+
+What this one settled is mostly what the client does, and one of the answers
+is a limitation rather than a feature.
+
+**The party column does not work on the WoW: Forever beta.** That client
+compiles every secure snippet with `loadstring_untainted`, the function is
+missing there, and the client's own group-header code uses it to configure
+each child it creates — so the header makes buttons it cannot finish, by oUF
+or by anyone else. Nothing a layout can work around. Umbra steps back there
+instead: the column checks whether any child was given a unit, and if none
+was, it hides, stops asking the client, and hands Blizzard's group panel back.
+Every other frame is unaffected. Retail is untouched by any of this.
+
+No party column out of fixed frames is planned for Forever. It would have no
+sorting and no changes during a fight, it would need maintaining beside the
+header, and the client may simply have the function by the time it launches or
+in a later beta. Umbra waits for the client.
+
+Raid frames are parked for the same kind of reason, and it is a decision:
+Blizzard's own do the job, class coloring included. The header carries them
+whenever they are wanted.
+
+Still a pre-release, and for the same reason as 0.1 and 0.2: there is no
+configuration beyond the slash commands, and Clique is not supported yet.
+
+- The party column stands itself down on a client whose header cannot finish a
+  child: no driver, no empty column, and Blizzard's group panel back whatever
+  `/uuf group` says. It asks whether a child was given a unit rather than
+  whether this is Forever, so it answers correctly on a client nobody has
+  tested yet — and on this one if the missing function turns up
+- `/uuf dev portrait` opens a box with four attempts at each portrait side by
+  side: the square as the column draws it, the whole model from its own
+  camera, the file alone with no unit behind it, and the client's 2D portrait.
+  The target is the question, the player and the pet are the controls. A
+  column that is empty while every value about it reads healthy is a picture
+  now, not an argument
+- `/uuf dev check` no longer says `showing 3D model`. That line only ever
+  measured which of the two layers was uncovered, and an empty model read the
+  same as a full one; it says `2D stand-in down, the square is the model's`
+- `/uuf dev header` retires its probe once it has answered, and keeps the run
+  that answered rather than taking it again — asking costs errors on a client
+  that cannot compile a snippet. It counts children that were *finished*
+  rather than children that were made, which on that client is seven against
+  none. Both group reports now name the build and the client they were taken
+  on
+- `/uuf reset` and `/uuf layout` in combat no longer reach for a protected
+  frame. Placing a frame sets clamp insets on a secure unit button, which the
+  client refuses in a fight; it now waits for the fight to end, ahead of the
+  reveal that already waited there, and both commands say so
+- Two things the client does, measured and written down: `SetUnit` on a unit
+  whose identity is secret leaves the **player's own model** in the square
+  rather than an empty one — so the 2D stand-in is what keeps your own face
+  off the enemy frame — and `SetPortraitTexture` is *not* declined for that
+  same unit, so the stand-in is the unit's real portrait rather than a
+  question mark
+
 ## 0.2 — 22 September 2026
 
 The group frames. A party column on the client's own secure group header —

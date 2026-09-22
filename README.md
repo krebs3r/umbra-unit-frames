@@ -71,8 +71,8 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 | **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. |
 | **Target of target** | One question — is it on the tank or on me — and cut like the pet. |
 | **Boss** | As many as the client has (`MAX_BOSS_FRAMES`), identical to one another, each keeping its cast bar. No aura rows: five stacked frames with rows between them would be a wall. |
-| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. |
-| **Raid** | Not yet. It is the next thing on that header. |
+| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Retail only for now** — see [Supported clients](#supported-clients). |
+| **Raid** | Not yet, and not next. Blizzard's own raid frames do the job, class coloring included; the header carries these whenever they are wanted. |
 
 There is deliberately **no focus frame**. One was built and taken out again, because a frame that never fills is a frame in the way. It costs a config entry and a point per layout set to put back.
 
@@ -163,7 +163,13 @@ Umbra targets **Retail** and **WoW: Forever**. These are one codebase, because F
 | API surface | 12.1.5 | 12.1.5, minus parts | Vanilla |
 | Secret Values | yes | yes | no |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Vanilla` |
-| Umbra support | yes — verified inside an instance | yes — loads and draws on the beta client | not planned |
+| Umbra support | yes — verified inside an instance | yes, except the party column | not planned |
+
+**The party column does not work on the Forever beta**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
+
+Umbra notices and steps back: two seconds after its column would first appear it checks whether any child was given a unit, and if none was, it hides itself, stops asking the client, and hands Blizzard's group panel back whatever `/uuf group` says. Everything else — the single frames, auras, cast bars, portraits — is unaffected.
+
+No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches, or in a later beta. `/uuf dev header` answers where any given client stands.
 
 Forever launches **4 November 2026**. What its beta client actually did with Umbra — which values it hides, which events it is missing — is written down in the [development notes](docs/development.md).
 

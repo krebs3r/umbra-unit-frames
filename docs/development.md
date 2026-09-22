@@ -24,8 +24,7 @@ instance under the restricted-value regime with error capture installed, and **l
 *Forever* for what that run settled.
 
 **The party column is built**, on the client's own secure header, with a
-debuff row, a cast bar and a role marker — see *Group and raid frames*. Raid
-frames are the next thing on that header.
+debuff row, a cast bar and a role marker — see *Group and raid frames*.
 
 **On Retail. Not on Forever.** The first `/uuf dev header` on the beta, 22
 September 2026, came back in the error log rather than in the report window:
@@ -1584,7 +1583,22 @@ the shape issue #1 threw 716 times on. On party members rather than on a
 hostile unit, so it is watched in the error log rather than guarded in
 advance.
 
-Still to build: raid frames, and Clique support.
+**Raid frames are parked, and that is a decision rather than a delay.** 22
+September 2026: Blizzard's own raid frames do the job, class coloring
+included, and nothing about them is in the way often enough to be worth forty
+frames in eight subgroups. They stay in the README table as *not yet*, the
+header carries them whenever they are wanted, and nothing else is waiting on
+them. Clique support is what is left ahead of them.
+
+**No fixed frames for Forever, either.** The beta cannot configure a header
+child (*The secure header does not work on Forever*), and the answer to that
+is not a second party column built out of four nailed-down frames: it would
+have no sorting and no in-combat changes, it would need maintaining beside the
+header, and raid frames would be the same work twice over. The client may well
+have `loadstring_untainted` by the time it launches on 4 November 2026, or in
+a later beta — and if it does, every line of that would have been written for
+nothing. So Umbra waits for the client, the column stands itself down there,
+and Blizzard's group panel takes over.
 
 **Open, and not urgent: pets of group members.** Two shapes are in the
 running and neither has been argued out yet — under each member's own frame,
