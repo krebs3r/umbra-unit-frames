@@ -128,6 +128,135 @@ It buys a second thing. Nothing protected is touched when the column moves,
 because the header is merely anchored to something that moved. The frame that
 is dragged is not the frame the client protects.
 --]]
+--[[ A header that cannot build a child must stop being asked to
+Measured on Forever on 22 September 2026: the client's own restricted
+environment compiles every snippet with `loadstring_untainted`, that function
+is missing there, and `SecureGroupHeaders.lua` runs a snippet on every child
+it creates. So the header makes a child, cannot configure it, the state driver
+comes back a moment later, and the error repeats for as long as the header is
+supposed to be visible — eighty-eight of them out of one run of the probe,
+which forces the header visible solo.
+
+The live column is quiet on that client until a party is joined, because it
+spawns with `showSolo` and `showPlayer` false. Joining one is what would set
+it off, in the middle of play, with no way to read the report that explains
+it.
+
+**So the header checks its own work, once.** It is shown, a moment passes, and
+either there are children or there are not. No children while shown is not a
+state a working header passes through for two seconds; on a client where the
+machinery works, one child exists solo and more in a party, within a frame or
+two of the driver showing it.
+
+What it does then is give everything back: the driver, so the client stops
+being asked; the header, hidden, because an empty column is worse than none;
+and **Blizzard's group panel**, whatever the setting says, because the promise
+`/uuf group umbra` makes is that Umbra shows the party instead — and a column
+that cannot draw has no standing to keep the client's panel switched off.
+
+It is a measurement rather than a client check on purpose. Nothing here asks
+whether this is Forever: it asks whether this header produced children, which
+is the thing that actually matters and which answers correctly on a client
+nobody has tested yet.
+--]]
+local STAND_DOWN_DELAY = 2
+
+--[[ Configured(header)
+Whether the client finished any of the children it made.
+
+**The number of children is not the measurement**, and this file read it as
+one for half a day. Measured on Forever on 22 September 2026, solo, with the
+probe forcing the header visible:
+
+	children: 7
+	child 1: oUF-guessUnit: nil · unit attribute: nil · styled: false
+	  ... and six more exactly like it
+
+So the client does create the button. It throws while configuring it, and
+comes back and makes another one — seven where a working header makes one.
+A header asked whether it has children answers *yes* there and is dead; asked
+whether any child was given a unit, it answers the thing the column needs.
+
+The unit attribute is the client's own work and `__unit` is oUF's, so either
+one standing means the chain got past the snippet that fails.
+--]]
+local function Configured(header)
+	for _, child in ipairs({header:GetChildren()}) do
+		if child:GetAttribute('unit') or child.__unit then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function StoodDown(header)
+	return Umbra.groupStoodDown ~= nil or not header
+end
+
+local function StandDown(header, reason)
+	if InCombatLockdown() then return false end
+
+	Umbra.groupStoodDown = reason
+
+	pcall(UnregisterAttributeDriver, header, 'state-visibility')
+	pcall(header.Hide, header)
+
+	-- Given back rather than left off: see above.
+	pcall(Umbra.SetBlizzardGroup, Umbra, true)
+
+	Umbra:Debug('party column stood down —', reason)
+	print(Umbra.prefix .. 'the party column is off on this client: ' .. reason
+		.. '. /uuf dev header has the details.')
+
+	return true
+end
+
+--[[ Ask(header)
+One reading, a delay after the header became visible, and whatever follows
+from it.
+
+**The failure cannot be caught, only seen afterwards.** Measured on Forever on
+22 September 2026: the throw happens inside `SetVisibility`, on our own stack,
+with `pcall` two frames below it — and the pcall still answers `true`. The
+client's restricted environment hands the error to the error handler and
+carries on, so the call succeeds, the log fills, and nothing a caller does
+would know. What is left is to look at what the header produced.
+
+Combat is a delay rather than an answer: unregistering a driver touches a
+protected frame, so in a fight this asks again later instead of writing the
+column off on a reading nobody could act on.
+--]]
+local function Ask(header)
+	if StoodDown(header) then return end
+
+	if InCombatLockdown() then
+		return C_Timer.After(STAND_DOWN_DELAY, function() Ask(header) end)
+	end
+
+	if not header:IsShown() then return end
+	if Configured(header) then return end
+
+	StandDown(header, 'its header builds children it cannot configure')
+end
+
+--[[ WatchHeader(header)
+Asks the first time the header is visible, and again each time it comes back
+until it has an answer it could act on.
+--]]
+local function WatchHeader(header)
+	header:HookScript('OnShow', function(self)
+		if StoodDown(self) or self.umbraWatching then return end
+
+		self.umbraWatching = true
+
+		C_Timer.After(STAND_DOWN_DELAY, function()
+			self.umbraWatching = nil
+			Ask(self)
+		end)
+	end)
+end
+
 local function BuildParty()
 	local config = Umbra.frames.party
 	local height = Umbra:ColumnHeight(config, Umbra.partyCount)
@@ -178,6 +307,8 @@ local function BuildParty()
 	-- arrangement rather than a longer party — it gets its own header when
 	-- it is built.
 	header:SetVisibility('party')
+
+	WatchHeader(header)
 
 	--[[ One stand-in per slot
 	Real frames rather than drawn boxes, for the reason the boss column uses
@@ -275,6 +406,12 @@ function Umbra:ReportParty()
 	add(Umbra:Heading())
 	add('')
 	add('locked: ' .. tostring(Umbra.locked))
+
+	-- Named first among the facts, because every reading below it is about a
+	-- header that was told to stop: no children, hidden, no driver. Without
+	-- this line that report describes a broken column instead of a retired
+	-- one.
+	add('stood down: ' .. (Umbra.groupStoodDown or 'no'))
 	add('group: '
 		.. (IsInRaid() and 'raid' or IsInGroup() and 'party' or 'solo')
 		.. ', ' .. tostring(GetNumGroupMembers()) .. ' member(s)')

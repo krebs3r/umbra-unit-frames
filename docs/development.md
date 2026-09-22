@@ -1717,6 +1717,21 @@ Two things follow for the code as it stands:
   has answered, because a driver on a header that cannot build a child is a
   standing invitation to try again — eighty-eight times in one run. A second
   `/uuf dev header` arms it again.
+- **And the live column now checks its own work.** Two seconds after the
+  header is first shown it asks whether any child was given a unit; children
+  without one is not a state a working header passes through, so it gives up
+  its driver, hides, hands Blizzard's group panel back whatever `/uuf group`
+  says, and prints one line saying so. `/uuf dev party` opens with `stood
+  down`.
+
+  It is written as a measurement rather than a client check: nothing in it
+  asks whether this is Forever, it asks whether this header produced
+  children. That answers correctly on the next client nobody has tested yet,
+  and it answers correctly here if the function turns up before 4 November.
+  In combat it is postponed rather than decided — unregistering a driver
+  touches a protected frame — and the question is asked again the next time
+  the header is shown.
+
 ### What the Forever client actually did
 
 Run on 20 September 2026 against build `1.60.1.69913`, standing in Deathknell

@@ -23,6 +23,12 @@ Umbra.isRetail = Umbra.isMainline and interface >= 100000
 local ACCENT = '|cff75dcc4'
 local PREFIX = ACCENT .. 'Umbra|r '
 
+-- Shared, because one line elsewhere has to say something in chat without a
+-- command behind it: the party column standing down on a client whose header
+-- cannot build a child. One prefix, so a line from there is recognisably the
+-- same addon talking.
+Umbra.prefix = PREFIX
+
 --[[ HEART
 The name comes from the TOC rather than from here, so it stays in one place
 and this line cannot go stale by being a second copy of it.
