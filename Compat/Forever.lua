@@ -22,7 +22,7 @@ end
 -- must not treat an empty profile as a first-run that needs setup.
 Umbra.savedVariablesUnreliable = true
 
--- Last line on purpose: `/uuf check` reports it, so a run that stopped part
+-- Last line on purpose: `/uuf dev check` reports it, so a run that stopped part
 -- way through this file can be told apart from one that never started it.
 -- Without that, an empty debug buffer is ambiguous — it could mean the build
 -- refused nothing, or it could mean the line above never ran.

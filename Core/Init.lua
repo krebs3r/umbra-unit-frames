@@ -132,7 +132,7 @@ read that as the whole secure-snippet machinery being gone: state drivers,
 `RunAttribute`, `initialConfigFunction`, and with them any hope of a secure
 group header.
 
-**That was wrong, and `/uuf header` measured it wrong.** A header spawns, its
+**That was wrong, and `/uuf dev header` measured it wrong.** A header spawns, its
 children get units, and both oUF's `initialConfigFunction` and one handed to
 it by the layout run to completion — on a client where this flag is false.
 Those snippets are compiled by the *client's own* secure code, reached through
@@ -197,7 +197,7 @@ Forever beta writes saved variables but never reads them back**, measured on
 `modern` again. On that client a saved switch is always off at login, which
 is exactly when the build happens.
 
-So the lines are kept whether or not anyone is listening, and `/uuf debug`
+So the lines are kept whether or not anyone is listening, and `/uuf dev debug`
 hands over what it already missed. That asks nothing of the client and works
 the same everywhere.
 --]]
@@ -391,7 +391,7 @@ local function Command(input)
 
 		-- Whether we could compile a snippet of our own, which is narrower
 		-- than it sounds and is **not** what decides whether a secure group
-		-- header works — `/uuf header` asks that one directly, and answered
+		-- header works — `/uuf dev header` asks that one directly, and answered
 		-- yes on a client where this says no.
 		add('secure snippets (ours): ' .. (Umbra.hasSecureSnippets and
 			'available' or 'unavailable'))
@@ -648,7 +648,8 @@ local function Command(input)
 
 		if Umbra:SetPreview(show) > 0 then
 			print(PREFIX .. (show
-				and 'every aura slot filled with stand-ins. ' .. Value('/uuf test') .. ' to stop.'
+				and 'every aura slot filled with stand-ins. '
+					.. Value('/uuf dev test') .. ' to stop.'
 				or 'stand-ins off.'))
 		else
 			print(PREFIX .. 'nothing to fill — this client refused the aura containers.')

@@ -4,7 +4,7 @@ local Umbra = ns.Umbra
 local colors, media = Umbra.colors, Umbra.media
 
 --[[ A window for output that is too long to read in chat
-`/uuf check` answers around thirty lines, and a chat frame is the wrong place
+`/uuf dev check` answers around thirty lines, and a chat frame is the wrong place
 to read them: everything else is pushed out of view, and the answers have to
 be held against each other rather than watched scrolling past.
 

@@ -21,7 +21,7 @@ every change waiting for combat to end. Those are two different addons.
 
 It came out whole, on Retail on 21 September 2026 — children created, units
 assigned, both snippets run, our style applied, and the client deciding when
-the column is on screen. `/uuf header` is what asked, it is still here, and
+the column is on screen. `/uuf dev header` is what asked, it is still here, and
 the write-up is under *Relevant to group frames* in the development notes.
 
 **It stays because Forever has not been asked.** The same probe on the beta
@@ -398,7 +398,7 @@ function Umbra:ReportParty()
 	local header, mover = Umbra.partyHeader, Umbra.partyMover
 
 	if not header then
-		add('party header: not built — see /uuf debug')
+		add('party header: not built — see /uuf dev debug')
 
 		return lines
 	end
@@ -808,7 +808,7 @@ function Umbra:ProbeHeader()
 	add(Umbra:Heading())
 	add('')
 
-	-- The same measurement `/uuf check` prints, under the same name: whether
+	-- The same measurement `/uuf dev check` prints, under the same name: whether
 	-- **we** can compile a snippet, which nothing here does and which decides
 	-- nothing below.
 	add('secure snippets (ours): '
@@ -958,7 +958,7 @@ function Umbra:ProbeHeader()
 		--[[ Worth nothing on the run that created the header
 		The client shows a child through `RegisterUnitWatch` and its own
 		layout pass, and neither has happened yet when this reads it in the
-		same call that spawned the header. A second `/uuf header` reuses the
+		same call that spawned the header. A second `/uuf dev header` reuses the
 		header it already made, and *that* reading means something.
 		--]]
 		add(label .. ': shown: ' .. tostring(child:IsShown())

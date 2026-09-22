@@ -5,7 +5,7 @@ local oUF = ns.oUF
 --[[ A full row of auras, without waiting for one
 A row only ever shows what the unit happens to be carrying, and that is never
 the case the arrangement has to survive: every slot taken, on both frames, in
-both sets. `/uuf test` fills each reserved block with stand-ins so that the
+both sets. `/uuf dev test` fills each reserved block with stand-ins so that the
 worst case can be looked at on demand.
 
 **Nothing here touches the aura container.** The stand-ins hang off the unit
@@ -167,7 +167,7 @@ end
 
 --[[ A health bar with something in front of it
 An absorb cannot be waited for either, and rather less than a full aura row
-can: it takes someone else to put one on you. So `/uuf test` fills the three
+can: it takes someone else to put one on you. So `/uuf dev test` fills the three
 prediction bars as well.
 
 The amounts are the *bars' own* scale rather than the unit's. Each one is

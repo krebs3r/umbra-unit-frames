@@ -71,7 +71,7 @@ oUF sets the model once, when the unit changes, and never asks again. That is
 enough for the player and the pet, whose models are loaded because they are
 standing there. It is not enough for a target picked up in a dungeon.
 
-Measured in *Der Steinerne Kern* on 20 September 2026, with `/uuf check`:
+Measured in *Der Steinerne Kern* on 20 September 2026, with `/uuf dev check`:
 
 	portrait target: UnitIsConnected: readable — true
 	portrait target: UnitIsVisible:   readable — true
@@ -92,7 +92,7 @@ this file exists to prevent — if the client answers "ready" while handing over
 nothing, the retry never runs and the measurement never happens.
 
 So it now runs on the **symptom** alone, a model file that is plainly nil, and
-`/uuf check` asks the ready question separately, where the answer is data
+`/uuf dev check` asks the ready question separately, where the answer is data
 rather than a decision. The retry goes through the element's own
 `ForceUpdate`, so the model is still set by oUF's code rather than by a second
 copy of it that could drift.
@@ -492,9 +492,9 @@ local function GuardPortraitEvents(frame)
 			A guard that does its job silently and one that was never
 			reached are the same empty log, and that is the reading-two-ways
 			trap this project keeps walking into. So the first refusal on
-			each element writes itself down — `/uuf debug` then says whether
+			each element writes itself down — `/uuf dev debug` then says whether
 			the settling branch was ever taken, without needing a live
-			target-of-target at the moment `/uuf check` is typed.
+			target-of-target at the moment `/uuf dev check` is typed.
 
 			Once per element rather than per event: this fires for every
 			model in the world, and a 60-line buffer is there to hold what
