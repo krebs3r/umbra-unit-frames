@@ -35,10 +35,11 @@ support.
   It cost one line — the stack below a frame already began with the
   castbar's reach, so the debuff row moved down by its height and the column
   grew with it, from 53 to 69 per member
-- Range fading, the last of the six design principles. A unit out of range
-  fades with its portrait and its rows instead of being replaced by a grey
-  copy of itself — oUF gates its own element on group membership, which is why
-  it waited for the column rather than being half-built on the single frames
+- Range fading, the last of the six design principles, and confirmed in an
+  instance on 21 September 2026. A unit out of range fades with its portrait
+  and its rows instead of being replaced by a grey copy of itself — oUF gates
+  its own element on group membership, which is why it waited for the column
+  rather than being half-built on the single frames
 - The header's spacing, the column's height and the stand-ins shown while it
   is unlocked now ask one function how much room a member takes. A row
   hanging under each frame was the first thing that could make the three
