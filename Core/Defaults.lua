@@ -208,7 +208,8 @@ Umbra.frames = {
 		owns = {targettarget = true},
 		-- How much the other side has left to spend with is worth the same
 		-- number the player reads about itself. It costs the name the width
-		-- of the column, which is why no other frame carries one.
+		-- of the column, which is why the small frames that are only
+		-- glanced at carry none.
 		powerValue = true,
 		-- The other way round: what you have put on the target is the reason
 		-- to look at it.
@@ -262,6 +263,12 @@ Umbra.frames = {
 		-- and the column grows with it. One member is 69 tall now
 		-- rather than 53.
 		castbar = true,
+
+		-- What each member has left to spend, in the color of their
+		-- own resource: whether the healer can still heal is the
+		-- question a party frame is read for. It takes the name
+		-- column's width the same way it does on the player.
+		powerValue = true,
 
 		nameHeight = 11,
 		healthHeight = 14,

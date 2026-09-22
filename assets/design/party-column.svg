@@ -10,14 +10,15 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,124,10)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip97352"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip97352)" opacity="0.42">
+<clipPath id="clip82888"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip82888)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,124,10)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,124,10)"/>
 </g>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(255,124,10,0.130)"/>
 <rect x="35.00" y="0.00" width="11.00" height="11.00" fill="rgb(11,14,21)"/>
 <path d="M 37.00 2.00 l 7.00 0 l 0 4.62 l -3.50 3.52 l -3.50 -3.52 Z" fill="rgb(110,160,220)"/>
+<text x="214.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">70%</text>
 <text x="48.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(255,124,10)" text-anchor="start" font-weight="600">Thornhide</text>
 <rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="35.00" y="13.00" width="157.38" height="14.00" fill="rgb(78,122,85)"/>
@@ -39,8 +40,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,255,255)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip97381"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip97381)" opacity="0.42">
+<clipPath id="clip82918"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip82918)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,255,255)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,255,255)"/>
 </g>
@@ -48,6 +49,7 @@
 <rect x="35.00" y="0.00" width="11.00" height="11.00" fill="rgb(11,14,21)"/>
 <rect x="39.18" y="2.00" width="2.64" height="7.00" fill="rgb(110,200,140)"/>
 <rect x="37.00" y="4.18" width="7.00" height="2.64" fill="rgb(110,200,140)"/>
+<text x="214.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">70%</text>
 <text x="48.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(255,255,255)" text-anchor="start" font-weight="600">Lightwell</text>
 <rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="35.00" y="13.00" width="177.51" height="14.00" fill="rgb(78,122,85)"/>
@@ -73,14 +75,15 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(0,112,221)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip97415"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip97415)" opacity="0.42">
+<clipPath id="clip82953"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip82953)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(0,112,221)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(0,112,221)"/>
 </g>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(0,112,221,0.130)"/>
 <rect x="35.00" y="0.00" width="11.00" height="11.00" fill="rgb(11,14,21)"/>
 <path d="M 37.50 8.50 l 6.00 -6.00 l 0.00 6.00 Z" fill="rgb(214,120,110)"/>
+<text x="214.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">70%</text>
 <text x="48.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(0,112,221)" text-anchor="start" font-weight="600">Stormfang</text>
 <rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="35.00" y="13.00" width="117.12" height="14.00" fill="rgb(78,122,85)"/>
@@ -108,14 +111,15 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(135,136,238)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip97450"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip97450)" opacity="0.42">
+<clipPath id="clip82989"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip82989)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(135,136,238)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(135,136,238)"/>
 </g>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(135,136,238,0.130)"/>
 <rect x="35.00" y="0.00" width="11.00" height="11.00" fill="rgb(11,14,21)"/>
 <path d="M 37.50 8.50 l 6.00 -6.00 l 0.00 6.00 Z" fill="rgb(214,120,110)"/>
+<text x="214.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">70%</text>
 <text x="48.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(135,136,238)" text-anchor="start" font-weight="600">Ashvault</text>
 <rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="35.00" y="13.00" width="75.03" height="14.00" fill="rgb(78,122,85)"/>

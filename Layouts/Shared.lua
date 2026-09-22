@@ -839,7 +839,8 @@ local function Style(self, unit)
 	local nameWidth = columnWidth - roleWidth
 
 	-- Power is a hairline and cannot hold a label, so the number goes in the
-	-- header where there is room for it. Only worth the space on the player.
+	-- header where there is room for it. Only worth the space on the frames
+	-- that are read rather than glanced at: player, target and party.
 	if config.powerValue then
 		-- The name stops a gap short of the number column.
 		nameWidth = (width - valueRight - l.valueWidth - l.gap) - nameX

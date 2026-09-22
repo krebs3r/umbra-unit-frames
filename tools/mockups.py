@@ -93,8 +93,8 @@ FRAMES = {
                'owns': {'targettarget'}, 'auras': {'helpful': 8, 'harmful': 16}},
     'pet': dict(SMALL),
     'targettarget': dict(SMALL),
-    'party': dict(SMALL, header=True, castbar=True, auraSize=14,
-                  auraDuration=False, auras={'harmful': 8}),
+    'party': dict(SMALL, header=True, castbar=True, powerValue=True,
+                  auraSize=14, auraDuration=False, auras={'harmful': 8}),
     'boss': dict(SMALL, castbar=True),
 }
 
@@ -739,6 +739,7 @@ def sheet_layout(out, which):
         draw_frame(sheet, ox + cx * s, oy + my * s, 'party', s, color=col,
                    name=nm, health=hp, power=0.7, role=role, alpha=alpha,
                    health_percent='%d%%' % round(hp * 100),
+                   power_value='70%',
                    cast=('Regrowth', '1.1', 0.5) if i == 1 else None)
         below = stack_offset(party, layout, 'below', 'harmful')
         draw_aura_row(sheet, ox + cx * s,
@@ -806,6 +807,7 @@ def sheet_party(out):
         draw_frame(sheet, fx, my, 'party', s, color=col, name=nm, health=hp,
                    power=0.7, role=role, alpha=alpha,
                    health_percent='%d%%' % round(hp * 100),
+                   power_value='70%',
                    cast=('Regrowth', '1.1', 0.5) if i == 1 else None)
         draw_aura_row(sheet, fx, my + (frame_height(party) + below) * s, s,
                       debuffs, harmful=True, size=party['auraSize'],

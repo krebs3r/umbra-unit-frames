@@ -72,7 +72,7 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 | **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. |
 | **Target of target** | One question — is it on the tank or on me — and cut like the pet. |
 | **Boss** | As many as the client has (`MAX_BOSS_FRAMES`), identical to one another, each keeping its cast bar. No aura rows: five stacked frames with rows between them would be a wall. |
-| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Retail only for now** — see [Supported clients](#supported-clients). |
+| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Retail only for now** — see [Supported clients](#supported-clients). |
 | **Raid** | Not yet, and not next. Blizzard's own raid frames do the job, class coloring included; the header carries these whenever they are wanted. |
 
 There is deliberately **no focus frame**. One was built and taken out again, because a frame that never fills is a frame in the way. It costs a config entry and a point per layout set to put back.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 — 22 September 2026
+
+One number more on the party column, and it is the one a group frame is read
+for: whether the healer can still heal.
+
+- Each party member shows their power percentage in the header, in the color
+  of their own resource, the way the player and target frames do
+
 ## 0.4 — 22 September 2026
 
 The first one that does not call itself a pre-release, and nothing was added

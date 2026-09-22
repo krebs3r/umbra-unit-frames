@@ -187,7 +187,9 @@ The target carries the same percentage, for the same reason: how much the
 other side has left to spend with is worth as much as reading it about
 yourself. It is not free — the number takes `valueWidth` plus a gap out of the
 name column, and the frame width was chosen for the length of an NPC name in
-the first place.
+the first place. The party column carries it too: whether the healer can still
+heal is what a member's frame is read for. Pet, target of target and boss are
+glanced at, not read, and keep the name's full width.
 
 `Umbra.power` then restates the entries where Umbra disagrees with the client,
 by calling `SetRGB` on oUF's existing color object rather than replacing it:

@@ -47,7 +47,7 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 | **Pet** | Same width so it lines up, but short: no cast bar, no aura rows |
 | **Target of target** | One question — is it on the tank or on me — and cut the same way |
 | **Boss** | As many as the fight has, each keeping its cast bar |
-| **Party** | A column with cast bars, a row of debuffs, the role each member signed up as, and range fading — Retail only, for a reason the client decides |
+| **Party** | A column with cast bars, power values, a row of debuffs, the role each member signed up as, and range fading — Retail only, for a reason the client decides |
 | **Raid** | Not yet, and not next — Blizzard's own do the job, class coloring included, and the group header carries them whenever they are wanted |
 
 There is deliberately **no focus frame**. One was built and taken back out: a frame that is empty most of the time is a frame in the way.
