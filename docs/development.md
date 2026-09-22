@@ -41,10 +41,12 @@ measurements are under *Auras*. Nothing about the containers is refused where
 they gain forbidden aspects; `/uuf dev debug` came back silent on a build run from
 inside *Der Flammenschlund*.
 
-**Range fading is written and not yet seen.** oUF's own element gates on party
-membership, which is why it waited for the group header — see *Range fading
-belongs to the group frames*. It is on the column now, and nobody has walked
-out of range of a group member to watch it happen.
+**Range fading is confirmed in the client.** Group members out of range were
+seen fading on 21 September 2026, inside an instance — the sixth principle,
+and the last one that was only written. oUF's own element gates on party
+membership, which is why it waited for the group header rather than being
+half-built on the single frames; see *Range fading belongs to the group
+frames*.
 
 The absorbs have been seen drawing in an instance, on both the player and the
 target frame, but only as stand-ins — see *Waiting to be looked at* for what
