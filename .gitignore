@@ -1,4 +1,5 @@
 .release/
+RELEASE_NOTES.md
 Libs/
 tools/.wowpath
 assets/design/png/

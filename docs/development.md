@@ -1875,6 +1875,14 @@ an addon manager reads to pick. It also decides the GitHub release type
 itself and **clears a prerelease flag set beforehand**, so `gh release edit
 <tag> --prerelease` belongs after the run, not before it.
 
+**The notes are the newest changelog section, and only that.** The workflow
+cuts the first `## ` section of `CHANGELOG.md` into `RELEASE_NOTES.md`, which
+is what `.pkgmeta` hands the packager for the GitHub release body, CurseForge
+and Wago; the zip keeps the whole `CHANGELOG.md`. So the section for a release
+goes at the top, headed `## <tag> — <date>`, before the tag is pushed — the
+workflow stops if the top section names any other version. 0.4.1 was released
+before this and carried every section back to 0.1.
+
 **Checking before shipping:** syntax can be checked without the client;
 semantics cannot. Luacheck runs in CI.
 

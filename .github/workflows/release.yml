@@ -16,6 +16,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The release page, CurseForge and Wago each get the notes for the tag
+      # being released, not the whole history: 0.4.1 went out carrying every
+      # section back to 0.1. CHANGELOG.md stays the full record and is what
+      # ships in the zip; this cuts its newest section into the file .pkgmeta
+      # names. And stops the release if that section is not this tag's, which
+      # is what a forgotten changelog entry looks like from here.
+      - name: Release notes from the newest changelog section
+        run: |
+          awk '/^## /{n++} n==1' CHANGELOG.md > RELEASE_NOTES.md
+          if ! head -n1 RELEASE_NOTES.md | grep -q "^## ${GITHUB_REF_NAME} "; then
+            echo "::error::CHANGELOG.md opens with '$(head -n1 RELEASE_NOTES.md)', not a section for ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
       # Builds ONE package carrying both TOC files, not one per flavor —
       # measured on the 0.1 tag, which produced a single UmbraUnitFrames zip
       # and a release.json declaring mainline 120100, mainline 120105 and
