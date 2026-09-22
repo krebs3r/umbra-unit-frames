@@ -9,5 +9,6 @@ ignore:
   - .github
   - docs
   - assets
+  - tools
 
 manual-changelog: CHANGELOG.md
