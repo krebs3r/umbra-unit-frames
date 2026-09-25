@@ -20,6 +20,22 @@ Umbra.isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 Umbra.isForever = Umbra.isMainline and interface >= 16000 and interface < 17000
 Umbra.isRetail = Umbra.isMainline and interface >= 100000
 
+-- The Classic clients — Mists of Pandaria in 5.5.4, the Anniversary realms'
+-- Burning Crusade in 2.5.6, Classic Era in 1.15.9 — are Classic in name and Midnight in most of
+-- their API: secret values, the heal prediction calculator and the duration
+-- objects are all there. All three lack the same four things, and
+-- Compat/Classic.lua answers them. Checked against Blizzard's interface code
+-- for each build rather than assumed. The aura rows are decided where they
+-- are built, by asking for the widget, not by these flags.
+local function IsProject(name)
+	return _G[name] ~= nil and WOW_PROJECT_ID == _G[name]
+end
+
+Umbra.isMists = IsProject('WOW_PROJECT_MISTS_CLASSIC')
+Umbra.isTBC = IsProject('WOW_PROJECT_BURNING_CRUSADE_CLASSIC')
+Umbra.isEra = IsProject('WOW_PROJECT_CLASSIC')
+Umbra.isClassic = not Umbra.isMainline
+
 local ACCENT = '|cff75dcc4'
 local PREFIX = ACCENT .. 'Umbra|r '
 
@@ -183,6 +199,8 @@ three lines that have to be kept in step.
 function Umbra:Heading()
 	return ('%s — %s (interface %d)'):format(Umbra.version,
 		Umbra.isForever and 'Forever' or Umbra.isRetail and 'Retail'
+			or Umbra.isMists and 'Mists' or Umbra.isTBC and 'TBC Anniversary'
+			or Umbra.isEra and 'Classic Era'
 			or 'unsupported', interface)
 end
 
@@ -389,6 +407,21 @@ local function Command(input)
 		add('aura underline: ' .. (Umbra.hasAuraUnderline and
 			'available' or 'unavailable'))
 
+		-- Which rows the frames stand on: the client's container, or ours
+		-- where it refused one — Mists, measured against its interface code.
+		-- Counted off the frames that exist, so it is what happened rather
+		-- than what this client was expected to do. On our own rows the
+		-- line above does not apply: they color the underline themselves.
+		local ownRows = 0
+
+		for _, frame in ipairs(ns.oUF.objects) do
+			if frame.UmbraOwnAuras then ownRows = ownRows + 1 end
+		end
+
+		add('aura rows: ' .. (ownRows > 0
+			and ('our own, on ' .. ownRows .. ' frames')
+			or "the client's container"))
+
 		-- Whether we could compile a snippet of our own, which is narrower
 		-- than it sounds and is **not** what decides whether a secure group
 		-- header works — `/uuf dev header` asks that one directly, and answered
@@ -400,8 +433,11 @@ local function Command(input)
 		-- none and says so; on Forever, `none` would mean the file that
 		-- reports this client's deviations never finished, which makes an
 		-- empty debug buffer mean nothing at all.
+		-- The client and the file are named apart: the Classic clients
+		-- share one file, so `TBC.lua ran` named a file that does not exist.
 		add('compat: ' .. (Umbra.compat
-			and (Umbra.compat .. '.lua ran')
+			and (Umbra.compat .. ' — ' .. (Umbra.compatFile or Umbra.compat)
+				.. '.lua ran')
 			or 'none'))
 
 		-- The class-power row is reserved on the player frame whatever the

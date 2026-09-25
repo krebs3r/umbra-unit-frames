@@ -1,0 +1,33 @@
+﻿## Interface: 50504
+## Title: Umbra Unit Frames
+## Notes: Compact, readable unit frames. Class color at the edge, portrait in its own column.
+## Author: krebs3r
+## Version: @project-version@
+## SavedVariables: UmbraUnitFramesDB
+## OptionalDeps: Clique
+## IconTexture: Interface\AddOns\UmbraUnitFrames\Media\logo
+## X-oUF: UmbraUF
+## X-Website: https://github.com/krebs3r/umbra-unit-frames
+## X-License: MIT
+## X-Curse-Project-ID: 1707332
+## Category-enUS: Unit Frames
+## Category-deDE: Einheitenfenster
+
+Libs\oUF\oUF.xml
+
+Core\Init.lua
+Core\Defaults.lua
+Core\Secrets.lua
+Core\Mover.lua
+Core\Blizzard.lua
+Core\Report.lua
+
+Compat\Classic.lua
+
+Layouts\Widgets.lua
+Layouts\Tags.lua
+Layouts\Auras.lua
+Layouts\Shared.lua
+Layouts\Single.lua
+Layouts\Group.lua
+Layouts\Preview.lua

@@ -749,6 +749,13 @@ local function Style(self, unit)
 		or Umbra.frames.player
 	local l = config
 
+	-- Before anything registers: a client that lacks an event oUF asks for
+	-- lets go of it here instead of reporting it. Only Compat/Classic.lua
+	-- defines this.
+	if Umbra.GuardUnknownEvents then
+		Umbra.GuardUnknownEvents(self)
+	end
+
 	local width, height = config.width, Umbra:FrameHeight(config)
 	local columnX = l.classEdge + l.gap + l.portrait + l.gap
 	local columnWidth = width - columnX - l.inset

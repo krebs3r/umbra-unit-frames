@@ -15,12 +15,21 @@ The WoW path is remembered in tools/.wowpath after the first run.
 
 .EXAMPLE
 .\tools\install.ps1 -Flavor forever
+
+.EXAMPLE
+.\tools\install.ps1 -Flavor mists
+
+.EXAMPLE
+.\tools\install.ps1 -Flavor anniversary
+
+.EXAMPLE
+.\tools\install.ps1 -Flavor era
 #>
 [CmdletBinding()]
 param(
 	[string]$WowPath,
 
-	[ValidateSet('retail', 'forever')]
+	[ValidateSet('retail', 'forever', 'mists', 'anniversary', 'era')]
 	[string]$Flavor = 'retail',
 
 	[string]$OufTag = '14.0.3'
@@ -45,7 +54,16 @@ if (-not (Test-Path $WowPath)) {
 
 Set-Content -Path $pathFile -Value $WowPath -Encoding utf8
 
-$clientDir = if ($Flavor -eq 'forever') { '_classic_beta_' } else { '_retail_' }
+# Mists of Pandaria Classic lives in _classic_, the folder the launcher gives
+# the current Classic progression client; the Anniversary realms, on Burning
+# Crusade in 2026, have a folder of their own.
+$clientDir = switch ($Flavor) {
+	'forever' { '_classic_beta_' }
+	'mists' { '_classic_' }
+	'anniversary' { '_anniversary_' }
+	'era' { '_classic_era_' }
+	default { '_retail_' }
+}
 $addons = Join-Path $WowPath "$clientDir\Interface\AddOns"
 
 if (-not (Test-Path $addons)) {

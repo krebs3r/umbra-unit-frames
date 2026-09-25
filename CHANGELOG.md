@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.5 — 26 September 2026
+
+The Classic clients: Mists of Pandaria, the Anniversary realms (Burning
+Crusade) and Classic Era, on the same code and the same oUF as Retail. Each
+calls itself Classic and carries almost all of the Midnight API anyway. Each
+was checked against Blizzard's own interface code for its build first, then
+played with: the frames, the aura rows and the portraits draw on all three,
+and on Mists the party header builds and configures its children. Not yet
+seen in a real party, and combo points have not been looked at.
+
+- A `_Mists` TOC, and `.\tools\install.ps1 -Flavor mists` for `_classic_`
+- A `_TBC` TOC for the Anniversary realms, and `-Flavor anniversary` for
+  `_anniversary_`, and a `_Vanilla` TOC for Classic Era with `-Flavor era`:
+  both clients lack exactly what Mists lacks, so all three share
+  `Compat/Classic.lua`
+- Where the client has no aura container, and Mists has none, Umbra builds
+  the aura rows itself: the same buttons, the same packing, the dispel color
+  on the underline, a countdown, and right-click to cancel a buff out of
+  combat
+- `Compat/Classic.lua` answers the one function oUF reads combo points through
+  and Mists does not have, and `SetRolesets`, the widget method oUF tags every
+  frame with — missing there, and fatal to the whole layout on the first login.
+  Where oUF uses it to put Blizzard's own frames away, it hides them
+- An event Mists does not know is left unregistered instead of being reported
+  on every login: oUF's class power asks for `UNIT_POWER_POINT_CHARGE`
+- `/uuf dev check` names the client — `Mists`, `TBC Anniversary`, `Classic
+  Era` — and says whether the aura rows are the client's or Umbra's
+- Not there yet on Mists: Eclipse, Shadow Orbs, Burning Embers and Demonic
+  Fury, and Chi for monks other than Windwalker
+
 ## 0.4.1 — 22 September 2026
 
 One number more on the party column, and it is the one a group frame is read

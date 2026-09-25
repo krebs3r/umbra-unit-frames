@@ -7,7 +7,7 @@
 **Your game. Front and center.**
 
 ![World of Warcraft · Unit Frames](https://img.shields.io/badge/World_of_Warcraft-Unit_Frames-75DCC4?style=flat-square&labelColor=15191F)
-![Focus · Retail & Forever](https://img.shields.io/badge/Focus-Retail_%26_Forever-C9B888?style=flat-square&labelColor=15191F)
+![Focus · Retail, Forever & Mists](https://img.shields.io/badge/Focus-Retail%2C_Forever_%26_Mists-C9B888?style=flat-square&labelColor=15191F)
 [![Latest release](https://img.shields.io/github/v/tag/krebs3r/umbra-unit-frames?style=flat-square&label=release&color=75DCC4&labelColor=15191F)](https://github.com/krebs3r/umbra-unit-frames/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-C9B888?style=flat-square&labelColor=15191F)](LICENSE)
 [![Sponsor on GitHub](https://img.shields.io/badge/sponsor-GitHub_Sponsors-C9B888?style=flat-square&labelColor=15191F)](https://github.com/sponsors/krebs3r)
@@ -18,7 +18,7 @@
 
 **Umbra preserves the idea, not every old design decision.**
 
-A project for modern, readable unit frames in World of Warcraft Retail and WoW: Forever. Inspired by ShadowedUnitFrames, with a visual identity of its own: class-colored edges, rectangular character portraits beside the bars, and information right where you need it.
+A project for modern, readable unit frames in World of Warcraft Retail, WoW: Forever and Mists of Pandaria Classic. Inspired by ShadowedUnitFrames, with a visual identity of its own: class-colored edges, rectangular character portraits beside the bars, and information right where you need it.
 
 [The idea](#the-idea) · [Design principles](#design-principles) · [The frames](#the-frames) · [Using it](#using-it) · [Installing](#installing) · [Supported clients](#supported-clients) · [Contributing](#contributing)
 
@@ -72,7 +72,7 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 | **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. |
 | **Target of target** | One question — is it on the tank or on me — and cut like the pet. |
 | **Boss** | As many as the client has (`MAX_BOSS_FRAMES`), identical to one another, each keeping its cast bar. No aura rows: five stacked frames with rows between them would be a wall. |
-| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Retail only for now** — see [Supported clients](#supported-clients). |
+| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Not on the Forever beta** — see [Supported clients](#supported-clients). |
 | **Raid** | Not yet, and not next. Blizzard's own raid frames do the job, class coloring included; the header carries these whenever they are wanted. |
 
 There is deliberately **no focus frame**. One was built and taken out again, because a frame that never fills is a frame in the way. It costs a config entry and a point per layout set to put back.
@@ -130,9 +130,9 @@ The addon folder is named `UmbraUnitFrames` and the slash command is `/uuf`. An 
 
 ### From a release
 
-Take the `UmbraUnitFrames` zip from [the latest release](https://github.com/krebs3r/umbra-unit-frames/releases/latest) and unpack it into `Interface\AddOns` — `_retail_\Interface\AddOns` for Retail, `_classic_beta_\Interface\AddOns` for the Forever beta.
+Take the `UmbraUnitFrames` zip from [the latest release](https://github.com/krebs3r/umbra-unit-frames/releases/latest) and unpack it into `Interface\AddOns` — `_retail_\Interface\AddOns` for Retail, `_classic_beta_\Interface\AddOns` for the Forever beta, `_classic_\Interface\AddOns` for Mists of Pandaria Classic, `_anniversary_\Interface\AddOns` for the Anniversary realms, `_classic_era_\Interface\AddOns` for Classic Era.
 
-One package carries both TOC files rather than one build per flavor, and the release publishes a `release.json` next to it that an addon manager reads to pick for itself.
+One package carries every TOC file rather than one build per flavor, and the release publishes a `release.json` next to it that an addon manager reads to pick for itself.
 
 ### Running from a checkout
 
@@ -151,20 +151,34 @@ Copying the clone directly into `AddOns` does not work, and it fails silently: t
 .\tools\install.ps1 -Flavor forever
 ```
 
+```powershell
+.\tools\install.ps1 -Flavor mists
+```
+
 Re-run it after every change, then `/reload` in the client. Adding the folder for the first time needs a full client restart, because the addon list is only read at launch.
 
 ## Supported clients
 
-Umbra targets **Retail** and **WoW: Forever**. These are one codebase, because Forever is not a Classic client: it runs the Mainline UI architecture on Vanilla content.
+Umbra targets **Retail**, **WoW: Forever** and **Mists of Pandaria Classic**. All three are one codebase with one copy of oUF. Forever runs the Mainline UI architecture on Vanilla content, and Mists, although it reports itself as a Classic client, carries almost all of the Midnight API in 5.5.4.
 
-| | Retail (Midnight) | WoW: Forever | Classic Era |
-| :--- | :--- | :--- | :--- |
-| Interface | `120100`, `120105` | `16001` | `11509` |
-| `WOW_PROJECT_ID` | Mainline | Mainline | Classic |
-| API surface | 12.1.5 | 12.1.5, minus parts | Vanilla |
-| Secret Values | yes | yes | no |
-| TOC suffix | `_Mainline` | `_Camelot` | `_Vanilla` |
-| Umbra support | yes — verified inside an instance | yes, with two exceptions | not planned |
+| | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Interface | `120100`, `120105` | `16001` | `50504` | `20506` | `11509` |
+| `WOW_PROJECT_ID` | Mainline | Mainline | Mists Classic | Burning Crusade Classic | Classic |
+| API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus four things | the same as Mists | the same as Mists |
+| Secret Values | yes | yes | the API is there | the API is there | the API is there |
+| TOC suffix | `_Mainline` | `_Camelot` | `_Mists` | `_TBC` | `_Vanilla` |
+| Umbra support | yes — verified inside an instance | yes, with two exceptions | new — frames, auras and the header seen working | new — frames, auras and portraits seen working | new — frames, auras and portraits seen working |
+
+**Mists was checked against Blizzard's own interface code**, not yet in play. Every client function oUF and Umbra call was looked up in the API documentation that build 5.5.4.69934 ships with. Two were missing, and the first login found a third:
+
+- **The aura container.** oUF builds its aura rows from the client's `AuraContainer` widget, and Mists has neither that widget nor `AddDispelTypeTexture`. Where the client refuses a container, Umbra builds the row itself from plain buttons, cut by the same function and packed by the same arithmetic. The dispel color on the underline, the countdown and right-click to cancel a buff are done in Lua on those rows; cancelling works out of combat only.
+- **`GetUnitChargedPowerPoints`**, which oUF reads combo points through. `Compat/Classic.lua` answers nil, as Retail does for a unit without charged points.
+- **`SetRolesets`**, a widget method oUF calls on every frame it builds. Rolesets are Midnight's rules for what an addon may do to a frame, and oUF also hides Blizzard's own frames through one. `Compat/Classic.lua` adds the method: for Umbra's frames it does nothing, and for Blizzard's it hides them the way oUF did before Midnight.
+
+The secure group header uses the same machinery as on Retail, and unlike Forever it finishes its children: `/uuf dev header` built and configured one on Mists, solo. A real party is the next thing to watch it with.
+
+What oUF's class power row does not know about Mists stays empty: Eclipse, Shadow Orbs, Burning Embers and Demonic Fury. Chi appears for Windwalker only, which is how oUF reads a Retail monk. Whether combo points arrive, when Mists keeps them on the target, is the first thing to look at.
 
 **The party column does not work on the Forever beta**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
 
@@ -178,7 +192,9 @@ Forever launches **4 November 2026**. What its beta client actually did with Umb
 
 The old Classic globals—`UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo`—do not exist on Forever. Code is written against the Retail API and the handful of Forever deviations live in `Compat/Forever.lua`.
 
-Classic Era would need a second implementation rather than a compatibility layer, and is out of scope.
+**The Anniversary client got the same check**, against build 2.5.6.69795, and came back with exactly the gaps Mists has — so `Compat/Classic.lua` answers both. What Burning Crusade has no use for simply stays empty: the boss column, and every class power but combo points.
+
+**Classic Era got it too**, against 1.15.9.69722, with the same answer — so one compatibility file, `Compat/Classic.lua`, covers all three Classic clients. Era has even less to fill the class power row with than Burning Crusade: combo points only.
 
 ### What Secret Values change
 
@@ -187,7 +203,7 @@ Since patch 12.0 the client returns opaque values for health, power and aura dat
 This suits Umbra's design better than most: a neutral health bar with class color at the edge never needs to derive a color from a health value, so the bar looks and behaves the same inside an encounter as outside one. Two consequences are visible to you:
 
 - **Health reads as a percentage.** The number itself is not lost—the client can still render a hidden value—but nothing may be *derived* from it. Custom thresholds, or a bar color that shifts as health drops, are not possible while the value is hidden.
-- **Auras are drawn through Blizzard's aura containers**, which constrains how freely icons can be arranged.
+- **Auras are drawn through Blizzard's aura containers** on Retail and Forever, which constrains how freely icons can be arranged. Mists has no such container, so there Umbra draws the same buttons itself.
 
 `/uuf dev check` prints which of these values the client is hiding right now, which is how any of it gets decided rather than assumed.
 

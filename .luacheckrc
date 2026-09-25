@@ -21,6 +21,9 @@ globals = {
 	'SlashCmdList',
 	'UmbraUnitFramesDB',
 	'BINDING_HEADER_UMBRAUNITFRAMES', 'BINDING_NAME_UMBRAUNITFRAMES_CHECK',
+
+	-- Answered in Compat/Classic.lua where the client lacks it.
+	'GetUnitChargedPowerPoints',
 }
 
 read_globals = {
@@ -62,11 +65,16 @@ read_globals = {
 
 	-- Namespaced API
 	'C_AddOns', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
-	'C_SpecializationInfo',
+	'C_SpecializationInfo', 'C_EventUtils', 'hooksecurefunc',
 
 	-- Tooltips. oUF sets no unit tooltip of its own, and Blizzard's handler
 	-- cannot be borrowed for one, so the layout brings its own.
 	'GameTooltip', 'GameTooltip_SetDefaultAnchor',
+
+	-- Aura rows of our own, where the client has no AuraContainer: a
+	-- countdown needs the clock, and a buff is cancelled the way the
+	-- client's own buff frame cancels one.
+	'GetTime', 'CancelUnitBuff',
 
 	-- The report window
 	'ChatFontNormal', 'UISpecialFrames', 'tinsert', 'UmbraReportFrame',

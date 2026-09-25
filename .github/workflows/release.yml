@@ -30,10 +30,12 @@ jobs:
             exit 1
           fi
 
-      # Builds ONE package carrying both TOC files, not one per flavor —
+      # Builds ONE package carrying every TOC file, not one per flavor —
       # measured on the 0.1 tag, which produced a single UmbraUnitFrames zip
       # and a release.json declaring mainline 120100, mainline 120105 and
       # forever 16001. An addon manager reads that and picks for itself.
+      # The _Mists TOC adds a mists entry the same way; that one is
+      # expected rather than measured until the first tag that carries it.
       #
       # It also decides the GitHub release type itself and will clear a
       # prerelease flag set beforehand, so that flag has to be set after the

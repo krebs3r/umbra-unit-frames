@@ -2,7 +2,7 @@
 
 **Your game. Front and center.**
 
-Compact, readable unit frames for **World of Warcraft Retail** and **WoW: Forever**. Your class color sits on the edge of the frame, your portrait gets a column of its own, and the numbers you actually read stay the biggest thing on screen.
+Compact, readable unit frames for **World of Warcraft Retail**, **WoW: Forever** and **Mists of Pandaria Classic**. Your class color sits on the edge of the frame, your portrait gets a column of its own, and the numbers you actually read stay the biggest thing on screen.
 
 Inspired by ShadowedUnitFrames — the same idea about what a unit frame is for, with a look of its own.
 
@@ -47,7 +47,7 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 | **Pet** | Same width so it lines up, but short: no cast bar, no aura rows |
 | **Target of target** | One question — is it on the tank or on me — and cut the same way |
 | **Boss** | As many as the fight has, each keeping its cast bar |
-| **Party** | A column with cast bars, power values, a row of debuffs, the role each member signed up as, and range fading — Retail only, for a reason the client decides |
+| **Party** | A column with cast bars, power values, a row of debuffs, the role each member signed up as, and range fading — not on the Forever beta, for a reason the client decides |
 | **Raid** | Not yet, and not next — Blizzard's own do the job, class coloring included, and the group header carries them whenever they are wanted |
 
 There is deliberately **no focus frame**. One was built and taken back out: a frame that is empty most of the time is a frame in the way.
@@ -112,11 +112,13 @@ One package covers both supported game versions; you do not need to pick a build
 
 ## Which game versions
 
-| | Retail (Midnight) | WoW: Forever | Classic Era |
-| :--- | :--- | :--- | :--- |
-| Supported | yes — tested inside an instance | yes, with two exceptions | not planned |
+| | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Classic Era |
+| :--- | :--- | :--- | :--- | :--- |
+| Supported | yes — tested inside an instance | yes, with two exceptions | new — checked against the client's code, and seen working | new |
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Classic Era would need a second addon rather than a patch to this one, so it is out of scope.
+The Anniversary realms (Burning Crusade) and Classic Era are supported the same way as Mists.
+
+Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Mists is new in this version. Its client carries almost everything Umbra and oUF ask of it; the aura rows are the exception, and Umbra draws those itself there. Eclipse, Shadow Orbs, Burning Embers and Demonic Fury are not shown yet. Classic Era and Anniversary come after Mists.
 
 **The two exceptions on Forever are the client's, not Umbra's.**
 

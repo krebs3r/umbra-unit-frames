@@ -7,9 +7,12 @@ them work against the API.
 
 ## Decisions
 
-1. **Retail and WoW: Forever are one codebase.** Forever runs the Mainline UI
-   (`WOW_PROJECT_MAINLINE`, interface 16001, the 12.1.5 API set), not the
-   Classic API. Two TOCs, one source tree. Classic Era is out of scope.
+1. **Retail, WoW: Forever and Mists of Pandaria Classic are one codebase.**
+   Forever runs the Mainline UI (`WOW_PROJECT_MAINLINE`, interface 16001, the
+   12.1.5 API set), not the Classic API. Mists reports itself as a Classic
+   client and carries almost all of the Midnight API anyway — see *Mists of
+   Pandaria Classic*. The Anniversary realms and Classic Era turned out to
+   be the same case. Five TOCs, one source tree, one oUF.
 2. **oUF as the framework**, embedded through `.pkgmeta` rather than declared
    as a dependency.
 3. **MIT licensed.** ShadowedUnitFrames carries no license file, so none of
@@ -1854,6 +1857,189 @@ about what the build refused. `/uuf dev check` now reports `compat:` for exactly
 this: `Forever.lua ran` is the file confirming it reached its last line, and
 `none` on this client would mean it did not. On Retail `none` is the expected
 answer, because no compatibility file is loaded there at all.
+
+### Mists of Pandaria Classic
+
+*The Anniversary realms (Burning Crusade 2.5.6) share all of this — see
+*Anniversary* below.*
+
+Added on 25 September 2026, **checked against Blizzard's interface code and
+not yet played with.** The first plan was a second, older oUF — 12.1.0, the
+last tag without secret values — with an adapter for every place its API
+differs from 14. It was dropped before a line of it was written, because the
+premise was wrong: Mists is a Classic client in `WOW_PROJECT_ID` only.
+
+**How it was checked.** Blizzard's own interface code for the `classic` branch,
+build 5.5.4.69934 of 22 September 2026, carries the generated API
+documentation. Every client function oUF 14 and Umbra call was looked up in
+it, and a name that is not documented was looked for in Blizzard's own code,
+because a few long-standing globals (`UnitIsDead`, `UnitHasVehicleUI`) are
+used there and never documented. What came back:
+
+- **There:** `issecretvalue`, `C_Secrets`, `CreateUnitHealPredictionCalculator`
+  with every method oUF's health element calls on it, `UnitHealthPercent`,
+  `CurveConstants.ScaleTo100`, the duration and seconds-formatter objects the
+  cast bar builds at file scope, `SetAlphaFromBoolean`, `UNIT_IN_RANGE_UPDATE`,
+  `UnitGroupRolesAssigned` and the `roleicon-tiny-*` atlases, `PartyFrame` with
+  its `PartyMemberFramePool`, `BuffFrame` and `DebuffFrame`, and
+  `CompactRaidFrameManager`. `RestrictedExecution.lua` keeps its own
+  `loadstring_untainted` before the environment is cleaned, exactly as on
+  Retail, so the secure group header should work.
+- **Missing:** the `AuraContainer` widget, `AddDispelTypeTexture` and the
+  `CustomAuraButtonDispelType*` enums — so oUF 14's aura rows cannot be
+  built — and `GetUnitChargedPowerPoints`.
+- **Missed by the check, found by the first login:** `SetRolesets`. It is a
+  widget method, and the check looked up functions. See below.
+
+**The aura rows are ours where the container is refused.** `Spawn` already
+asked for the container through `pcall`, because Forever was missing parts of
+the surface; a refusal now builds the row out of plain buttons in
+`Layouts/Auras.lua` instead of leaving the frame without auras. The decision
+is the refusal, not the client's name. Each button is cut by
+`PostCreateButton` and packed by `Umbra:AuraPerRow`, so it is the same
+geometry as a container's and as the preview's stand-ins. What the container
+did for us is done in Lua: the underline takes its color from
+`oUF.colors.dispel` by `dispelName`, the countdown is a label on a 0.2 s
+timer, and right-click cancels a buff through `CancelUnitBuff` out of combat.
+Every value that decides something is asked whether it is hidden first, so
+if Mists ever switches secret values on, a hidden count or duration leaves
+that part blank instead of throwing. `/uuf dev check` says which rows the
+frames are standing on.
+
+**`GetUnitChargedPowerPoints` is answered in `Compat/Classic.lua`.** oUF reads
+combo points as `UnitPower(unit, ComboPoints), GetUnitChargedPowerPoints(unit)`,
+and the second call would throw on every point gained. Nil is Retail's answer
+for a unit with no charged points. Nothing of Blizzard's on that client calls
+it, so our global cannot reach their code.
+
+**`SetRolesets` is answered there too**, and it cost the whole layout on
+the first login: `ouf.lua:853: attempt to call a nil value` in `Spawn`, on
+the first frame built, so `oUF:Factory` stopped and no frame came up. oUF
+tags every frame and header it builds with a roleset, and every Blizzard
+frame it puts away. Rolesets are Midnight's rules for what an addon may do to
+a frame; Mists has none, so the first answer was a method that did nothing.
+
+**That was half wrong**, and the next login showed which half: Blizzard's
+player frame stood beside Umbra's, frozen. oUF 14 hides Blizzard's frames
+with `SetRolesets('alwaysBlocked')` and nothing else — Midnight stops drawing
+a blocked frame — so a method that ignores the roleset leaves them on screen
+with their events taken away. `alwaysBlocked` now does what oUF did before
+Midnight: hide, reparent to a frame that is never shown, and hook `SetParent`
+so nothing puts it back. A frame whose container was already put away is only
+hidden. `unitFrames` still does nothing. It goes on the Frame and Button
+method tables, the only two types oUF calls it on, and only where missing.
+
+**And unknown events are let go of before oUF tries them.** The second
+login reported `Attempt to register unknown event "UNIT_POWER_POINT_CHARGE"`
+from the class power element on a monk. oUF survives that on its own — it
+tries an event under `xpcall` and registers nothing when it fails — but it
+hands the failure to the error handler on the way, on every login and every
+change of specialisation. `Umbra.GuardUnknownEvents` in `Compat/Classic.lua`
+fronts each frame's `RegisterEvent` from the style, which runs before oUF
+enables any element, and asks `C_EventUtils.IsEventValid` first. Checking
+every event name in oUF and Umbra against the client's documentation found
+one more, `HONOR_LEVEL_UPDATE`, in the PvP indicator Umbra does not use.
+
+The lesson for the next client: a check against the API documentation has to
+look up the **methods** called on widgets and the **events** registered, not
+only the functions. A second
+sweep did, comparing every `:Method(` in oUF and Umbra against the documented
+names and against every function Blizzard's own code defines on that client;
+everything else it turned up is defined by oUF itself.
+
+**What oUF's class power row does not know about Mists stays empty**, and that
+is oUF's reading of the classes, not the client's:
+
+- Chi is read for Windwalker only; on Mists every monk has it.
+- Eclipse, Shadow Orbs, Burning Embers and Demonic Fury have no reader at all.
+- Combo points live on the target on Mists. Whether `UnitPower('player',
+  ComboPoints)` answers there is the first thing to look at on a rogue.
+
+**To look at first, in the client:**
+
+1. `/dump (select(4, GetBuildInfo()))` — the TOC says `50504`, taken from the
+   build number rather than read off a client.
+2. `/uuf dev check`: `Mists`, `compat: Mists`, and `aura rows: our own`.
+3. `/uuf dev test` and `/uuf layout classic` / `modern`: both rows turn round.
+4. A buff with a countdown, a stacking one, a dispellable debuff on a party
+   member, and a right-click out of combat.
+5. `/uuf dev header` in a party.
+6. Combo points on a rogue, Holy Power on a paladin.
+
+**Measured on 26 September 2026**, on a monk:
+
+- The frames build and draw, Blizzard's own are gone, and the aura rows are
+  ours and fill: countdowns in seconds and minutes, stack counts, the
+  underline. Chi showed two of four on the player frame.
+- **`/uuf dev header`, solo: the secure header works on Mists.** `header:
+  created`, `children: 1, configured: 1`, and the child reports
+  `umbraProbeRan: yes`, `unit attribute: player`, `styled as: party` — the
+  step Forever cannot take. Both drivers registered and answered: hidden by
+  `[group:raid]`, back on solo and party. The child read `shown: false`,
+  which solo says nothing. **Still open:** a real party — four members
+  sorted, and a change of roster during a fight.
+- Still open as well: right-click to cancel a buff, combo points, and the
+  interface number read off the client rather than taken from the build.
+
+### Anniversary
+
+The Anniversary realms run **Burning Crusade Classic, 2.5.6.69795** (Blizzard's
+`classic_anniversary` branch, 12 September 2026), with
+`WOW_PROJECT_BURNING_CRUSADE_CLASSIC`, TOC suffix `_TBC`, installed under
+`_anniversary_`.
+
+**It lacks exactly what Mists lacks.** The same sweep — functions, widget
+methods, events and `C_` namespaces, against the client's generated API
+documentation and every function Blizzard's own code defines — came back
+identical for both branches, line for line. Two cross-checks, because an
+identical answer is also what a sweep that read the wrong tree would give:
+the two branches differ in 2,966 files, and a spot check of the functions
+this rests on (`CreateUnitHealPredictionCalculator`, `IsEventValid`,
+`UnitGetTotalAbsorbs`, `CurveConstants.ScaleTo100`, `PartyMemberFramePool`
+and more) finds each in both. Blizzard's unit frame TOC for the Classic
+family loads `PartyFrame` and the rest for every flavour, TBC included.
+
+So `Compat/Mists.lua` became `Compat/Classic.lua`, gated on any client that
+is not Mainline, and both Classic TOCs load it.
+
+What Burning Crusade has no use for stays empty rather than being built
+around: no boss units, and oUF reads Holy Power, Chi and Soul Shards off
+power types that are zero there, so only combo points fill the pip row.
+
+**Measured on 26 September 2026**, on an Affliction warlock with a
+voidwalker: the frames build with no Lua error, Blizzard's own are gone, and
+`/uuf dev check` read `TBC Anniversary (interface 20506)` — so the TOC's
+number is the client's — with `aura rows: our own, on 6 frames` and the
+compatibility file run through. `issecretvalue` exists and hides nothing:
+health, percentages and every tag read in the clear. Player, pet and target
+portraits load as models. The class power row reads `0 of 10 pips` under
+`Gebrechen (spec 1)` — so `GetSpecialization` answers on this client too,
+and a warlock simply has nothing to fill it with. The compat line named the
+file after the client, `TBC.lua ran`, for a file called `Classic.lua`; the
+two are reported apart now. **Still open:** a party, combo points, and
+right-click to cancel a buff.
+
+### Classic Era
+
+**Classic Era 1.15.9.69722** (Blizzard's `classic_era` branch, 12 September
+2026), `WOW_PROJECT_CLASSIC`, TOC suffix `_Vanilla`, installed under
+`_classic_era_`. The same sweep gave the same answer as Mists and Anniversary,
+line for line, and the same spot check found every function this rests on;
+Blizzard's Classic unit frame TOC loads `PartyFrame` for Vanilla as well. So
+Era needed a TOC, a flag and an installer flavour, and nothing else:
+`Compat/Classic.lua` answers it as it answers the other two.
+
+Era has no class resource the pip row reads except combo points, no boss
+units and no absorbs to speak of, so all of those stay empty.
+
+**Measured on 26 September 2026**, on a warlock with a pet: `Classic Era
+(interface 11509)` — the TOC's number is the client's — `compat: Era —
+Classic.lua ran`, `aura rows: our own, on 6 frames`, and every value and tag
+in the clear. Player, pet, target and target-of-target portraits load as
+models. One oddity worth knowing: the class power line read `Gebrechen
+(spec 1)` on a client that has no specialisations, so `GetSpecialization`
+answers there and names the first tree. Nothing here decides anything on it.
+**Still open:** a party, combo points, right-click to cancel a buff.
 
 ---
 
