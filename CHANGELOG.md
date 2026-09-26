@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.6 — 26 September 2026
+
+An options window. Everything `/uuf` sets can now be clicked: the layout, the
+health bar's color, whether Blizzard's buffs and group manager stay up, and the
+mover. It is a small window in Umbra's own colors, shaped like Soundstone's
+options, and every switch takes effect where you stand, as the commands
+always have.
+
+- `/uuf` on its own opens the window; the command list is `/uuf help`
+- On Retail and Forever it is in the addon compartment under the minimap; on
+  Mists, the Anniversary realms and Classic Era, which have no compartment, a
+  minimap button opens it instead, and the window can switch that button on
+  and off
+- The minimap button exists from login even while it is switched off, so
+  addons that gather minimap buttons into one, such as MinimapButtonButton,
+  find it like any other
+- Every client lists Umbra under Options › AddOns, with a button that opens
+  the window
+- In combat the unlock button is refused, as `/uuf unlock` is; a layout picked
+  in a fight is kept and applied when it ends. On Forever, where the party
+  column stands down, the switch for Blizzard's group manager is struck through
+- The window and the commands change a setting through the same call, so a
+  word typed in chat shows up in an open window at once
+- The window speaks German on a German client and English on every other;
+  what `/uuf` prints in chat stays English, like the words it takes
+
 ## 0.5.1 — 26 September 2026
 
 Names in other scripts. A party member called 车神 or Ашесть showed up as a

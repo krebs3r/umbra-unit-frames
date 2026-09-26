@@ -28,7 +28,7 @@ globals = {
 
 read_globals = {
 	-- Widgets and core
-	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim', 'C_Timer',
+	'CreateFrame', 'UIParent', 'GetBuildInfo', 'GetLocale', 'print', 'strtrim', 'C_Timer',
 	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
 	'CreateFont', 'CreateFontFamily',
 	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'CurveConstants',
@@ -79,6 +79,11 @@ read_globals = {
 
 	-- The report window
 	'ChatFontNormal', 'UISpecialFrames', 'tinsert', 'UmbraReportFrame',
+
+	-- The options window and its ways in: the client's options, the addon
+	-- compartment where there is one, and a button on the minimap rim.
+	'Settings', 'SettingsPanel', 'HideUIPanel', 'AddonCompartmentFrame',
+	'Minimap', 'GetMinimapShape', 'GetCursorPosition',
 
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',

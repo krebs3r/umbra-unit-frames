@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="1590" viewBox="0 0 980 1590" role="img" aria-label="Umbra Unit Frames — the options window">
+<title>Umbra Unit Frames — the options window</title>
+<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
+<rect width="980" height="1590" fill="rgb(9,11,17)"/>
+<defs><pattern id="hatch-fine" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="6" fill="#ffffff" fill-opacity="0.16"/></pattern></defs>
+<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">OPTIONS · /UUF</text>
+<text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The options window</text>
+<text x="48.00" y="119.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">What /uuf already sets, in one small window: Soundstone's shape — a title, sections, switches, two</text>
+<text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">actions and a quiet footer — in Umbra's own colors. Every control takes effect where you stand, without a</text>
+<text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">reload, as the command does today.</text>
+<g transform="translate(48.00,206.00) scale(1.5000)">
+<rect x="-1.00" y="-1.00" width="282.00" height="336.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="280.00" height="334.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="334.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="268.00" y1="12.00" x2="256.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="280.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="50.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">LAYOUT</text>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="78.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Modern</text>
+<rect x="142.50" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Classic</text>
+<text x="15.00" y="102.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">HEALTH BAR</text>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="130.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Neutral</text>
+<rect x="142.50" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Class color</text>
+<text x="15.00" y="154.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD FRAMES</text>
+<rect x="15.00" y="162.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="162.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="165.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="173.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard buffs &amp; debuffs</text>
+<rect x="15.00" y="186.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="186.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="189.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="197.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard group manager</text>
+<text x="15.00" y="224.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">DISPLAY</text>
+<rect x="15.00" y="232.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="232.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<text x="37.00" y="243.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Show minimap button</text>
+<text x="15.00" y="270.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">FRAMES</text>
+<rect x="15.00" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="76.75" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock</text>
+<rect x="144.50" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.25" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Reset</text>
+<text x="15.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.5.1</text>
+<text x="268.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
+</g>
+<polyline points="468.00,233.00 482.00,233.00 500.00,233.00 512.00,233.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="468.00" cy="233.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="520.00" y="232.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Title, close, Escape</text>
+<text x="520.00" y="254.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">accent edge where a frame has its class edge</text>
+<polyline points="468.00,309.50 482.00,309.50 500.00,309.50 512.00,309.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="468.00" cy="309.50" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="520.00" y="308.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Segmented switch</text>
+<text x="520.00" y="330.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the chosen side carries a 2 px line</text>
+<polyline points="468.00,459.50 482.00,459.50 500.00,459.50 512.00,459.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="468.00" cy="459.50" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="520.00" y="458.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Checkboxes of its own</text>
+<text x="520.00" y="480.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the same on all five clients</text>
+<polyline points="468.00,639.50 482.00,639.50 500.00,639.50 512.00,639.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="468.00" cy="639.50" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="520.00" y="638.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Unlock turns into Lock</text>
+<text x="520.00" y="660.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">while the frames can be dragged</text>
+<text x="48.00" y="799.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Two states it has to show</text>
+<line x1="48.00" y1="765.00" x2="932.00" y2="765.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<g transform="translate(48.00,857.00) scale(1.5000)">
+<rect x="-1.00" y="-1.00" width="282.00" height="336.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="280.00" height="334.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="334.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="268.00" y1="12.00" x2="256.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="280.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="50.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">LAYOUT</text>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="78.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Modern</text>
+<rect x="142.50" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Classic</text>
+<text x="268.00" y="54.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(178,93,93)" text-anchor="end" font-weight="400">applies after combat</text>
+<text x="15.00" y="102.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">HEALTH BAR</text>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="130.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Neutral</text>
+<rect x="142.50" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Class color</text>
+<text x="15.00" y="154.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD FRAMES</text>
+<rect x="15.00" y="162.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="162.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="165.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="173.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard buffs &amp; debuffs</text>
+<rect x="15.00" y="186.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="186.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="189.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="197.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard group manager</text>
+<text x="15.00" y="224.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">DISPLAY</text>
+<rect x="15.00" y="232.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="232.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<text x="37.00" y="243.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Show minimap button</text>
+<text x="15.00" y="270.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">FRAMES</text>
+<rect x="15.00" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="76.75" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400" opacity="0.45">Unlock</text>
+<rect x="15.00" y="278.00" width="123.50" height="22.00" fill="url(#hatch-fine)"/>
+<rect x="144.50" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.25" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Reset</text>
+<text x="15.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.5.1</text>
+<text x="268.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
+</g>
+<g transform="translate(512.00,857.00) scale(1.5000)">
+<rect x="-1.00" y="-1.00" width="282.00" height="336.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="280.00" height="334.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="334.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="268.00" y1="12.00" x2="256.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="280.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="50.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">LAYOUT</text>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="58.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="78.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Modern</text>
+<rect x="142.50" y="58.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="73.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Classic</text>
+<text x="15.00" y="102.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">HEALTH BAR</text>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="110.00" width="125.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="130.00" width="125.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="77.75" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Neutral</text>
+<rect x="142.50" y="110.00" width="125.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="205.25" y="125.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Class color</text>
+<text x="15.00" y="154.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD FRAMES</text>
+<rect x="15.00" y="162.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="162.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="165.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="173.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard buffs &amp; debuffs</text>
+<rect x="15.00" y="186.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="186.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<text x="37.00" y="197.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.60">Hide Blizzard group manager</text>
+<rect x="15.00" y="186.00" width="14.00" height="14.00" fill="url(#hatch-fine)"/>
+<text x="268.00" y="197.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(178,93,93)" text-anchor="end" font-weight="400">not on this client</text>
+<text x="15.00" y="224.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">DISPLAY</text>
+<rect x="15.00" y="232.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="232.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<text x="37.00" y="243.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Show minimap button</text>
+<text x="15.00" y="270.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="600" letter-spacing="1.20">FRAMES</text>
+<rect x="15.00" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="76.75" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock</text>
+<rect x="144.50" y="278.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.25" y="293.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Reset</text>
+<text x="15.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.5.1</text>
+<text x="268.00" y="322.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
+</g>
+<text x="48.00" y="1390.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In combat</text>
+<text x="48.00" y="1412.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The mover is refused, as /uuf unlock refuses it. The</text>
+<text x="48.00" y="1431.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">layout stays live: one picked now is applied when the</text>
+<text x="48.00" y="1450.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">fight ends.</text>
+<text x="512.00" y="1390.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">On WoW: Forever</text>
+<text x="512.00" y="1412.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The party column steps back on that client, so the</text>
+<text x="512.00" y="1431.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">switch for Blizzard's group manager has nothing to</text>
+<text x="512.00" y="1450.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">hand over.</text>
+<line x1="48.00" y1="1518.00" x2="932.00" y2="1518.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<circle cx="52.00" cy="1549.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="66.00" y="1554.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="66.00" y="1576.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">on its own, no argument</text>
+<circle cx="273.00" cy="1549.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="287.00" y="1554.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Addon compartment</text>
+<text x="287.00" y="1576.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where the client has one</text>
+<circle cx="494.00" cy="1549.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="508.00" y="1554.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
+<text x="508.00" y="1576.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">a page with one button</text>
+<circle cx="715.00" cy="1549.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="729.00" y="1554.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Minimap button</text>
+<text x="729.00" y="1576.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where there is none</text>
+</svg>

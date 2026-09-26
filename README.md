@@ -22,7 +22,7 @@ A project for modern, readable unit frames in World of Warcraft Retail, WoW: For
 
 [The idea](#the-idea) · [Design principles](#design-principles) · [The frames](#the-frames) · [Using it](#using-it) · [Installing](#installing) · [Supported clients](#supported-clients) · [Contributing](#contributing)
 
-> **Where it stands.** All six design principles are implemented, and every frame in [the table below](#the-frames) that is not marked otherwise. There is no options panel — everything is set through `/uuf` — and Clique is not supported. Which version is current, the release badge above says; the [changelog](CHANGELOG.md) says what each one settled.
+> **Where it stands.** All six design principles are implemented, and every frame in [the table below](#the-frames) that is not marked otherwise. Everything is set in a small options window or through `/uuf`, which do the same, and Clique is not supported. Which version is current, the release badge above says; the [changelog](CHANGELOG.md) says what each one settled.
 
 ---
 
@@ -93,14 +93,20 @@ Two **layout sets** decide where everything goes, and each set remembers its own
 
 The boss column is the same in both: the right edge, centred, as many frames as the client has. It is not part of the arrangement you chose — it is something the fight brings.
 
-There is no options panel. `/uuf` on its own prints the list, and every setting takes effect where you stand — no `/reload`:
+`/uuf` on its own opens the options window. It is also in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* on all of them. Every setting in it takes effect where you stand — no `/reload`:
+
+![The options window: a layout switch, a health bar switch, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the party switch struck through](assets/design/options-window.svg)
+
+The window offers nothing the commands do not, and `/uuf help` lists them:
 
 | Command | Values | What it does |
 | :--- | :--- | :--- |
+| `/uuf` | — | the options window |
+| `/uuf help` | — | this list |
 | `/uuf layout` | `classic`, `modern` | the whole arrangement |
 | `/uuf auras` | `umbra`, `both` | who shows your buffs and debuffs |
 | `/uuf health` | `class`, `plain` | what colors the health bars |
-| `/uuf group` | `umbra`, `both` | who shows your party |
+| `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
 | `/uuf unlock` | — | drag the frames, every one of them, filled out |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this set's dragged positions |

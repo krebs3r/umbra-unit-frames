@@ -161,6 +161,10 @@ local function PlainButton(parent, text, width)
 	return button
 end
 
+-- The options window is built from these as well, so its buttons and this
+-- window's are the same button.
+Umbra.PlainButton = PlainButton
+
 --[[ Title(frame, text)
 Whichever title the template gave us, named differently across versions.
 

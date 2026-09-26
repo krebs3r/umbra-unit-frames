@@ -22,9 +22,18 @@ holder:Hide()
 local taken = {}
 
 --[[ What each switch reaches
-The group panel is one frame and the raid frames are inside it, so taking
-the panel takes the container with it. That is the whole of the client's
-group display and exactly what the Umbra column replaces.
+`group` reaches the group manager: the panel on the left edge with the raid
+markers, the ready check and the way out of a group. **Not the party
+frames** — oUF turns those off itself whenever the party column is spawned
+(`DisableBlizzard('party')`), whatever this switch says. The switch was
+labelled as if it did until 26 September 2026.
+
+Whether the raid frames go with it depends on the client, read in each one's
+interface code rather than assumed. The Classic variant of the manager takes
+`CompactRaidFrameContainer` as its own child when it loads, so on Mists, the
+Anniversary realms and Classic Era the raid frames are put away with it. The
+Mainline variant, on Retail and Forever, leaves the container on UIParent,
+and there only the panel goes.
 --]]
 local FRAMES = {
 	auras = {'BuffFrame', 'DebuffFrame'},

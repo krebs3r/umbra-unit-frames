@@ -21,6 +21,9 @@ Core\Secrets.lua
 Core\Mover.lua
 Core\Blizzard.lua
 Core\Report.lua
+Core\Locale.lua
+Core\Options.lua
+Core\Minimap.lua
 
 Layouts\Widgets.lua
 Layouts\Tags.lua

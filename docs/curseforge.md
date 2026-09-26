@@ -87,7 +87,7 @@ There is no options window yet. `/uuf` on its own prints the list, and **every s
 | `/uuf layout` | `classic`, `modern` | the whole arrangement |
 | `/uuf auras` | `umbra`, `both` | who shows your buffs and debuffs |
 | `/uuf health` | `class`, `plain` | what colors the health bars |
-| `/uuf group` | `umbra`, `both` | who shows your party |
+| `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
 | `/uuf unlock` | — | drag the frames — all of them, filled out so you can see what you are placing |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this layout's dragged positions |

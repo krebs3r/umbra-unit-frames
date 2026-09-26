@@ -21,6 +21,10 @@ Umbra.media = {
 	-- client stretches the region to. White because the color comes from
 	-- SetVertexColor.
 	hatch = [[Interface\AddOns\UmbraUnitFrames\Media\hatch]],
+
+	-- The heart in the options window's footer, 32x32 and white like the
+	-- hatch, because the font the labels are set in has no ♥ to draw.
+	heart = [[Interface\AddOns\UmbraUnitFrames\Media\heart]],
 }
 
 --[[ Umbra.Font(size, outline)

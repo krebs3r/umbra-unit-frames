@@ -81,7 +81,7 @@ under it has a longer reach than the bug did.
 | `layout classic` · `layout modern` | switch the whole arrangement |
 | `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame, and a group column against stand-ins for every slot |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
-| `group umbra` · `group both` | who shows your party: the Umbra column alone, or the client's panel as well |
+| `group umbra` · `group both` | whether the client's group manager — the panel on the left edge with the markers — is put away or kept |
 | `health class` · `health plain` | whether the health bar takes the unit's color too, or leaves it to the edge |
 | `dev` | the measurements, listed behind that word |
 
@@ -1641,6 +1641,27 @@ Still unverified: whether Edit Mode puts the frames back. That is what
 
 Ace3 is not embedded yet. Positions live in a small hand-rolled store in
 `Core/Mover.lua`, keyed by layout set, and the set itself is one saved string.
+
+**The options window** (`Core/Options.lua`, since 0.6) sets what `/uuf` sets
+and nothing more. Both go through `Umbra:SetOption(key, value)`, which writes
+the saved value, calls the applier the command always called, and tells an
+open window through `Umbra:OptionsChanged()`. `SetLocked` and the party
+column's `StandDown` tell it too. So a new setting is one entry in `SETTINGS`
+there, one control in `Build`, and one branch in the command; a setting that
+cannot be applied live does not belong in that window until something can
+rebuild a frame.
+
+The window is drawn from Umbra's palette rather than the client's templates,
+and `tools/mockups.py` draws it from the same numbers (`OPT`) — change one,
+change both. Its three ways in besides `/uuf` are in `Core/Minimap.lua`
+(the addon compartment on Retail and Forever, a minimap button on the Classic
+clients, which have none) and at the end of `Core/Options.lua` (a page under
+Options › AddOns). Its words go through `Umbra.L` (`Core/Locale.lua`), keyed
+by the English text: German on `deDE`, English everywhere else, and a missing
+translation falls back to the English key. Chat output is not translated.
+The Settings API calls it uses were checked in
+wow-ui-source on all five branches; `AddonCompartment.lua` exists on `live`
+and `forever` only.
 When that moves to AceDB and AceConfig, the design studio's profile schema
 (`schemaVersion: 2`) should become the import format. The studio still offers
 `classic|retail` and needs updating to the three real clients first.

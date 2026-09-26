@@ -36,6 +36,16 @@ Umbra.isTBC = IsProject('WOW_PROJECT_BURNING_CRUSADE_CLASSIC')
 Umbra.isEra = IsProject('WOW_PROJECT_CLASSIC')
 Umbra.isClassic = not Umbra.isMainline
 
+--[[ Umbra:HasCompartment()
+Whether the client lists addons under the minimap. Retail and Forever do; the
+three Classic clients do not, checked against each one's interface code. Asked
+of the frame itself, because that is what the answer is used on.
+--]]
+function Umbra:HasCompartment()
+	return type(_G.AddonCompartmentFrame) == 'table'
+		and type(AddonCompartmentFrame.RegisterAddon) == 'function'
+end
+
 local ACCENT = '|cff75dcc4'
 local PREFIX = ACCENT .. 'Umbra|r '
 
@@ -80,8 +90,9 @@ local function Values(names)
 end
 
 --[[ COMMANDS
-What `/uuf` on its own prints, one to a line: the command, the values it takes
-if it takes any, and what it does.
+What `/uuf help` prints, one to a line: the command, the values it takes if it
+takes any, and what it does. The first line is `/uuf` itself, which opens the
+options window rather than printing this.
 
 A run of names separated by dots says what exists and nothing about what any
 of it does, which is no help to the one person who needs the list: someone who
@@ -89,10 +100,11 @@ has forgotten. The values stay a list rather than a sentence, so that the
 printing decides what is colored and the table only says what is true.
 --]]
 local COMMANDS = {
+	{'', nil, 'the options window, where all of the below can be clicked'},
 	{'layout', {'classic', 'modern'}, 'the whole arrangement'},
 	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
 	{'health', {'class', 'plain'}, 'what colors the health bars'},
-	{'group', {'umbra', 'both'}, "who shows your party"},
+	{'group', {'umbra', 'both'}, "whether the game's group manager stays on the left edge"},
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
@@ -272,6 +284,14 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 		UmbraUnitFramesDB.hideBlizzardGroup = false
 	end
 
+	-- Where the client lists addons under the minimap, a button of our own
+	-- beside that entry would be the same door twice.
+	UmbraUnitFramesDB.minimap = UmbraUnitFramesDB.minimap or {}
+
+	if UmbraUnitFramesDB.minimap.shown == nil then
+		UmbraUnitFramesDB.minimap.shown = not Umbra:HasCompartment()
+	end
+
 	-- ADDON_LOADED runs before the frames are built, which is the only place
 	-- this can be picked up in time to report on that build.
 	Umbra.debug = UmbraUnitFramesDB.debug or false
@@ -281,7 +301,7 @@ SLASH_UMBRAUNITFRAMES1 = '/uuf'
 
 local function PrintCommands(entries, prefix)
 	for _, entry in ipairs(entries) do
-		local line = '  ' .. Value(prefix .. entry[1])
+		local line = '  ' .. Value(strtrim(prefix .. entry[1]))
 
 		if entry[2] then
 			line = line .. ' ' .. Values(entry[2])
@@ -328,7 +348,15 @@ local function Command(input)
 		return
 	end
 
-	if input == 'unlock' then
+	--[[ The window on its own, the list behind a word
+	`/uuf` with nothing after it used to print the list. It opens the window
+	now, because that is what someone typing the bare command is looking for;
+	the list is `/uuf help`, and anything this handler does not know still
+	prints it, so a typo is answered rather than ignored.
+	--]]
+	if input == '' then
+		Umbra:ToggleOptions()
+	elseif input == 'unlock' then
 		if Umbra:SetLocked(false) then
 			print(PREFIX .. 'every frame shown and filled out, drag them where '
 				.. 'you want them. ' .. Value('/uuf lock') .. ' when done.')
@@ -669,9 +697,7 @@ local function Command(input)
 		elseif not Umbra.layouts[name] then
 			print(PREFIX .. 'no such layout: ' .. name)
 		else
-			UmbraUnitFramesDB.layout = name
-
-			if Umbra:ApplyLayout() then
+			if Umbra:SetOption('layout', name) then
 				print(PREFIX .. 'layout: ' .. Value(name))
 			else
 				print(PREFIX .. 'layout: ' .. Value(name)
@@ -704,14 +730,10 @@ local function Command(input)
 		elseif which ~= 'umbra' and which ~= 'both' then
 			print(PREFIX .. 'no such setting: ' .. which)
 		else
-			local hide = which == 'umbra'
-
-			UmbraUnitFramesDB.hideBlizzardAuras = hide
-
 			-- Both frames are protected, so in combat this is a promise
 			-- rather than a result, and saying so beats reporting a state
 			-- the screen does not show yet.
-			if Umbra:SetBlizzardAuras(not hide) then
+			if Umbra:SetOption('auras', which == 'umbra') then
 				print(PREFIX .. 'auras: ' .. Value(which))
 			else
 				print(PREFIX .. 'auras: ' .. Value(which)
@@ -735,11 +757,9 @@ local function Command(input)
 		elseif which ~= 'class' and which ~= 'plain' then
 			print(PREFIX .. 'no such setting: ' .. which)
 		else
-			UmbraUnitFramesDB.classHealth = which == 'class'
-
 			-- Nothing here is protected, so unlike `auras` this is a result
 			-- rather than a promise, in a fight as much as out of one.
-			Umbra:ApplyHealthStyle()
+			Umbra:SetOption('health', which == 'class')
 			print(PREFIX .. 'health: ' .. Value(which))
 		end
 	elseif input:find('^group') then
@@ -751,17 +771,13 @@ local function Command(input)
 
 		if not which then
 			print(PREFIX .. 'group: ' .. Value(current))
-			print(PREFIX .. Value('umbra') .. ' — only the Umbra column')
+			print(PREFIX .. Value('umbra') .. ' — the group manager is put away')
 			print(PREFIX .. Value('both')
-				.. " — the game keeps its group panel, markers and all")
+				.. " — the game keeps its group manager, markers and all")
 		elseif which ~= 'umbra' and which ~= 'both' then
 			print(PREFIX .. 'no such setting: ' .. which)
 		else
-			local hide = which == 'umbra'
-
-			UmbraUnitFramesDB.hideBlizzardGroup = hide
-
-			if Umbra:SetBlizzardGroup(not hide) then
+			if Umbra:SetOption('group', which == 'umbra') then
 				print(PREFIX .. 'group: ' .. Value(which))
 			else
 				print(PREFIX .. 'group: ' .. Value(which)

@@ -946,6 +946,282 @@ def sheet_states(out):
     sheet.save(os.path.join(out, 'bar-states.svg'))
 
 
+# --- Sheet 6: the options window ------------------------------------------
+
+#[[ The window's own numbers, copied from Core/Options.lua
+# Drawn before the window existed and kept in step with it since, like the
+# frames: `OPT` below is a copy of the constants at the top of that file and
+# the walk in `options_layout` is a copy of its `Add` calls. Its colors are
+# the addon's, and its controls are the settings `/uuf` already takes.
+#
+# The geometry is the window's own, in its pixels, and the sheet scales it
+# once like a frame: a 12 px label is a claim about the window. The type is
+# the client's and stands in here, as it does on every sheet.
+#]]
+OPT = {
+    'width': 280,
+    'pad': 12,
+    'header': 36,
+    'segment': 22,
+    'box': 14,
+    'button': 22,
+    'label': 10,
+    'font': 12,
+    'title': 13,
+    'footer': 9,
+}
+
+VERSION = '0.5.1'
+
+OPTION_ROWS = [
+    ('section', 'Layout'),
+    ('segment', 'layout', ('Modern', 'Classic')),
+    ('section', 'Health bar'),
+    ('segment', 'health', ('Neutral', 'Class color')),
+    ('section', 'Blizzard frames'),
+    ('check', 'auras', 'Hide Blizzard buffs & debuffs'),
+    ('check', 'group', 'Hide Blizzard group manager'),
+    ('section', 'Display'),
+    ('check', 'minimap', 'Show minimap button'),
+    ('section', 'Frames'),
+]
+
+
+def options_layout():
+    """Where each row starts, in window pixels, and how tall the window is."""
+    o = OPT
+    y = o['header']
+    rows = []
+    for row in OPTION_ROWS:
+        kind = row[0]
+        if kind == 'section':
+            y += 14
+            rows.append((y, row))
+            y += 8
+        elif kind == 'segment':
+            rows.append((y, row))
+            y += o['segment'] + 8
+        else:
+            rows.append((y, row))
+            y += o['box'] + 10
+    # The two buttons stand under their own heading rather than under a
+    # rule: "Frames" says what they move and reset, so their labels can be
+    # one word.
+    buttons = y
+    footer = buttons + o['button'] + 22
+    return rows, buttons, footer + 12
+
+
+def draw_options(sheet, x, y, s, *, state=None, notes=None):
+    """The window at scale `s`. `state` holds the values and what is refused.
+
+    Returns the window's height in its own pixels.
+    """
+    o = OPT
+    state = state or {}
+    refused = state.get('refused', {})
+    # A note says why without taking the control away: the layout in a fight
+    # is kept and applied when it ends, so it stays live.
+    said = state.get('notes', {})
+    rows, buttons, height = options_layout()
+    w = o['width']
+    left = C_EDGE + o['pad']
+    inner = w - left - o['pad']
+
+    sheet.add('<g transform="translate(%.2f,%.2f) scale(%.4f)">' % (x, y, s))
+
+    # the window: border, ground, and the accent edge where a frame has its
+    # class edge — the interface's color at the place a unit keeps its own
+    sheet.rect(-1, -1, w + 2, height + 2, rgb(C['border']))
+    sheet.rect(0, 0, w, height, rgb(C['background']))
+    sheet.rect(0, 0, C_EDGE, height, rgb(C['accent']))
+
+    sheet.text(left, 23, 'Umbra Unit Frames', size=o['title'],
+               fill=rgb(C['text']), weight='600')
+    cx, cy, cs = w - o['pad'] - 12, 12, 12
+    sheet.rect(cx - 3, cy - 3, cs + 6, cs + 6, rgb(C['border']))
+    sheet.line(cx, cy, cx + cs, cy + cs, stroke=rgb(C['muted']), width=1.5)
+    sheet.line(cx + cs, cy, cx, cy + cs, stroke=rgb(C['muted']), width=1.5)
+    sheet.line(C_EDGE, o['header'], w, o['header'], stroke=rgb(C['muted'], 0.18))
+
+    for ry, row in rows:
+        kind = row[0]
+        if kind == 'section':
+            sheet.text(left, ry, row[1].upper(), size=o['label'],
+                       fill=rgb(C['muted']), weight='600', spacing=1.2)
+            continue
+
+        key = row[1]
+        why = refused.get(key)
+
+        if kind == 'segment':
+            choices = row[2]
+            chosen = state.get(key, 0)
+            gap = 2
+            sw = (inner - gap * (len(choices) - 1)) / len(choices)
+            for i, label in enumerate(choices):
+                sx = left + i * (sw + gap)
+                on = i == chosen
+                sheet.rect(sx, ry, sw, o['segment'], rgb(C['border']))
+                if on:
+                    # The chosen side carries a line under it, the same two
+                    # pixels an aura icon has: one mark, meaning "this one".
+                    sheet.rect(sx, ry, sw, o['segment'], rgb(C['accent'], 0.12))
+                    sheet.rect(sx, ry + o['segment'] - 2, sw, 2, rgb(C['accent']))
+                sheet.text(sx + sw / 2, ry + 15, label, size=o['font'],
+                           fill=rgb(C['accent'] if on else C['muted']),
+                           anchor='middle', weight='600' if on else '400')
+            if why:
+                sheet.rect(left, ry, inner, o['segment'], rgb(C['background'], 0.55))
+                sheet.rect(left, ry, inner, o['segment'], 'url(#hatch-fine)')
+        else:
+            on = state.get(key, False)
+            b = o['box']
+            sheet.rect(left, ry, b, b, rgb(C['border']))
+            sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+                      'fill="none" stroke="%s" stroke-width="1"/>'
+                      % (left + 0.5, ry + 0.5, b - 1, b - 1, rgb(C['muted'], 0.35)))
+            if on:
+                # A filled square inset in the box, the shape of a class
+                # power pip — no tick, which would be the client's art.
+                sheet.rect(left + 3, ry + 3, b - 6, b - 6, rgb(C['accent']))
+            sheet.text(left + b + 8, ry + 11, row[2], size=o['font'],
+                       fill=rgb(C['muted'] if why else C['text']),
+                       opacity=0.6 if why else None)
+            if why:
+                sheet.rect(left, ry, b, b, 'url(#hatch-fine)')
+
+        why = why or said.get(key)
+        if why:
+            sheet.text(w - o['pad'], ry - 4 if kind == 'segment' else ry + 11,
+                       why, size=o['label'], fill=rgb(C['auraHarmful']),
+                       anchor='end')
+
+
+    unlocked = state.get('unlocked')
+    bw = (inner - 6) / 2
+    for i, label in enumerate(('Lock' if unlocked else 'Unlock', 'Reset')):
+        bx = left + i * (bw + 6)
+        sheet.rect(bx, buttons, bw, o['button'], rgb(C['border']))
+        hot = i == 0 and unlocked
+        if hot:
+            sheet.rect(bx, buttons + o['button'] - 2, bw, 2, rgb(C['accent']))
+        sheet.text(bx + bw / 2, buttons + 15, label, size=o['font'],
+                   fill=rgb(C['accent'] if hot else C['text']), anchor='middle',
+                   opacity=0.45 if (i == 0 and refused.get('unlock')) else None)
+        if i == 0 and refused.get('unlock'):
+            sheet.rect(bx, buttons, bw, o['button'], 'url(#hatch-fine)')
+
+    fy = height - 12
+    sheet.text(left, fy, '/uuf help  ·  v%s' % VERSION, size=o['footer'],
+               fill=rgb(C['muted']), opacity=0.7)
+    sheet.text(w - o['pad'], fy, '♥ by krebs3r', size=o['footer'],
+               fill=rgb(C['muted']), opacity=0.7, anchor='end')
+
+    sheet.add('</g>')
+
+    if notes:
+        sheet.text(x, y + (height + 1) * s + 30, notes, size=11 * TYPE,
+                   fill=rgb(LABEL))
+    return height
+
+
+C_EDGE = M['classEdge']
+
+
+def sheet_options(out):
+    s = 1.5
+    rows, buttons, height = options_layout()
+    o = OPT
+    w = o['width'] * s
+    top = 206
+    row2 = top + height * s + 150
+
+    sheet = Sheet(980, int(row2 + height * s + 232),
+                  'Umbra Unit Frames — the options window')
+    # A refused control is struck through with the hatch tile, finer than the
+    # absorb's, so it reads as "not now" rather than as a shield.
+    sheet.add('<defs><pattern id="hatch-fine" width="6" height="6" '
+              'patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
+              '<rect width="2" height="6" fill="#ffffff" fill-opacity="0.16"/>'
+              '</pattern></defs>')
+    caption(sheet, 48, 52, 'Options · /uuf',
+            'The options window',
+            'What /uuf already sets, in one small window: Soundstone\'s shape '
+            '— a title, sections, switches, two actions and a quiet footer — '
+            'in Umbra\'s own colors. Every control takes effect where you '
+            'stand, without a reload, as the command does today.',
+            width=884)
+
+    fx = 48
+    normal = {'layout': 0, 'health': 0, 'auras': True, 'group': True,
+              'minimap': False}
+    draw_options(sheet, fx, top, s, state=normal)
+
+    right = fx + w
+    lx = right + 44
+    ys = {row[1]: ry for ry, row in rows if row[0] != 'section'}
+
+    notes = [
+        (top + 18 * s, 'Title, close, Escape',
+         'accent edge where a frame has its class edge'),
+        (top + (ys['layout'] + 11) * s, 'Segmented switch',
+         'the chosen side carries a 2 px line'),
+        (top + (ys['auras'] + 7) * s, 'Checkboxes of its own',
+         'the same on all five clients'),
+        (top + (buttons + 11) * s, 'Unlock turns into Lock',
+         'while the frames can be dragged'),
+    ]
+    for py, label, value in notes:
+        callout(sheet, right, py, lx, label, value)
+
+    # the two states the window has to show, under the first
+    sheet.text(48, row2 - 58, 'Two states it has to show', size=12.5 * TYPE,
+               fill=rgb(C['text']), weight='600')
+    sheet.line(48, row2 - 92, 932, row2 - 92, stroke=rgb(RULE))
+
+    combat = dict(normal, unlocked=False,
+                  notes={'layout': 'applies after combat'},
+                  refused={'unlock': True})
+    draw_options(sheet, 48, row2, s, state=combat)
+    forever = dict(normal, group=False,
+                   refused={'group': 'not on this client'})
+    second = 980 - 48 - w
+    draw_options(sheet, second, row2, s, state=forever)
+
+    for x, title, body in (
+            (48, 'In combat',
+             'The mover is refused, as /uuf unlock refuses it. The layout '
+             'stays live: one picked now is applied when the fight ends.'),
+            (second, 'On WoW: Forever',
+             'The party column steps back on that client, so the switch for '
+             'Blizzard\'s group manager has nothing to hand over.')):
+        by = row2 + height * s + 32
+        sheet.text(x, by, title, size=12 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        for j, line in enumerate(wrap(body, w, 11 * TYPE)):
+            sheet.text(x, by + 22 + j * 19, line, size=11 * TYPE,
+                       fill=rgb(LABEL))
+
+    # where it opens
+    ly = row2 + height * s + 196
+    doors = (('/uuf', 'on its own, no argument'),
+             ('Addon compartment', 'where the client has one'),
+             ('Options › AddOns', 'a page with one button'),
+             ('Minimap button', 'where there is none'))
+    sheet.line(48, ly - 36, 932, ly - 36, stroke=rgb(RULE))
+    step = 884 / len(doors)
+    for i, (label, note) in enumerate(doors):
+        x = 52 + i * step
+        sheet.add('<circle cx="%.2f" cy="%.2f" r="3.5" fill="%s"/>'
+                  % (x, ly - 5, rgb(C['accent'])))
+        sheet.text(x + 14, ly, label, size=12 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        sheet.text(x + 14, ly + 22, note, size=10.5 * TYPE, fill=rgb(LABEL))
+
+    sheet.save(os.path.join(out, 'options-window.svg'))
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out = os.path.join(root, 'assets', 'design')
@@ -960,6 +1236,7 @@ def main():
     sheet_layout(out, 'classic')
     sheet_party(out)
     sheet_states(out)
+    sheet_options(out)
 
 
 if __name__ == '__main__':

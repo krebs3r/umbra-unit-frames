@@ -666,5 +666,9 @@ function Umbra:SetLocked(locked)
 
 	Reveal(not locked)
 
+	-- The options window's button says which of the two the frames are in,
+	-- and `/uuf lock` can change that under it.
+	self:OptionsChanged()
+
 	return true
 end

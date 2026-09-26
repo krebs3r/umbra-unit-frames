@@ -205,6 +205,9 @@ local function StandDown(header, reason)
 	-- Given back rather than left off: see above.
 	pcall(Umbra.SetBlizzardGroup, Umbra, true)
 
+	-- An open options window has a switch that no longer means anything.
+	Umbra:OptionsChanged()
+
 	Umbra:Debug('party column stood down —', reason)
 	print(Umbra.prefix .. 'the party column is off on this client: ' .. reason
 		.. '. /uuf dev header has the details.')
