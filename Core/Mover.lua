@@ -488,7 +488,7 @@ function Umbra:PlaceFrame(frame, key)
 	fill:SetColorTexture(self.colors.accent[1], self.colors.accent[2], self.colors.accent[3], 0.25)
 
 	local label = overlay:CreateFontString(nil, 'OVERLAY')
-	label:SetFont(self.media.font, self.metrics.fontSize)
+	label:SetFontObject(self.Font(self.metrics.fontSize))
 	label:SetPoint('CENTER')
 	label:SetText(key)
 	label:SetShadowColor(0, 0, 0, 0.85)

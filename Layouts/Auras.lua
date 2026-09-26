@@ -46,7 +46,7 @@ these labels sit on spell art rather than on a surface Umbra chose.
 --]]
 local function Label(fontString, l)
 	fontString:ClearAllPoints()
-	fontString:SetFont(media.font, l.font)
+	fontString:SetFontObject(Umbra.Font(l.font))
 	fontString:SetTextColor(unpack(colors.text))
 	fontString:SetShadowColor(0, 0, 0, 0.85)
 	fontString:SetShadowOffset(1, -1)

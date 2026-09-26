@@ -23,6 +23,65 @@ Umbra.media = {
 	hatch = [[Interface\AddOns\UmbraUnitFrames\Media\hatch]],
 }
 
+--[[ Umbra.Font(size, outline)
+The font every label in this addon is set in, as a font object: one per
+size and outline, built on first use and kept.
+
+Not the file alone. One font file covers one script, and `media.font` on a
+German or English client is Friz Quadrata, which has no Cyrillic, no Hangul
+and no Chinese. Blizzard's own fonts are families — one file per alphabet,
+and the client picks the member each character needs. A label handed the
+file directly through `SetFont` gets none of that, and a party member called
+Сила Света or 빛의힘 comes out as a row of empty boxes.
+
+So this builds the same kind of family. Each foreign member takes the file
+GameFontNormal uses for that alphabet on this client, and falls back to the
+file Blizzard's Fonts.xml names — the same on Retail and all three Classic
+clients. The heights stay equal: Blizzard's own families nudge the Chinese
+members a point or three either way with no rule to it, and a label here
+has a fixed box to fit.
+--]]
+local ALPHABET_FILES = {
+	korean = [[Fonts\2002.TTF]],
+	simplifiedchinese = [[Fonts\ARKai_T.ttf]],
+	traditionalchinese = [[Fonts\blei00d.TTF]],
+	russian = [[Fonts\FRIZQT___CYR.TTF]],
+}
+
+local function AlphabetFile(alphabet)
+	local ok, font = pcall(GameFontNormal.GetFontObjectForAlphabet, GameFontNormal, alphabet)
+	local file = ok and font and font:GetFont()
+
+	return file or ALPHABET_FILES[alphabet]
+end
+
+local fonts = {}
+
+function Umbra.Font(size, outline)
+	local key = size .. (outline or '')
+	if fonts[key] then return fonts[key] end
+
+	local name = 'UmbraFont' .. key:gsub('%W', '')
+	local flags = outline or ''
+
+	local members = {{alphabet = 'roman', file = Umbra.media.font, height = size, flags = flags}}
+	for alphabet in pairs(ALPHABET_FILES) do
+		members[#members + 1] = {alphabet = alphabet, file = AlphabetFile(alphabet), height = size, flags = flags}
+	end
+
+	local ok, font = pcall(CreateFontFamily, name, members)
+
+	-- Without a family the labels still need a font, and one script
+	-- readable is better than none: the plain file, as before.
+	if not ok or not font then
+		font = CreateFont(name)
+		font:SetFont(Umbra.media.font, size, flags)
+	end
+
+	fonts[key] = font
+	return font
+end
+
 Umbra.colors = {
 	-- RGB 78/122/85, sampled from the reference shot rather than guessed at.
 	-- The bar stays neutral so that class color means class and nothing else,

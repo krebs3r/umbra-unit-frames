@@ -43,10 +43,10 @@ end
 function Widgets.Text(parent, justify, size)
 	local fs = parent:CreateFontString(nil, 'OVERLAY')
 
-	-- Kept because `SetFont` takes all three at once: anything that wants to
-	-- add or drop an outline later has to hand back the size it found.
+	-- Kept because a font object is size and outline at once: anything that
+	-- wants to add or drop an outline later has to hand back the size.
 	fs.umbraSize = size or metrics.fontSize
-	fs:SetFont(media.font, fs.umbraSize)
+	fs:SetFontObject(Umbra.Font(fs.umbraSize))
 	fs:SetJustifyH(justify)
 	fs:SetJustifyV('MIDDLE')
 	fs:SetTextColor(unpack(colors.text))
@@ -70,7 +70,17 @@ worked out from the color itself: inside an instance it is a secret
 value, and brightness is arithmetic.
 --]]
 function Widgets.Outline(fs, outline)
-	fs:SetFont(media.font, fs.umbraSize or metrics.fontSize, outline)
+	-- A new font object brings its own color and shadow along, so the
+	-- string's are read first and put back after.
+	local r, g, b, a = fs:GetTextColor()
+	local sr, sg, sb, sa = fs:GetShadowColor()
+	local sx, sy = fs:GetShadowOffset()
+
+	fs:SetFontObject(Umbra.Font(fs.umbraSize or metrics.fontSize, outline))
+
+	fs:SetTextColor(r, g, b, a)
+	fs:SetShadowColor(sr, sg, sb, sa)
+	fs:SetShadowOffset(sx, sy)
 end
 
 --[[ Widgets.Prediction(parent, color, hatched)

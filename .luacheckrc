@@ -30,6 +30,7 @@ read_globals = {
 	-- Widgets and core
 	'CreateFrame', 'UIParent', 'GetBuildInfo', 'print', 'strtrim', 'C_Timer',
 	'AbbreviateNumbers', 'BreakUpLargeNumbers', 'CreateColor', 'GameFontNormal', 'Enum',
+	'CreateFont', 'CreateFontFamily',
 	'DECIMAL_SEPERATOR', 'LARGE_NUMBER_SEPERATOR', 'CurveConstants',
 	'C_StringUtil', 'CreateAbbreviateConfig',
 	'wipe', 'math', 'string',

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.1 — 26 September 2026
+
+Names in other scripts. A party member called 车神 or Ашесть showed up as a
+row of empty boxes: the frames were set in a single font file, and on a
+German or English client that file only knows the Latin alphabet.
+
+- Every label is now set in a font family the way Blizzard's own are, one
+  file per alphabet, so Cyrillic, Korean and both Chinese scripts draw in
+  the frames, the aura timers, the mover labels and the report window
+
 ## 0.5 — 26 September 2026
 
 The Classic clients: Mists of Pandaria, the Anniversary realms (Burning

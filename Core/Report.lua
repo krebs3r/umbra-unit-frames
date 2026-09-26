@@ -1,7 +1,7 @@
 local _, ns = ...
 local Umbra = ns.Umbra
 
-local colors, media = Umbra.colors, Umbra.media
+local colors = Umbra.colors
 
 --[[ A window for output that is too long to read in chat
 `/uuf dev check` answers around thirty lines, and a chat frame is the wrong place
@@ -148,7 +148,7 @@ local function PlainButton(parent, text, width)
 	background:SetColorTexture(unpack(colors.border))
 
 	local label = button:CreateFontString(nil, 'OVERLAY')
-	label:SetFont(media.font, 12)
+	label:SetFontObject(Umbra.Font(12))
 	label:SetPoint('CENTER')
 	label:SetText(text)
 	label:SetTextColor(unpack(colors.text))
@@ -211,7 +211,7 @@ local function Panel(globalName, width, height, footer)
 		background:SetColorTexture(unpack(colors.background))
 
 		local title = frame:CreateFontString(nil, 'OVERLAY')
-		title:SetFont(media.font, 13)
+		title:SetFontObject(Umbra.Font(13))
 		title:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, -PADDING)
 		title:SetTextColor(unpack(colors.accent))
 		frame.UmbraTitle = title
@@ -316,14 +316,14 @@ local function Build()
 	edit:SetAutoFocus(false)
 	edit:SetWidth(WIDTH - PADDING * 2 - 44)
 
-	--[[ An EditBox wants the third argument
-	`FontString:SetFont(file, height)` is happy with two, and every other
-	label in this addon is a FontString. An EditBox is not: it answers
-	`bad argument #3 to 'SetFont'` and throws, which is how this window broke
-	the chat frame — see Umbra:ShowReport for why a throw here was so much
-	worse than a missing window.
+	--[[ Nothing here may throw
+	This window once broke the chat frame by throwing while it was built:
+	`EditBox:SetFont` wants a third argument where a FontString does not.
+	It takes the font object now, like every other label, and is still
+	guarded — see Umbra:ShowReport for why a throw here was so much worse
+	than a missing window.
 	--]]
-	if not pcall(edit.SetFont, edit, media.font, 12, '') then
+	if not pcall(edit.SetFontObject, edit, Umbra.Font(12)) then
 		edit:SetFontObject(ChatFontNormal)
 	end
 
@@ -534,14 +534,14 @@ local function BuildSquare(parent, attempt)
 	square.Flat = flat
 
 	local name = square:CreateFontString(nil, 'OVERLAY')
-	name:SetFont(media.font, 11)
+	name:SetFontObject(Umbra.Font(11))
 	name:SetPoint('TOP', square, 'BOTTOM', 0, -4)
 	name:SetWidth(CELL - 8)
 	name:SetText(attempt.label)
 	name:SetTextColor(unpack(colors.text))
 
 	local caption = square:CreateFontString(nil, 'OVERLAY')
-	caption:SetFont(media.font, 10)
+	caption:SetFontObject(Umbra.Font(10))
 	caption:SetPoint('TOP', name, 'BOTTOM', 0, -2)
 	caption:SetWidth(CELL - 8)
 	caption:SetJustifyH('CENTER')
@@ -557,13 +557,13 @@ local function BuildRow(parent, index)
 		-(HEADING_HEIGHT + (index - 1) * (ROW_HEIGHT + 10)))
 
 	local title = row:CreateFontString(nil, 'OVERLAY')
-	title:SetFont(media.font, 12)
+	title:SetFontObject(Umbra.Font(12))
 	title:SetPoint('TOPLEFT', row, 'TOPLEFT', 4, 0)
 	title:SetTextColor(unpack(colors.accent))
 	row.Title = title
 
 	local facts = row:CreateFontString(nil, 'OVERLAY')
-	facts:SetFont(media.font, 11)
+	facts:SetFontObject(Umbra.Font(11))
 	facts:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', 0, -3)
 	facts:SetTextColor(unpack(colors.muted))
 	row.Facts = facts
@@ -710,7 +710,7 @@ function Umbra:ShowPortraits(title, heading, rows)
 				body + TITLE_HEIGHT + PADDING * 2, 0)
 
 			local top = inset:CreateFontString(nil, 'OVERLAY')
-			top:SetFont(media.font, 12)
+			top:SetFontObject(Umbra.Font(12))
 			top:SetPoint('TOPLEFT', inset, 'TOPLEFT', PADDING + 4, -PADDING)
 			top:SetTextColor(unpack(colors.accent))
 			frame.Heading = top
