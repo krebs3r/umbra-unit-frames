@@ -55,6 +55,14 @@ local SETTINGS = {
 			return true
 		end,
 	},
+	level = {
+		get = function() return UmbraUnitFramesDB.level end,
+		set = function(placement)
+			UmbraUnitFramesDB.level = placement
+			Umbra:ApplyLevelStyle()
+			return true
+		end,
+	},
 	auras = {
 		get = function() return UmbraUnitFramesDB.hideBlizzardAuras end,
 		set = function(hide)
@@ -393,6 +401,8 @@ local function Build()
 	Add('segment', 'layout', {{'modern', 'Modern'}, {'classic', 'Classic'}})
 	Add('section', 'Health bar')
 	Add('segment', 'health', {{false, 'Neutral'}, {true, 'Class color'}})
+	Add('section', 'Show level')
+	Add('segment', 'level', {{'portrait', 'Portrait'}, {'name', 'Name'}, {'off', 'Off'}})
 	Add('section', 'Blizzard frames')
 	Add('check', 'auras', 'Hide Blizzard buffs & debuffs')
 	Add('check', 'group', 'Hide Blizzard group manager')
@@ -471,6 +481,7 @@ local function Build()
 	function frame:Refresh()
 		controls.layout:Refresh(fighting and 'applies after combat' or nil)
 		controls.health:Refresh()
+		controls.level:Refresh()
 		controls.auras:Refresh()
 		controls.group:Refresh(Umbra.groupStoodDown and 'not on this client' or nil)
 		controls.minimap:Refresh()

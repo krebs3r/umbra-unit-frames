@@ -105,6 +105,7 @@ local COMMANDS = {
 	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
 	{'health', {'class', 'plain'}, 'what colors the health bars'},
 	{'group', {'umbra', 'both'}, "whether the game's group manager stays on the left edge"},
+	{'level', {'portrait', 'name', 'off'}, 'where the level stands, or whether it does'},
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
@@ -282,6 +283,13 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 	-- rather than to replace it.
 	if UmbraUnitFramesDB.hideBlizzardGroup == nil then
 		UmbraUnitFramesDB.hideBlizzardGroup = false
+	end
+
+	-- On the portrait by default: the name keeps its width. The name and
+	-- off are the other two answers.
+	if UmbraUnitFramesDB.level ~= 'portrait' and UmbraUnitFramesDB.level ~= 'name'
+		and UmbraUnitFramesDB.level ~= 'off' then
+		UmbraUnitFramesDB.level = 'portrait'
 	end
 
 	-- Where the client lists addons under the minimap, a button of our own
@@ -784,6 +792,22 @@ local function Command(input)
 					.. ' — the panel is protected in combat, so this takes '
 					.. 'effect when the fight ends.')
 			end
+		end
+	elseif input:find('^level') then
+		-- Three places rather than a toggle: where the level stands is the
+		-- question, and off is one of the answers.
+		local which = input:match('^level%s+(%S+)$')
+
+		if not which then
+			print(PREFIX .. 'level: ' .. Value(UmbraUnitFramesDB.level))
+			print(PREFIX .. Value('portrait') .. ' — in a plate at the foot of the portrait')
+			print(PREFIX .. Value('name') .. ' — in front of the name')
+			print(PREFIX .. Value('off') .. ' — not shown')
+		elseif which ~= 'portrait' and which ~= 'name' and which ~= 'off' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			Umbra:SetOption('level', which)
+			print(PREFIX .. 'level: ' .. Value(which))
 		end
 	elseif input == 'header' then
 		--[[ One question, asked once

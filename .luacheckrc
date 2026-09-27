@@ -47,6 +47,14 @@ read_globals = {
 	'MAX_BOSS_FRAMES',
 	'SetPortraitTexture',
 
+	-- The level plate: how high, how hard, and how the client colors it.
+	-- UnitEffectiveLevel is Mainline only and read through `_G`.
+	'UnitLevel', 'UnitClassification', 'UnitCanAttack', 'GetCreatureDifficultyColor',
+	'UnitIsWildBattlePet', 'UnitIsBattlePetCompanion', 'UnitBattlePetLevel',
+
+	-- Whether the target is still worth anything: tapped, or gray.
+	'UnitIsTapDenied', 'UnitPlayerControlled', 'QuestDifficultyColors',
+
 	-- A unit's identity, which is what `Model:SetUnit` is gated on, and the
 	-- role a person signed up as, which the party column marks.
 	'UnitGUID', 'UnitGroupRolesAssigned',

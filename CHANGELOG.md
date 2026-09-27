@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.1 — 27 September 2026
+
+The level, on the frames where it is read. A plate across the foot of the
+portrait carries it, so the name keeps its whole width.
+
+- The player and the party column show the level muted; on the target it reads
+  in the client's difficulty color, gray to red, for anything you can attack
+- An elite carries a `+`, a unit too far above you to be told reads `??`
+- On a scaled unit it is the level you fight it at; the Classic clients, which
+  do not scale, show the plain level
+- The options window has a Show level section: on the portrait, in front of the
+  name, or off. `/uuf level portrait`, `name` and `off` do the same
+- The target's health bar turns gray when the kill would be for nothing:
+  somebody else struck first, or the unit is too far below you to give
+  experience. The edge and the name keep its color
+
 ## 0.6 — 26 September 2026
 
 An options window. Everything `/uuf` sets can now be clicked: the layout, the

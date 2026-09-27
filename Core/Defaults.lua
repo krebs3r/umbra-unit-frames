@@ -256,6 +256,9 @@ Umbra.frames = {
 		castbar = true,
 		classPower = true,
 		powerValue = true,
+		-- The level sits in a plate at the foot of the portrait, where it
+		-- costs the name nothing. Your own is context, so it stays muted.
+		level = true,
 		-- The pet frame hangs off this one, so it takes a place in the stack
 		-- on whichever side the set puts it.
 		owns = {pet = true},
@@ -274,6 +277,12 @@ Umbra.frames = {
 		-- of the column, which is why the small frames that are only
 		-- glanced at carry none.
 		powerValue = true,
+		-- The one frame where a level is a warning rather than context: it
+		-- reads in the client's difficulty color, with `+` for an elite.
+		level = 'difficulty',
+		-- A bar that goes gray when the kill would be for nothing: tapped
+		-- by somebody else, or too far below you to give experience.
+		grayNoReward = true,
 		-- The other way round: what you have put on the target is the reason
 		-- to look at it.
 		auras = {helpful = 8, harmful = 16},
@@ -332,6 +341,11 @@ Umbra.frames = {
 		-- question a party frame is read for. It takes the name
 		-- column's width the same way it does on the player.
 		powerValue = true,
+
+		-- Whether a friend can come along where you are going. Muted
+		-- like the player's own; the small frames that are only glanced
+		-- at carry none.
+		level = true,
 
 		nameHeight = 11,
 		healthHeight = 14,

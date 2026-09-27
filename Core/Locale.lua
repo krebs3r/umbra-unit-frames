@@ -24,12 +24,16 @@ local GERMAN = {
 	['Blizzard frames'] = 'Blizzard-Fenster',
 	['Display'] = 'Anzeige',
 	['Frames'] = 'Frames',
+	['Show level'] = 'Level anzeigen',
 
 	-- Switches
 	['Modern'] = 'Modern',
 	['Classic'] = 'Klassisch',
 	['Neutral'] = 'Neutral',
 	['Class color'] = 'Klassenfarbe',
+	['Portrait'] = 'Porträt',
+	['Name'] = 'Name',
+	['Off'] = 'Aus',
 	['Hide Blizzard buffs & debuffs'] = 'Buffs & Debuffs ausblenden',
 	['Hide Blizzard group manager'] = 'Gruppenverwaltung ausblenden',
 	['Show minimap button'] = 'Minimap-Button anzeigen',

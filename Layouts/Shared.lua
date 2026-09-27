@@ -554,6 +554,37 @@ local function MuteFill(bar, alpha)
 	if fill then fill:SetAlpha(alpha) end
 end
 
+--[[ NoReward(unit)
+Whether killing the unit would be for nothing: somebody else struck it
+first, or it is so far below you that it gives no experience. The client
+answers both, the second through the same GetCreatureDifficultyColor the
+level is colored with — its gray is one table, QuestDifficultyColors'
+`trivial`, so the answer is an identity check rather than a guess at
+where the gray starts, which differs by client and by level.
+
+A player or anything a player controls is never tapped and never gray
+here, and a hidden answer is taken as no: the bar stays as it was rather
+than going gray on a guess.
+--]]
+local UnitEffectiveLevel = _G.UnitEffectiveLevel or UnitLevel
+
+local function NoReward(unit)
+	if not unit or not UnitExists(unit) or UnitPlayerControlled(unit) then return false end
+
+	local denied = UnitIsTapDenied(unit)
+	if not Umbra.Secrets.Is(denied) and denied then return true end
+
+	if not UnitCanAttack('player', unit) or not GetCreatureDifficultyColor
+		or type(_G.QuestDifficultyColors) ~= 'table' then
+		return false
+	end
+
+	local level = UnitEffectiveLevel(unit)
+	if Umbra.Secrets.Is(level) or not level or level <= 0 then return false end
+
+	return GetCreatureDifficultyColor(level) == QuestDifficultyColors.trivial
+end
+
 local function UpdateIdentity(element, unit, _)
 	local color = Umbra.Secrets.UnitColor(unit)
 	local frame = element.__owner
@@ -565,7 +596,17 @@ local function UpdateIdentity(element, unit, _)
 
 	local ghost = element.HealingAll
 
-	if color and UmbraUnitFramesDB and UmbraUnitFramesDB.classHealth then
+	-- Gray over either color, and only on the bar: who the unit is still
+	-- shows at the edge, and what it is worth to you shows here.
+	if frame.umbraConfig and frame.umbraConfig.grayNoReward and NoReward(unit) then
+		element:SetStatusBarColor(oUF.colors.tapped:GetRGB())
+		MuteFill(element, 1)
+
+		if ghost then
+			ghost:SetStatusBarColor(oUF.colors.tapped:GetRGB())
+			MuteFill(ghost, colors.healPrediction[4])
+		end
+	elseif color and UmbraUnitFramesDB and UmbraUnitFramesDB.classHealth then
 		-- The color goes on at full strength and the fill is faded
 		-- instead, which is the only way to mute a class color at all:
 		-- dimming one means arithmetic on its three numbers, and inside an
@@ -625,6 +666,23 @@ local function LabelOutline(element)
 
 	for _, fs in ipairs(element.umbraLabels) do
 		Umbra.Widgets.Outline(fs, wanted)
+	end
+end
+
+--[[ Umbra:ApplyLevelStyle()
+Where the level stands, after the setting changed: the plate is shown or
+put away, and every frame re-reads its tags, which is how the one in front
+of the name appears or goes. Neither is protected, so this is a result in a
+fight as much as out of one.
+--]]
+function Umbra:ApplyLevelStyle()
+	local placement = UmbraUnitFramesDB.level
+
+	for _, frame in ipairs(oUF.objects) do
+		if frame.UmbraLevelPlate then
+			frame.UmbraLevelPlate:SetShown(placement == 'portrait')
+			frame:UpdateTags()
+		end
 	end
 end
 
@@ -828,6 +886,39 @@ local function Style(self, unit)
 	tint:SetFrameLevel(portrait:GetFrameLevel() + 2)
 	self.PortraitTint = tint
 
+	--[[ The level plate
+	A strip across the foot of the portrait rather than a number beside the
+	name: the name keeps its whole width, and the header keeps its one number
+	on the right. It sits a level above the tint, so neither the model, its
+	2D stand-in nor the class wash can cover it.
+
+	Built on every frame that carries a level, whichever placement is
+	chosen, and shown or hidden by `Umbra:ApplyLevelStyle`: the setting
+	changes where you stand, and nothing here is built twice.
+	--]]
+	local levelText
+
+	if config.level then
+		local plateHeight = l.fontSize + 4
+
+		local plate = CreateFrame('Frame', nil, self)
+		plate:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', l.classEdge + l.gap, 0)
+		plate:SetSize(l.portrait, plateHeight)
+		plate:SetFrameLevel(tint:GetFrameLevel() + 1)
+
+		local plateGround = plate:CreateTexture(nil, 'BACKGROUND')
+		plateGround:SetAllPoints(plate)
+		plateGround:SetColorTexture(colors.border[1], colors.border[2], colors.border[3], 0.5)
+
+		levelText = CreateText(plate, 'CENTER', l.fontSize)
+		levelText:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', l.classEdge + l.gap, 0)
+		levelText:SetSize(l.portrait, plateHeight)
+		levelText:SetTextColor(unpack(colors.muted))
+
+		plate:SetShown(UmbraUnitFramesDB.level == 'portrait')
+		self.UmbraLevelPlate = plate
+	end
+
 	-- Every number on the right edge shares this inset, so they stack into one
 	-- column. The health percentage needs it because it sits inside its own
 	-- bar and has to clear the bar's edge; the power percentage sits in the
@@ -885,6 +976,19 @@ local function Style(self, unit)
 	health:SetPoint('TOPLEFT', self, 'TOPLEFT', columnX, healthY)
 	health:SetSize(columnWidth, l.healthHeight)
 	health.PostUpdateColor = UpdateIdentity
+
+	-- Whether the unit is still worth anything changes without the unit
+	-- changing: a tap arrives as UNIT_FACTION, and a level gained can turn
+	-- it gray. No color flag asks oUF to listen for either, so this does.
+	if config.grayNoReward then
+		local function Recolor(frame)
+			UpdateIdentity(frame.Health, Umbra:FrameUnit(frame))
+		end
+
+		self:RegisterEvent('UNIT_FACTION', Recolor)
+		self:RegisterEvent('UNIT_LEVEL', Recolor)
+		self:RegisterEvent('PLAYER_LEVEL_UP', Recolor, true)
+	end
 	self.Health = health
 
 	--[[ What is coming to the bar, and what stands in front of it
@@ -1041,9 +1145,23 @@ local function Style(self, unit)
 
 	Umbra:AddAuras(self, unit, config)
 
-	self:Tag(name, '[umbra:identity][name]|r')
+	-- The other placement rides on the name tag and stays empty until the
+	-- setting asks for it.
+	local nameLevel = ''
+
+	if config.level then
+		nameLevel = config.level == 'difficulty'
+			and '[umbra:namelevel(difficulty)]' or '[umbra:namelevel]'
+	end
+
+	self:Tag(name, nameLevel .. '[umbra:identity][name]|r')
 	self:Tag(healthValue, '[umbra:health]')
 	self:Tag(healthPercent, '[perhp]%')
+
+	if levelText then
+		self:Tag(levelText, config.level == 'difficulty'
+			and '[umbra:difficulty][umbra:level]|r' or '[umbra:level]')
+	end
 end
 
 oUF:AddElement('UmbraRole', UpdateRole, EnableRole, DisableRole)

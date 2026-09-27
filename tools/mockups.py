@@ -978,6 +978,8 @@ OPTION_ROWS = [
     ('segment', 'layout', ('Modern', 'Classic')),
     ('section', 'Health bar'),
     ('segment', 'health', ('Neutral', 'Class color')),
+    ('section', 'Show level'),
+    ('segment', 'level', ('Portrait', 'Name', 'Off')),
     ('section', 'Blizzard frames'),
     ('check', 'auras', 'Hide Blizzard buffs & debuffs'),
     ('check', 'group', 'Hide Blizzard group manager'),
