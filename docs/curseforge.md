@@ -2,11 +2,11 @@
 
 **Your game. Front and center.**
 
-Compact, readable unit frames for **World of Warcraft Retail**, **WoW: Forever** and **Mists of Pandaria Classic**. Your class color sits on the edge of the frame, your portrait gets a column of its own, and the numbers you actually read stay the biggest thing on screen.
+Compact, readable unit frames for **World of Warcraft Retail**, **WoW: Forever** and the **Classic clients** — Mists of Pandaria, the Anniversary realms and Classic Era. Your class color sits on the edge of the frame, your portrait gets a column of its own, and the numbers you actually read stay the biggest thing on screen.
 
 Inspired by ShadowedUnitFrames — the same idea about what a unit frame is for, with a look of its own.
 
-> **Where it stands.** Everything below is built and in use. There is no options window yet: every setting is a `/uuf` command. Clique is not supported, and raid frames are deliberately Blizzard's — both are said plainly further down rather than left as something this has not got round to.
+> **Where it stands.** Everything below is built and in use. Every setting is in a small options window and behind a `/uuf` command, which do the same. Clique is not supported, and raid frames are deliberately Blizzard's — both are said plainly further down rather than left as something this has not got round to.
 
 ---
 
@@ -42,13 +42,15 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 
 | Frame | What it carries |
 | :--- | :--- |
-| **Player** | Cast bar, class power (combo points, holy power, runes and the rest), power value, 16 buffs and 8 debuffs |
-| **Target** | Cast bar, power value, 8 buffs and 16 debuffs — the other way round, because what *you* put on the target is why you are looking at it |
+| **Player** | Cast bar, class power (combo points, holy power, runes and the rest), power value, level, 16 buffs and 8 debuffs |
+| **Target** | Cast bar, power value, level, 8 buffs and 16 debuffs — the other way round, because what *you* put on the target is why you are looking at it. The level shows in the game's difficulty color, and the health bar turns gray when the kill would be worth nothing |
 | **Pet** | Same width so it lines up, but short: no cast bar, no aura rows |
 | **Target of target** | One question — is it on the tank or on me — and cut the same way |
 | **Boss** | As many as the fight has, each keeping its cast bar |
-| **Party** | A column with cast bars, power values, a row of debuffs, the role each member signed up as, and range fading — not on the Forever beta, for a reason the client decides |
+| **Party** | A column with cast bars, power values, levels, a row of debuffs, the role each member signed up as, and range fading — not on the Forever beta, for a reason the client decides |
 | **Raid** | Not yet, and not next — Blizzard's own do the job, class coloring included, and the group header carries them whenever they are wanted |
+
+The level sits in a small plate at the foot of the portrait, so names keep their full width — or in front of the name, or nowhere, as you like.
 
 There is deliberately **no focus frame**. One was built and taken back out: a frame that is empty most of the time is a frame in the way.
 
@@ -80,7 +82,9 @@ The boss column is the same in both — right edge, centred. It is not part of t
 
 ## Commands
 
-There is no options window yet. `/uuf` on its own prints the list, and **every setting takes effect where you stand** — no `/reload`.
+`/uuf` on its own opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. The window speaks German on a German client and English on every other, and **every setting takes effect where you stand** — no `/reload`.
+
+Everything in the window is also a command, and `/uuf help` lists them:
 
 | Command | Values | What it does |
 | :--- | :--- | :--- |
@@ -88,13 +92,14 @@ There is no options window yet. `/uuf` on its own prints the list, and **every s
 | `/uuf auras` | `umbra`, `both` | who shows your buffs and debuffs |
 | `/uuf health` | `class`, `plain` | what colors the health bars |
 | `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
+| `/uuf level` | `portrait`, `name`, `off` | where the level stands, or whether it does |
 | `/uuf unlock` | — | drag the frames — all of them, filled out so you can see what you are placing |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this layout's dragged positions |
 
 Type a setting without a value and it tells you what it is on and what the alternatives mean.
 
-Defaults are `modern`, `both`, `plain`, `both` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group.
+Defaults are `modern`, `both`, `plain`, `both` and `portrait` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group.
 
 There is also `/uuf dev`, a set of read-only checks that change nothing and print what your client is doing. `/uuf dev test` fills every aura slot with stand-ins so you can judge a layout at its fullest, and `/uuf dev check` gives you most of a good bug report in a window you can copy out of.
 
@@ -106,19 +111,19 @@ Grab it with your addon manager, or unpack the zip into `Interface\AddOns` yours
 
 The folder is named **`UmbraUnitFrames`** and the command is `/uuf`. There is an unrelated addon called *Umbra* — the longer name keeps both installable side by side.
 
-One package covers both supported game versions; you do not need to pick a build.
+One package covers every supported game version; you do not need to pick a build.
 
 ---
 
 ## Which game versions
 
-| | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Classic Era |
-| :--- | :--- | :--- | :--- | :--- |
-| Supported | yes — tested inside an instance | yes, with two exceptions | new — checked against the client's code, and seen working | new |
+| | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Supported | yes — tested inside an instance | yes, with two exceptions | yes — checked against the client's code, and seen working | yes — checked and seen working | yes — checked and seen working |
 
-The Anniversary realms (Burning Crusade) and Classic Era are supported the same way as Mists.
+Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client.
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Mists is new in this version. Its client carries almost everything Umbra and oUF ask of it; the aura rows are the exception, and Umbra draws those itself there. Eclipse, Shadow Orbs, Burning Embers and Demonic Fury are not shown yet. Classic Era and Anniversary come after Mists.
+The three Classic clients carry almost everything Umbra and oUF ask of them; the aura rows are the exception, and Umbra draws those itself there. What a client has no use for stays empty: on Mists, Eclipse, Shadow Orbs, Burning Embers and Demonic Fury are not shown yet; the Anniversary realms and Classic Era show combo points as their only class power, and the Anniversary realms have no boss column.
 
 **The two exceptions on Forever are the client's, not Umbra's.**
 
