@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7 — unreleased
+## 0.7 — 2 October 2026
 
 A first login that asks. A new install opens on a small window that walks
 through what `/uuf` sets, one question to a page, each with a drawing of what
