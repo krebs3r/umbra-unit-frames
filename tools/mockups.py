@@ -1293,28 +1293,28 @@ ONB = {
 
 STEPS = [
     {'key': 'layout', 'eyebrow': 'Welcome',
-     'heading': 'Where your frames go',
-     'body': 'Two layout sets. Each keeps its own dragged positions, so '
-             'trying one costs nothing.',
+     'heading': 'Choose your layout',
+     'body': "Each layout remembers where you've moved your frames, so "
+             'feel free to try both.',
      'choices': ('Modern', 'Classic')},
     {'key': 'health', 'eyebrow': 'Health bar',
-     'heading': 'What colors the health bar',
-     'body': 'Neutral green leaves class color to the edge and the name. '
-             'Class color spends it on the bar as well.',
+     'heading': 'Pick a health bar color',
+     'body': 'Neutral keeps class color on the edge and the name. Class '
+             'color paints the bar as well.',
      'choices': ('Neutral', 'Class color')},
     {'key': 'level', 'eyebrow': 'Level',
-     'heading': 'Where the level stands',
-     'body': 'On the portrait, in front of the name, or not at all. The '
-             'target reads it in the difficulty color.',
+     'heading': 'Where should the level go?',
+     'body': 'On the portrait, before the name, or not at all. On a '
+             'target, the color shows how tough it is.',
      'choices': ('Portrait', 'Name', 'Off')},
     {'key': 'blizzard', 'eyebrow': "Blizzard's frames",
-     'heading': 'Keep Blizzard\'s own as well?',
-     'body': 'Umbra draws your buffs and your party. Blizzard\'s group '
-             'manager also holds the raid markers.'},
+     'heading': 'Hide Blizzard\'s frames?',
+     'body': 'Umbra already shows your buffs and party. Keep the group '
+             'manager if you use its raid markers.'},
     {'key': 'done', 'eyebrow': 'Done',
      'heading': 'Ready to go',
-     'body': 'Your choices are in place. Drag the frames where you '
-             'want them, or change anything later.'},
+     'body': "That's it! Unlock the frames below to move them, or "
+             'change any setting later.'},
 ]
 
 
@@ -1453,18 +1453,19 @@ def draw_preview(sheet, x, y, w, h, step, state):
         return
 
     # done: where everything lives afterwards
-    doors = [('/uuf', 'opens the options, any time'),
-             ('/uuf setup', 'brings these questions back'),
-             ('Options › AddOns', 'lists Umbra like any addon')]
-    doors.insert(1, ('Minimap button', 'opens the options with a click')
-                 if state.get('classic') else
-                 ('Addon compartment', 'under the minimap'))
+    # the commands worth knowing afterwards, centred in the box; not
+    # /uuf lock, which the button under the box already does
+    doors = [('/uuf', 'opens the options'),
+             ('/uuf reset', 'puts the frames back in place'),
+             ('/uuf setup', 'shows this guide again'),
+             ('/uuf help', 'lists all commands')]
+    top = (h - ((len(doors) - 1) * 28 + 12)) / 2
     for i, (label, note) in enumerate(doors):
-        ry = y + 22 + i * 28
+        ry = y + top + 10 + i * 28
         # A square, as the client draws it: a texture has no round dot.
         sheet.rect(x + 14, ry - 6, 4, 4, rgb(C['accent']))
         sheet.text(x + 26, ry, label, size=11, fill=rgb(C['text']), weight='600')
-        sheet.text(x + 136, ry, note, size=10, fill=rgb(C['muted']))
+        sheet.text(x + 104, ry, note, size=10, fill=rgb(C['muted']))
 
 
 def draw_onboarding(sheet, x, y, s, step, state=None):
@@ -1532,7 +1533,7 @@ def draw_onboarding(sheet, x, y, s, step, state=None):
     else:
         unlocked = state.get('unlocked')
         draw_button(sheet, left, ry, inner, 'Lock frames' if unlocked
-                    else 'Unlock frames to drag them', hot=unlocked,
+                    else 'Unlock frames', hot=unlocked,
                     refused=refused.get('unlock'))
         if state.get('classic'):
             draw_check(sheet, left, ry + o['button'] + 10, 'Show minimap button',
@@ -1616,14 +1617,14 @@ def sheet_onboarding(out):
         (48, rows_top + row_h, 3, dict(state, auras=True), '4 · Blizzard\'s frames',
          'Buffs put away, drawn dashed; the group manager kept.'),
         (second, rows_top + row_h, 4, state, '5 · Done, on Retail',
-         'The addon compartment is the way back; no minimap switch.'),
+         'No minimap switch: the client has its addon compartment.'),
         (48, rows_top + 2 * row_h, 0,
          dict(state, notes={'layout': 'applies after combat'}),
          'In combat', 'The layout is kept and applied when the fight ends.'),
         (second, rows_top + 2 * row_h, 4,
          dict(state, classic=True, refused={'unlock': True}),
          '5 · Done, on a Classic client, in combat',
-         'A minimap button instead of the compartment; unlock refused.'),
+         'The minimap button gets a switch; unlocking is refused.'),
     ]
     for px, py, step, st, title, body in pages:
         draw_onboarding(sheet, px, py, small, step, st)

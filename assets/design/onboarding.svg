@@ -18,9 +18,9 @@
 <line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">WELCOME  ·  1 / 5</text>
-<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where your frames go</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Two layout sets. Each keeps its own dragged</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">positions, so trying one costs nothing.</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Choose your layout</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Each layout remembers where you've moved your</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">frames, so feel free to try both.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
 <rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
@@ -109,17 +109,17 @@
 <line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">HEALTH BAR  ·  2 / 5</text>
-<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">What colors the health bar</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Neutral green leaves class color to the edge and</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">the name. Class color spends it on the bar as well.</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Pick a health bar color</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Neutral keeps class color on the edge and the name.</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Class color paints the bar as well.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
 <g transform="translate(33.85,162.97) scale(1.1500)">
 <rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip57508"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip57508)" opacity="0.42">
+<clipPath id="clip87364"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip87364)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -182,17 +182,17 @@
 <line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">LEVEL  ·  3 / 5</text>
-<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where the level stands</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">On the portrait, in front of the name, or not at</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">all. The target reads it in the difficulty color.</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where should the level go?</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">On the portrait, before the name, or not at all. On</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">a target, the color shows how tough it is.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
 <g transform="translate(33.85,162.97) scale(1.1500)">
 <rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip57581"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip57581)" opacity="0.42">
+<clipPath id="clip87437"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip87437)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -255,9 +255,9 @@
 <line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD'S FRAMES  ·  4 / 5</text>
-<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Keep Blizzard's own as well?</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Umbra draws your buffs and your party. Blizzard's</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">group manager also holds the raid markers.</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Hide Blizzard's frames?</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Umbra already shows your buffs and party. Keep the</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">group manager if you use its raid markers.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
 <rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
@@ -339,24 +339,24 @@
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">DONE  ·  5 / 5</text>
 <text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Ready to go</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Your choices are in place. Drag the frames where</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">you want them, or change anything later.</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">That's it! Unlock the frames below to move them, or</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">change any setting later.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
-<rect x="29.00" y="140.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
-<text x="151.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options, any time</text>
-<rect x="29.00" y="168.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Addon compartment</text>
-<text x="151.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">under the minimap</text>
-<rect x="29.00" y="196.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
-<text x="151.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">brings these questions back</text>
-<rect x="29.00" y="224.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
-<text x="151.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists Umbra like any addon</text>
+<rect x="29.00" y="146.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="152.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="119.00" y="152.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options</text>
+<rect x="29.00" y="174.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="180.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf reset</text>
+<text x="119.00" y="180.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">puts the frames back in place</text>
+<rect x="29.00" y="202.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="208.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
+<text x="119.00" y="208.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">shows this guide again</text>
+<rect x="29.00" y="230.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="236.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf help</text>
+<text x="119.00" y="236.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists all commands</text>
 <rect x="15.00" y="268.00" width="293.00" height="22.00" fill="rgb(11,14,21)"/>
-<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock frames to drag them</text>
+<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock frames</text>
 <line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
 <rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
@@ -371,8 +371,8 @@
 <text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Done</text>
 </g>
 <text x="532.00" y="2042.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">5 · Done, on Retail</text>
-<text x="532.00" y="2064.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The addon compartment is the way back; no minimap</text>
-<text x="532.00" y="2083.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">switch.</text>
+<text x="532.00" y="2064.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">No minimap switch: the client has its addon</text>
+<text x="532.00" y="2083.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">compartment.</text>
 <g transform="translate(48.00,2132.00) scale(1.2500)">
 <rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
 <rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
@@ -383,9 +383,9 @@
 <line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">WELCOME  ·  1 / 5</text>
-<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where your frames go</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Two layout sets. Each keeps its own dragged</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">positions, so trying one costs nothing.</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Choose your layout</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Each layout remembers where you've moved your</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">frames, so feel free to try both.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
 <rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
@@ -460,24 +460,24 @@
 <line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
 <text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">DONE  ·  5 / 5</text>
 <text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Ready to go</text>
-<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Your choices are in place. Drag the frames where</text>
-<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">you want them, or change anything later.</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">That's it! Unlock the frames below to move them, or</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">change any setting later.</text>
 <rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
 <rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
-<rect x="29.00" y="140.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
-<text x="151.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options, any time</text>
-<rect x="29.00" y="168.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Minimap button</text>
-<text x="151.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options with a click</text>
-<rect x="29.00" y="196.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
-<text x="151.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">brings these questions back</text>
-<rect x="29.00" y="224.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
-<text x="41.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
-<text x="151.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists Umbra like any addon</text>
+<rect x="29.00" y="146.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="152.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="119.00" y="152.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options</text>
+<rect x="29.00" y="174.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="180.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf reset</text>
+<text x="119.00" y="180.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">puts the frames back in place</text>
+<rect x="29.00" y="202.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="208.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
+<text x="119.00" y="208.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">shows this guide again</text>
+<rect x="29.00" y="230.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="236.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf help</text>
+<text x="119.00" y="236.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists all commands</text>
 <rect x="15.00" y="268.00" width="293.00" height="22.00" fill="rgb(11,14,21)"/>
-<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400" opacity="0.45">Unlock frames to drag them</text>
+<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400" opacity="0.45">Unlock frames</text>
 <rect x="15.00" y="268.00" width="293.00" height="22.00" fill="url(#hatch-fine)"/>
 <rect x="15.00" y="300.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
 <rect x="15.50" y="300.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
@@ -497,6 +497,6 @@
 <text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Done</text>
 </g>
 <text x="532.00" y="2634.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">5 · Done, on a Classic client, in combat</text>
-<text x="532.00" y="2656.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">A minimap button instead of the compartment; unlock</text>
+<text x="532.00" y="2656.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The minimap button gets a switch; unlocking is</text>
 <text x="532.00" y="2675.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">refused.</text>
 </svg>

@@ -75,18 +75,16 @@ local STAND_INS = {
 }
 
 local STEPS = {
-	{key = 'layout', eyebrow = 'Welcome', heading = 'Where your frames go',
-		body = 'Two layout sets. Each keeps its own dragged positions, so trying one costs nothing.'},
-	{key = 'health', eyebrow = 'Health bar', heading = 'What colors the health bar',
-		body = 'Neutral green leaves class color to the edge and the name. '
-			.. 'Class color spends it on the bar as well.'},
-	{key = 'level', eyebrow = 'Level', heading = 'Where the level stands',
-		body = 'On the portrait, in front of the name, or not at all. '
-			.. 'The target reads it in the difficulty color.'},
-	{key = 'blizzard', eyebrow = 'Blizzard frames', heading = "Keep Blizzard's own as well?",
-		body = "Umbra draws your buffs and your party. Blizzard's group manager also holds the raid markers."},
+	{key = 'layout', eyebrow = 'Welcome', heading = 'Choose your layout',
+		body = "Each layout remembers where you've moved your frames, so feel free to try both."},
+	{key = 'health', eyebrow = 'Health bar', heading = 'Pick a health bar color',
+		body = 'Neutral keeps class color on the edge and the name. Class color paints the bar as well.'},
+	{key = 'level', eyebrow = 'Level', heading = 'Where should the level go?',
+		body = 'On the portrait, before the name, or not at all. On a target, the color shows how tough it is.'},
+	{key = 'blizzard', eyebrow = 'Blizzard frames', heading = "Hide Blizzard's frames?",
+		body = 'Umbra already shows your buffs and party. Keep the group manager if you use its raid markers.'},
 	{key = 'done', eyebrow = 'Done', heading = 'Ready to go',
-		body = 'Your choices are in place. Drag the frames where you want them, or change anything later.'},
+		body = "That's it! Unlock the frames below to move them, or change any setting later."},
 }
 
 local window
@@ -417,21 +415,23 @@ local function FramePreview(parent)
 end
 
 --[[ Doors(parent)
-Where everything lives once the window is gone. The second line is the
-client's: the addon compartment where there is one, the minimap button where
-there is not.
+The commands worth knowing once the window is gone, centred in the preview
+box. Not `/uuf lock`: the button under the box already locks.
 --]]
+local DOOR_STEP = 28
+
 local function Doors(parent)
 	local doors = {
-		{'/uuf', 'opens the options, any time'},
-		Umbra:HasCompartment() and {'Addon compartment', 'under the minimap'}
-			or {'Minimap button', 'opens the options with a click'},
-		{'/uuf setup', 'brings these questions back'},
-		{'Options › AddOns', 'lists Umbra like any addon'},
+		{'/uuf', 'opens the options'},
+		{'/uuf reset', 'puts the frames back in place'},
+		{'/uuf setup', 'shows this guide again'},
+		{'/uuf help', 'lists all commands'},
 	}
 
+	local top = (PREVIEW - ((#doors - 1) * DOOR_STEP + 12)) / 2
+
 	for index, door in ipairs(doors) do
-		local y = -(14 + (index - 1) * 28)
+		local y = -(top + (index - 1) * DOOR_STEP)
 
 		local dot = Texture(parent, 'ARTWORK', colors.accent)
 		dot:SetSize(4, 4)
@@ -441,7 +441,7 @@ local function Doors(parent)
 		label:SetPoint('TOPLEFT', parent, 'TOPLEFT', 26, y)
 
 		local note = Label(parent, 10, colors.muted, L[door[2]])
-		note:SetPoint('TOPLEFT', parent, 'TOPLEFT', 136, y - 1)
+		note:SetPoint('TOPLEFT', parent, 'TOPLEFT', 104, y - 1)
 		note:SetPoint('RIGHT', parent, 'RIGHT', -8, 0)
 		note:SetJustifyH('LEFT')
 		note:SetWordWrap(false)
@@ -557,7 +557,7 @@ local function Build()
 	controls.auras = W.Check(pages[4], CONTROLS, 'auras', 'Hide Blizzard buffs & debuffs', INNER)
 	controls.group = W.Check(pages[4], CONTROLS + BOX + 10, 'group', 'Hide Blizzard group manager', INNER)
 
-	local unlock = Umbra.PlainButton(pages[5], L['Unlock frames to drag them'], INNER)
+	local unlock = Umbra.PlainButton(pages[5], L['Unlock frames'], INNER)
 	unlock:SetPoint('TOPLEFT', pages[5], 'TOPLEFT', LEFT, -CONTROLS)
 
 	unlock.line = Texture(unlock, 'ARTWORK', colors.accent)
@@ -680,7 +680,7 @@ local function Build()
 		local unlocked = not Umbra.locked
 		local refused = fighting and not unlocked
 
-		unlock.UmbraLabel:SetText(L[unlocked and 'Lock frames' or 'Unlock frames to drag them'])
+		unlock.UmbraLabel:SetText(L[unlocked and 'Lock frames' or 'Unlock frames'])
 		unlock.UmbraLabel:SetTextColor(unpack(unlocked and colors.accent or colors.text))
 		unlock.UmbraLabel:SetAlpha(refused and 0.45 or 1)
 		unlock.line:SetShown(unlocked)
