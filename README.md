@@ -99,7 +99,11 @@ The boss column is the same in both: the right edge, centred, as many frames as 
 
 ![The options window: a layout switch, a health bar switch, a switch for where the level stands, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
 
-The window offers nothing the commands do not, and `/uuf help` lists them:
+**The first login asks.** On an install that has never run, a window walks through the same settings one question to a page, each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and how to drag the frames into place. Every answer takes effect as it is clicked, so leaving halfway loses nothing; *Skip* keeps the defaults, and `/uuf setup` brings the questions back. An update from an earlier version does not ask — its settings are already chosen.
+
+![The onboarding: five pages, one question each. The first asks for the layout over a miniature of the screen; the others ask for the health bar's color and the level's place over a drawing of the player frame, whether Blizzard's buffs and group manager stay, and end on where everything can be found again](assets/design/onboarding.svg)
+
+The options window offers nothing the commands do not, and `/uuf help` lists them:
 
 | Command | Values | What it does |
 | :--- | :--- | :--- |
@@ -113,6 +117,7 @@ The window offers nothing the commands do not, and `/uuf help` lists them:
 | `/uuf unlock` | — | drag the frames, every one of them, filled out |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this set's dragged positions |
+| `/uuf setup` | — | the questions of the first login, again |
 | `/uuf dev` | — | measurements and diagnostics, listed behind that word |
 
 Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `both`, `plain`, `both` and `portrait`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group.
@@ -198,7 +203,7 @@ Umbra notices and steps back: two seconds after its column would first appear it
 
 No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches, or in a later beta. `/uuf dev header` answers where any given client stands.
 
-**And it does not remember.** That client writes its saved variables on exit and never reads them back: `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the next save writes those over what was there. Every reload costs a generation, and the `.bak` beside the file is the only thing still holding the one before. The write is correct — it is the reading that never happens, and a store of our own would be a second mechanism carried forever for a beta.
+**And it does not remember.** That client writes its saved variables on exit and never reads them back: `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the next save writes those over what was there. Every reload costs a generation, and the `.bak` beside the file is the only thing still holding the one before. It is also why the first-login questions come up on every login there. The write is correct — it is the reading that never happens, and a store of our own would be a second mechanism carried forever for a beta.
 
 What the beta client actually did with Umbra — which values it hides, which events it is missing, and the file that proves which half of the saved variables is broken — is written down in the [development notes](docs/development.md).
 
@@ -236,7 +241,7 @@ Feedback, bug reports, and focused improvements are welcome. It is especially he
 
 A bug report should identify the affected frame, selected layout, version, and steps to reproduce the issue — `/uuf dev check` and `/uuf dev party` give you most of that in a window you can copy out of.
 
-The sheets in `assets/design/` are generated rather than drawn by hand — `python tools/mockups.py` rebuilds all six. That file keeps its own copy of the metrics, so a number changed in `Core/Defaults.lua` has to be changed there too, or the sheets quietly start claiming something the addon no longer does.
+The sheets in `assets/design/` are generated rather than drawn by hand — `python tools/mockups.py` rebuilds all seven. That file keeps its own copy of the metrics, so a number changed in `Core/Defaults.lua` has to be changed there too, or the sheets quietly start claiming something the addon no longer does.
 
 The [development notes](docs/development.md) are where the reasoning lives: what the client actually does, what is built, and what comes next. Please discuss larger changes in an [issue](https://github.com/krebs3r/umbra-unit-frames/issues) first, and document the source and licensing of any code or assets you contribute.
 

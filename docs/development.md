@@ -7,7 +7,7 @@ them work against the API.
 
 ## Decisions
 
-1. **Retail, WoW: Forever and Mists of Pandaria Classic are one codebase.**
+1. **Retail, WoW: Forever and the three Classic clients are one codebase.**
    Forever runs the Mainline UI (`WOW_PROJECT_MAINLINE`, interface 16001, the
    12.1.5 API set), not the Classic API. Mists reports itself as a Classic
    client and carries almost all of the Midnight API anyway — see *Mists of
@@ -74,7 +74,8 @@ under it has a longer reach than the bug did.
 
 ### Slash commands
 
-`/uuf` on its own prints the version and the list.
+`/uuf` on its own opens the options window (since 0.6); `/uuf help` prints
+the version and the list.
 
 | | |
 | :--- | :--- |
@@ -83,6 +84,8 @@ under it has a longer reach than the bug did.
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `group umbra` · `group both` | whether the client's group manager — the panel on the left edge with the markers — is put away or kept |
 | `health class` · `health plain` | whether the health bar takes the unit's color too, or leaves it to the edge |
+| `level portrait` · `level name` · `level off` | where the level stands, or whether it does |
+| `setup` | the onboarding, the questions of the first login |
 | `dev` | the measurements, listed behind that word |
 
 **The measurements moved behind `/uuf dev` on 21 September 2026.** None of them
@@ -1662,6 +1665,26 @@ translation falls back to the English key. Chat output is not translated.
 The Settings API calls it uses were checked in
 wow-ui-source on all five branches; `AddonCompartment.lua` exists on `live`
 and `forever` only.
+**The onboarding** (`Core/Onboarding.lua`, since 0.7) asks the same settings
+on the first login, one to a page with a preview, and is drawn in
+`assets/design/onboarding.svg` from `ONB` in `tools/mockups.py` — change one,
+change both. It writes through `Umbra:SetOption` as the window does, so it
+holds no state of its own beyond the page it is on, and it builds its
+switches from `Umbra.Widgets`, the options window's own pieces. It hooks
+`Umbra:OptionsChanged`, so an answer given elsewhere shows up in it at once.
+
+First login is decided in `ADDON_LOADED`: no `UmbraUnitFramesDB` at all sets
+`onboarded = false`, and a table without the field — anyone updating from
+0.6.1 or earlier — counts as asked. The window sets it true however it is
+left. It opens a second after `PLAYER_LOGIN`, or after the fight when the login
+lands in one.
+
+Its previews are drawn rather than borrowed. The miniature screen is placed by
+the set's own points, scaled, so the client resolves its anchors exactly as it
+resolves the real frames'; the player frame is plain textures from the same
+metrics, with the 2D portrait, name, class color and level of the character
+logging in.
+
 When that moves to AceDB and AceConfig, the design studio's profile schema
 (`schemaVersion: 2`) should become the import format. The studio still offers
 `classic|retail` and needs updating to the three real clients first.
@@ -1670,7 +1693,9 @@ When that moves to AceDB and AceConfig, the design studio's profile schema
 
 Forever launches **4 November 2026**. Known beta behaviour: saved variables are
 written but never read back, and `/reload UI` is protected while `/reload` is
-not.
+not. The first follows the onboarding there: every login looks like the first,
+so the questions come up every time. Deliberately not worked around — the
+release is expected to read its saved variables as Retail does.
 
 **The beta client is installed** as of 20 September 2026, under the same root
 as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
@@ -1884,8 +1909,9 @@ answer, because no compatibility file is loaded there at all.
 *The Anniversary realms (Burning Crusade 2.5.6) share all of this — see
 *Anniversary* below.*
 
-Added on 25 September 2026, **checked against Blizzard's interface code and
-not yet played with.** The first plan was a second, older oUF — 12.1.0, the
+Added on 25 September 2026, **checked against Blizzard's interface code
+first** and played with the day after — see *Measured on 26 September 2026*
+below. The first plan was a second, older oUF — 12.1.0, the
 last tag without secret values — with an adapter for every place its API
 differs from 14. It was dropped before a line of it was written, because the
 premise was wrong: Mists is a Classic client in `WOW_PROJECT_ID` only.

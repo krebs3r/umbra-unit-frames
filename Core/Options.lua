@@ -168,16 +168,17 @@ local function Section(parent, y, text)
 	return label
 end
 
---[[ Segmented(parent, y, key, choices)
+--[[ Segmented(parent, y, key, choices, inner)
 Two named states side by side, for a setting that is one of two things rather
 than on or off — the reason `/uuf` takes words for these and not a toggle.
 The chosen side carries the two-pixel line an aura icon has under it: one mark,
-meaning "this one".
+meaning "this one". `inner` is the width the row has, this window's unless a
+wider one asks.
 --]]
-local function Segmented(parent, y, key, choices)
+local function Segmented(parent, y, key, choices, inner)
 	local control = {buttons = {}}
 	local gap = 2
-	local width = (INNER - gap * (#choices - 1)) / #choices
+	local width = ((inner or INNER) - gap * (#choices - 1)) / #choices
 
 	for index, choice in ipairs(choices) do
 		local button = CreateFrame('Button', nil, parent)
@@ -230,17 +231,17 @@ local function Segmented(parent, y, key, choices)
 	return control
 end
 
---[[ Check(parent, y, key, text)
+--[[ Check(parent, y, key, text, inner)
 A box of our own rather than UICheckButtonTemplate, which is a different
 picture on every client. Ticked is a filled square inset in the box, the shape
 a class power pip has — nothing here is drawn with the client's art.
 --]]
-local function Check(parent, y, key, text)
+local function Check(parent, y, key, text, inner)
 	local control = {}
 
 	local button = CreateFrame('Button', nil, parent)
 	button:SetPoint('TOPLEFT', parent, 'TOPLEFT', LEFT, -y)
-	button:SetSize(INNER, BOX)
+	button:SetSize(inner or INNER, BOX)
 
 	local outline = Texture(button, 'BACKGROUND', colors.muted, 0.35)
 	outline:SetPoint('TOPLEFT')
@@ -297,6 +298,19 @@ local function Check(parent, y, key, text)
 
 	return control
 end
+
+--[[ Umbra.Widgets
+The onboarding (`Core/Onboarding.lua`) is built from the same pieces, so a
+switch there and a switch here are the same switch.
+--]]
+Umbra.Widgets = {
+	Texture = Texture,
+	Label = Label,
+	Hatch = Hatch,
+	Note = Note,
+	Segmented = Segmented,
+	Check = Check,
+}
 
 --[[ Where the window was left
 Kept like a frame's position, as a point on UIParent. Forever never reads it

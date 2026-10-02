@@ -82,6 +82,8 @@ The boss column is the same in both — right edge, centred. It is not part of t
 
 ## Settings
 
+**The first login asks.** A small window walks you through the settings, one question to a page and each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and finally how to drag the frames into place. Every answer takes effect as you click it, *Skip* keeps the defaults, and `/uuf setup` brings the questions back whenever you like. An update from an earlier version does not ask — you have chosen already.
+
 `/uuf` opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. **Every setting takes effect where you stand** — no `/reload`. In a fight the mover is refused, as the game requires; a layout picked mid-combat is kept and applied when the fight ends.
 
 ![Umbra Unit Frames — the options window](https://media.forgecdn.net/attachments/1987/128/options-window-png.png)
@@ -100,6 +102,7 @@ It offers nothing the commands do not, and `/uuf help` lists them:
 | `/uuf unlock` | — | drag the frames — all of them, filled out so you can see what you are placing |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this layout's dragged positions |
+| `/uuf setup` | — | the questions of the first login, again |
 
 Type a setting without a value and it tells you what it is on and what the alternatives mean.
 
@@ -135,7 +138,7 @@ Forever launches **4 November 2026**, and Umbra already loads and draws on its b
 
 *The party column cannot be built there.* That client compiles every secure snippet with `loadstring_untainted`, the function is missing, and the client's own group-header code needs it to finish each child it creates — so the header makes buttons it cannot finish, by Umbra or by any other addon. Umbra notices within two seconds of the column first appearing, hides it, stops asking, and hands Blizzard's group panel back whatever `/uuf group` says. Every other frame is unaffected.
 
-*And it does not remember.* The beta writes its saved variables on exit and never reads them back, so every login and every `/reload` starts from the defaults — your layout and anything you dragged with it. The write is correct; it is the reading that never happens, and no addon can do that part for the client.
+*And it does not remember.* The beta writes its saved variables on exit and never reads them back, so every login and every `/reload` starts from the defaults — your layout and anything you dragged with it, and the first-login questions come up each time. The write is correct; it is the reading that never happens, and no addon can do that part for the client.
 
 Both are being watched rather than worked around: either could be gone by launch, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
 

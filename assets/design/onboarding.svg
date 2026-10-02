@@ -1,0 +1,502 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="2744" viewBox="0 0 980 2744" role="img" aria-label="Umbra Unit Frames — the onboarding">
+<title>Umbra Unit Frames — the onboarding</title>
+<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
+<rect width="980" height="2744" fill="rgb(9,11,17)"/>
+<defs><pattern id="hatch-fine" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="6" fill="#ffffff" fill-opacity="0.16"/></pattern></defs>
+<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">FIRST LOGIN · /UUF SETUP</text>
+<text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The onboarding</text>
+<text x="48.00" y="119.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The first login asks what /uuf sets, one question to a page, each with a drawing of what the answer does.</text>
+<text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Every answer takes effect the moment it is clicked; Skip keeps the defaults, and /uuf setup brings the</text>
+<text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">questions back.</text>
+<g transform="translate(48.00,220.00) scale(1.5000)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">WELCOME  ·  1 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where your frames go</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Two layout sets. Each keeps its own dragged</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">positions, so trying one costs nothing.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<rect x="106.97" y="201.63" width="33.53" height="7.10" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="201.63" width="1.00" height="7.10" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="204.61" width="16.43" height="2.13" fill="rgb(78,122,85)"/>
+<rect x="106.97" y="191.96" width="33.53" height="9.36" fill="rgba(141,151,171,0.350)"/>
+<rect x="106.97" y="216.73" width="33.53" height="4.53" fill="rgba(178,93,93,0.350)"/>
+<rect x="182.49" y="202.54" width="33.53" height="6.19" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="202.54" width="1.00" height="6.19" fill="rgb(199,64,64)"/>
+<rect x="190.54" y="205.14" width="16.43" height="1.86" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="192.42" width="33.53" height="4.53" fill="rgba(141,151,171,0.350)"/>
+<rect x="182.49" y="211.45" width="33.53" height="9.36" fill="rgba(178,93,93,0.350)"/>
+<rect x="106.97" y="211.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="211.45" width="1.00" height="4.98" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="213.54" width="23.47" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="197.25" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="197.25" width="1.00" height="4.98" fill="rgb(198,155,109)"/>
+<rect x="190.54" y="199.34" width="14.08" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="170.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="170.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="172.38" width="21.12" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="178.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="178.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="180.39" width="17.84" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="186.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="186.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="188.39" width="14.55" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="194.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="194.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="196.40" width="11.27" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="202.31" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="202.31" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="204.40" width="7.98" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="60.83" y="167.80" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="167.80" width="1.00" height="4.98" fill="rgb(255,124,10)"/>
+<rect x="60.83" y="179.12" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="179.12" width="1.00" height="4.98" fill="rgb(255,255,255)"/>
+<rect x="60.83" y="190.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="190.45" width="1.00" height="4.98" fill="rgb(0,112,221)"/>
+<rect x="60.83" y="201.78" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="201.78" width="1.00" height="4.98" fill="rgb(135,136,238)"/>
+<rect x="15.00" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="268.00" width="145.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="288.00" width="145.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="87.75" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Modern</text>
+<rect x="162.50" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="235.25" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Classic</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Next</text>
+</g>
+<polyline points="528.00,301.00 542.00,301.00 560.00,301.00 572.00,301.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="528.00" cy="301.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="580.00" y="300.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Page and progress</text>
+<text x="580.00" y="322.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">five pages, one question each</text>
+<polyline points="528.00,505.00 542.00,505.00 560.00,505.00 572.00,505.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="528.00" cy="505.00" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="580.00" y="504.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Preview of the answer</text>
+<text x="580.00" y="526.44" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">redrawn when the answer changes</text>
+<polyline points="528.00,638.50 542.00,638.50 560.00,638.50 572.00,638.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="528.00" cy="638.50" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="580.00" y="637.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">The options window's switch</text>
+<text x="580.00" y="659.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">applied at once, via SetOption</text>
+<polyline points="528.00,752.50 542.00,752.50 560.00,752.50 572.00,752.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<circle cx="528.00" cy="752.50" r="2" fill="rgba(117,220,196,0.800)"/>
+<text x="580.00" y="751.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Skip, Back, Next</text>
+<text x="580.00" y="773.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">one height on every page</text>
+<text x="48.00" y="889.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The other four pages</text>
+<line x1="48.00" y1="855.00" x2="932.00" y2="855.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<g transform="translate(48.00,947.00) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">HEALTH BAR  ·  2 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">What colors the health bar</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Neutral green leaves class color to the edge and</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">the name. Class color spends it on the bar as well.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<g transform="translate(33.85,162.97) scale(1.1500)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
+<clipPath id="clip57508"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip57508)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">58%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600">Umbrastra</text>
+<rect x="5.00" y="31.00" width="38.00" height="16.00" fill="rgba(11,14,21,0.500)"/>
+<text x="24.00" y="43.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">80</text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgba(63,199,235,0.600)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">412k</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">72%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+</g>
+<rect x="15.00" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="87.75" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Neutral</text>
+<rect x="162.50" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="162.50" y="268.00" width="145.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="162.50" y="288.00" width="145.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="235.25" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Class color</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="174.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Back</text>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Next</text>
+</g>
+<text x="48.00" y="1449.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">2 · Health bar</text>
+<text x="48.00" y="1471.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Class color picked: the bar takes the unit's color</text>
+<text x="48.00" y="1490.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">too.</text>
+<g transform="translate(532.00,947.00) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">LEVEL  ·  3 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where the level stands</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">On the portrait, in front of the name, or not at</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">all. The target reads it in the difficulty color.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<g transform="translate(33.85,162.97) scale(1.1500)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
+<clipPath id="clip57581"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip57581)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">58%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" font-weight="600"><tspan fill="rgb(141,151,171)">80 </tspan><tspan fill="rgb(63,199,235)">Umbrastra</tspan></text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">412k</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">72%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+</g>
+<rect x="15.00" y="268.00" width="96.33" height="22.00" fill="rgb(11,14,21)"/>
+<text x="63.17" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Portrait</text>
+<rect x="113.33" y="268.00" width="96.33" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="113.33" y="268.00" width="96.33" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="113.33" y="288.00" width="96.33" height="2.00" fill="rgb(117,220,196)"/>
+<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Name</text>
+<rect x="211.67" y="268.00" width="96.33" height="22.00" fill="rgb(11,14,21)"/>
+<text x="259.83" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Off</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="174.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Back</text>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Next</text>
+</g>
+<text x="532.00" y="1449.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">3 · Level</text>
+<text x="532.00" y="1471.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">In front of the name: the plate on the portrait</text>
+<text x="532.00" y="1490.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">goes.</text>
+<g transform="translate(48.00,1539.50) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD'S FRAMES  ·  4 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Keep Blizzard's own as well?</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Umbra draws your buffs and your party. Blizzard's</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">group manager also holds the raid markers.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<rect x="106.97" y="201.63" width="33.53" height="7.10" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="201.63" width="1.00" height="7.10" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="204.61" width="16.43" height="2.13" fill="rgb(78,122,85)"/>
+<rect x="106.97" y="191.96" width="33.53" height="9.36" fill="rgba(141,151,171,0.350)"/>
+<rect x="106.97" y="216.73" width="33.53" height="4.53" fill="rgba(178,93,93,0.350)"/>
+<rect x="182.49" y="202.54" width="33.53" height="6.19" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="202.54" width="1.00" height="6.19" fill="rgb(199,64,64)"/>
+<rect x="190.54" y="205.14" width="16.43" height="1.86" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="192.42" width="33.53" height="4.53" fill="rgba(141,151,171,0.350)"/>
+<rect x="182.49" y="211.45" width="33.53" height="9.36" fill="rgba(178,93,93,0.350)"/>
+<rect x="106.97" y="211.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="211.45" width="1.00" height="4.98" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="213.54" width="23.47" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="197.25" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="197.25" width="1.00" height="4.98" fill="rgb(198,155,109)"/>
+<rect x="190.54" y="199.34" width="14.08" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="170.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="170.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="172.38" width="21.12" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="178.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="178.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="180.39" width="17.84" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="186.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="186.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="188.39" width="14.55" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="194.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="194.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="196.40" width="11.27" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="202.31" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="202.31" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="204.40" width="7.98" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="60.83" y="167.80" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="167.80" width="1.00" height="4.98" fill="rgb(255,124,10)"/>
+<rect x="60.83" y="179.12" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="179.12" width="1.00" height="4.98" fill="rgb(255,255,255)"/>
+<rect x="60.83" y="190.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="190.45" width="1.00" height="4.98" fill="rgb(0,112,221)"/>
+<rect x="60.83" y="201.78" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="201.78" width="1.00" height="4.98" fill="rgb(135,136,238)"/>
+<rect x="180.50" y="134.61" width="48.84" height="9.57" fill="none" stroke="rgba(141,151,171,0.600)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="176.98" y="142.40" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="8.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">Blizzard buffs</text>
+<rect x="58.41" y="154.66" width="3.32" height="28.70" fill="rgba(141,151,171,0.450)"/>
+<text x="58.72" y="150.66" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="8.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Group manager</text>
+<rect x="15.00" y="268.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="268.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="271.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="279.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard buffs &amp; debuffs</text>
+<rect x="15.00" y="292.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="292.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<text x="37.00" y="303.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Hide Blizzard group manager</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="174.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Back</text>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Next</text>
+</g>
+<text x="48.00" y="2042.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">4 · Blizzard's frames</text>
+<text x="48.00" y="2064.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Buffs put away, drawn dashed; the group manager</text>
+<text x="48.00" y="2083.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">kept.</text>
+<g transform="translate(532.00,1539.50) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">DONE  ·  5 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Ready to go</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Your choices are in place. Drag the frames where</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">you want them, or change anything later.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<rect x="29.00" y="140.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="151.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options, any time</text>
+<rect x="29.00" y="168.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Addon compartment</text>
+<text x="151.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">under the minimap</text>
+<rect x="29.00" y="196.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
+<text x="151.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">brings these questions back</text>
+<rect x="29.00" y="224.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
+<text x="151.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists Umbra like any addon</text>
+<rect x="15.00" y="268.00" width="293.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock frames to drag them</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="174.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Back</text>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Done</text>
+</g>
+<text x="532.00" y="2042.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">5 · Done, on Retail</text>
+<text x="532.00" y="2064.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The addon compartment is the way back; no minimap</text>
+<text x="532.00" y="2083.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">switch.</text>
+<g transform="translate(48.00,2132.00) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">WELCOME  ·  1 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Where your frames go</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Two layout sets. Each keeps its own dragged</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">positions, so trying one costs nothing.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="rgb(13,16,24)"/>
+<rect x="58.41" y="132.00" width="206.17" height="116.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<rect x="106.97" y="201.63" width="33.53" height="7.10" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="201.63" width="1.00" height="7.10" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="204.61" width="16.43" height="2.13" fill="rgb(78,122,85)"/>
+<rect x="106.97" y="191.96" width="33.53" height="9.36" fill="rgba(141,151,171,0.350)"/>
+<rect x="106.97" y="216.73" width="33.53" height="4.53" fill="rgba(178,93,93,0.350)"/>
+<rect x="182.49" y="202.54" width="33.53" height="6.19" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="202.54" width="1.00" height="6.19" fill="rgb(199,64,64)"/>
+<rect x="190.54" y="205.14" width="16.43" height="1.86" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="192.42" width="33.53" height="4.53" fill="rgba(141,151,171,0.350)"/>
+<rect x="182.49" y="211.45" width="33.53" height="9.36" fill="rgba(178,93,93,0.350)"/>
+<rect x="106.97" y="211.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="106.97" y="211.45" width="1.00" height="4.98" fill="rgb(63,199,235)"/>
+<rect x="115.02" y="213.54" width="23.47" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="182.49" y="197.25" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="182.49" y="197.25" width="1.00" height="4.98" fill="rgb(198,155,109)"/>
+<rect x="190.54" y="199.34" width="14.08" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="170.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="170.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="172.38" width="21.12" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="178.29" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="178.29" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="180.39" width="17.84" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="186.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="186.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="188.39" width="14.55" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="194.30" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="194.30" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="196.40" width="11.27" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="228.64" y="202.31" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="228.64" y="202.31" width="1.00" height="4.98" fill="rgb(199,64,64)"/>
+<rect x="236.69" y="204.40" width="7.98" height="1.50" fill="rgb(78,122,85)"/>
+<rect x="60.83" y="167.80" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="167.80" width="1.00" height="4.98" fill="rgb(255,124,10)"/>
+<rect x="60.83" y="179.12" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="179.12" width="1.00" height="4.98" fill="rgb(255,255,255)"/>
+<rect x="60.83" y="190.45" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="190.45" width="1.00" height="4.98" fill="rgb(0,112,221)"/>
+<rect x="60.83" y="201.78" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
+<rect x="60.83" y="201.78" width="1.00" height="4.98" fill="rgb(135,136,238)"/>
+<rect x="15.00" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="15.00" y="268.00" width="145.50" height="22.00" fill="rgba(117,220,196,0.120)"/>
+<rect x="15.00" y="288.00" width="145.50" height="2.00" fill="rgb(117,220,196)"/>
+<text x="87.75" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="600">Modern</text>
+<rect x="162.50" y="268.00" width="145.50" height="22.00" fill="rgb(11,14,21)"/>
+<text x="235.25" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="middle" font-weight="400">Classic</text>
+<text x="308.00" y="304.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(178,93,93)" text-anchor="end" font-weight="400">applies after combat</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Next</text>
+</g>
+<text x="48.00" y="2634.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In combat</text>
+<text x="48.00" y="2656.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The layout is kept and applied when the fight ends.</text>
+<g transform="translate(532.00,2132.00) scale(1.2500)">
+<rect x="-1.00" y="-1.00" width="322.00" height="380.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="320.00" height="378.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="378.00" fill="rgb(117,220,196)"/>
+<text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
+<rect x="293.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
+<line x1="296.00" y1="12.00" x2="308.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="308.00" y1="12.00" x2="296.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
+<line x1="3.00" y1="36.00" x2="320.00" y2="36.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="58.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.20">DONE  ·  5 / 5</text>
+<text x="15.00" y="80.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="15.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Ready to go</text>
+<text x="15.00" y="98.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Your choices are in place. Drag the frames where</text>
+<text x="15.00" y="112.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">you want them, or change anything later.</text>
+<rect x="15.00" y="124.00" width="293.00" height="132.00" fill="rgb(9,11,17)"/>
+<rect x="15.50" y="124.50" width="292.00" height="131.00" fill="none" stroke="rgb(11,14,21)" stroke-width="1"/>
+<rect x="29.00" y="140.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="151.00" y="146.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options, any time</text>
+<rect x="29.00" y="168.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Minimap button</text>
+<text x="151.00" y="174.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">opens the options with a click</text>
+<rect x="29.00" y="196.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf setup</text>
+<text x="151.00" y="202.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">brings these questions back</text>
+<rect x="29.00" y="224.00" width="4.00" height="4.00" fill="rgb(117,220,196)"/>
+<text x="41.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
+<text x="151.00" y="230.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">lists Umbra like any addon</text>
+<rect x="15.00" y="268.00" width="293.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="161.50" y="283.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400" opacity="0.45">Unlock frames to drag them</text>
+<rect x="15.00" y="268.00" width="293.00" height="22.00" fill="url(#hatch-fine)"/>
+<rect x="15.00" y="300.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="15.50" y="300.50" width="13.00" height="13.00" fill="none" stroke="rgba(141,151,171,0.350)" stroke-width="1"/>
+<rect x="18.00" y="303.00" width="8.00" height="8.00" fill="rgb(117,220,196)"/>
+<text x="37.00" y="311.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Show minimap button</text>
+<line x1="3.00" y1="332.00" x2="320.00" y2="332.00" stroke="rgba(141,151,171,0.180)" stroke-width="1.00"/>
+<text x="15.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400">Skip</text>
+<rect x="87.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="99.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="111.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="123.50" y="352.00" width="6.00" height="6.00" fill="rgba(141,151,171,0.350)"/>
+<rect x="135.50" y="352.00" width="6.00" height="6.00" fill="rgb(117,220,196)"/>
+<rect x="174.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<text x="206.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Back</text>
+<rect x="244.00" y="344.00" width="64.00" height="22.00" fill="rgb(11,14,21)"/>
+<rect x="244.00" y="364.00" width="64.00" height="2.00" fill="rgb(117,220,196)"/>
+<text x="276.00" y="359.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(117,220,196)" text-anchor="middle" font-weight="400">Done</text>
+</g>
+<text x="532.00" y="2634.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">5 · Done, on a Classic client, in combat</text>
+<text x="532.00" y="2656.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">A minimap button instead of the compartment; unlock</text>
+<text x="532.00" y="2675.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">refused.</text>
+</svg>
