@@ -8,8 +8,8 @@ the answer does.
 
 - Five pages: the layout over a miniature of the screen, the health bar's
   color and the level's place over a drawing of your own player frame,
-  whether Blizzard's buffs and group manager stay, and where everything can
-  be found again, with a button to drag the frames into place
+  whether Blizzard's buffs and group manager stay, and a last page with the
+  commands worth knowing and a button to unlock the frames
 - Every answer takes effect as it is clicked, through the same call the
   options window and `/uuf` use; Skip, the close button and Escape keep
   whatever is set, and none of them ask again
