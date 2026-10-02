@@ -12,7 +12,7 @@ Inspired by ShadowedUnitFrames — the same idea about what a unit frame is for,
 
 ## What a frame is made of
 
-![Umbra Unit Frames — what a frame is made of](https://media.forgecdn.net/attachments/1967/376/frame-anatomy-png.png)
+![Umbra Unit Frames — what a frame is made of](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/frame-anatomy.svg)
 
 Player, target, pet, boss, party — every frame is built from the same parts, then cut down to what it is for. A class-colored edge. A portrait column. A name. One health bar that owns the frame, and a hairline underneath it for mana, energy or rage.
 
@@ -32,7 +32,7 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 
 **Range by fading.** Someone out of range fades out, portrait and all. They stay recognisably themselves instead of turning into a grey copy.
 
-![Umbra Unit Frames — bar and aura states](https://media.forgecdn.net/attachments/1967/375/bar-states-png.png)
+![Umbra Unit Frames — bar and aura states](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/bar-states.svg)
 
 > Accent color belongs to the interface. Class color belongs to the unit. The health bar belongs to health.
 
@@ -54,7 +54,7 @@ There is deliberately **no focus frame**. One was built and taken back out: a fr
 
 **The level** sits on a small plate across the foot of the portrait, so the name keeps its whole width — or in front of the name, or nowhere, as you prefer. On the target it takes the game's difficulty color, grey to red; an elite carries a `+`, and something too far above you to tell reads `??`. And when a kill would be worth nothing — somebody else tagged it first, or it is too far below you to give experience — the target's health bar turns grey, while the edge and the name keep their color.
 
-![Umbra Unit Frames — the party column](https://media.forgecdn.net/attachments/1967/379/party-column-png.png)
+![Umbra Unit Frames — the party column](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/party-column.svg)
 
 The party column is built on the game's own group header, which means the game creates and sorts the members — in combat as well as out of it.
 
@@ -68,13 +68,13 @@ A layout decides three things at once, because they only make sense together: wh
 
 The arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar, debuffs under the pet. The party column goes to the left edge.
 
-![Umbra Unit Frames — the modern layout](https://media.forgecdn.net/attachments/1967/378/layout-modern-png.png)
+![Umbra Unit Frames — the modern layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/layout-modern.svg)
 
 ### `classic` — where the player frame used to live
 
 Player and target in the top left, the pet above them, both aura rows below, and the party column hanging under the whole block.
 
-![Umbra Unit Frames — the classic layout](https://media.forgecdn.net/attachments/1967/377/layout-classic-png.png)
+![Umbra Unit Frames — the classic layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/layout-classic.svg)
 
 The boss column is the same in both — right edge, centred. It is not part of the arrangement you chose; it is something the fight brings.
 
@@ -84,9 +84,11 @@ The boss column is the same in both — right edge, centred. It is not part of t
 
 **The first login asks.** A small window walks you through the settings, one question to a page and each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and finally how to drag the frames into place. Every answer takes effect as you click it, *Skip* keeps the defaults, and `/uuf setup` brings the questions back whenever you like. An update from an earlier version does not ask — you have chosen already.
 
+![Umbra Unit Frames — the onboarding](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/onboarding.svg)
+
 `/uuf` opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. **Every setting takes effect where you stand** — no `/reload`. In a fight the mover is refused, as the game requires; a layout picked mid-combat is kept and applied when the fight ends.
 
-![Umbra Unit Frames — the options window](https://media.forgecdn.net/attachments/1987/128/options-window-png.png)
+![Umbra Unit Frames — the options window](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/options-window.svg)
 
 The window speaks German on a German client and English everywhere else.
 
