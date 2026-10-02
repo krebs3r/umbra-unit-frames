@@ -3,7 +3,9 @@ package-as: UmbraUnitFrames
 externals:
   Libs/oUF:
     url: https://github.com/oUF-wow/oUF
-    tag: latest
+    # Pinned to the version this was tested against. `latest` would hand a
+    # release whatever oUF tagged last, tested here or not.
+    tag: 14.0.3
 
 ignore:
   - .github
