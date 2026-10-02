@@ -109,6 +109,7 @@ local COMMANDS = {
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
+	{'setup', nil, 'the questions of the first login, again'},
 	{'dev', nil, 'measurements and diagnostics, listed behind that word'},
 }
 
@@ -256,15 +257,30 @@ function Umbra:Debug(...)
 	end
 end
 
--- Forever writes saved variables but never reads them back, so an empty table
--- here is an expected state rather than a first run that needs attention.
+-- The Forever beta writes saved variables but never reads them back, so there
+-- every login looks like the first, and the onboarding comes up each time.
+-- Nothing works around that: the release is expected to read them as Retail
+-- does, and a store of our own would be carried forever for a beta.
 local loader = CreateFrame('Frame')
 loader:RegisterEvent('ADDON_LOADED')
 loader:SetScript('OnEvent', function(self, _, loaded)
 	if loaded ~= addonName then return end
 	self:UnregisterEvent('ADDON_LOADED')
 
+	--[[ A first login, and only a first login
+	No table at all is the one sign of an install that has never run: the
+	client hands back whatever was saved, and anyone who has had Umbra before
+	has at least a layout in it. They were never asked, but they have chosen
+	already, so a missing answer counts as asked.
+	--]]
+	local fresh = UmbraUnitFramesDB == nil
+
 	UmbraUnitFramesDB = UmbraUnitFramesDB or {}
+
+	if UmbraUnitFramesDB.onboarded == nil then
+		UmbraUnitFramesDB.onboarded = not fresh
+	end
+
 	UmbraUnitFramesDB.positions = UmbraUnitFramesDB.positions or {}
 	UmbraUnitFramesDB.layout = UmbraUnitFramesDB.layout or Umbra.defaultLayout
 
@@ -371,6 +387,8 @@ local function Command(input)
 		else
 			print(PREFIX .. 'frames cannot be moved in combat.')
 		end
+	elseif input == 'setup' then
+		Umbra:ShowOnboarding()
 	elseif input == 'lock' then
 		Umbra:SetLocked(true)
 		print(PREFIX .. 'frames locked.')

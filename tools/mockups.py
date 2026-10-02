@@ -341,8 +341,12 @@ def bar(sheet, x, y, w, h, color, fill=1.0, alpha=None, shade=True):
 def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
                pips=None, health_value=None, health_percent=None,
                power_value=None, role=None, cast=None, class_health=False,
-               heal=0.0, absorb=0.0, heal_absorb=0.0, alpha=1.0, portrait=True):
+               heal=0.0, absorb=0.0, heal_absorb=0.0, alpha=1.0, portrait=True,
+               level=None, level_at='portrait', level_color=None):
     """One frame at scale `s`, laid out exactly as Layouts/Shared.lua lays it.
+
+    `level` is the text the level tag would print, and `level_at` where
+    `/uuf level` puts it: `portrait`, `name`, or None for off.
 
     Returns the frame's height in frame units, so callers can stack.
     """
@@ -411,8 +415,26 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
                    size=c['fontSize'], fill=rgb(C['mana']), anchor='end',
                    weight='600')
 
-    sheet.text(name_x, c['nameHeight'] - 3, name, size=c['fontSize'],
-               fill=rgb(color), weight='600')
+    level_fill = rgb(level_color or C['muted'])
+    if level and level_at == 'name':
+        # One label, as the tag builds it: the level in its own color, then
+        # the name in the class color.
+        sheet.add('<text x="%.2f" y="%.2f" font-family="Inter,Segoe UI,Helvetica,'
+                  'Arial,sans-serif" font-size="%.1f" font-weight="600">'
+                  '<tspan fill="%s">%s </tspan><tspan fill="%s">%s</tspan></text>'
+                  % (name_x, c['nameHeight'] - 3, c['fontSize'], level_fill,
+                     escape(level), rgb(color), escape(name)))
+    else:
+        sheet.text(name_x, c['nameHeight'] - 3, name, size=c['fontSize'],
+                   fill=rgb(color), weight='600')
+
+    if level and level_at == 'portrait' and portrait:
+        # The plate: fontSize + 4 tall across the foot of the portrait, the
+        # border color at half strength under the number.
+        plate = c['fontSize'] + 4
+        sheet.rect(px, h - plate, c['portrait'], plate, rgb(C['border'], 0.5))
+        sheet.text(px + c['portrait'] / 2, h - 4, level, size=c['fontSize'],
+                   fill=level_fill, anchor='middle')
 
     # health, and the three surfaces on it
     fill_color = color if class_health else C['health']
@@ -971,7 +993,7 @@ OPT = {
     'footer': 9,
 }
 
-VERSION = '0.5.1'
+VERSION = '0.6.1'
 
 OPTION_ROWS = [
     ('section', 'Layout'),
@@ -987,6 +1009,61 @@ OPTION_ROWS = [
     ('check', 'minimap', 'Show minimap button'),
     ('section', 'Frames'),
 ]
+
+
+#[[ The window furniture
+# One drawing per control, shared by the options window and the onboarding,
+# because `Core/Options.lua` builds both from the same pieces.
+#]]
+def draw_segment(sheet, left, ry, inner, choices, chosen, refused=None):
+    o = OPT
+    gap = 2
+    sw = (inner - gap * (len(choices) - 1)) / len(choices)
+    for i, label in enumerate(choices):
+        sx = left + i * (sw + gap)
+        on = i == chosen
+        sheet.rect(sx, ry, sw, o['segment'], rgb(C['border']))
+        if on:
+            # The chosen side carries a line under it, the same two
+            # pixels an aura icon has: one mark, meaning "this one".
+            sheet.rect(sx, ry, sw, o['segment'], rgb(C['accent'], 0.12))
+            sheet.rect(sx, ry + o['segment'] - 2, sw, 2, rgb(C['accent']))
+        sheet.text(sx + sw / 2, ry + 15, label, size=o['font'],
+                   fill=rgb(C['accent'] if on else C['muted']),
+                   anchor='middle', weight='600' if on else '400')
+    if refused:
+        sheet.rect(left, ry, inner, o['segment'], rgb(C['background'], 0.55))
+        sheet.rect(left, ry, inner, o['segment'], 'url(#hatch-fine)')
+
+
+def draw_check(sheet, left, ry, label, on, refused=None):
+    o = OPT
+    b = o['box']
+    sheet.rect(left, ry, b, b, rgb(C['border']))
+    sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+              'fill="none" stroke="%s" stroke-width="1"/>'
+              % (left + 0.5, ry + 0.5, b - 1, b - 1, rgb(C['muted'], 0.35)))
+    if on:
+        # A filled square inset in the box, the shape of a class
+        # power pip — no tick, which would be the client's art.
+        sheet.rect(left + 3, ry + 3, b - 6, b - 6, rgb(C['accent']))
+    sheet.text(left + b + 8, ry + 11, label, size=o['font'],
+               fill=rgb(C['muted'] if refused else C['text']),
+               opacity=0.6 if refused else None)
+    if refused:
+        sheet.rect(left, ry, b, b, 'url(#hatch-fine)')
+
+
+def draw_button(sheet, bx, by, bw, label, hot=False, refused=False):
+    o = OPT
+    sheet.rect(bx, by, bw, o['button'], rgb(C['border']))
+    if hot:
+        sheet.rect(bx, by + o['button'] - 2, bw, 2, rgb(C['accent']))
+    sheet.text(bx + bw / 2, by + 15, label, size=o['font'],
+               fill=rgb(C['accent'] if hot else C['text']), anchor='middle',
+               opacity=0.45 if refused else None)
+    if refused:
+        sheet.rect(bx, by, bw, o['button'], 'url(#hatch-fine)')
 
 
 def options_layout():
@@ -1057,41 +1134,11 @@ def draw_options(sheet, x, y, s, *, state=None, notes=None):
         why = refused.get(key)
 
         if kind == 'segment':
-            choices = row[2]
-            chosen = state.get(key, 0)
-            gap = 2
-            sw = (inner - gap * (len(choices) - 1)) / len(choices)
-            for i, label in enumerate(choices):
-                sx = left + i * (sw + gap)
-                on = i == chosen
-                sheet.rect(sx, ry, sw, o['segment'], rgb(C['border']))
-                if on:
-                    # The chosen side carries a line under it, the same two
-                    # pixels an aura icon has: one mark, meaning "this one".
-                    sheet.rect(sx, ry, sw, o['segment'], rgb(C['accent'], 0.12))
-                    sheet.rect(sx, ry + o['segment'] - 2, sw, 2, rgb(C['accent']))
-                sheet.text(sx + sw / 2, ry + 15, label, size=o['font'],
-                           fill=rgb(C['accent'] if on else C['muted']),
-                           anchor='middle', weight='600' if on else '400')
-            if why:
-                sheet.rect(left, ry, inner, o['segment'], rgb(C['background'], 0.55))
-                sheet.rect(left, ry, inner, o['segment'], 'url(#hatch-fine)')
+            draw_segment(sheet, left, ry, inner, row[2], state.get(key, 0),
+                         refused=why)
         else:
-            on = state.get(key, False)
-            b = o['box']
-            sheet.rect(left, ry, b, b, rgb(C['border']))
-            sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
-                      'fill="none" stroke="%s" stroke-width="1"/>'
-                      % (left + 0.5, ry + 0.5, b - 1, b - 1, rgb(C['muted'], 0.35)))
-            if on:
-                # A filled square inset in the box, the shape of a class
-                # power pip — no tick, which would be the client's art.
-                sheet.rect(left + 3, ry + 3, b - 6, b - 6, rgb(C['accent']))
-            sheet.text(left + b + 8, ry + 11, row[2], size=o['font'],
-                       fill=rgb(C['muted'] if why else C['text']),
-                       opacity=0.6 if why else None)
-            if why:
-                sheet.rect(left, ry, b, b, 'url(#hatch-fine)')
+            draw_check(sheet, left, ry, row[2], state.get(key, False),
+                       refused=why)
 
         why = why or said.get(key)
         if why:
@@ -1103,16 +1150,9 @@ def draw_options(sheet, x, y, s, *, state=None, notes=None):
     unlocked = state.get('unlocked')
     bw = (inner - 6) / 2
     for i, label in enumerate(('Lock' if unlocked else 'Unlock', 'Reset')):
-        bx = left + i * (bw + 6)
-        sheet.rect(bx, buttons, bw, o['button'], rgb(C['border']))
-        hot = i == 0 and unlocked
-        if hot:
-            sheet.rect(bx, buttons + o['button'] - 2, bw, 2, rgb(C['accent']))
-        sheet.text(bx + bw / 2, buttons + 15, label, size=o['font'],
-                   fill=rgb(C['accent'] if hot else C['text']), anchor='middle',
-                   opacity=0.45 if (i == 0 and refused.get('unlock')) else None)
-        if i == 0 and refused.get('unlock'):
-            sheet.rect(bx, buttons, bw, o['button'], 'url(#hatch-fine)')
+        draw_button(sheet, left + i * (bw + 6), buttons, bw, label,
+                    hot=i == 0 and unlocked,
+                    refused=i == 0 and refused.get('unlock'))
 
     fy = height - 12
     sheet.text(left, fy, '/uuf help  ·  v%s' % VERSION, size=o['footer'],
@@ -1224,6 +1264,379 @@ def sheet_options(out):
     sheet.save(os.path.join(out, 'options-window.svg'))
 
 
+# --- Sheet 7: the onboarding ----------------------------------------------
+
+#[[ The onboarding
+# The first login asks what `/uuf` sets, one question to a page, each with a
+# drawing of what the answer does. It is the options window's furniture in a
+# taller window: the same title, edge, controls and footer type, with a
+# preview box between the question and the switch. Every answer is applied
+# the moment it is clicked, as in the options window, so the preview and the
+# frames behind the window agree.
+#
+# The window keeps one height on every page: the controls have a fixed band,
+# so Back and Next do not move under the pointer between steps.
+#]]
+ONB = {
+    'width': 320,
+    'pad': 12,
+    'header': 36,
+    'eyebrow': 10,
+    'heading': 15,
+    'body': 11,
+    'preview': 132,
+    'controls': 52,
+    'button': 22,
+    'nav': 64,
+    'dot': 6,
+}
+
+STEPS = [
+    {'key': 'layout', 'eyebrow': 'Welcome',
+     'heading': 'Where your frames go',
+     'body': 'Two layout sets. Each keeps its own dragged positions, so '
+             'trying one costs nothing.',
+     'choices': ('Modern', 'Classic')},
+    {'key': 'health', 'eyebrow': 'Health bar',
+     'heading': 'What colors the health bar',
+     'body': 'Neutral green leaves class color to the edge and the name. '
+             'Class color spends it on the bar as well.',
+     'choices': ('Neutral', 'Class color')},
+    {'key': 'level', 'eyebrow': 'Level',
+     'heading': 'Where the level stands',
+     'body': 'On the portrait, in front of the name, or not at all. The '
+             'target reads it in the difficulty color.',
+     'choices': ('Portrait', 'Name', 'Off')},
+    {'key': 'blizzard', 'eyebrow': "Blizzard's frames",
+     'heading': 'Keep Blizzard\'s own as well?',
+     'body': 'Umbra draws your buffs and your party. Blizzard\'s group '
+             'manager also holds the raid markers.'},
+    {'key': 'done', 'eyebrow': 'Done',
+     'heading': 'Ready to go',
+     'body': 'Your choices are in place. Drag the frames where you '
+             'want them, or change anything later.'},
+]
+
+
+def onboarding_layout():
+    """The bands of the window, top to bottom, in its own pixels."""
+    o = ONB
+    eyebrow = o['header'] + 22
+    heading = eyebrow + 22
+    body = heading + 18
+    preview = body + 26
+    controls = preview + o['preview'] + 12
+    rule = controls + o['controls'] + 12
+    nav = rule + 12
+    height = nav + o['button'] + 12
+    return {'eyebrow': eyebrow, 'heading': heading, 'body': body,
+            'preview': preview, 'controls': controls, 'rule': rule,
+            'nav': nav, 'height': height}
+
+
+def mini_screen(sheet, x, y, w, which, *, blizzard=None):
+    """A screen at a glance: where a set puts each frame, as blocks.
+
+    Frames are their ground, their class edge and a health strip; aura rows
+    and the columns are blocks. `blizzard` adds the client's buff row and
+    group manager, drawn solid when kept and as a dashed outline when put
+    away.
+    """
+    s = w / SCREEN_W
+    h = SCREEN_H * s
+    layout = LAYOUTS[which]
+    pts = points(which)
+
+    sheet.rect(x, y, w, h, rgb((13, 16, 24)))
+    sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="none" '
+              'stroke="%s" stroke-width="1"/>' % (x, y, w, h, rgb(RULE)))
+
+    def block(unit, color, health=0.7):
+        c = cfg(unit.rstrip('0123456789'))
+        fw, fh = c['width'], frame_height(c)
+        fx, fy = resolve(*pts[unit], fw, fh)
+        bx, by = x + fx * s, y + fy * s
+        sheet.rect(bx, by, fw * s, fh * s, rgb(C['background']))
+        sheet.rect(bx, by, max(1, c['classEdge'] * s * 1.5), fh * s, rgb(color))
+        sheet.rect(bx + fw * s * 0.24, by + fh * s * 0.42, fw * s * 0.7 * health,
+                   max(1, fh * s * 0.3), rgb(C['health']))
+        return fx, fy, c
+
+    def auras(fx, fy, c, key):
+        count = c['auras'][key]
+        ah = aura_block_height(c, count)
+        if key in layout['above']:
+            ay = fy - stack_offset(c, layout, 'above', key) - ah
+        else:
+            ay = fy + frame_height(c) + stack_offset(c, layout, 'below', key)
+        line = C['auraHarmful'] if key == 'harmful' else C['auraHelpful']
+        sheet.rect(x + fx * s, y + ay * s, c['width'] * s, ah * s,
+                   rgb(line, 0.35))
+
+    for unit, color in (('player', CLASS['MAGE']), ('target', HOSTILE)):
+        fx, fy, c = block(unit, color)
+        auras(fx, fy, c, 'helpful')
+        auras(fx, fy, c, 'harmful')
+    block('pet', CLASS['MAGE'], 1.0)
+    block('targettarget', CLASS['WARRIOR'], 0.6)
+    for i in range(BOSS_COUNT):
+        block('boss%d' % (i + 1), HOSTILE, 0.9 - i * 0.14)
+
+    party = cfg('party')
+    slot = group_slot_height(party, layout)
+    col_h = column_height(party, layout, PARTY_COUNT)
+    cx, cy = resolve(*pts['party'], party['width'], col_h)
+    for i, col in enumerate((CLASS['DRUID'], CLASS['PRIEST'],
+                             CLASS['SHAMAN'], CLASS['WARLOCK'])):
+        my = cy + i * (slot + party['groupSpacing'])
+        fh = frame_height(party)
+        sheet.rect(x + cx * s, y + my * s, party['width'] * s, fh * s,
+                   rgb(C['background']))
+        sheet.rect(x + cx * s, y + my * s, max(1, 4.5 * s), fh * s, rgb(col))
+
+    if blizzard is None:
+        return h
+
+    # The client's own, where they stand by default: the buff row left of
+    # the minimap, the group manager as a tab on the left edge.
+    for kept, (bx, by, bw, bh), label, anchor, lx in (
+            (blizzard['auras'], (SCREEN_W - 560, 14, 330, 70),
+             'Blizzard buffs', 'end', SCREEN_W - 580),
+            (blizzard['group'], (0, 150, 22, 190),
+             'Group manager', 'start', None)):
+        rx, ry, rw, rh = x + bx * s, y + by * s, bw * s, bh * s
+        if kept:
+            sheet.rect(rx, ry, rw, rh, rgb(C['muted'], 0.45))
+        else:
+            sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+                      'fill="none" stroke="%s" stroke-width="1" '
+                      'stroke-dasharray="2 2"/>'
+                      % (rx + 0.5, ry + 0.5, rw - 1, rh - 1, rgb(C['muted'], 0.6)))
+        # The group tab's label stands above it, clear of the party column.
+        ty = ry + rh / 2 + 3 if lx is not None else ry - 4
+        sheet.text(x + (lx if lx is not None else 2) * s, ty, label, size=8,
+                   fill=rgb(C['text'] if kept else C['muted']), anchor=anchor,
+                   opacity=None if kept else 0.7)
+    return h
+
+
+def draw_preview(sheet, x, y, w, h, step, state):
+    """What the current answer does, inside the preview box."""
+    key = STEPS[step]['key']
+    sheet.rect(x, y, w, h, rgb(PAPER))
+    sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="none" '
+              'stroke="%s" stroke-width="1"/>'
+              % (x + 0.5, y + 0.5, w - 1, h - 1, rgb(C['border'])))
+
+    if key in ('layout', 'blizzard'):
+        sw = (h - 16) * SCREEN_W / SCREEN_H
+        which = ('modern', 'classic')[state.get('layout', 0)]
+        blizzard = None
+        if key == 'blizzard':
+            blizzard = {'auras': not state.get('auras'),
+                        'group': not state.get('group')}
+        mini_screen(sheet, x + (w - sw) / 2, y + 8, sw, which,
+                    blizzard=blizzard)
+        return
+
+    if key in ('health', 'level'):
+        fs = 1.15
+        c = cfg('player')
+        fw, fh = c['width'] * fs, frame_height(c) * fs
+        level_at = ('portrait', 'name', None)[state.get('level', 0)]
+        draw_frame(sheet, x + (w - fw) / 2, y + (h - fh) / 2, 'player', fs,
+                   color=CLASS['MAGE'], name='Umbrastra', health=0.72,
+                   power=0.58, pips=(5, 3), health_value='412k',
+                   health_percent='72%', power_value='58%',
+                   class_health=state.get('health', 0) == 1,
+                   level='80', level_at=level_at)
+        return
+
+    # done: where everything lives afterwards
+    doors = [('/uuf', 'opens the options, any time'),
+             ('/uuf setup', 'brings these questions back'),
+             ('Options › AddOns', 'lists Umbra like any addon')]
+    doors.insert(1, ('Minimap button', 'opens the options with a click')
+                 if state.get('classic') else
+                 ('Addon compartment', 'under the minimap'))
+    for i, (label, note) in enumerate(doors):
+        ry = y + 22 + i * 28
+        # A square, as the client draws it: a texture has no round dot.
+        sheet.rect(x + 14, ry - 6, 4, 4, rgb(C['accent']))
+        sheet.text(x + 26, ry, label, size=11, fill=rgb(C['text']), weight='600')
+        sheet.text(x + 136, ry, note, size=10, fill=rgb(C['muted']))
+
+
+def draw_onboarding(sheet, x, y, s, step, state=None):
+    """The onboarding window on page `step` (0-based), at scale `s`.
+
+    Returns the window's height in its own pixels.
+    """
+    o = ONB
+    state = state or {}
+    refused = state.get('refused', {})
+    said = state.get('notes', {})
+    b = onboarding_layout()
+    w, height = o['width'], b['height']
+    left = C_EDGE + o['pad']
+    inner = w - left - o['pad']
+    page = STEPS[step]
+
+    sheet.add('<g transform="translate(%.2f,%.2f) scale(%.4f)">' % (x, y, s))
+
+    sheet.rect(-1, -1, w + 2, height + 2, rgb(C['border']))
+    sheet.rect(0, 0, w, height, rgb(C['background']))
+    sheet.rect(0, 0, C_EDGE, height, rgb(C['accent']))
+
+    sheet.text(left, 23, 'Umbra Unit Frames', size=OPT['title'],
+               fill=rgb(C['text']), weight='600')
+    cx, cy, cs = w - o['pad'] - 12, 12, 12
+    sheet.rect(cx - 3, cy - 3, cs + 6, cs + 6, rgb(C['border']))
+    sheet.line(cx, cy, cx + cs, cy + cs, stroke=rgb(C['muted']), width=1.5)
+    sheet.line(cx + cs, cy, cx, cy + cs, stroke=rgb(C['muted']), width=1.5)
+    sheet.line(C_EDGE, o['header'], w, o['header'], stroke=rgb(C['muted'], 0.18))
+
+    # the question
+    sheet.text(left, b['eyebrow'], '%s  ·  %d / %d' % (
+        page['eyebrow'].upper(), step + 1, len(STEPS)), size=o['eyebrow'],
+        fill=rgb(C['accent']), weight='600', spacing=1.2)
+    sheet.text(left, b['heading'], page['heading'], size=o['heading'],
+               fill=rgb(C['text']), weight='600')
+    for i, line in enumerate(wrap(page['body'], inner, o['body'])[:2]):
+        sheet.text(left, b['body'] + i * 14, line, size=o['body'],
+                   fill=rgb(C['muted']))
+
+    draw_preview(sheet, left, b['preview'], inner, o['preview'], step, state)
+
+    # the answer, in the controls band
+    ry = b['controls']
+    key = page['key']
+    if 'choices' in page:
+        draw_segment(sheet, left, ry, inner, page['choices'],
+                     state.get(key, 0), refused=refused.get(key))
+        why = refused.get(key) or said.get(key)
+        if why:
+            sheet.text(w - o['pad'], ry + OPT['segment'] + 14, why,
+                       size=OPT['label'], fill=rgb(C['auraHarmful']),
+                       anchor='end')
+    elif key == 'blizzard':
+        for i, (k, label) in enumerate((
+                ('auras', 'Hide Blizzard buffs & debuffs'),
+                ('group', 'Hide Blizzard group manager'))):
+            draw_check(sheet, left, ry + i * (OPT['box'] + 10), label,
+                       state.get(k, False), refused=refused.get(k))
+            if refused.get(k):
+                sheet.text(w - o['pad'], ry + i * (OPT['box'] + 10) + 11,
+                           refused[k], size=OPT['label'],
+                           fill=rgb(C['auraHarmful']), anchor='end')
+    else:
+        unlocked = state.get('unlocked')
+        draw_button(sheet, left, ry, inner, 'Lock frames' if unlocked
+                    else 'Unlock frames to drag them', hot=unlocked,
+                    refused=refused.get('unlock'))
+        if state.get('classic'):
+            draw_check(sheet, left, ry + o['button'] + 10, 'Show minimap button',
+                       state.get('minimap', True))
+
+    # the way through
+    sheet.line(C_EDGE, b['rule'], w, b['rule'], stroke=rgb(C['muted'], 0.18))
+    ny = b['nav']
+    sheet.text(left, ny + 15, 'Skip', size=OPT['font'], fill=rgb(C['muted']))
+
+    dots = len(STEPS)
+    span = dots * o['dot'] + (dots - 1) * 6
+    dx = left + 40 + (inner - 40 - 2 * o['nav'] - 6 - span) / 2
+    for i in range(dots):
+        on = i == step
+        sheet.rect(dx + i * (o['dot'] + 6), ny + 8, o['dot'], o['dot'],
+                   rgb(C['accent'] if on else C['muted'], None if on else 0.35))
+
+    nx = w - o['pad'] - o['nav']
+    last = step == len(STEPS) - 1
+    if step:
+        draw_button(sheet, nx - 6 - o['nav'], ny, o['nav'], 'Back')
+    draw_button(sheet, nx, ny, o['nav'], 'Done' if last else 'Next', hot=True)
+
+    sheet.add('</g>')
+    return height
+
+
+def sheet_onboarding(out):
+    o = ONB
+    b = onboarding_layout()
+    height = b['height']
+    big, small = 1.5, 1.25
+    top = 220
+    rows_top = top + height * big + 160
+    row_h = height * small + 120
+    sheet = Sheet(980, int(rows_top + 3 * row_h + 20),
+                  'Umbra Unit Frames — the onboarding')
+    sheet.add('<defs><pattern id="hatch-fine" width="6" height="6" '
+              'patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
+              '<rect width="2" height="6" fill="#ffffff" fill-opacity="0.16"/>'
+              '</pattern></defs>')
+
+    caption(sheet, 48, 52, 'First login · /uuf setup', 'The onboarding',
+            'The first login asks what /uuf sets, one question to a page, '
+            'each with a drawing of what the answer does. Every answer takes '
+            'effect the moment it is clicked; Skip keeps the defaults, and '
+            '/uuf setup brings the questions back.', width=884)
+
+    state = {'layout': 0, 'health': 0, 'level': 0, 'auras': False,
+             'group': False, 'minimap': True}
+    fx = 48
+    draw_onboarding(sheet, fx, top, big, 0, state)
+
+    right = fx + o['width'] * big
+    lx = right + 44
+    left = C_EDGE + o['pad']
+    notes = [
+        (top + (b['eyebrow'] - 4) * big, 'Page and progress',
+         'five pages, one question each'),
+        (top + (b['preview'] + o['preview'] / 2) * big, 'Preview of the answer',
+         'redrawn when the answer changes'),
+        (top + (b['controls'] + 11) * big, 'The options window\'s switch',
+         'applied at once, via SetOption'),
+        (top + (b['nav'] + 11) * big, 'Skip, Back, Next',
+         'one height on every page'),
+    ]
+    for py, label, value in notes:
+        callout(sheet, right, py, lx, label, value)
+
+    sheet.text(48, rows_top - 58, 'The other four pages', size=12.5 * TYPE,
+               fill=rgb(C['text']), weight='600')
+    sheet.line(48, rows_top - 92, 932, rows_top - 92, stroke=rgb(RULE))
+
+    second = 980 - 48 - o['width'] * small
+    pages = [
+        (48, rows_top, 1, dict(state, health=1), '2 · Health bar',
+         'Class color picked: the bar takes the unit\'s color too.'),
+        (second, rows_top, 2, dict(state, level=1), '3 · Level',
+         'In front of the name: the plate on the portrait goes.'),
+        (48, rows_top + row_h, 3, dict(state, auras=True), '4 · Blizzard\'s frames',
+         'Buffs put away, drawn dashed; the group manager kept.'),
+        (second, rows_top + row_h, 4, state, '5 · Done, on Retail',
+         'The addon compartment is the way back; no minimap switch.'),
+        (48, rows_top + 2 * row_h, 0,
+         dict(state, notes={'layout': 'applies after combat'}),
+         'In combat', 'The layout is kept and applied when the fight ends.'),
+        (second, rows_top + 2 * row_h, 4,
+         dict(state, classic=True, refused={'unlock': True}),
+         '5 · Done, on a Classic client, in combat',
+         'A minimap button instead of the compartment; unlock refused.'),
+    ]
+    for px, py, step, st, title, body in pages:
+        draw_onboarding(sheet, px, py, small, step, st)
+        by = py + height * small + 30
+        sheet.text(px, by, title, size=12 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        for j, line in enumerate(wrap(body, o['width'] * small, 11 * TYPE)):
+            sheet.text(px, by + 22 + j * 19, line, size=11 * TYPE,
+                       fill=rgb(LABEL))
+
+    sheet.save(os.path.join(out, 'onboarding.svg'))
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out = os.path.join(root, 'assets', 'design')
@@ -1239,6 +1652,7 @@ def main():
     sheet_party(out)
     sheet_states(out)
     sheet_options(out)
+    sheet_onboarding(out)
 
 
 if __name__ == '__main__':

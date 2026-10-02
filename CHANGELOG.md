@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.7 — unreleased
+
+A first login that asks. A new install opens on a small window that walks
+through what `/uuf` sets, one question to a page, each with a drawing of what
+the answer does.
+
+- Five pages: the layout over a miniature of the screen, the health bar's
+  color and the level's place over a drawing of your own player frame,
+  whether Blizzard's buffs and group manager stay, and where everything can
+  be found again, with a button to drag the frames into place
+- Every answer takes effect as it is clicked, through the same call the
+  options window and `/uuf` use; Skip, the close button and Escape keep
+  whatever is set, and none of them ask again
+- `/uuf setup` brings the questions back at any time
+- An install that already has settings is not asked
+- On the Classic clients the last page also carries the minimap button switch
+- German on a German client, like the options window
+- On the Forever beta, which never reads its saved variables back, the
+  questions come up on every login
+
 ## 0.6.1 — 27 September 2026
 
 The level, on the frames where it is read. A plate across the foot of the
