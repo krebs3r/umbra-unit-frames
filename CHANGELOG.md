@@ -17,8 +17,6 @@ the answer does.
 - An install that already has settings is not asked
 - On the Classic clients the last page also carries the minimap button switch
 - German on a German client, like the options window
-- On the Forever beta, which never reads its saved variables back, the
-  questions come up on every login
 - Built on oUF 14.1.1, checked on Retail and Mists. On Forever it prints a
   name with its surname, where the character has one
 

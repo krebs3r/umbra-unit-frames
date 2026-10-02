@@ -126,7 +126,7 @@ One package covers every supported game version; you do not need to pick a build
 
 | | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Supported | yes — tested inside an instance | yes, with two exceptions | yes — frames, auras and the party header seen working | yes — frames, auras and portraits seen working | yes — frames, auras and portraits seen working |
+| Supported | yes — tested inside an instance | yes, with one exception | yes — frames, auras and the party header seen working | yes — frames, auras and portraits seen working | yes — frames, auras and portraits seen working |
 
 All five run on one codebase. **The Classic clients** call themselves Classic but carry almost everything Umbra and oUF ask of them; each was checked against Blizzard's own interface code for its build before it was tried in game. The aura rows are the main exception — those clients lack the widget Retail builds them from, so Umbra draws the same buttons itself there. Right-click to cancel a buff works out of combat only on them.
 
@@ -134,13 +134,11 @@ What the class power row does not know yet stays empty: Eclipse, Shadow Orbs, Bu
 
 Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client.
 
-**The two exceptions on Forever are the client's, not Umbra's.**
+**The one exception on Forever is the client's, not Umbra's.**
 
 *The party column cannot be built there.* That client compiles every secure snippet with `loadstring_untainted`, the function is missing, and the client's own group-header code needs it to finish each child it creates — so the header makes buttons it cannot finish, by Umbra or by any other addon. Umbra notices within two seconds of the column first appearing, hides it, stops asking, and hands Blizzard's group panel back whatever `/uuf group` says. Every other frame is unaffected.
 
-*And it does not remember.* The beta writes its saved variables on exit and never reads them back, so every login and every `/reload` starts from the defaults — your layout and anything you dragged with it, and the first-login questions come up each time. The write is correct; it is the reading that never happens, and no addon can do that part for the client.
-
-Both are being watched rather than worked around: either could be gone by launch, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
+It is being watched rather than worked around: it could be gone by launch, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
 
 **A word on Secret Values.** Since patch 12.0 the game hides exact health and power numbers inside encounters, Mythic+ and PvP — addons may display them but not read them. Umbra's design happens to suit that well: a neutral health bar with class color on the edge never needed to work out a color from your health, so your frames look and behave the same inside a boss fight as outside one. What you will notice is that health reads as a percentage while the fight hides the number.
 

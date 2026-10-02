@@ -187,7 +187,7 @@ Umbra runs on **five clients**: Retail, WoW: Forever, and the three Classic clie
 | API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus four things | the same as Mists | the same as Mists |
 | Secret Values | yes | yes | the API is there | the API is there | the API is there |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Mists` | `_TBC` | `_Vanilla` |
-| Umbra support | yes — verified inside an instance | yes, with two exceptions | frames, auras and the header seen working | frames, auras and portraits seen working | frames, auras and portraits seen working |
+| Umbra support | yes — verified inside an instance | yes, with one exception | frames, auras and the header seen working | frames, auras and portraits seen working | frames, auras and portraits seen working |
 
 ### Retail
 
@@ -195,7 +195,7 @@ The client everything is measured against, and verified inside an instance, wher
 
 ### WoW: Forever
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. The old Classic globals — `UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo` — do not exist there; the handful of deviations from Retail live in `Compat/Forever.lua`. Two things do not work, and both are the client's.
+Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. The old Classic globals — `UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo` — do not exist there; the handful of deviations from Retail live in `Compat/Forever.lua`. One thing does not work, and it is the client's.
 
 **The party column cannot be built there**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
 
@@ -203,9 +203,7 @@ Umbra notices and steps back: two seconds after its column would first appear it
 
 No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches, or in a later beta. `/uuf dev header` answers where any given client stands.
 
-**And it does not remember.** That client writes its saved variables on exit and never reads them back: `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the next save writes those over what was there. Every reload costs a generation, and the `.bak` beside the file is the only thing still holding the one before. It is also why the first-login questions come up on every login there. The write is correct — it is the reading that never happens, and a store of our own would be a second mechanism carried forever for a beta.
-
-What the beta client actually did with Umbra — which values it hides, which events it is missing, and the file that proves which half of the saved variables is broken — is written down in the [development notes](docs/development.md).
+What the beta client actually did with Umbra — which values it hides and which events it is missing — is written down in the [development notes](docs/development.md).
 
 ### The Classic clients
 
