@@ -313,8 +313,7 @@ Umbra.Widgets = {
 }
 
 --[[ Where the window was left
-Kept like a frame's position, as a point on UIParent. Forever never reads it
-back, and a window that opens in the middle is no loss there.
+Kept like a frame's position, as a point on UIParent.
 --]]
 local function SavePosition(frame)
 	local point, _, relativePoint, x, y = frame:GetPoint()

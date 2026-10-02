@@ -1691,11 +1691,8 @@ When that moves to AceDB and AceConfig, the design studio's profile schema
 
 ### Forever
 
-Forever launches **4 November 2026**. Known beta behaviour: saved variables are
-written but never read back, and `/reload UI` is protected while `/reload` is
-not. The first follows the onboarding there: every login looks like the first,
-so the questions come up every time. Deliberately not worked around — the
-release is expected to read its saved variables as Retail does.
+Forever launches **4 November 2026**. Known beta behaviour: `/reload UI` is
+protected while `/reload` is not.
 
 **The beta client is installed** as of 20 September 2026, under the same root
 as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
@@ -1855,36 +1852,6 @@ is built on it.
   16001)` rather than `unsupported`, so `WOW_PROJECT_ID ==
   WOW_PROJECT_MAINLINE` holds here and the interface falls in the 16xxx band
   the check keys off.
-- **Saved variables really are written and never read**, and the two halves of
-  that are worth keeping apart, because only one of them is broken.
-  `/uuf layout classic` followed by `/reload` came back as `modern`. The file
-  on disk says why: `WTF/Account/<id>/SavedVariables/UmbraUnitFrames.lua`, and
-  its `.bak` beside it, are one generation apart and read
-
-  ```
-  .bak      layout = "classic", debug = true, positions for both sets
-  current   layout = "modern",  no debug,     positions for modern only
-  ```
-
-  So the **write is correct**. What the reload does not do is read it back:
-  `ADDON_LOADED` sees an empty table, Umbra fills in its defaults, and the
-  next save writes those defaults over the real settings. Every reload
-  destroys a generation, and the `.bak` is the only thing still holding the
-  previous one.
-
-  Nothing on this side can fix that, and nothing should try. A store of our
-  own — custom CVars, say — would be a second mechanism carried forever for a
-  beta that cannot load files every addon depends on. Worth revisiting only if
-  it is still broken near the 4 November launch.
-
-That last one broke the one thing it most needed to work. `/uuf dev debug` exists
-to report what the build refused, the build happens at `PLAYER_LOGIN`, and the
-switch was saved so that it would already be on by then — which on this client
-it never is. **So the lines are buffered instead**: `Umbra:Debug` writes every
-line down whether or not anyone is listening, and switching the flag on hands
-over what it missed. That asks nothing of the client and works the same on
-both.
-
 - **`secure snippets: unavailable`.** `loadstring_untainted` is missing here,
   as the record said, and `Umbra.hasSecureSnippets` is false by measurement
   rather than by a file that failed to load. What that was taken to mean for

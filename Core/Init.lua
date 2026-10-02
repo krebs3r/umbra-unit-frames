@@ -223,11 +223,8 @@ Writes a line down always, and prints it only when debugging is on.
 
 Most of what there is to report is refused while the frames are being built,
 at PLAYER_LOGIN, before anyone can type the command that turns printing on.
-Saving the switch was the first answer to that, and it is not enough: **the
-Forever beta writes saved variables but never reads them back**, measured on
-20 September 2026 by setting `/uuf layout classic`, reloading, and finding
-`modern` again. On that client a saved switch is always off at login, which
-is exactly when the build happens.
+A saved switch only helps from the second login on, and the first one is
+where the questions usually are.
 
 So the lines are kept whether or not anyone is listening, and `/uuf dev debug`
 hands over what it already missed. That asks nothing of the client and works
@@ -257,10 +254,6 @@ function Umbra:Debug(...)
 	end
 end
 
--- The Forever beta writes saved variables but never reads them back, so there
--- every login looks like the first, and the onboarding comes up each time.
--- Nothing works around that: the release is expected to read them as Retail
--- does, and a store of our own would be carried forever for a beta.
 local loader = CreateFrame('Frame')
 loader:RegisterEvent('ADDON_LOADED')
 loader:SetScript('OnEvent', function(self, _, loaded)

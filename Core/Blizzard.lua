@@ -128,9 +128,7 @@ function Umbra:SetBlizzardGroup(shown)
 	return Apply('group', shown)
 end
 
--- ADDON_LOADED has run by now, so the setting is there to read. On Forever it
--- is always the default, because that client writes saved variables without
--- ever reading them back.
+-- ADDON_LOADED has run by now, so the setting is there to read.
 local applier = CreateFrame('Frame')
 applier:RegisterEvent('PLAYER_LOGIN')
 applier:SetScript('OnEvent', function()
