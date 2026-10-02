@@ -32,7 +32,7 @@ param(
 	[ValidateSet('retail', 'forever', 'mists', 'anniversary', 'era')]
 	[string]$Flavor = 'retail',
 
-	[string]$OufTag = '14.0.3'
+	[string]$OufTag = '14.1.1'
 )
 
 $ErrorActionPreference = 'Stop'

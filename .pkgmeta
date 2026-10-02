@@ -5,7 +5,7 @@ externals:
     url: https://github.com/oUF-wow/oUF
     # Pinned to the version this was tested against. `latest` would hand a
     # release whatever oUF tagged last, tested here or not.
-    tag: 14.0.3
+    tag: 14.1.1
 
 ignore:
   - .github
