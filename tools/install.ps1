@@ -5,8 +5,9 @@ Copies this checkout into a WoW AddOns folder under the name the client expects.
 .DESCRIPTION
 WoW resolves UmbraUnitFrames_Mainline.toc only inside a folder named
 UmbraUnitFrames, so a clone directory named after the repository is never
-looked at. This script copies to the right name, fetches oUF if it is missing,
-and leaves out everything that does not belong in an addon folder.
+looked at. This script copies to the right name, fetches oUF if it is missing
+or not the pinned tag, and leaves out everything that does not belong in an
+addon folder.
 
 The WoW path is remembered in tools/.wowpath after the first run.
 
@@ -32,7 +33,7 @@ param(
 	[ValidateSet('retail', 'forever', 'mists', 'anniversary', 'era')]
 	[string]$Flavor = 'retail',
 
-	[string]$OufTag = '14.1.1'
+	[string]$OufTag = '14.2.0'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -72,11 +73,39 @@ if (-not (Test-Path $addons)) {
 }
 
 # oUF is fetched at build time and is not part of the repository, so a fresh
-# checkout has nothing to load.
+# checkout has nothing to load. A copy of any other tag is fetched again:
+# kept, it would test this checkout against an oUF the release does not carry,
+# and nothing would say so. `tag --points-at` prints the tags of the commit
+# checked out, and nothing at all for a copy that is not on one.
+#
+# The new copy is cloned beside the old one and swapped in only once it is
+# complete, so a clone that fails - offline, or a tag that does not exist -
+# leaves the old copy to install against rather than none.
 $ouf = Join-Path $repo 'Libs\oUF'
-if (-not (Test-Path (Join-Path $ouf 'oUF.xml'))) {
+$oufTags = @()
+if (Test-Path (Join-Path $ouf '.git')) {
+	$oufTags = @(git -C $ouf tag --points-at HEAD)
+}
+
+if (-not (Test-Path (Join-Path $ouf 'oUF.xml')) -or $oufTags -notcontains $OufTag) {
+	$fresh = "$ouf.new"
+	if (Test-Path $fresh) {
+		Remove-Item -Path $fresh -Recurse -Force
+	}
+
 	Write-Host "Fetching oUF $OufTag into Libs/oUF"
-	git clone --quiet --depth 1 --branch $OufTag https://github.com/oUF-wow/oUF.git $ouf
+	git clone --quiet --depth 1 --branch $OufTag https://github.com/oUF-wow/oUF.git $fresh
+
+	if ($LASTEXITCODE -ne 0) {
+		throw "Fetching oUF $OufTag failed with exit code $LASTEXITCODE; Libs/oUF was left as it was"
+	}
+
+	if (Test-Path $ouf) {
+		Write-Host "Libs/oUF was not $OufTag, replacing it"
+		Remove-Item -Path $ouf -Recurse -Force
+	}
+
+	Move-Item -Path $fresh -Destination $ouf
 }
 
 $target = Join-Path $addons 'UmbraUnitFrames'

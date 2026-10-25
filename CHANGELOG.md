@@ -22,6 +22,8 @@ and Classic Era.
   when that patch arrives
 - On Mists, getting into a vehicle no longer raises an error from the class
   power row
+- Built on oUF 14.2.0, which brings back the sound when you flag for PvP on
+  Forever
 
 ## 0.7 — 2 October 2026
 
