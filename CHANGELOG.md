@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8 — unreleased
+## 0.8 — 25 October 2026
 
 Debuffs over the buffs, for frames kept right above the action bars, and
 Umbra on the builds that are current now: Retail 12.1.5 and the 12.1.7 test
@@ -24,6 +24,8 @@ and Classic Era.
   power row
 - Built on oUF 14.2.0, which brings back the sound when you flag for PvP on
   Forever
+- Checked on Retail, Mists, the Anniversary realms and Classic Era. Not on
+  Forever: its beta had closed, and the release client opens on 4 November
 
 ## 0.7 — 2 October 2026
 
