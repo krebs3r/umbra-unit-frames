@@ -2168,6 +2168,11 @@ goes at the top, headed `## <tag> — <date>`, before the tag is pushed — the
 workflow stops if the top section names any other version. 0.4.1 was released
 before this and carried every section back to 0.1.
 
+The pictures in `docs/curseforge.md` come from the repository at a tag, so
+they move to the new tag in a commit of their own before the release, and
+the description is pasted into CurseForge once the tag is out — before
+that, the links point at a tag that does not exist yet.
+
 **Checking before shipping:** syntax can be checked without the client;
 semantics cannot. Luacheck runs in CI.
 
