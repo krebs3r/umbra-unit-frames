@@ -518,7 +518,8 @@ local function Grow(element, upwards)
 end
 
 --[[ Umbra:AnchorAuras(frame, config)
-Hangs the frame's aura rows where the set in force wants them.
+Hangs the frame's aura rows where the set in force wants them, with the
+debuffs switch applied (`Umbra:Stack`).
 
 Creates nothing, so a set switch can run it again on frames that already
 exist. Each row asks the stack where it begins rather than counting what came
@@ -535,8 +536,9 @@ function Umbra:AnchorAuras(frame, config)
 	if not containers then return end
 
 	local layout = self:ActiveLayout()
+	local stack = self:Stack(config, layout)
 
-	for _, filter in ipairs(layout.above) do
+	for _, filter in ipairs(stack.above) do
 		local element = containers[filter]
 
 		if element then
@@ -547,7 +549,7 @@ function Umbra:AnchorAuras(frame, config)
 		end
 	end
 
-	for _, filter in ipairs(layout.below) do
+	for _, filter in ipairs(stack.below) do
 		local element = containers[filter]
 
 		if element then

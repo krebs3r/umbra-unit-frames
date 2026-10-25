@@ -5,8 +5,8 @@ local colors = Umbra.colors
 local L = Umbra.L
 
 --[[ The options window
-What `/uuf` sets, in one small window: a title, four sections, two actions and
-a footer — Soundstone's shape, in Umbra's own colors. The sheet it was drawn
+What `/uuf` sets, in one small window: a title, sections of switches, two
+actions and a footer — Soundstone's shape, in Umbra's own colors. The sheet it was drawn
 from is `assets/design/options-window.svg`, and the numbers below are the ones
 `tools/mockups.py` draws it with (`OPT` there); change one, change both.
 
@@ -44,6 +44,16 @@ local SETTINGS = {
 		get = function() return UmbraUnitFramesDB.layout end,
 		set = function(name)
 			UmbraUnitFramesDB.layout = name
+			return Umbra:ApplyLayout()
+		end,
+	},
+	-- The same applier as the layout: a row changing sides changes how far
+	-- the frame reaches, and the reach is protected on a secure frame in a
+	-- fight, so this waits for the end of it the same way.
+	debuffs = {
+		get = function() return UmbraUnitFramesDB.debuffs end,
+		set = function(placement)
+			UmbraUnitFramesDB.debuffs = placement
 			return Umbra:ApplyLayout()
 		end,
 	},
@@ -412,6 +422,8 @@ local function Build()
 
 	Add('section', 'Layout')
 	Add('segment', 'layout', {{'modern', 'Modern'}, {'classic', 'Classic'}})
+	Add('section', 'Debuffs')
+	Add('segment', 'debuffs', {{'below', 'Below buffs'}, {'above', 'Above buffs'}})
 	Add('section', 'Health bar')
 	Add('segment', 'health', {{false, 'Neutral'}, {true, 'Class color'}})
 	Add('section', 'Show level')
@@ -483,7 +495,8 @@ local function Build()
 	--[[ What the window refuses, and why
 	Only what the client itself refuses. The layout is not one of them: a set
 	picked in a fight is kept and applied when it ends, which is what `/uuf
-	layout` has always done, so the switch stays live and says so. Unlocking
+	layout` has always done, so the switch stays live and says so. The debuffs
+	switch goes through the same applier and says the same. Unlocking
 	is refused outright, as the command refuses it — locking is not, because
 	being left with frames you can still drag is the worse place to be.
 
@@ -493,6 +506,7 @@ local function Build()
 	--]]
 	function frame:Refresh()
 		controls.layout:Refresh(fighting and 'applies after combat' or nil)
+		controls.debuffs:Refresh(fighting and 'applies after combat' or nil)
 		controls.health:Refresh()
 		controls.level:Refresh()
 		controls.auras:Refresh()

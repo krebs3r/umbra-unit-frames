@@ -95,9 +95,11 @@ Two **layout sets** decide where everything goes, and each set remembers its own
 
 The boss column is the same in both: the right edge, centred, as many frames as the client has. It is not part of the arrangement you chose — it is something the fight brings.
 
+**Debuffs over the buffs.** Either set can draw the debuff row over the buff row instead, with `/uuf debuffs above` or the *Debuffs* switch in the window — for frames kept right above the action bars. In `modern` both rows then hang above the frame, the debuffs outermost, and under the player only the cast bar and the pet are left; in `classic` the debuffs move next to the frame, over the buffs. The frames keep their places — unless one sits so close to the top of the screen that its taller stack no longer fits — and the party column keeps its row of debuffs under each member, since it has no buffs to stand over.
+
 `/uuf` on its own opens the options window. It is also in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* on all of them. The window speaks German on a German client and English on every other; what `/uuf` prints in chat stays English, like the words it takes. Every setting in it takes effect where you stand — no `/reload`:
 
-![The options window: a layout switch, a health bar switch, a switch for where the level stands, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
+![The options window: a layout switch, a switch for the debuffs' place, a health bar switch, a switch for where the level stands, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
 
 **The first login asks.** On an install that has never run, a window walks through the same settings one question to a page, each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and how to drag the frames into place. Every answer takes effect as it is clicked, so leaving halfway loses nothing; *Skip* keeps the defaults, and `/uuf setup` brings the questions back. An update from an earlier version does not ask — its settings are already chosen.
 
@@ -110,6 +112,7 @@ The options window offers nothing the commands do not, and `/uuf help` lists the
 | `/uuf` | — | the options window |
 | `/uuf help` | — | this list |
 | `/uuf layout` | `classic`, `modern` | the whole arrangement |
+| `/uuf debuffs` | `below`, `above` | whether the debuff row goes under the buff row or over it |
 | `/uuf auras` | `umbra`, `both` | who shows your buffs and debuffs |
 | `/uuf health` | `class`, `plain` | what colors the health bars |
 | `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
@@ -120,9 +123,9 @@ The options window offers nothing the commands do not, and `/uuf help` lists the
 | `/uuf setup` | — | the questions of the first login, again |
 | `/uuf dev` | — | measurements and diagnostics, listed behind that word |
 
-Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `both`, `plain`, `both` and `portrait`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group.
+Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `below`, `both`, `plain`, `both` and `portrait`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group.
 
-Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens.
+Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens. A layout or a debuffs placement picked in a fight is kept the same way and applied when it ends.
 
 ### Measurements
 

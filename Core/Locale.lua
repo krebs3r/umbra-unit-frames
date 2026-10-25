@@ -20,6 +20,7 @@ say one word each: the heading above them already says the rest.
 local GERMAN = {
 	-- Sections
 	['Layout'] = 'Layout',
+	['Debuffs'] = 'Debuffs',
 	['Health bar'] = 'Gesundheitsbalken',
 	['Blizzard frames'] = 'Blizzard-Fenster',
 	['Display'] = 'Anzeige',
@@ -29,6 +30,8 @@ local GERMAN = {
 	-- Switches
 	['Modern'] = 'Modern',
 	['Classic'] = 'Klassisch',
+	['Below buffs'] = 'Unter den Buffs',
+	['Above buffs'] = 'Über den Buffs',
 	['Neutral'] = 'Neutral',
 	['Class color'] = 'Klassenfarbe',
 	['Portrait'] = 'Porträt',

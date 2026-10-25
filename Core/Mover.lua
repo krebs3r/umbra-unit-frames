@@ -192,17 +192,18 @@ local function Slots(frame, box)
 	end
 
 	local layout = Umbra:ActiveLayout()
+	local stack = Umbra:Stack(config, layout)
 	local under, over = {}, {}
 
 	-- An entry that names a frame is room for one. Asking Umbra.frames keeps
 	-- this true of any frame a later set puts in a stack.
-	for _, entry in ipairs(layout.below) do
+	for _, entry in ipairs(stack.below) do
 		if Umbra.frames[entry] and Umbra:StackHeight(config, entry) then
 			under[#under + 1] = box.bottom - Umbra:StackOffset(config, layout, 'below', entry)
 		end
 	end
 
-	for _, entry in ipairs(layout.above) do
+	for _, entry in ipairs(stack.above) do
 		if Umbra.frames[entry] and Umbra:StackHeight(config, entry) then
 			over[#over + 1] = box.top + Umbra:StackOffset(config, layout, 'above', entry)
 		end
@@ -286,13 +287,14 @@ local function Bands(frame, box, shift)
 	if not config then return bands end
 
 	local layout = Umbra:ActiveLayout()
+	local stack = Umbra:Stack(config, layout)
 	local castbar = Umbra:CastbarReach(config)
 
 	if castbar > 0 then
 		bands[#bands + 1] = {box.bottom - castbar + shift, box.bottom + shift}
 	end
 
-	for _, entry in ipairs(layout.below) do
+	for _, entry in ipairs(stack.below) do
 		local height = not Umbra.frames[entry] and Umbra:StackHeight(config, entry)
 
 		if height then
@@ -302,7 +304,7 @@ local function Bands(frame, box, shift)
 		end
 	end
 
-	for _, entry in ipairs(layout.above) do
+	for _, entry in ipairs(stack.above) do
 		local height = not Umbra.frames[entry] and Umbra:StackHeight(config, entry)
 
 		if height then

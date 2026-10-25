@@ -193,23 +193,34 @@ local function MiniScreen(parent, which)
 		return block
 	end
 
+	-- Each row is made once and placed again on every refresh: the screens
+	-- are built once, and the debuffs switch can move a row after that.
+	local rows = {}
+
 	local function Auras(block, config)
-		for _, side in ipairs({'above', 'below'}) do
-			for _, entry in ipairs(set[side]) do
-				local count = config.auras and config.auras[entry]
+		for entry, count in pairs(config.auras or {}) do
+			local row = Texture(block, 'BORDER',
+				entry == 'harmful' and colors.auraHarmful or colors.auraHelpful, 0.35)
+			row:SetSize(Px(config.width), Px(Umbra:AuraBlockHeight(config, count)))
 
-				if count then
-					local offset = Umbra:StackOffset(config, set, side, entry)
-					local row = Texture(block, 'BORDER',
-						entry == 'harmful' and colors.auraHarmful or colors.auraHelpful, 0.35)
-					row:SetSize(Px(config.width), Px(Umbra:AuraBlockHeight(config, count)))
+			rows[#rows + 1] = {texture = row, block = block, config = config, entry = entry}
+		end
+	end
 
-					if side == 'above' then
-						row:SetPoint('BOTTOMLEFT', block, 'TOPLEFT', 0, offset * s)
-					else
-						row:SetPoint('TOPLEFT', block, 'BOTTOMLEFT', 0, -offset * s)
-					end
-				end
+	-- Which side a row is on is asked of the stack, the way the stand-ins in
+	-- Layouts/Preview.lua ask it.
+	function screen:PlaceRows()
+		for _, row in ipairs(rows) do
+			local above = Umbra:StackOffset(row.config, set, 'above', row.entry)
+			local below = not above and Umbra:StackOffset(row.config, set, 'below', row.entry)
+
+			row.texture:ClearAllPoints()
+			row.texture:SetShown((above or below) and true or false)
+
+			if above then
+				row.texture:SetPoint('BOTTOMLEFT', row.block, 'TOPLEFT', 0, above * s)
+			elseif below then
+				row.texture:SetPoint('TOPLEFT', row.block, 'BOTTOMLEFT', 0, -below * s)
 			end
 		end
 	end
@@ -242,6 +253,8 @@ local function MiniScreen(parent, which)
 			Auras(block, config)
 		end
 	end
+
+	screen:PlaceRows()
 
 	--[[ Blizzard's own, where they stand by default
 	The buff row left of the minimap and the group manager as a tab on the
@@ -692,6 +705,7 @@ local function Build()
 		for index, pair in pairs(screens) do
 			for name, screen in pairs(pair) do
 				screen:SetShown(name == layout)
+				screen:PlaceRows()
 
 				if index == 4 then
 					screen:ShowBlizzard(true)

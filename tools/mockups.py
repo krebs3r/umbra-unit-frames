@@ -103,6 +103,37 @@ LAYOUTS = {
     'modern': {'above': ['targettarget', 'helpful'], 'below': ['pet', 'harmful']},
 }
 
+# `/uuf debuffs`. The sheets show the default; set it to draw the other answer.
+DEBUFFS_ABOVE = False
+
+
+def debuffs_above(layout):
+    """The set's variant with the debuff row over the buff row, by the rule
+    Core/Defaults.lua derives it with: next to the buffs, outside them above
+    the frame, between them and the frame below it."""
+    variant = {side: [e for e in layout[side] if e != 'harmful']
+               for side in ('above', 'below')}
+    for side in ('above', 'below'):
+        if 'helpful' in variant[side]:
+            i = variant[side].index('helpful')
+            variant[side].insert(i + 1 if side == 'above' else i, 'harmful')
+            return variant
+    return None
+
+
+DEBUFFS_VARIANTS = {name: debuffs_above(layout) for name, layout in LAYOUTS.items()}
+
+
+def stack(c, layout):
+    """Umbra:Stack — the lists a frame of this config hangs on: the variant
+    only for a frame carrying both rows, so the party keeps its row below."""
+    auras = c.get('auras', {})
+    for name, base in LAYOUTS.items():
+        if base is layout and DEBUFFS_ABOVE and DEBUFFS_VARIANTS[name] \
+                and 'helpful' in auras and 'harmful' in auras:
+            return DEBUFFS_VARIANTS[name]
+    return layout
+
 PARTY_COUNT = 4   # MAX_PARTY_MEMBERS
 BOSS_COUNT = 5    # MAX_BOSS_FRAMES
 
@@ -150,7 +181,7 @@ def stack_height(c, entry):
 
 def stack_offset(c, layout, side, entry=None):
     offset = castbar_reach(c) if side == 'below' else 0
-    for name in layout[side]:
+    for name in stack(c, layout)[side]:
         if name == entry:
             return offset + c['gap']
         h = stack_height(c, name)
@@ -737,7 +768,7 @@ def sheet_layout(out, which):
         for key, harmful in (('helpful', False), ('harmful', True)):
             count = c['auras'][key]
             h = aura_block_height(c, count)
-            if key in layout['above']:
+            if key in stack(c, layout)['above']:
                 off = stack_offset(c, layout, 'above', key)
                 ay = fyy - off - h
             else:
@@ -993,11 +1024,13 @@ OPT = {
     'footer': 9,
 }
 
-VERSION = '0.6.1'
+VERSION = '0.8'
 
 OPTION_ROWS = [
     ('section', 'Layout'),
     ('segment', 'layout', ('Modern', 'Classic')),
+    ('section', 'Debuffs'),
+    ('segment', 'debuffs', ('Below buffs', 'Above buffs')),
     ('section', 'Health bar'),
     ('segment', 'health', ('Neutral', 'Class color')),
     ('section', 'Show level'),
@@ -1196,8 +1229,8 @@ def sheet_options(out):
             width=884)
 
     fx = 48
-    normal = {'layout': 0, 'health': 0, 'auras': True, 'group': True,
-              'minimap': False}
+    normal = {'layout': 0, 'debuffs': 0, 'health': 0, 'auras': True,
+              'group': True, 'minimap': False}
     draw_options(sheet, fx, top, s, state=normal)
 
     right = fx + w
@@ -1223,7 +1256,8 @@ def sheet_options(out):
     sheet.line(48, row2 - 92, 932, row2 - 92, stroke=rgb(RULE))
 
     combat = dict(normal, unlocked=False,
-                  notes={'layout': 'applies after combat'},
+                  notes={'layout': 'applies after combat',
+                         'debuffs': 'applies after combat'},
                   refused={'unlock': True})
     draw_options(sheet, 48, row2, s, state=combat)
     forever = dict(normal, group=False,
@@ -1234,7 +1268,8 @@ def sheet_options(out):
     for x, title, body in (
             (48, 'In combat',
              'The mover is refused, as /uuf unlock refuses it. The layout '
-             'stays live: one picked now is applied when the fight ends.'),
+             'and the debuffs stay live: one picked now is applied when the '
+             'fight ends.'),
             (second, 'On WoW: Forever',
              'The party column steps back on that client, so the switch for '
              'Blizzard\'s group manager has nothing to hand over.')):
@@ -1365,7 +1400,7 @@ def mini_screen(sheet, x, y, w, which, *, blizzard=None):
     def auras(fx, fy, c, key):
         count = c['auras'][key]
         ah = aura_block_height(c, count)
-        if key in layout['above']:
+        if key in stack(c, layout)['above']:
             ay = fy - stack_offset(c, layout, 'above', key) - ah
         else:
             ay = fy + frame_height(c) + stack_offset(c, layout, 'below', key)

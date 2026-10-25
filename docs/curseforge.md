@@ -78,6 +78,10 @@ Player and target in the top left, the pet above them, both aura rows below, and
 
 The boss column is the same in both — right edge, centred. It is not part of the arrangement you chose; it is something the fight brings.
 
+### Debuffs over the buffs
+
+Keep your frames right above the action bars? `/uuf debuffs above`, or the *Debuffs* switch in the options window, draws the debuff row over the buff row in either layout. In `modern` both rows then hang above the frame, the debuffs on top, and under the player only the cast bar and the pet are left; in `classic` the debuffs move next to the frame, over the buffs. Your frames keep their places, and the party column keeps its debuffs under each member.
+
 ---
 
 ## Settings
@@ -86,7 +90,7 @@ The boss column is the same in both — right edge, centred. It is not part of t
 
 ![Umbra Unit Frames — the onboarding](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/onboarding.svg)
 
-`/uuf` opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. **Every setting takes effect where you stand** — no `/reload`. In a fight the mover is refused, as the game requires; a layout picked mid-combat is kept and applied when the fight ends.
+`/uuf` opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. **Every setting takes effect where you stand** — no `/reload`. In a fight the mover is refused, as the game requires; a layout or a debuffs placement picked mid-combat is kept and applied when the fight ends.
 
 ![Umbra Unit Frames — the options window](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.7/assets/design/options-window.svg)
 
@@ -97,6 +101,7 @@ It offers nothing the commands do not, and `/uuf help` lists them:
 | Command | Values | What it does |
 | :--- | :--- | :--- |
 | `/uuf layout` | `classic`, `modern` | the whole arrangement |
+| `/uuf debuffs` | `below`, `above` | whether the debuff row goes under the buff row or over it |
 | `/uuf auras` | `umbra`, `both` | who shows your buffs and debuffs |
 | `/uuf health` | `class`, `plain` | what colors the health bars |
 | `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
@@ -108,7 +113,7 @@ It offers nothing the commands do not, and `/uuf help` lists them:
 
 Type a setting without a value and it tells you what it is on and what the alternatives mean.
 
-Defaults are `modern`, `both`, `plain`, `both` and `portrait` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group.
+Defaults are `modern`, `below`, `both`, `plain`, `both` and `portrait` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group.
 
 There is also `/uuf dev`, a set of read-only checks that change nothing and print what your client is doing. `/uuf dev test` fills every aura slot with stand-ins so you can judge a layout at its fullest, and `/uuf dev check` gives you most of a good bug report in a window you can copy out of.
 

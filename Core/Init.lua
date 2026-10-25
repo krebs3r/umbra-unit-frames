@@ -102,6 +102,7 @@ printing decides what is colored and the table only says what is true.
 local COMMANDS = {
 	{'', nil, 'the options window, where all of the below can be clicked'},
 	{'layout', {'classic', 'modern'}, 'the whole arrangement'},
+	{'debuffs', {'below', 'above'}, 'whether the debuff row goes under the buff row or over it'},
 	{'auras', {'umbra', 'both'}, 'who shows your buffs and debuffs'},
 	{'health', {'class', 'plain'}, 'what colors the health bars'},
 	{'group', {'umbra', 'both'}, "whether the game's group manager stays on the left edge"},
@@ -301,6 +302,12 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 		UmbraUnitFramesDB.level = 'portrait'
 	end
 
+	-- Under the buffs by default, where each set puts them. Over them is the
+	-- other answer, for frames kept right above the action bars.
+	if UmbraUnitFramesDB.debuffs ~= 'above' then
+		UmbraUnitFramesDB.debuffs = 'below'
+	end
+
 	-- Where the client lists addons under the minimap, a button of our own
 	-- beside that entry would be the same door twice.
 	UmbraUnitFramesDB.minimap = UmbraUnitFramesDB.minimap or {}
@@ -410,6 +417,11 @@ local function Command(input)
 		end
 
 		add(Umbra:Heading())
+
+		-- What the frames were asked to look like. A report about a row in
+		-- the wrong place starts here.
+		add('layout: ' .. Umbra:LayoutName() .. ' · debuffs '
+			.. (UmbraUnitFramesDB.debuffs or 'below'))
 		add('')
 
 		-- Which unit values this client hands over in the clear decides how
@@ -722,6 +734,30 @@ local function Command(input)
 				print(PREFIX .. 'layout: ' .. Value(name)
 					.. ' — the frames belong to the client while the fight '
 					.. 'is on, so they move when it ends.')
+			end
+		end
+	elseif input:find('^debuffs') then
+		-- Named by where the row goes, like `level`: the question is which of
+		-- the two rows is drawn over the other, not whether something is on.
+		local which = input:match('^debuffs%s+(%S+)$')
+
+		if not which then
+			print(PREFIX .. 'debuffs: ' .. Value(UmbraUnitFramesDB.debuffs))
+			print(PREFIX .. Value('below') .. ' — under the buffs, where the layout puts them')
+			print(PREFIX .. Value('above')
+				.. ' — over the buffs; in modern both rows go above the frame')
+		elseif which ~= 'below' and which ~= 'above' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			-- A row that changes sides changes how far the frame reaches,
+			-- and that is protected on a secure frame in a fight, so this
+			-- waits the way `layout` does.
+			if Umbra:SetOption('debuffs', which) then
+				print(PREFIX .. 'debuffs: ' .. Value(which))
+			else
+				print(PREFIX .. 'debuffs: ' .. Value(which)
+					.. ' — the frames belong to the client while the fight '
+					.. 'is on, so the rows move when it ends.')
 			end
 		end
 	elseif input == 'test' then

@@ -38,7 +38,8 @@ by oUF or by anyone — see *The secure header does not work on Forever*.
 All six design principles are implemented — class color at the edge, the
 portrait column, power as a hairline, auras with an underline, hatched absorbs
 with ghosted incoming healing, and range shown through fading, which arrived
-with the group frames it was waiting for. Alongside them: two layout sets, the
+with the group frames it was waiting for. Alongside them: two layout sets and
+a switch that puts the debuffs over the buffs in either, the
 class-power row, a cast bar, a frame mover, a switch for Blizzard's own aura
 display, one for its group panel, a switch for class-colored health bars, an
 addon-list icon and packaging.
@@ -80,6 +81,7 @@ the version and the list.
 | | |
 | :--- | :--- |
 | `layout classic` · `layout modern` | switch the whole arrangement |
+| `debuffs below` · `debuffs above` | whether the debuff row goes under the buff row or over it, in either set |
 | `unlock` · `lock` · `reset` | move frames, per layout set; unlocking shows and fills every frame, and a group column against stand-ins for every slot |
 | `auras umbra` · `auras both` | who shows your buffs and debuffs |
 | `group umbra` · `group both` | whether the client's group manager — the panel on the left edge with the markers — is put away or kept |
@@ -233,6 +235,55 @@ Two things follow from having sets at all:
 
 The metrics table is `Umbra.metrics`; `Umbra.layouts` holds the sets. It used
 to be `Umbra.layout`, which would have read as the singular of the other.
+
+### Debuffs above the buffs
+
+Asked for in issue #4 by a player who keeps the frames right above the action
+bars, and added in 0.8 as `/uuf debuffs above` and a *Debuffs* switch in the
+window. In `modern` the debuffs hang under the pet, 83 below the player frame
+and 80 below the target. Blizzard's bottom bars stack from 45 upwards, each
+about 45 tall with 5 between them (`MAIN_ACTION_BAR_DEFAULT_OFFSET_Y`,
+`BOTTOM_ACTION_BARS_SPACER_Y` in the Edit Mode presets, live 12.1.5), so a
+third bar reaches about 190 — and from the default point at 260 the debuff
+rows already come down to 177 and 180.
+
+**It is not a third set.** It moves one entry and no frame: each set's
+variant is derived once at load (`set.debuffsAbove`) by one rule — the
+debuffs go next to the buffs, outside them above the frame and between them
+and the frame below it — so `modern` becomes `above = {targettarget, helpful,
+harmful}`, `below = {pet}`, and `classic` becomes `below = {harmful, helpful}`.
+Positions stay keyed by the set, so a dragged frame stays where it was.
+
+**It is resolved per frame.** `Umbra:Stack(config, set)` hands out the variant
+only to a frame that carries both rows. A party member has debuffs and no
+buffs to put them over, so its row stays below, and the header's spacing,
+the column's height and the stand-ins never see the switch. StackOffset walks
+`Stack`, and so do the four places that walk a side themselves: `AnchorAuras`,
+the mover's `Slots` and `Bands`, and the onboarding's miniature, which
+re-places its rows on every refresh because its screens are built once.
+
+**The points are not derived again**, and that was checked rather than
+assumed: `tools/mockups.py`'s arithmetic, run with `DEBUFFS_ABOVE` on and
+off, gives every set the same points, party slot and boss column.
+Each point reads an entry the rule does not move — the pet and the target's
+target stay first on their side — or, for the classic party column, the whole
+reach below the player, which is a sum. What does change is the reach:
+
+| `modern` | above, off → on | below, off → on |
+| :--- | :--- | :--- |
+| player | 64 → 96 | 83 → 51 |
+| target | 67 → 131 | 80 → 16 |
+
+From the default point that puts the top of the target's stack at 432, above
+the middle of a 768-unit screen and clear of the party and boss columns at
+16:9 and 16:10.
+
+The switch goes through `ApplyLayout`, because a reach that changes means new
+clamp insets, and `SetClampRectInsets` on a secure frame is refused in a
+fight. Those insets are also why a frame dragged right against the top of
+the screen moves down when its stack grows: the clamp keeps the whole stack
+on screen. A frame that was snapped against the old over-line is not moved off
+the rows that now stand there; the mover only asks at the end of a drag.
 
 ### Unlocking has to show what it asks you to place
 
@@ -1654,6 +1705,10 @@ there, one control in `Build`, and one branch in the command; a setting that
 cannot be applied live does not belong in that window until something can
 rebuild a frame.
 
+`debuffs` (0.8) is the first setting the onboarding does not ask. It is a
+refinement of the layout for frames kept somewhere the set did not plan for,
+and someone answering the first questions has not put them anywhere yet.
+
 The window is drawn from Umbra's palette rather than the client's templates,
 and `tools/mockups.py` draws it from the same numbers (`OPT`) — change one,
 change both. Its three ways in besides `/uuf` are in `Core/Minimap.lua`
@@ -1665,7 +1720,8 @@ translation falls back to the English key. Chat output is not translated.
 The Settings API calls it uses were checked in
 wow-ui-source on all five branches; `AddonCompartment.lua` exists on `live`
 and `forever` only.
-**The onboarding** (`Core/Onboarding.lua`, since 0.7) asks the same settings
+**The onboarding** (`Core/Onboarding.lua`, since 0.7) asks the same settings,
+but for the debuffs switch,
 on the first login, one to a page with a preview, and is drawn in
 `assets/design/onboarding.svg` from `ONB` in `tools/mockups.py` — change one,
 change both. It writes through `Umbra:SetOption` as the window does, so it

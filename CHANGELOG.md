@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8 — unreleased
+
+Debuffs over the buffs, for frames kept right above the action bars, and
+Umbra on the builds that are current now: Retail 12.1.5 and the 12.1.7 test
+realm, Forever as it launches on 4 November, Mists, the Anniversary realms
+and Classic Era.
+
+- `/uuf debuffs above`, or the new Debuffs switch in the options window,
+  draws the debuff row over the buff row. In `modern` both rows hang above
+  the frame and only the cast bar and the pet stay underneath; in `classic`
+  the debuffs move next to the frame. `/uuf debuffs below` is the default and
+  changes nothing
+- The frames stay where they are, dragged or not, and the party column keeps
+  its debuffs under each member
+- Picked in a fight, it is kept and applied when the fight ends, like the
+  layout
+
 ## 0.7 — 2 October 2026
 
 A first login that asks. A new install opens on a small window that walks

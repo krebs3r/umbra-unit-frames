@@ -442,9 +442,11 @@ while it is unlocked — and they would disagree the moment a debuff row
 appeared under each member. So all three ask here.
 
 It reads the set in force rather than assuming a side. Today both sets
-hang a party frame's debuffs below it and neither puts anything above,
-so the answer is the same either way; that is a fact about the two sets,
-not something this is allowed to rely on.
+hang a party frame's debuffs below it and neither puts anything above, and
+the debuffs switch leaves a party frame alone, since it has no buff row for
+its debuffs to stand over (see `Umbra:Stack`). So the answer is the same
+either way; that is a fact about the sets and the switch, not something
+this is allowed to rely on.
 --]]
 function Umbra:GroupSlotHeight(config)
 	local layout = self:ActiveLayout()
@@ -549,6 +551,11 @@ above when nothing else is up there, so the aura rows have to move with it.
 frame: the first entry is the one nearest to it. The pet takes its place in
 that stack the way an aura row does, so that everything on that side is
 counted the same way and nothing can land on top of it.
+
+One switch sits on top of either set and moves a single entry: `/uuf debuffs
+above` puts the debuff row over the buff row. It is not a third set, because
+it changes nothing about where the frames go — see *Debuffs above the buffs*
+below.
 --]]
 Umbra.layouts = {
 	-- Top left, where the player frame lived before Dragonflight moved it.
@@ -570,6 +577,67 @@ Umbra.layouts = {
 
 Umbra.defaultLayout = 'modern'
 
+--[[ Debuffs above the buffs
+Asked for by a player who keeps the frames right above the action bars
+(issue #4). In `modern` the debuffs hang under the pet, 83 below the player
+frame and 80 below the target, which is exactly where those bars are.
+Blizzard's own bottom bars stack upwards from 45, each about 45 tall with 5
+between them, so a third one reaches about 190, and from the default point
+the debuff rows already come down to 177 and 180.
+
+The switch means the same thing in both sets, and it says it about the
+screen rather than about the lists: the debuff row is drawn over the buff
+row. So each variant is derived from its set by one rule rather than written
+down a second time: the debuffs leave their side and go next to the buffs —
+outside them above the frame, between them and the frame below it.
+
+    modern   above = {targettarget, helpful, harmful}, below = {pet}
+    classic  below = {harmful, helpful}
+
+Under the player in `modern` that leaves the castbar and the pet, 51 instead
+of 83. What it costs is height upwards: the player's stack ends 96 above the
+frame instead of 64, the target's 131 instead of 67, because the target
+carries two rows of debuffs.
+
+The points derived further down are left as they are, and they can be. Each
+one reads an entry this rule does not move — the pet and the target's target
+stay first on their side — or, for the classic party column, the whole reach
+below the player, which is a sum and does not care about order.
+--]]
+local function DebuffsAbove(set)
+	local variant = {}
+
+	for _, side in ipairs({'above', 'below'}) do
+		variant[side] = {}
+
+		for _, entry in ipairs(set[side]) do
+			if entry ~= 'harmful' then
+				table.insert(variant[side], entry)
+			end
+		end
+	end
+
+	for _, side in ipairs({'above', 'below'}) do
+		for index, entry in ipairs(variant[side]) do
+			if entry == 'helpful' then
+				-- Above the frame a list runs upwards, so over the buffs is
+				-- after them; below it, the list runs downwards and over them
+				-- is before.
+				table.insert(variant[side], side == 'above' and index + 1 or index, 'harmful')
+
+				return variant
+			end
+		end
+	end
+
+	-- A set without a buff row has nothing to put the debuffs over.
+	return nil
+end
+
+for _, set in pairs(Umbra.layouts) do
+	set.debuffsAbove = DebuffsAbove(set)
+end
+
 --[[ Umbra:LayoutName() / Umbra:ActiveLayout()
 The set in force. A saved name this version no longer has falls back to the
 default rather than erroring, which is what happens to anyone downgrading.
@@ -586,6 +654,37 @@ end
 
 function Umbra:ActiveLayout()
 	return self.layouts[self:LayoutName()]
+end
+
+--[[ Umbra:DebuffsAbove() / Umbra:Stack(config, set)
+Whether the switch is on, and the two lists a frame of this kind actually
+hangs on in this set: the set's own, or its debuffs-above variant.
+
+A frame takes the variant only when it carries both rows. A party member has
+debuffs and nothing for them to stand over, so its row stays under it, and
+the header's spacing, the column's height and the stand-ins never learn the
+switch exists. The pet, the target's target and the boss column carry no
+rows at all.
+
+Everything that walks a side asks here — StackOffset, the aura anchoring,
+the mover's slots and bands, the onboarding's miniature — so a frame and the
+lines drawn around it cannot disagree about where its rows are. The saved
+variables do not exist yet while this file loads, which is why the points
+derived below see the sets as they are.
+--]]
+function Umbra:DebuffsAbove()
+	return UmbraUnitFramesDB ~= nil and UmbraUnitFramesDB.debuffs == 'above'
+end
+
+function Umbra:Stack(config, set)
+	local auras = config.auras
+
+	if set.debuffsAbove and auras and auras.helpful and auras.harmful
+		and self:DebuffsAbove() then
+		return set.debuffsAbove
+	end
+
+	return set
 end
 
 --[[ Umbra:StackHeight(config, entry)
@@ -623,7 +722,7 @@ the pet once ended up underneath a row of debuffs.
 function Umbra:StackOffset(config, layout, side, entry)
 	local offset = side == 'below' and self:CastbarReach(config) or 0
 
-	for _, name in ipairs(layout[side]) do
+	for _, name in ipairs(self:Stack(config, layout)[side]) do
 		if name == entry then
 			return offset + config.gap
 		end
