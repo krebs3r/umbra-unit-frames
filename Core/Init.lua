@@ -42,7 +42,7 @@ Umbra.isRetail = Umbra.isMainline and interface >= 100000
 -- The Classic clients — Mists of Pandaria in 5.5.4, the Anniversary realms'
 -- Burning Crusade in 2.5.6, Classic Era in 1.15.9 — are Classic in name and Midnight in most of
 -- their API: secret values, the heal prediction calculator and the duration
--- objects are all there. All three lack the same four things, and
+-- objects are all there. All three lack the same handful of things, and
 -- Compat/Classic.lua answers them. Checked against Blizzard's interface code
 -- for each build rather than assumed. The aura rows are decided where they
 -- are built, by asking for the widget, not by these flags.

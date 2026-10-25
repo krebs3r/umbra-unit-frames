@@ -187,7 +187,7 @@ Umbra runs on **five clients**: Retail, WoW: Forever, and the three Classic clie
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Interface | `120105`, `120107` | `16001` | `50504` | `20506` | `11509` |
 | `WOW_PROJECT_ID` | Mainline | Camelot (18) | Mists Classic | Burning Crusade Classic | Classic |
-| API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus four things | the same as Mists | the same as Mists |
+| API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus six things | the same as Mists | the same as Mists |
 | Secret Values | yes | yes | the API is there | the API is there | the API is there |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Mists` | `_TBC` | `_Vanilla` |
 | Umbra support | yes — verified inside an instance | yes, with one exception | frames, auras and the header seen working | frames, auras and portraits seen working | frames, auras and portraits seen working |
@@ -214,12 +214,14 @@ What the beta client actually did with Umbra — which values it hides and which
 
 ### The Classic clients
 
-Mists (build 5.5.4.69934), the Anniversary realms (2.5.6.69795) and Classic Era (1.15.9.69722) were each checked against the API documentation their build ships with, then played with. All three came back with the same four gaps, so one file, `Compat/Classic.lua`, answers them for all three:
+Mists (build 5.5.4.69934), the Anniversary realms (2.5.6.69795) and Classic Era (1.15.9.69722) were each checked against the API documentation their build ships with, then played with. All three came back with the same four gaps, and a reading of Blizzard's code in October found two more that oUF reaches unguarded, so one file, `Compat/Classic.lua`, answers them for all three:
 
 - **The aura container.** oUF builds its aura rows from the client's `AuraContainer` widget, and the Classic clients have neither that widget nor `AddDispelTypeTexture`. Where the client refuses a container, Umbra builds the row itself from plain buttons, cut by the same function and packed by the same arithmetic. The dispel color on the underline, the countdown and right-click to cancel a buff are done in Lua on those rows; cancelling works out of combat only.
 - **`GetUnitChargedPowerPoints`**, which oUF reads combo points through. `Compat/Classic.lua` answers nil, as Retail does for a unit without charged points.
 - **`UNIT_POWER_POINT_CHARGE`**, the event oUF's class power asks for. It is left unregistered instead of being reported on every login.
 - **`SetRolesets`**, a widget method oUF calls on every frame it builds. Rolesets are Midnight's rules for what an addon may do to a frame, and oUF also hides Blizzard's own frames through one. `Compat/Classic.lua` adds the method: for Umbra's frames it does nothing, and for Blizzard's it hides them the way oUF did before Midnight.
+- **`PlayerVehicleHasComboPoints`**, which oUF's class power calls in a vehicle seat. Mists has vehicles and not this function, so getting in would throw; `Compat/Classic.lua` answers from the vehicle's power type.
+- **`TRAIT_CONFIG_UPDATED`**, valid on all three, but oUF answers it through `C_ClassTalents`, which none of them has. It is left unregistered there.
 
 The secure group header uses the same machinery as on Retail, and unlike Forever it finishes its children: `/uuf dev header` built and configured one on Mists, solo. A real party is the next thing to watch it with.
 

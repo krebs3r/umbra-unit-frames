@@ -1981,6 +1981,12 @@ used there and never documented. What came back:
 - **Missing:** the `AuraContainer` widget, `AddDispelTypeTexture` and the
   `CustomAuraButtonDispelType*` enums — so oUF 14's aura rows cannot be
   built — and `GetUnitChargedPowerPoints`.
+- **Missed by both, found by reading oUF against Blizzard's code on 25
+  October:** `PlayerVehicleHasComboPoints`, which oUF's class power calls
+  unguarded in a vehicle seat, and `C_ClassTalents`, which it indexes on
+  `TRAIT_CONFIG_UPDATED` — an event the client calls valid. Compat/Classic.lua
+  answers the first from the vehicle's power type and lets the event go where
+  the namespace is missing. Neither has been seen in a seat or a spec change.
 - **Missed by the check, found by the first login:** `SetRolesets`. It is a
   widget method, and the check looked up functions. See below.
 

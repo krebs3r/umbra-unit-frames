@@ -36,6 +36,32 @@ if type(_G.GetUnitChargedPowerPoints) ~= 'function' then
 	Umbra:Debug('GetUnitChargedPowerPoints missing, answering nil')
 end
 
+--[[ PlayerVehicleHasComboPoints
+The same element, one branch further. In a vehicle seat it asks whether the
+vehicle carries combo points — `if(UnitHasVehicleUI('player')) then … if(
+PlayerVehicleHasComboPoints()) then` — with no guard, for every class. Mists
+has vehicles and not this function: it is not in that client's documentation,
+none of Blizzard's code there calls it, and an in-game dump of the client's
+globals for 5.5.4 does not list it. So every seat with a vehicle bar would
+throw, on getting in and on each change of power display, and take the
+elements after ClassPower down with that update.
+
+A vehicle with combo points has them as its power type, which is what
+ElvUI's own copy of oUF asks on Mists. Only defined where it is missing, like
+the one above. Found by reading Blizzard's code on 25 October 2026, not yet
+seen in a seat; the Anniversary realms and Era have no vehicles, and get the
+same answer for a question nothing there asks.
+--]]
+if type(_G.PlayerVehicleHasComboPoints) ~= 'function' then
+	local comboPoints = Enum and Enum.PowerType and Enum.PowerType.ComboPoints or 4
+
+	_G.PlayerVehicleHasComboPoints = function()
+		return UnitPowerType('vehicle') == comboPoints
+	end
+
+	Umbra:Debug('PlayerVehicleHasComboPoints missing, answering from the vehicle power type')
+end
+
 --[[ SetRolesets
 The first thing that broke in the client, on 25 September 2026, and it broke
 the whole layout: `ouf.lua:853: attempt to call a nil value`, in `Spawn`, on
@@ -124,8 +150,32 @@ through `C_EventUtils.IsEventValid`, so this is a question rather than a list
 and an event the client gains is registered again. The style runs before
 oUF enables a single element, which is what makes this early enough. Once
 per event it says so in the debug buffer.
+
+**One event is valid here and still let go of.** `TRAIT_CONFIG_UPDATED` is
+documented on all three clients, so the client calls it valid, and the same
+class power element answers it with `C_ClassTalents.GetActiveConfigID()`,
+unguarded — a namespace none of the three has. Nothing on these clients is
+known to fire the event for the player, whose talents are not trait configs,
+but each firing would throw if one did. So where the namespace is missing the
+event goes as well. Stubbing `C_ClassTalents` would be the other way, and the
+wrong one: Blizzard's own code tests for it to tell the clients apart.
 --]]
 local skipped = {}
+
+-- What an event's handler in oUF reaches for, where that is not the event.
+local NEEDS = {
+	TRAIT_CONFIG_UPDATED = function() return _G.C_ClassTalents ~= nil end,
+}
+
+local function Unusable(event)
+	if not C_EventUtils.IsEventValid(event) then
+		return 'event not on this client, not registered:'
+	end
+
+	if NEEDS[event] and not NEEDS[event]() then
+		return 'event valid, but what answers it is missing, not registered:'
+	end
+end
 
 function Umbra.GuardUnknownEvents(frame)
 	if not (C_EventUtils and C_EventUtils.IsEventValid) then return end
@@ -133,10 +183,12 @@ function Umbra.GuardUnknownEvents(frame)
 	local register = frame.RegisterEvent
 
 	frame.RegisterEvent = function(self, event, ...)
-		if type(event) == 'string' and not C_EventUtils.IsEventValid(event) then
+		local why = type(event) == 'string' and Unusable(event)
+
+		if why then
 			if not skipped[event] then
 				skipped[event] = true
-				Umbra:Debug('event not on this client, not registered:', event)
+				Umbra:Debug(why, event)
 			end
 
 			return

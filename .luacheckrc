@@ -22,8 +22,8 @@ globals = {
 	'UmbraUnitFramesDB',
 	'BINDING_HEADER_UMBRAUNITFRAMES', 'BINDING_NAME_UMBRAUNITFRAMES_CHECK',
 
-	-- Answered in Compat/Classic.lua where the client lacks it.
-	'GetUnitChargedPowerPoints',
+	-- Answered in Compat/Classic.lua where the client lacks them.
+	'GetUnitChargedPowerPoints', 'PlayerVehicleHasComboPoints',
 }
 
 read_globals = {
@@ -48,7 +48,8 @@ read_globals = {
 	'SetPortraitTexture',
 
 	-- The level plate: how high, how hard, and how the client colors it.
-	-- UnitEffectiveLevel is Mainline only and read through `_G`.
+	-- UnitEffectiveLevel is read through `_G`, so a client without it falls
+	-- back to UnitLevel.
 	'UnitLevel', 'UnitClassification', 'UnitCanAttack', 'GetCreatureDifficultyColor',
 	'UnitIsWildBattlePet', 'UnitIsBattlePetCompanion', 'UnitBattlePetLevel',
 
@@ -75,6 +76,7 @@ read_globals = {
 	-- Namespaced API
 	'C_AddOns', 'C_Spell', 'C_UnitAuras', 'C_Traits', 'C_CVar',
 	'C_SpecializationInfo', 'C_EventUtils', 'hooksecurefunc',
+	'UnitPowerType', 'C_ClassTalents',
 
 	-- Tooltips. oUF sets no unit tooltip of its own, and Blizzard's handler
 	-- cannot be borrowed for one, so the layout brings its own.

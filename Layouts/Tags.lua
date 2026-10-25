@@ -105,8 +105,9 @@ The unit's level, with `+` for an elite and `??` for one too far above you to
 be told, the way the client's own target frame writes it.
 
 UnitEffectiveLevel is the level a scaled unit is fought at, which is the one
-worth reading; the Classic clients do not have it and nothing of Blizzard's
-there asks for it, so they get the plain level. Neither comes back hidden on
+worth reading. Mists has it too — Blizzard's own group finder calls it there,
+read on 25 October 2026 — and on a client that does not scale it answers the
+plain level anyway; a client without it gets UnitLevel. Neither comes back hidden on
 any client checked, but the level is only compared once it is known to be in
 the clear: a hidden one goes to the client to render as it is.
 --]]

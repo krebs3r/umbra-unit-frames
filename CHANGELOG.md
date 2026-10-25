@@ -20,6 +20,8 @@ and Classic Era.
   its own, and `/uuf` had been calling it unsupported
 - The Retail TOC lists 12.1.7, so the game does not hide Umbra as out of date
   when that patch arrives
+- On Mists, getting into a vehicle no longer raises an error from the class
+  power row
 
 ## 0.7 — 2 October 2026
 
