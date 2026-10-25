@@ -8,19 +8,20 @@ Forever ships the Mainline UI with Vanilla content. Almost everything works as
 it does on Retail; what follows are the deviations found on the beta client
 (build 1.60.1, interface 16001). Each one is guarded so that the file keeps
 working once Blizzard fixes it.
+
+From 1.60.1.70170 on, and until Core/Init.lua learnt the project Forever
+reports since then, this file stopped at its first line. The report line at
+the bottom is how that showed: `/uuf dev check` said `compat: none`.
 --]]
 
 -- Core/Init.lua asks whether loadstring_untainted is there, because the answer
 -- matters on every client and this file loads on one. All that is left here is
--- saying so out loud on the client where it was first found missing.
+-- saying so out loud on the client where it was first found missing. Retail
+-- clears it for addons too; whether the secure group header works is a
+-- different question, and `/uuf dev header` asks that one.
 if not Umbra.hasSecureSnippets then
-	Umbra:Debug('loadstring_untainted missing, secure snippets disabled')
+	Umbra:Debug('loadstring_untainted missing, snippets of our own disabled')
 end
-
--- The beta client writes SavedVariables on exit and never reads them back, so
--- every session starts from defaults. Nothing to work around, but the addon
--- must not treat an empty profile as a first-run that needs setup.
-Umbra.savedVariablesUnreliable = true
 
 -- Last line on purpose: `/uuf dev check` reports it, so a run that stopped part
 -- way through this file can be told apart from one that never started it.

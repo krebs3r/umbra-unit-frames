@@ -139,13 +139,13 @@ All five run on one codebase. **The Classic clients** call themselves Classic bu
 
 What the class power row does not know yet stays empty: Eclipse, Shadow Orbs, Burning Embers and Demonic Fury on Mists, where Chi shows for Windwalker only. Burning Crusade and Classic Era show combo points and nothing else, and Burning Crusade has no boss column to fill.
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client.
+Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Since a late beta build Forever tells addons it is a game of its own rather than Retail; Umbra 0.8 knows that answer too.
 
 **The one exception on Forever is the client's, not Umbra's.**
 
 *The party column cannot be built there.* That client compiles every secure snippet with `loadstring_untainted`, the function is missing, and the client's own group-header code needs it to finish each child it creates — so the header makes buttons it cannot finish, by Umbra or by any other addon. Umbra notices within two seconds of the column first appearing, hides it, stops asking, and hands Blizzard's group panel back whatever `/uuf group` says. Every other frame is unaffected.
 
-It is being watched rather than worked around: it could be gone by launch, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
+It is being watched rather than worked around: a late beta build changed what lies behind it and may have fixed it, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
 
 **A word on Secret Values.** Since patch 12.0 the game hides exact health and power numbers inside encounters, Mythic+ and PvP — addons may display them but not read them. Umbra's design happens to suit that well: a neutral health bar with class color on the edge never needed to work out a color from your health, so your frames look and behave the same inside a boss fight as outside one. What you will notice is that health reads as a percentage while the fight hides the number.
 

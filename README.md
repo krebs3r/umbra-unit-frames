@@ -148,7 +148,7 @@ The addon folder is named `UmbraUnitFrames` and the slash command is `/uuf`. An 
 
 ### From a release
 
-Take the `UmbraUnitFrames` zip from [the latest release](https://github.com/krebs3r/umbra-unit-frames/releases/latest) and unpack it into `Interface\AddOns` — `_retail_\Interface\AddOns` for Retail, `_classic_beta_\Interface\AddOns` for the Forever beta, `_classic_\Interface\AddOns` for Mists of Pandaria Classic, `_anniversary_\Interface\AddOns` for the Anniversary realms, `_classic_era_\Interface\AddOns` for Classic Era.
+Take the `UmbraUnitFrames` zip from [the latest release](https://github.com/krebs3r/umbra-unit-frames/releases/latest) and unpack it into `Interface\AddOns` — `_retail_\Interface\AddOns` for Retail, `_forever_\Interface\AddOns` for WoW: Forever, `_classic_\Interface\AddOns` for Mists of Pandaria Classic, `_anniversary_\Interface\AddOns` for the Anniversary realms, `_classic_era_\Interface\AddOns` for Classic Era.
 
 One package carries every TOC file rather than one build per flavor, and the release publishes a `release.json` next to it that an addon manager reads to pick for itself.
 
@@ -186,7 +186,7 @@ Umbra runs on **five clients**: Retail, WoW: Forever, and the three Classic clie
 | | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Interface | `120100`, `120105` | `16001` | `50504` | `20506` | `11509` |
-| `WOW_PROJECT_ID` | Mainline | Mainline | Mists Classic | Burning Crusade Classic | Classic |
+| `WOW_PROJECT_ID` | Mainline | Camelot (18) | Mists Classic | Burning Crusade Classic | Classic |
 | API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus four things | the same as Mists | the same as Mists |
 | Secret Values | yes | yes | the API is there | the API is there | the API is there |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Mists` | `_TBC` | `_Vanilla` |
@@ -200,11 +200,15 @@ The client everything is measured against, and verified inside an instance, wher
 
 Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. The old Classic globals — `UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo` — do not exist there; the handful of deviations from Retail live in `Compat/Forever.lua`. One thing does not work, and it is the client's.
 
+Since build 1.60.1.70170 Forever reports a project of its own, `WOW_PROJECT_CAMELOT`, where it used to report Mainline. Umbra knows both answers from 0.8 on; before that, `/uuf` named the client unsupported and `Compat/Forever.lua` did not run. Nothing broke, but nothing on the client was told it was Forever either.
+
 **The party column cannot be built there**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
 
 Umbra notices and steps back: two seconds after its column would first appear it checks whether any child was given a unit, and if none was, it hides itself, stops asking the client, and hands Blizzard's group panel back whatever `/uuf group` says. Everything else — the single frames, auras, cast bars, portraits — is unaffected.
 
-No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches, or in a later beta. `/uuf dev header` answers where any given client stands.
+**That may have changed.** Build 70009 changed the order in which the client clears that function for addons and its restricted environment takes its own copy, which is what the oUF maintainers point to as the fix. It has not been measured here on a build since. The step back measures it every time, so a header that works there is simply used.
+
+No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches. `/uuf dev header` answers where any given client stands.
 
 What the beta client actually did with Umbra — which values it hides and which events it is missing — is written down in the [development notes](docs/development.md).
 

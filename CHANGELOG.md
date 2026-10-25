@@ -16,6 +16,8 @@ and Classic Era.
   its debuffs under each member
 - Picked in a fight, it is kept and applied when the fight ends, like the
   layout
+- Forever is recognised again. Since a late beta build it reports a game of
+  its own, and `/uuf` had been calling it unsupported
 
 ## 0.7 — 2 October 2026
 

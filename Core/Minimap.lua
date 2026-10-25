@@ -61,7 +61,10 @@ Blizzard's tracking-button geometry, the one LibDBIcon, Soundstone and
 Hourstone use: a round ground, the icon, and the tracking border over both.
 The border's transparent padding differs between Retail and the Classic
 families, so the sizes do too — and Forever runs Retail's code with Classic's
-art, which is why this asks `isRetail` rather than `isMainline`.
+art, which is why this asks `isRetail` rather than `isMainline`, which is true
+on Forever. Forever's minimap was reskinned in 1.60.1.70425 with Retail-style
+atlases; whether the button there still wants Classic's sizes has not been
+looked at.
 
 Dragged around the rim, not across the screen, and kept as an angle.
 --]]

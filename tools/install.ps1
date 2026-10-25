@@ -56,9 +56,10 @@ Set-Content -Path $pathFile -Value $WowPath -Encoding utf8
 
 # Mists of Pandaria Classic lives in _classic_, the folder the launcher gives
 # the current Classic progression client; the Anniversary realms, on Burning
-# Crusade in 2026, have a folder of their own.
+# Crusade in 2026, have a folder of their own. Forever moved to _forever_ when
+# its beta closed on 23 October 2026; the beta's _classic_beta_ is left behind.
 $clientDir = switch ($Flavor) {
-	'forever' { '_classic_beta_' }
+	'forever' { '_forever_' }
 	'mists' { '_classic_' }
 	'anniversary' { '_anniversary_' }
 	'era' { '_classic_era_' }

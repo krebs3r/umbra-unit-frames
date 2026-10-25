@@ -8,8 +8,10 @@ them work against the API.
 ## Decisions
 
 1. **Retail, WoW: Forever and the three Classic clients are one codebase.**
-   Forever runs the Mainline UI (`WOW_PROJECT_MAINLINE`, interface 16001, the
-   12.1.5 API set), not the Classic API. Mists reports itself as a Classic
+   Forever runs the Mainline UI (interface 16001, the 12.1.5 API set), not
+   the Classic API. It reported `WOW_PROJECT_MAINLINE` until 1.60.1.70170 and
+   `WOW_PROJECT_CAMELOT` (18) since — see *What the Forever client actually
+   did*. Mists reports itself as a Classic
    client and carries almost all of the Midnight API anyway — see *Mists of
    Pandaria Classic*. The Anniversary realms and Classic Era turned out to
    be the same case. Five TOCs, one source tree, one oUF.
@@ -32,8 +34,9 @@ debuff row, a cast bar and a role marker — see *Group and raid frames*.
 **On Retail. Not on Forever.** The first `/uuf dev header` on the beta, 22
 September 2026, came back in the error log rather than in the report window:
 that client's own restricted environment cannot compile the snippet its own
-header machinery runs on a new child, so no secure group header works there,
-by oUF or by anyone — see *The secure header does not work on Forever*.
+header machinery runs on a new child, so no secure group header worked there
+on that build, by oUF or by anyone — see *The secure header does not work on
+Forever*, and the note under it on build 70009, which may have changed that.
 
 All six design principles are implemented — class color at the edge, the
 portrait column, power as a hairline, auras with an underline, hatched absorbs
@@ -1654,9 +1657,9 @@ child (*The secure header does not work on Forever*), and the answer to that
 is not a second party column built out of four nailed-down frames: it would
 have no sorting and no in-combat changes, it would need maintaining beside the
 header, and raid frames would be the same work twice over. The client may well
-have `loadstring_untainted` by the time it launches on 4 November 2026, or in
-a later beta — and if it does, every line of that would have been written for
-nothing. So Umbra waits for the client, the column stands itself down there,
+have `loadstring_untainted` by the time it launches on 4 November 2026 — build
+70009 may already have seen to it — and if it does, every line of that would
+have been written for nothing. So Umbra waits for the client, the column stands itself down there,
 and Blizzard's group panel takes over.
 
 **Open, and not urgent: pets of group members.** Two shapes are in the
@@ -1750,12 +1753,14 @@ When that moves to AceDB and AceConfig, the design studio's profile schema
 Forever launches **4 November 2026**. Known beta behaviour: `/reload UI` is
 protected while `/reload` is not.
 
-**The beta client is installed** as of 20 September 2026, under the same root
+**The beta client was installed** from 20 September 2026, under the same root
 as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
-`wow_classic_beta`, with `WowB.exe`. That is the folder
-`.\tools\install.ps1 -Flavor forever` already targets, and `tools/.wowpath`
-holds the shared root, so the flavour alone picks the client and neither
-overwrites the other.
+`wow_classic_beta`, with `WowB.exe`. The beta closed on 23 October 2026, and
+the launcher now installs Forever as product `wowf` into `_forever_`, which is
+where `.\tools\install.ps1 -Flavor forever` puts the addon since 0.8.
+`tools/.wowpath` holds the shared root, so the flavour alone picks the client
+and neither overwrites the other. Nothing carries over from the beta folder:
+its AddOns and saved variables stay behind.
 
 `Interface\AddOns` does not exist until the client has been started once, so a
 first install has to wait for that.
@@ -1853,6 +1858,19 @@ would have to be fixed frames with no sorting and no in-combat changes — which
 is the second addon the header was chosen to avoid being — or wait for the
 client to gain the function before it launches on 4 November 2026.
 
+**Build 70009 may have changed this; not measured since.** Read off the
+`forever` branch on 25 October 2026: in 1.60.1.70009, 24 September,
+`Blizzard_EnvironmentCleanup.toc` stopped depending on the restricted
+environment through a game-type gate that left `camelot` out, and now names
+it as an `OptionalDep` the way Retail does. On 69913 the cleanup could run
+first and clear `loadstring_untainted` before `RestrictedExecution.lua`
+captured its own copy at file scope — which is the `loadstring_untainted =
+nil` the error above shows. The restricted-environment and group-header Lua
+is byte-identical to Retail's, and the oUF maintainers name 70009 as the fix
+(oUF #895). Until `/uuf dev header` has been run on a build since, the
+result above stands; the column's stand-down measures it every time anyway,
+so a header that works there would be used without a change.
+
 Two things follow for the code as it stands:
 
 - **Solo it does not bite.** The live header spawns with `showSolo` and
@@ -1907,7 +1925,12 @@ is built on it.
 - **`Umbra.isForever` matches.** `/uuf` names the client `Forever (interface
   16001)` rather than `unsupported`, so `WOW_PROJECT_ID ==
   WOW_PROJECT_MAINLINE` holds here and the interface falls in the 16xxx band
-  the check keys off.
+  the check keys off. **No longer from 1.60.1.70170 on**, 1 October 2026:
+  Blizzard's `Camelot\ProjectConstants.lua` sets `WOW_PROJECT_ID =
+  WOW_PROJECT_CAMELOT` (18), which made Forever neither Mainline nor Forever
+  here, `Compat/Forever.lua` returned on its first line and `/uuf` said
+  `unsupported`. Found by reading the `forever` branch on 25 October; 0.8 asks
+  for either answer and counts Forever as Mainline.
 - **`secure snippets: unavailable`.** `loadstring_untainted` is missing here,
   as the record said, and `Umbra.hasSecureSnippets` is false by measurement
   rather than by a file that failed to load. What that was taken to mean for

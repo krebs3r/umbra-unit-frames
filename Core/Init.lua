@@ -14,10 +14,29 @@ end
 
 local interface = select(4, GetBuildInfo())
 
--- Forever runs the Mainline API but reports interface 16xxx, so a numeric
--- threshold on the interface version picks the wrong code path there.
-Umbra.isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-Umbra.isForever = Umbra.isMainline and interface >= 16000 and interface < 17000
+-- A project constant this client does not define answers no rather than
+-- matching a nil WOW_PROJECT_ID.
+local function IsProject(name)
+	return _G[name] ~= nil and WOW_PROJECT_ID == _G[name]
+end
+
+--[[ Forever is its own project now
+Forever runs the Mainline API but reports interface 16xxx, so a numeric
+threshold on the interface version picks the wrong code path there. It used
+to report the Mainline project as well, and was told apart by that number
+alone — measured on the beta's 69913, 20 September 2026.
+
+Since 1.60.1.70170, 1 October, Blizzard's Camelot\ProjectConstants.lua sets
+`WOW_PROJECT_ID = WOW_PROJECT_CAMELOT`, which is 18. Read the old way, that
+made Forever neither Mainline nor Forever, so Compat/Forever.lua returned on
+its first line and every report named the client unsupported. Nothing threw;
+the wrong answer was only ever visible in the diagnostics. Both are asked
+now, so a client on either side of that build is Forever, and Forever counts
+as Mainline, which its API is.
+--]]
+Umbra.isForever = IsProject('WOW_PROJECT_CAMELOT')
+	or (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and interface >= 16000 and interface < 17000)
+Umbra.isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or Umbra.isForever
 Umbra.isRetail = Umbra.isMainline and interface >= 100000
 
 -- The Classic clients — Mists of Pandaria in 5.5.4, the Anniversary realms'
@@ -27,10 +46,6 @@ Umbra.isRetail = Umbra.isMainline and interface >= 100000
 -- Compat/Classic.lua answers them. Checked against Blizzard's interface code
 -- for each build rather than assumed. The aura rows are decided where they
 -- are built, by asking for the widget, not by these flags.
-local function IsProject(name)
-	return _G[name] ~= nil and WOW_PROJECT_ID == _G[name]
-end
-
 Umbra.isMists = IsProject('WOW_PROJECT_MISTS_CLASSIC')
 Umbra.isTBC = IsProject('WOW_PROJECT_BURNING_CRUSADE_CLASSIC')
 Umbra.isEra = IsProject('WOW_PROJECT_CLASSIC')
