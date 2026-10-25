@@ -185,7 +185,7 @@ Umbra runs on **five clients**: Retail, WoW: Forever, and the three Classic clie
 
 | | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Interface | `120100`, `120105` | `16001` | `50504` | `20506` | `11509` |
+| Interface | `120105`, `120107` | `16001` | `50504` | `20506` | `11509` |
 | `WOW_PROJECT_ID` | Mainline | Camelot (18) | Mists Classic | Burning Crusade Classic | Classic |
 | API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus four things | the same as Mists | the same as Mists |
 | Secret Values | yes | yes | the API is there | the API is there | the API is there |
