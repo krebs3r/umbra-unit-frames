@@ -529,6 +529,15 @@ local function BuildSquare(parent, attempt)
 	model:SetAllPoints()
 	square.Model = model
 
+	-- The camera worked out again once the model has loaded, as the column
+	-- does (Layouts/Shared.lua, *The camera*), so `as drawn` keeps drawing
+	-- what the column draws.
+	if model:HasScript('OnModelLoaded') then
+		model:HookScript('OnModelLoaded', function(self)
+			pcall(self.RefreshCamera, self)
+		end)
+	end
+
 	-- The 2D attempt is a texture rather than a model, and in that one
 	-- square it lies over the model the way the stand-in lies over the
 	-- column.

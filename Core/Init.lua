@@ -750,6 +750,22 @@ local function Command(input)
 					((model.umbraFlat and model.umbraFlat:IsShown())
 						and 'up, over the model'
 						or "down, the square is the model's"))
+
+				--[[ Whether the camera is ever worked out again
+				The column refreshes its camera when the client says a model
+				has loaded (Layouts/Shared.lua, *The camera*), but on the
+				Anniversary realms and Classic Era nothing of Blizzard's
+				shows that script firing on a PlayerModel. A count that stays
+				at zero on a client that offers the script says it never
+				fired there, and the refresh on load never ran. The count
+				starts again with every reload.
+				--]]
+				if model.HasScript and model:HasScript('OnModelLoaded') then
+					add(label .. ': models loaded since the last reload — '
+						.. (model.umbraLoads or 0))
+				else
+					add(label .. ': models loaded — no OnModelLoaded on this client')
+				end
 			end
 		end
 

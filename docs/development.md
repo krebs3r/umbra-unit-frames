@@ -1376,6 +1376,62 @@ Two things to read correctly in that box, both measured and neither a fault:
   units while the three pictures differ. So the caption says a portrait was
   given, and nothing about whose.
 
+### A portrait framed before its model arrived
+
+Seen on Forever on 8 November 2026 at 09:25, off a lossless screenshot: the
+player's portrait was a blurred close-up of the armor — yellow cloth and a
+red and white emblem — where two minutes earlier it had shown the face. The
+debug buffer had just read `portrait missing for player — standing in for it`
+and `portrait arrived for player on try 1`. Seen once; nothing since has made
+it happen again.
+
+What was read, on all five branches of the client's code and in other unit
+frames:
+
+- oUF sets zoom, distance and position, then `ClearModel` and `SetUnit`, once.
+  The bundled element is upstream's, and upstream has no report of this.
+- Blizzard places its custom cameras in `OnModelLoaded` when a new model is
+  set, after the model exists, and the talking head on Retail and Forever
+  calls `RefreshCamera` there first. Its model frames call `RefreshCamera` on every
+  `UI_SCALE_CHANGED` and `DISPLAY_SIZE_CHANGED`, on all five clients —
+  among them the guild news boss model, which sets its portrait zoom once in
+  `OnLoad` and leaves the refresh to keep it.
+- Shadowed Unit Frames, EllesmereUI and the Forever addon GlassUnitFrames
+  frame the portrait after `SetUnit` rather than before it; KullThranUI and
+  DialogueUI frame theirs in `OnModelLoaded`.
+- A zoom that was simply lost shows the whole figure — what Shadowed Unit
+  Frames' own comment and an ElvUI report describe — not a close-up. So the
+  picture fits a framing worked out while the model was still streaming in
+  better than a lost one. That is a reading, not a measurement.
+
+Three changes follow, and none copies oUF's values:
+
+- `RefreshCamera` when the client says a model has loaded, hooked only where
+  the model offers `OnModelLoaded`. The question mark of an unreachable unit
+  keeps its own framing, because the refresh works from the settings already
+  on the model.
+- `RefreshCamera` on every portrait when the UI scale or the resolution
+  changes, as Blizzard's model frames do.
+- `RetryPortrait` looks before it reloads. It called `ForceUpdate` first, so a
+  model that had loaded by itself in the half second was cleared and set
+  again. Whether that happened before the bad picture, the old log cannot
+  tell: it wrote `on try 1` either way. That case now refreshes the camera,
+  lowers the stand-in, and logs `portrait arrived for player on its own,
+  before try 1`. A model that turns up only after a try has set it again
+  logs `before try 2 — try 1 had set it again` instead: which of the two
+  loads arrived, nothing in the retry can tell.
+
+Left out on purpose: zooming again with oUF's numbers after `SetUnit`, which
+would copy oUF and frame the question mark as a face, since which branch ran
+is private to the element; and `ForceUpdate` from `OnModelLoaded`, which a
+load would fire again. `/uuf dev check` counts the loads per portrait,
+`models loaded since the last reload`. Blizzard's own code wires
+`OnModelLoaded` on the talking head's `PlayerModel` on Retail and Forever and
+on the wardrobe's `DressUpModel`s, a kind of `PlayerModel`, there and on
+Mists; on the Anniversary realms and Classic Era nothing of Blizzard's uses it.
+A count that stays at zero on a client means the hook never ran there, and
+only the scale refresh and the retry change apply.
+
 ### Permission to compare two units is not an answer
 
 **Settled, and it is a defect in oUF.** Every comparison of two unit tokens in
@@ -1764,6 +1820,28 @@ quietly rather than erroring, which is why none of them announced itself.
    - Retail and a Classic client, where `auto` should stay `umbra` and
      `/uuf theme forever` should draw the same rim. `/uuf dev check` names
      the theme in force under the layout, as `theme: forever (auto)`.
+
+4. **The portrait camera.** Written on 8 November 2026 from one picture —
+   see *A portrait framed before its model arrived*. What has to be seen:
+
+   - The close-up not coming back over some days of play on Forever.
+   - `models loaded since the last reload` above zero in `/uuf dev check`
+     on each client that offers the script, the Anniversary realms and
+     Classic Era above all, where nothing of Blizzard's uses it.
+   - Healthy portraits unchanged by the refresh: the face on every frame,
+     the question mark of a disconnected party member, and the 2D stand-in.
+
+   On Forever, the same day, the first run with the change: the script
+   fires there. `/uuf dev check` counted 2 loads on the player, 2 on the
+   pet, 7 on the target and 3 on the target of the target. The debug buffer
+   read `portrait missing for` the player and the pet at login, then
+   `portrait arrived for pet on its own, before try 1` — a late model that
+   was not set a second time — and `portrait arrived for player on its own,
+   before try 2`, worded since as *try 1 had set it again*: the player's
+   model was still missing at try 1, so that try reloaded it, as it should.
+   The four faces looked as they did before the change. Retail, the
+   Classic clients, the question mark of a disconnected party member and
+   the close-up itself are still open.
 
 Settled on 21 September 2026, measured in a delve:
 

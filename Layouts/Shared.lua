@@ -141,6 +141,103 @@ local function WithheldIdentity(unit)
 	return ok and Umbra.Secrets.Is(guid)
 end
 
+--[[ StandIn(element, unit)
+Covers the model with the client's own 2D portrait, or uncovers it.
+
+`SetPortraitTexture` is what Blizzard's own unit frames use, and it is asked
+for the same unit the model was asked for, so nothing is invented here: if the
+client will not name this unit either, the stand-in is its question mark and
+that is still an honest answer.
+--]]
+local function StandIn(element, unit, show)
+	local flat = element.umbraFlat
+	if not flat then return end
+
+	if show and unit and type(_G.SetPortraitTexture) == 'function' then
+		pcall(SetPortraitTexture, element.umbraFlatArt, unit)
+	end
+
+	flat:SetShown(show and true or false)
+end
+
+--[[ The camera, worked out again once the model is there
+Seen on Forever on 8 November 2026, off a lossless screenshot: the player's
+portrait showed a blurred close-up of the armor instead of the face, a
+moment after the log read `portrait missing for player` and `portrait arrived
+for player on try 1`. Two minutes earlier the same frame had shown the face.
+Seen once, and not made to happen again.
+
+oUF sets the camera — portrait zoom, distance, position — and then the unit,
+once, in that order, and nothing asks again. The picture fits a framing
+worked out while the model was still streaming in: close, as asked, but aimed
+at the middle of the body rather than at a head that was not there yet. A
+zoom that was simply lost looks different — the whole figure, which is what
+other unit frames report when theirs goes. That is a reading of one picture,
+not a measurement.
+
+So when the client says a model has loaded, the camera is worked out again
+with `RefreshCamera`. It works from the settings already on the model, so
+nothing of oUF's is copied and the question mark of an unreachable unit keeps
+its own framing. That it keeps a portrait zoom is Blizzard's to answer, not
+the documentation's, which has nothing to say about the method: the guild
+news boss model sets its zoom once and leaves it to `RefreshCamera` on every
+change of UI scale. That change is the other time a framing goes stale —
+Blizzard's model frames refresh on `UI_SCALE_CHANGED` and
+`DISPLAY_SIZE_CHANGED` on every client — so the portraits do too. And the
+talking head on Retail and Forever refreshes in its `OnModelLoaded` before it
+places its own camera.
+
+`OnModelLoaded` is in the script list of all five clients. Blizzard's own code
+wires it on the talking head's `PlayerModel` on Retail and Forever, and on the
+wardrobe's `DressUpModel`s, a kind of `PlayerModel`, there and on Mists; on
+the Anniversary realms and Classic Era nothing of Blizzard's uses it. So the
+hook is only set where the model offers the script, and `umbraLoads` counts
+the loads for `/uuf dev check`: a count that stays at zero on a client says
+the hook never ran there. A model the retry finds arrived by itself is
+refreshed there as well, which covers such a client for the case that was
+seen. Nothing in here sets a model or calls `ForceUpdate`, because a load
+would fire it again.
+--]]
+local function RefreshPortraitCamera(element)
+	if element.RefreshCamera then
+		pcall(element.RefreshCamera, element)
+	end
+end
+
+local function PortraitModelLoaded(element)
+	element.umbraLoads = (element.umbraLoads or 0) + 1
+	RefreshPortraitCamera(element)
+end
+
+local cameras = CreateFrame('Frame')
+
+cameras:SetScript('OnEvent', function()
+	for _, frame in ipairs(oUF.objects) do
+		local element = frame.Portrait
+
+		if element then
+			RefreshPortraitCamera(element)
+		end
+	end
+end)
+
+Umbra:RegisterEvent(cameras, 'UI_SCALE_CHANGED')
+Umbra:RegisterEvent(cameras, 'DISPLAY_SIZE_CHANGED')
+
+--[[ RetryPortrait(element, tries)
+Looks before it reloads. Until 8 November 2026 each try called `ForceUpdate`
+first and asked afterwards, so a model that had streamed in by itself in the
+half second was torn down and set again — `ClearModel` and `SetUnit` on a
+model that was already there. Whether that is what happened before the
+close-up above, the old log cannot tell: it wrote `on try 1` either way. A
+model that turned up on its own is now uncovered, its camera worked out
+again, and the log says so; `ForceUpdate` is for one that is still missing.
+
+The first run on Forever, the same day, read `on its own, before try 2` for
+the player: try 1 had found the model missing and set it again, so *on its
+own* overstated what was known. Only an arrival before try 1 is now worded
+that way.
+--]]
 local function RetryPortrait(element, tries)
 	C_Timer.After(PORTRAIT_DELAY, function()
 		local frame = element.__owner
@@ -148,6 +245,22 @@ local function RetryPortrait(element, tries)
 
 		if not unit or not UnitExists(unit) then
 			element.umbraWaiting = nil
+			return
+		end
+
+		if not ModelPending(element) then
+			element.umbraWaiting = nil
+			RefreshPortraitCamera(element)
+			StandIn(element, unit, false)
+			-- Only before the first try is that the client's doing alone.
+			-- Later, the try before has already set the model again, and
+			-- which of the two loads arrived nothing here can tell.
+			if tries == 1 then
+				Umbra:Debug('portrait arrived for', unit, 'on its own, before try 1')
+			else
+				Umbra:Debug('portrait arrived for', unit, 'before try', tries,
+					'— try', tries - 1, 'had set it again')
+			end
 			return
 		end
 
@@ -176,25 +289,6 @@ The ForceUpdate inside the chain comes back through here, which is what the
 flag is for: without it each attempt would start a chain of its own. Clearing
 it when the chain ends is what lets the next target have its own.
 --]]
---[[ StandIn(element, unit)
-Covers the model with the client's own 2D portrait, or uncovers it.
-
-`SetPortraitTexture` is what Blizzard's own unit frames use, and it is asked
-for the same unit the model was asked for, so nothing is invented here: if the
-client will not name this unit either, the stand-in is its question mark and
-that is still an honest answer.
---]]
-local function StandIn(element, unit, show)
-	local flat = element.umbraFlat
-	if not flat then return end
-
-	if show and unit and type(_G.SetPortraitTexture) == 'function' then
-		pcall(SetPortraitTexture, element.umbraFlatArt, unit)
-	end
-
-	flat:SetShown(show and true or false)
-end
-
 local function PortraitPostUpdate(element, unit)
 	local missing = ModelPending(element)
 
@@ -859,6 +953,12 @@ local function Style(self, unit)
 	portrait:SetFrameLevel(self:GetFrameLevel() + 2)
 	portrait.PostUpdate = PortraitPostUpdate
 	self.Portrait = portrait
+
+	-- Its camera worked out again once its model has loaded: see
+	-- RefreshPortraitCamera above.
+	if portrait:HasScript('OnModelLoaded') then
+		portrait:HookScript('OnModelLoaded', PortraitModelLoaded)
+	end
 
 	--[[ The 2D stand-in
 	Laid over the model rather than swapped for it. A PlayerModel that is

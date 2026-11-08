@@ -38,6 +38,13 @@ bar.
 - The class tint in the portrait column lies behind the model now, on the
   column's ground. It used to lie over the model as well and drew a faint
   veil of class color across every face
+- A 3D portrait works its camera out again once its model has loaded, and
+  when the UI scale or the resolution changes. On Forever the player's
+  portrait once showed a close-up of the armor instead of the face, right
+  after its model had been late. Seen once and not made to happen again, so
+  this is the likely fix rather than a measured one
+- A model that turns up by itself while Umbra waits for it is no longer
+  loaded a second time
 - Checked on Forever, where the timers now sit inside their icons. Not yet
   on Retail, or inside an instance
 
