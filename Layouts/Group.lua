@@ -24,9 +24,10 @@ assigned, both snippets run, our style applied, and the client deciding when
 the column is on screen. `/uuf dev header` is what asked, it is still here, and
 the write-up is under *Relevant to group frames* in the development notes.
 
-**It stays because Forever has not been asked.** The same probe on the beta
-client is one slash command, and until it has been run there this file's
-foundation is measured on one of the two clients it claims to support.
+**It stays because it is the measurement.** It answered no on the Forever
+beta (22 September 2026) and yes on Retail, Mists and Forever's release client
+(8 November 2026), and it is the first thing to run on a client nobody has
+asked yet.
 --]]
 
 --[[ The Umbra style on a header child
@@ -137,10 +138,9 @@ comes back a moment later, and the error repeats for as long as the header is
 supposed to be visible — eighty-eight of them out of one run of the probe,
 which forces the header visible solo.
 
-The live column is quiet on that client until a party is joined, because it
-spawns with `showSolo` and `showPlayer` false. Joining one is what would set
-it off, in the middle of play, with no way to read the report that explains
-it.
+On the beta the live column was quiet until a party was joined, because it
+spawns with `showSolo` and `showPlayer` false. Joining one is what set it
+off, in the middle of play, with no way to read the report that explains it.
 
 **So the header checks its own work, once.** It is shown, a moment passes, and
 either there are children or there are not. No children while shown is not a
@@ -656,10 +656,11 @@ local probe
 The run that answered on a client where asking costs errors.
 
 Every registration shows the header, every show builds a child the client
-cannot configure, and every failure is reported — so on Forever a second
-`/uuf dev header` buys nothing and pays the same handful of errors and the
-same handful of abandoned buttons for it. The question is not open there any
-more; what is wanted is the answer, and the answer is already written down.
+cannot configure, and every failure is reported — so on a client like the
+Forever beta a second `/uuf dev header` buys nothing and pays the same handful
+of errors and the same handful of abandoned buttons for it. On such a client
+the question is answered; what is wanted is the answer, and it is already
+written down.
 
 A reload clears this along with everything else, which is the right way to ask
 again: the probe header cannot be unmade, so a fresh one needs a fresh
@@ -766,9 +767,9 @@ its own.
 local function RestrictedNote(add)
 	add('Read the error log next. The child is built inside the')
 	add("client's restricted environment, so a failure there reaches")
-	add('no pcall here — on Forever it is RestrictedExecution.lua')
-	add('with loadstring_untainted nil, and then no header works on')
-	add('this client at all.')
+	add('no pcall here — on the Forever beta it was RestrictedExecution.lua')
+	add('with loadstring_untainted nil, and then no header worked on')
+	add('that client at all.')
 end
 
 --[[ Umbra:ProbeHeader()
@@ -885,8 +886,8 @@ function Umbra:ProbeHeader()
 	end
 
 	--[[ Counted, because seven of them can mean nothing
-	Forever answers `children: 7` solo, where a working header makes one, and
-	not one of the seven carries a unit. The count on its own reads as a
+	The Forever beta answered `children: 7` solo, where a working header makes
+	one, and not one of the seven carried a unit. The count on its own reads as a
 	header doing rather more than it was asked; with the second number beside
 	it, it reads as what it is.
 	--]]

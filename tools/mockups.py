@@ -817,7 +817,7 @@ def sheet_layout(out, which):
         'modern': 'The arrangement Dragonflight introduced. Player and target '
                   'meet in the lower third, buffs above them, the pet under '
                   'the cast bar and the debuffs under the pet. The party '
-                  'column goes to the left edge, centred on it: it is about '
+                  'column goes to the left edge, centered on it: it is about '
                   'four other people and does not belong in that gathering.',
         'classic': 'Where the player frame lived before Dragonflight. The pet '
                    'is the topmost thing in the stack, so both aura rows hang '
@@ -988,7 +988,7 @@ def sheet_party(out):
             aura_block_height(party, 8) + party['gap'])),
         ('Out of range fades',
          'Alpha %.2f, the portrait with it. Class color and identity stay '
-         'intact rather than going grey.' % M['rangeAlpha']),
+         'intact rather than going gray.' % M['rangeAlpha']),
     ]
     for i, (title, body) in enumerate(notes):
         y = 200 + i * 128
@@ -1126,7 +1126,7 @@ OPT = {
     'footer': 9,
 }
 
-VERSION = '0.8'
+VERSION = '0.9'
 
 OPTION_ROWS = [
     ('section', 'Layout'),
@@ -1359,8 +1359,8 @@ def sheet_options(out):
     for py, label, value in notes:
         callout(sheet, right, py, lx, label, value)
 
-    # the two states the window has to show, under the first
-    sheet.text(48, row2 - 58, 'Two states it has to show', size=12.5 * TYPE,
+    # where it looks different, under the first
+    sheet.text(48, row2 - 58, 'In a fight, and on WoW: Forever', size=12.5 * TYPE,
                fill=rgb(C['text']), weight='600')
     sheet.line(48, row2 - 92, 932, row2 - 92, stroke=rgb(RULE))
 
@@ -1369,8 +1369,10 @@ def sheet_options(out):
                          'debuffs': 'applies after combat'},
                   refused={'unlock': True})
     draw_options(sheet, 48, row2, s, state=combat)
-    forever = dict(normal, group=False,
-                   refused={'group': 'not on this client'})
+    # The Forever beta could not build the party column, and this panel
+    # struck the group manager's switch through. The release client builds
+    # it (8 November 2026), so the window there differs only in its colors.
+    forever = dict(normal)
     second = 980 - 48 - w
     # Auto is chosen, and on that client auto is Forever's own colors.
     with theme('forever'):
@@ -1382,10 +1384,10 @@ def sheet_options(out):
              'and the debuffs stay live: one picked now is applied when the '
              'fight ends.'),
             (second, 'On WoW: Forever',
-             'The party column steps back on that client, so the switch for '
-             'Blizzard\'s group manager has nothing to hand over. Auto picks '
-             'the Forever theme there: a bronze border, the title in the '
-             'client\'s gold.')):
+             'Auto picks the Forever theme there: near-black plates, a '
+             'bronze border, the title in the client\'s gold and the accent '
+             'a pale gold. The controls are the same as on every other '
+             'client.')):
         by = row2 + height * s + 32
         sheet.text(x, by, title, size=12 * TYPE, fill=rgb(C['text']),
                    weight='600')

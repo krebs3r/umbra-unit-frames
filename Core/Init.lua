@@ -186,13 +186,14 @@ Those snippets are compiled by the *client's own* secure code, reached through
 `SetAttribute`, and never touch this global. The two were read as one
 mechanism because both are called "secure snippets" in conversation.
 
-**And on Forever the client's own code cannot compile one either**, measured
-22 September 2026: `RestrictedExecution.lua` calls this same missing function
-to build the snippet `SecureGroupHeaders.lua` runs on every new child, so the
-header creates a child it cannot configure and the state driver comes back to
-try again. The flag is false on both clients and the header works on exactly
-one of them, which is why it decides nothing here — and why what it names is
-worth knowing in both directions. See *The secure header does not work on
+**And on the Forever beta the client's own code could not compile one
+either**, measured 22 September 2026: `RestrictedExecution.lua` called this
+same missing function to build the snippet `SecureGroupHeaders.lua` runs on
+every new child, so the header created a child it could not configure and the
+state driver came back to try again. The flag is false on every client; the
+header failed on that beta alone and works on Forever's release client (8
+November 2026), which is why it decides nothing here — and why what it names
+is worth knowing in both directions. See *The secure header does not work on
 Forever*.
 
 So the flag stays, because it is a true measurement, and it is the name and
@@ -934,7 +935,8 @@ local function Command(input)
 			print(PREFIX .. 'no such setting: ' .. which)
 		else
 			-- Only colors change and none of that is protected, so like
-			-- `health` this is a result, in a fight as much as out of one.
+			-- `health` this should be a result in a fight as much as out of
+			-- one; not tried in a fight yet.
 			Umbra:SetOption('theme', which)
 			print(PREFIX .. 'theme: ' .. Value(which) .. Resolved(which))
 		end

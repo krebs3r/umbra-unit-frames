@@ -6,7 +6,7 @@ Compact, readable unit frames for **World of Warcraft Retail**, **WoW: Forever**
 
 Inspired by ShadowedUnitFrames — the same idea about what a unit frame is for, with a look of its own.
 
-> **Where it stands.** Everything below is built and in use. Every setting is in a small options window, or behind `/uuf` if you would rather type — both do the same. Clique is not supported, and raid frames are deliberately Blizzard's — both are said plainly further down rather than left as something this has not got round to.
+> **Where it stands.** Everything below is built and in use. Every setting is in a small options window, or behind `/uuf` if you would rather type — both do the same. Clique is not supported, and raid frames are deliberately Blizzard's — both are said plainly further down rather than left as something this has not gotten around to.
 
 ---
 
@@ -30,7 +30,7 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 
 **Shields and incoming heals you can tell apart.** Absorbs are drawn as hatching. Incoming healing is a pale, see-through segment. Neither one can be mistaken for health you already have.
 
-**Range by fading.** Someone out of range fades out, portrait and all. They stay recognisably themselves instead of turning into a grey copy.
+**Range by fading.** Someone out of range fades out, portrait and all. They stay recognizably themselves instead of turning into a gray copy.
 
 ![Umbra Unit Frames — bar and aura states](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/bar-states.svg)
 
@@ -47,12 +47,12 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 | **Pet** | Same width so it lines up, but short: no cast bar, no aura rows |
 | **Target of target** | One question — is it on the tank or on me — and cut the same way |
 | **Boss** | As many as the fight has, each keeping its cast bar |
-| **Party** | A column with cast bars, power values, levels, a row of debuffs, the role each member signed up as, and range fading — not on the Forever beta, for a reason the client decides |
+| **Party** | A column with cast bars, power values, levels, a row of debuffs, the role each member signed up as, and range fading — on WoW: Forever since its release; its beta could not build one |
 | **Raid** | Not yet, and not next — Blizzard's own do the job, class coloring included, and the group header carries them whenever they are wanted |
 
 There is deliberately **no focus frame**. One was built and taken back out: a frame that is empty most of the time is a frame in the way.
 
-**The level** sits on a small plate across the foot of the portrait, so the name keeps its whole width — or in front of the name, or nowhere, as you prefer. On the target it takes the game's difficulty color, grey to red; an elite carries a `+`, and something too far above you to tell reads `??`. And when a kill would be worth nothing — somebody else tagged it first, or it is too far below you to give experience — the target's health bar turns grey, while the edge and the name keep their color.
+**The level** sits on a small plate across the foot of the portrait, so the name keeps its whole width — or in front of the name, or nowhere, as you prefer. On the target it takes the game's difficulty color, gray to red; an elite carries a `+`, and something too far above you to tell reads `??`. And when a kill would be worth nothing — somebody else tagged it first, or it is too far below you to give experience — the target's health bar turns gray, while the edge and the name keep their color.
 
 ![Umbra Unit Frames — the party column](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/party-column.svg)
 
@@ -76,7 +76,7 @@ Player and target in the top left, the pet above them, both aura rows below, and
 
 ![Umbra Unit Frames — the classic layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/layout-classic.svg)
 
-The boss column is the same in both — right edge, centred. It is not part of the arrangement you chose; it is something the fight brings.
+The boss column is the same in both — right edge, centered. It is not part of the arrangement you chose; it is something the fight brings.
 
 ### Debuffs over the buffs
 
@@ -134,21 +134,19 @@ One package covers every supported game version; you do not need to pick a build
 
 | | Retail (Midnight) | WoW: Forever | Mists of Pandaria Classic | Anniversary (Burning Crusade) | Classic Era |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Supported | yes — tested inside an instance | yes, with one exception | yes — frames, auras and the party header seen working | yes — frames, auras and portraits seen working | yes — frames, auras and portraits seen working |
+| Supported | yes — tested inside an instance; 0.9's changes seen in the open world only | yes — frames, auras, portraits and the party column seen working, not yet inside an instance | yes — frames, auras and portraits seen working; the party column not yet in a real party | yes — frames, auras and portraits seen working | yes — frames, auras and portraits seen working |
 
 All five run on one codebase. **The Classic clients** call themselves Classic but carry almost everything Umbra and oUF ask of them; each was checked against Blizzard's own interface code for its build before it was tried in game. The aura rows are the main exception — those clients lack the widget Retail builds them from, so Umbra draws the same buttons itself there. Right-click to cancel a buff works out of combat only on them.
 
 What the class power row does not know yet stays empty: Eclipse, Shadow Orbs, Burning Embers and Demonic Fury on Mists, where Chi shows for Windwalker only. Burning Crusade and Classic Era show combo points and nothing else, and Burning Crusade has no boss column to fill.
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Since a late beta build Forever tells addons it is a game of its own rather than Retail; Umbra 0.8 knows that answer too.
+Forever launched on **4 November 2026**, and Umbra loads and draws on its release client as it did on the beta. Forever tells addons it is a game of its own rather than Retail, which Umbra has known since 0.8.
 
-**On Forever, the frames take on Forever's own look.** Near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame, an amber cast bar, and a gold title on the options window — the colors were sampled from the game's own tooltips and zone plaques. Your class color keeps the left edge, and nothing that belongs to a unit changes: health, class color, resources and the colored line under a debuff stay exactly as they are everywhere else. That is `/uuf theme auto`, the default, so after the update your frames on Forever look different. `/uuf theme umbra` brings back the slate and teal, `/uuf theme forever` brings the bronze to any other game version, and the switch in the options window does the same — at once, in combat too.
+**On Forever, the frames take on Forever's own look.** Near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame, an amber cast bar, and a gold title in a bronze border on the options window and the first-login window — the colors were sampled from the game's own tooltips and zone plaques. Your class color keeps the left edge, and nothing that belongs to a unit changes: health, class color, resources and the colored line under a debuff stay exactly as they are everywhere else. That is `/uuf theme auto`, the default, so after the update your frames on Forever look different. `/uuf theme umbra` brings back the slate and teal, `/uuf theme forever` brings the bronze to any other game version, and the switch in the options window does the same, at once and with no `/reload`. A switch in combat should work too, since only colors change, but has not been tried in one yet.
 
-**The one exception on Forever is the client's, not Umbra's.**
+![Umbra Unit Frames — Forever's own look](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/forever.svg)
 
-*The party column cannot be built there.* That client compiles every secure snippet with `loadstring_untainted`, the function is missing, and the client's own group-header code needs it to finish each child it creates — so the header makes buttons it cannot finish, by Umbra or by any other addon. Umbra notices within two seconds of the column first appearing, hides it, stops asking, and hands Blizzard's group panel back whatever `/uuf group` says. Every other frame is unaffected.
-
-It is being watched rather than worked around: a late beta build changed what lies behind it and may have fixed it, and `/uuf dev header` answers where any given client stands — including one nobody has tested yet. **Retail is untouched by all of this.**
+**The party column works on Forever's release client.** On the beta it could not be built: that client's own group-header code could not finish the buttons it created, for Umbra or for any other addon, so Umbra stood its column down there and handed Blizzard's group panel back. The release client finishes them, and in a real group the column drew the party — nothing in Umbra had to change. Umbra still checks within two seconds of the column first appearing, and `/uuf dev header` answers where any given client stands. **Retail was never affected.**
 
 **A word on Secret Values.** Since patch 12.0 the game hides exact health and power numbers inside encounters, Mythic+ and PvP — addons may display them but not read them. Umbra's design happens to suit that well: a neutral health bar with class color on the edge never needed to work out a color from your health, so your frames look and behave the same inside a boss fight as outside one. What you will notice is that health reads as a percentage while the fight hides the number.
 

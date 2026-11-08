@@ -25,18 +25,20 @@ them work against the API.
 
 Done: the project foundation, and every single frame — player, target, pet,
 target-of-target and the boss column — the first three verified inside an
-instance under the restricted-value regime with error capture installed, and **loading and drawing on the Forever beta client** — see
-*Forever* for what that run settled.
+instance under the restricted-value regime with error capture installed, and **loading and drawing on Forever, on the beta and on the release
+client** — see *Forever*.
 
 **The party column is built**, on the client's own secure header, with a
 debuff row, a cast bar and a role marker — see *Group and raid frames*.
 
-**On Retail. Not on Forever.** The first `/uuf dev header` on the beta, 22
-September 2026, came back in the error log rather than in the report window:
-that client's own restricted environment cannot compile the snippet its own
-header machinery runs on a new child, so no secure group header worked there
-on that build, by oUF or by anyone — see *The secure header does not work on
-Forever*, and the note under it on build 70009, which may have changed that.
+**On Retail, and on Forever's release client.** The first `/uuf dev header`
+on the beta, 22 September 2026, came back in the error log rather than in the
+report window: that client's own restricted environment cannot compile the
+snippet its own header machinery runs on a new child, so no secure group
+header worked there on that build, by oUF or by anyone — see *The secure
+header does not work on Forever*. On the release client, 8 November 2026, it
+built and configured a child, and the column drew a real group; the note on
+build 70009 under that heading says what may have changed it.
 
 All six design principles are implemented — class color at the edge, the
 portrait column, power as a hairline, auras with an underline, hatched absorbs
@@ -101,7 +103,7 @@ they have forgotten a command should be about the frames.
 | | |
 | :--- | :--- |
 | `dev test` | fill every aura slot with stand-ins, and the health bar's prediction |
-| `dev check` | opens a report window: which unit values this client hides, what the class-power row found, and per frame whether the unit's identity is secret and what its portrait could load |
+| `dev check` | opens a report window: which unit values this client hides, the theme in force, the aura duration format, what the class-power row found, and per frame whether the unit's identity is secret, what its portrait could load and how many models it has loaded since the last reload |
 | `dev header` | whether a secure group header works on this client, layer by layer |
 | `dev party` | what the party column is made of, child by child, with each top edge in screen coordinates |
 | `dev portrait` | a box with four attempts at the portrait per unit, for when the column is empty and every value says it should not be |
@@ -453,8 +455,9 @@ resolution is the only thing that moves the pixel answer, and `UI_SCALE_CHANGED`
 every rim and window border again — in a fight as much as out of one: the
 lines are textures of the rim's own plain frame, only anchored to the unit's
 button, and a party member's frame built mid-fight already sizes its rim the
-same way. The colors themselves are not protected either, so a switch is a
-result in a fight as much as out of one, like `/uuf health`.
+same way. The colors themselves are not protected either, so a switch should
+be a result in a fight as much as out of one, like `/uuf health`; none has
+been tried in one yet (*Waiting to be looked at*, the theme).
 
 **Chat keeps Umbra's accent.** `Core/Init.lua` writes the prefix and every
 value in its replies in its own `ACCENT`, `|cff75dcc4`, and that is left alone
@@ -1788,6 +1791,10 @@ quietly rather than erroring, which is why none of them announced itself.
    where `25 min` had hung 6 over. The cast time measured `230/233/240`, the
    text color, though it stood on the empty part of the bar in that shot.
 
+   On 8 November 2026 `/uuf dev check` read `aura duration format: ours
+   (25m)` on the Anniversary realms and Classic Era as well, where Umbra
+   writes the timer on its own rows.
+
    Still to be seen: the same row inside an instance, where the duration is
    secret and the client applies the rules without Lua seeing the value; the
    cast time on the fill; and Retail. If a check reads `the client's`, `/uuf
@@ -2007,15 +2014,17 @@ frames in eight subgroups. They stay in the README table as *not yet*, the
 header carries them whenever they are wanted, and nothing else is waiting on
 them. Clique support is what is left ahead of them.
 
-**No fixed frames for Forever, either.** The beta cannot configure a header
-child (*The secure header does not work on Forever*), and the answer to that
-is not a second party column built out of four nailed-down frames: it would
-have no sorting and no in-combat changes, it would need maintaining beside the
-header, and raid frames would be the same work twice over. The client may well
-have `loadstring_untainted` by the time it launches on 4 November 2026 — build
-70009 may already have seen to it — and if it does, every line of that would
-have been written for nothing. So Umbra waits for the client, the column stands itself down there,
-and Blizzard's group panel takes over.
+**No fixed frames for Forever, either.** The beta could not configure a
+header child (*The secure header does not work on Forever*), and the answer to
+that was not a second party column built out of four nailed-down frames: it
+would have had no sorting and no in-combat changes, it would have needed
+maintaining beside the header, and raid frames would have been the same work
+twice over. The client might have its own copy of `loadstring_untainted` back
+by its launch on 4 November 2026, and then every line of that would have been
+written for nothing. So Umbra waited for the client, with the column standing
+itself down and Blizzard's group panel taking over. The release client needed
+nothing more: on 8 November 2026 its header configured its children and the
+column drew a party. The stand-down stays, for a client that cannot build one.
 
 **Open, and not urgent: pets of group members.** Two shapes are in the
 running and neither has been argued out yet — under each member's own frame,
@@ -2106,8 +2115,8 @@ When that moves to AceDB and AceConfig, the design studio's profile schema
 
 ### Forever
 
-Forever launches **4 November 2026**. Known beta behaviour: `/reload UI` is
-protected while `/reload` is not.
+Forever launched on **4 November 2026**; its beta closed on 23 October. Known
+beta behaviour: `/reload UI` is protected while `/reload` is not.
 
 **The beta client was installed** from 20 September 2026, under the same root
 as Retail: `World of Warcraft\_classic_beta_`, whose `.flavor.info` reads
@@ -2122,6 +2131,9 @@ its AddOns and saved variables stay behind.
 first install has to wait for that.
 
 ### The secure header does not work on Forever
+
+**On the beta. On the release client it does** — measured on 8 November
+2026, see *Measured on the release client* at the end of this section.
 
 **Settled, on the first run of `/uuf dev header` on that client**, 22 September
 2026. The answer did not come back in the report window: it came back in the
@@ -2198,23 +2210,24 @@ the header's children instead of trying to catch anything.
 **This is not the same question as `secure snippets (ours)`, and that line is
 now worth more rather than less.** It reads `unavailable` on Retail too, where
 the party column works perfectly: an addon cannot compile a snippet there, and
-Blizzard's own machinery can. On Forever neither can. The two clients
-therefore separate cleanly:
+Blizzard's own machinery can. On the Forever beta neither could. The two
+clients therefore separated cleanly:
 
-| | Retail 120100 | Forever 16001 |
+| | Retail 120100 | Forever beta 69913 |
 | :--- | :--- | :--- |
 | an addon compiles a snippet | no | no |
 | the client compiles its own | yes | **no** |
 | secure group header | works | cannot configure a child |
 
-Which settles what `/uuf dev header` was built to ask, and settles it the
-wrong way: **no secure group header can work on this client**, by oUF or by
-anyone, because what fails is below every layout. A party column on Forever
-would have to be fixed frames with no sorting and no in-combat changes — which
-is the second addon the header was chosen to avoid being — or wait for the
-client to gain the function before it launches on 4 November 2026.
+Which settled what `/uuf dev header` was built to ask, and settled it the
+wrong way for that build: **no secure group header could work on it**, by oUF
+or by anyone, because what failed was below every layout. A party column on
+the beta would have had to be fixed frames with no sorting and no in-combat
+changes — which is the second addon the header was chosen to avoid being — or
+wait for the client to gain the function before its launch on 4 November
+2026. It did; see *Measured on the release client* below.
 
-**Build 70009 may have changed this; not measured since.** Read off the
+**Build 70009 may be what changed this.** Read off the
 `forever` branch on 25 October 2026: in 1.60.1.70009, 24 September,
 `Blizzard_EnvironmentCleanup.toc` stopped depending on the restricted
 environment through a game-type gate that left `camelot` out, and now names
@@ -2223,17 +2236,18 @@ first and clear `loadstring_untainted` before `RestrictedExecution.lua`
 captured its own copy at file scope — which is the `loadstring_untainted =
 nil` the error above shows. The restricted-environment and group-header Lua
 is byte-identical to Retail's, and the oUF maintainers name 70009 as the fix
-(oUF #895). Until `/uuf dev header` has been run on a build since, the
-result above stands; the column's stand-down measures it every time anyway,
-so a header that works there would be used without a change.
+(oUF #895). `/uuf dev header` has since been run on the release client, and
+the header works there; whether 70009 or a later build did it, nothing here
+can tell. The column's stand-down measured it as it was written to, and a
+header that worked was used without a change.
 
-Two things follow for the code as it stands:
+Three things followed for the code on the beta:
 
 - **Solo it does not bite.** The live header spawns with `showSolo` and
   `showPlayer` false and a `party` visibility, so it is hidden and configures
   nothing. The errors above came from the probe, which turns both on to force
-  the question. On Forever the column will fail the moment a party is joined,
-  not at login.
+  the question. On the beta the column would have failed the moment a party
+  was joined, not at login.
 - **The probe now retires itself.** It gives up its drivers and hides once it
   has answered, because a driver on a header that cannot build a child is a
   standing invitation to try again — eighty-eight times in one run. A second
@@ -2248,10 +2262,34 @@ Two things follow for the code as it stands:
   It is written as a measurement rather than a client check: nothing in it
   asks whether this is Forever, it asks whether this header produced
   children. That answers correctly on the next client nobody has tested yet,
-  and it answers correctly here if the function turns up before 4 November.
+  and it answered correctly on Forever's release client, where on 8 November
+  2026 it found children with units and stayed out of the way.
   In combat it is postponed rather than decided — unregistering a driver
   touches a protected frame — and the question is asked again the next time
   the header is shown.
+
+**Measured on the release client.** `/uuf dev header` on 8 November 2026,
+solo, on `dev-9dc59df` against interface 16001:
+
+```
+secure snippets (ours): unavailable
+group: solo, 0 member(s)
+header: created
+children: 1, configured: 1
+child 1: oUF-guessUnit: party   umbraProbeRan: yes   unit attribute: player
+child 1: __unit: player   styled: true   styled as: party
+visibility driven: hidden by [group:raid] solo: true
+                   back on solo,party: true
+```
+
+The same answer Retail and Mists give, and no error in the log: the client
+compiles its own snippet again — whether through 70009, which the oUF
+maintainers name as the fix, or a build after it, nothing here can tell.
+`secure snippets (ours): unavailable` is the addon-facing global, which Retail
+clears as well, and says nothing about the header. The same day, in a real
+group, the column drew the party, a member who had gone offline with the
+question mark. Nothing in Umbra changed for it; the stand-down simply found
+children with units and stayed out of the way.
 
 ### What the Forever client actually did
 
@@ -2291,8 +2329,9 @@ is built on it.
   as the record said, and `Umbra.hasSecureSnippets` is false by measurement
   rather than by a file that failed to load. What that was taken to mean for
   group frames was wrong, and is corrected under *Relevant to group frames* —
-  the header on Retail works without it. Whether the same holds on Forever is
-  one `/uuf dev header` away and has not been run there yet.
+  the header on Retail works without it. Whether the same held on Forever was
+  one `/uuf dev header` away; on the beta it did not, and on the release
+  client it does.
 
 **One thing does not add up yet.** `/uuf dev debug` answered `nothing has been
 refused since login` on a run where `secure snippets: unavailable` — but that
@@ -2429,7 +2468,7 @@ is oUF's reading of the classes, not the client's:
 - **`/uuf dev header`, solo: the secure header works on Mists.** `header:
   created`, `children: 1, configured: 1`, and the child reports
   `umbraProbeRan: yes`, `unit attribute: player`, `styled as: party` — the
-  step Forever cannot take. Both drivers registered and answered: hidden by
+  step the Forever beta could not take. Both drivers registered and answered: hidden by
   `[group:raid]`, back on solo and party. The child read `shown: false`,
   which solo says nothing. **Still open:** a real party — four members
   sorted, and a change of roster during a fight.

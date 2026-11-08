@@ -46,8 +46,8 @@
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
-<clipPath id="clip36572"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip36572)" opacity="0.42">
+<clipPath id="clip5564"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip5564)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>

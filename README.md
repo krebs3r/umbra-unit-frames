@@ -63,7 +63,7 @@ Color, shape, and placement should make different kinds of information easy to d
 
 Every frame shares the same anatomy — the portrait column, class color at the edge, the name, a health bar and the power hairline — and is then cut down to what it is for. Names are set in a font family the way Blizzard's own labels are, one file per alphabet, so Cyrillic, Korean and Chinese names draw as well as Latin ones.
 
-![The player frame at twice its size, with every part labelled: the three-pixel class edge, the portrait column, name and power value, health bar, power hairline, class power row and cast bar](assets/design/frame-anatomy.svg)
+![The player frame at twice its size, with every part labeled: the three-pixel class edge, the portrait column, name and power value, health bar, power hairline, class power row and cast bar](assets/design/frame-anatomy.svg)
 
 > The sheets on this page are **drawings, not screenshots**. `tools/mockups.py` redraws the frames from the same metrics `Core/Defaults.lua` lays them out with, deriving the heights and offsets rather than copying them, so what they can show is geometry and color. The fonts, the spell art in an icon and the portrait models belong to the client and stand in here.
 
@@ -74,7 +74,7 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 | **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. |
 | **Target of target** | One question — is it on the tank or on me — and cut like the pet. |
 | **Boss** | As many as the client has (`MAX_BOSS_FRAMES`), identical to one another, each keeping its cast bar. No aura rows: five stacked frames with rows between them would be a wall. |
-| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, level, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. **Not on the Forever beta** — see [Supported clients](#supported-clients). |
+| **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, level, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. On WoW: Forever since its release; its beta could not build one — see [Supported clients](#supported-clients). |
 | **Raid** | Not yet, and not next. Blizzard's own raid frames do the job, class coloring included; the header carries these whenever they are wanted. |
 
 The level stands in a plate across the foot of the portrait, so the name keeps its whole width; `/uuf level` moves it in front of the name or takes it away. On a scaled unit it is the level you fight it at — the Classic clients do not scale, and show the plain one.
@@ -87,21 +87,21 @@ There is deliberately **no focus frame**. One was built and taken out again, bec
 
 Two **layout sets** decide where everything goes, and each set remembers its own dragged positions. A set decides three things at once, because they only hold together as a set: where the frames sit, which side of a frame each aura row hangs on, and whether the pet sits above the player or below it.
 
-**`modern`** — the default, and the arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar and the debuffs under the pet. The party column goes to the left edge, centred on it.
+**`modern`** — the default, and the arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar and the debuffs under the pet. The party column goes to the left edge, centered on it.
 
-![The modern set on a screen: player and target in the lower third with aura rows above and below, the party column centred on the left edge, the boss column on the right](assets/design/layout-modern.svg)
+![The modern set on a screen: player and target in the lower third with aura rows above and below, the party column centered on the left edge, the boss column on the right](assets/design/layout-modern.svg)
 
 **`classic`** — where the player frame lived before Dragonflight. The pet is the topmost thing in the stack, so both aura rows hang below, and the party column hangs under the player's whole block rather than under the frame.
 
 ![The classic set on a screen: player and target stacked into the top left with the pet above them and both aura rows below, the party column under the player's block, the boss column on the right](assets/design/layout-classic.svg)
 
-The boss column is the same in both: the right edge, centred, as many frames as the client has. It is not part of the arrangement you chose — it is something the fight brings.
+The boss column is the same in both: the right edge, centered, as many frames as the client has. It is not part of the arrangement you chose — it is something the fight brings.
 
 **Debuffs over the buffs.** Either set can draw the debuff row over the buff row instead, with `/uuf debuffs above` or the *Debuffs* switch in the window — for frames kept right above the action bars. In `modern` both rows then hang above the frame, the debuffs outermost, and under the player only the cast bar and the pet are left; in `classic` the debuffs move next to the frame, over the buffs. The frames keep their places — unless one sits so close to the top of the screen that its taller stack no longer fits — and the party column keeps its row of debuffs under each member, since it has no buffs to stand over.
 
 `/uuf` on its own opens the options window. It is also in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* on all of them. The window speaks German on a German client and English on every other; what `/uuf` prints in chat stays English, like the words it takes. Every setting in it takes effect where you stand — no `/reload`:
 
-![The options window: a layout switch, a switch for the debuffs' place, a health bar switch, a switch for where the level stands, a theme switch, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
+![The options window: a layout switch, a switch for the debuffs' place, a health bar switch, a switch for where the level stands, a theme switch, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; below it, the same window in combat with the mover refused, and on Forever in that client's own theme](assets/design/options-window.svg)
 
 **The first login asks.** On an install that has never run, a window walks through the same settings one question to a page, each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and how to drag the frames into place. Every answer takes effect as it is clicked, so leaving halfway loses nothing; *Skip* keeps the defaults, and `/uuf setup` brings the questions back. An update from an earlier version does not ask — its settings are already chosen.
 
@@ -128,7 +128,7 @@ The options window offers nothing the commands do not, and `/uuf help` lists the
 
 Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `below`, `both`, `plain`, `both`, `portrait` and `auto`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group, and `auto` gives WoW: Forever its own look and every other client Umbra's.
 
-Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens. A layout or a debuffs placement picked in a fight is kept the same way and applied when it ends. A theme is a result in a fight as well as out of one: it changes colors, and the client protects none of them.
+Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens. A layout or a debuffs placement picked in a fight is kept the same way and applied when it ends. A theme should be a result in a fight as well as out of one — it changes colors, and the client protects none of them — but no switch has been tried in one yet.
 
 ### Measurements
 
@@ -137,7 +137,7 @@ Switching Blizzard's frames off in combat is a promise rather than a result — 
 | Command | What it answers |
 | :--- | :--- |
 | `/uuf dev test` | fills every aura slot with stand-ins, so a layout can be judged full — run it again to stop |
-| `/uuf dev check` | which unit values this client hides |
+| `/uuf dev check` | which unit values this client hides, which theme and aura duration format are in force, and how many models each portrait has loaded |
 | `/uuf dev header` | whether a secure group header works on this client |
 | `/uuf dev party` | what the party column is made of, child by child |
 | `/uuf dev portrait` | four ways of asking what the portrait column has to draw, side by side |
@@ -193,7 +193,7 @@ Umbra runs on **five clients**: Retail, WoW: Forever, and the three Classic clie
 | API surface | 12.1.5 | 12.1.5, minus parts | 12.x, minus six things | the same as Mists | the same as Mists |
 | Secret Values | yes | yes | the API is there | the API is there | the API is there |
 | TOC suffix | `_Mainline` | `_Camelot` | `_Mists` | `_TBC` | `_Vanilla` |
-| Umbra support | yes — verified inside an instance | yes, with one exception | frames, auras and the header seen working | frames, auras and portraits seen working | frames, auras and portraits seen working |
+| Umbra support | yes — verified inside an instance; 0.9's changes seen in the open world only | yes — frames, auras, portraits and the party column seen working, not yet inside an instance | frames, auras and portraits seen working, the header solo | frames, auras and portraits seen working | frames, auras and portraits seen working |
 
 ### Retail
 
@@ -201,36 +201,36 @@ The client everything is measured against, and verified inside an instance, wher
 
 ### WoW: Forever
 
-Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. The old Classic globals — `UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo` — do not exist there; the handful of deviations from Retail live in `Compat/Forever.lua`. One thing does not work, and it is the client's.
+Forever launched on **4 November 2026**, and Umbra loads and draws on its release client as it did on the beta. The old Classic globals — `UnitAura`, `GetSpellInfo`, `GetItemInfo`, `CombatLogGetCurrentEventInfo` — do not exist there; the handful of deviations from Retail live in `Compat/Forever.lua`. One thing did not work on the beta, and it was the client's; on the release client it works.
 
 Since build 1.60.1.70170 Forever reports a project of its own, `WOW_PROJECT_CAMELOT`, where it used to report Mainline. Umbra knows both answers from 0.8 on; before that, `/uuf` named the client unsupported and `Compat/Forever.lua` did not run. Nothing broke, but nothing on the client was told it was Forever either.
 
-**The party column cannot be built there**, and the reason is below every addon: that client compiles each secure snippet with `loadstring_untainted`, the function is missing there, and the client's own group-header code uses it to configure every child it creates. So the header makes buttons it cannot finish — no unit, no style — by oUF or by anyone else.
+**On the beta the party column could not be built**, and the reason was below every addon: that client compiled each secure snippet with `loadstring_untainted`, its own copy of the function was missing, and the client's group-header code uses it to configure every child it creates. So the header made buttons it could not finish — no unit, no style — by oUF or by anyone else.
 
-Umbra notices and steps back: two seconds after its column would first appear it checks whether any child was given a unit, and if none was, it hides itself, stops asking the client, and hands Blizzard's group panel back whatever `/uuf group` says. Everything else — the single frames, auras, cast bars, portraits — is unaffected.
+Umbra noticed and stepped back: two seconds after its column appears it checks whether any child was given a unit, and if none was, it hides itself, stops asking the client, and hands Blizzard's group panel back whatever `/uuf group` says. Everything else — the single frames, auras, cast bars, portraits — was unaffected. That check still runs on every client.
 
-**That may have changed.** Build 70009 changed the order in which the client clears that function for addons and its restricted environment takes its own copy, which is what the oUF maintainers point to as the fix. It has not been measured here on a build since. The step back measures it every time, so a header that works there is simply used.
+**On the release client it works.** Build 70009 changed the order in which the client clears that function for addons and its restricted environment takes its own copy, which is what the oUF maintainers pointed to as the fix; whether that build or a later one did it, nothing here can tell. On 8 November 2026 `/uuf dev header` built and configured a child there, as it does on Retail, and in a real group the column drew the party, the question mark of a member who had gone offline included. Nothing in Umbra had to change for it: the step back measures the header every time, so one that works is simply used.
 
-No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches. `/uuf dev header` answers where any given client stands.
+No second party column out of fixed frames was built for the beta — it would have meant no sorting, no changes during a fight, and a second implementation to maintain — and the release client shows it was not needed. `/uuf dev header` answers where any given client stands.
 
-**Forever's own look.** On Forever the frames wear the client's colors rather than Umbra's slate and teal: near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame body, an amber cast bar, and a gold title inside a bronze border on the options window. The values were sampled on 7 November 2026 off lossless screenshots of the client's own tooltip and zone plaque. The left side of each frame stays the class edge's, and nothing that belongs to the unit changes color. That is `/uuf theme auto`, the default, which picks by client; `/uuf theme umbra` keeps the slate and teal on Forever, and `/uuf theme forever` brings the bronze to any other client.
+**Forever's own look.** On Forever the frames wear the client's colors rather than Umbra's slate and teal: near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame body, an amber cast bar, and a gold title inside a bronze border on the options window and the first-login window. The values were sampled on 7 November 2026 off lossless screenshots of the client's own tooltip and zone plaque. The left side of each frame stays the class edge's, and nothing that belongs to the unit changes color. That is `/uuf theme auto`, the default, which picks by client; `/uuf theme umbra` keeps the slate and teal on Forever, and `/uuf theme forever` brings the bronze to any other client.
 
 ![The player frame with its pet and the target with its target of target, twice over: once in Umbra's own slate and teal, and once in the Forever theme, on near-black plates with a one-pixel bronze line along the top, right and bottom of each frame body and an amber cast bar](assets/design/forever.svg)
 
-What the beta client actually did with Umbra — which values it hides and which events it is missing — is written down in the [development notes](docs/development.md).
+What the beta client did with Umbra, and what the release client has shown since — which values it hides, which events it is missing, how the theme and the aura timers measured — is written down in the [development notes](docs/development.md).
 
 ### The Classic clients
 
 Mists (build 5.5.4.69934), the Anniversary realms (2.5.6.69795) and Classic Era (1.15.9.69722) were each checked against the API documentation their build ships with, then played with. All three came back with the same four gaps, and a reading of Blizzard's code in October found two more that oUF reaches unguarded, so one file, `Compat/Classic.lua`, answers them for all three:
 
-- **The aura container.** oUF builds its aura rows from the client's `AuraContainer` widget, and the Classic clients have neither that widget nor `AddDispelTypeTexture`. Where the client refuses a container, Umbra builds the row itself from plain buttons, cut by the same function and packed by the same arithmetic. The dispel color on the underline, the countdown and right-click to cancel a buff are done in Lua on those rows; cancelling works out of combat only.
+- **The aura container.** oUF builds its aura rows from the client's `AuraContainer` widget, and the Classic clients have neither that widget nor `AddDispelTypeTexture`. Where the client refuses a container, Umbra builds the row itself from plain buttons, cut by the same function and packed by the same arithmetic. The dispel color on the underline, the countdown and right-click to cancel a buff are done in Lua on those rows; canceling works out of combat only.
 - **`GetUnitChargedPowerPoints`**, which oUF reads combo points through. `Compat/Classic.lua` answers nil, as Retail does for a unit without charged points.
 - **`UNIT_POWER_POINT_CHARGE`**, the event oUF's class power asks for. It is left unregistered instead of being reported on every login.
 - **`SetRolesets`**, a widget method oUF calls on every frame it builds. Rolesets are Midnight's rules for what an addon may do to a frame, and oUF also hides Blizzard's own frames through one. `Compat/Classic.lua` adds the method: for Umbra's frames it does nothing, and for Blizzard's it hides them the way oUF did before Midnight.
 - **`PlayerVehicleHasComboPoints`**, which oUF's class power calls in a vehicle seat. Mists has vehicles and not this function, so getting in would throw; `Compat/Classic.lua` answers from the vehicle's power type.
 - **`TRAIT_CONFIG_UPDATED`**, valid on all three, but oUF answers it through `C_ClassTalents`, which none of them has. It is left unregistered there.
 
-The secure group header uses the same machinery as on Retail, and unlike Forever it finishes its children: `/uuf dev header` built and configured one on Mists, solo. A real party is the next thing to watch it with.
+The secure group header uses the same machinery as on Retail, and unlike the Forever beta it finishes its children: `/uuf dev header` built and configured one on Mists, solo. A real party is the next thing to watch it with.
 
 What each client has no use for, or oUF does not know about, simply stays empty:
 

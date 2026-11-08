@@ -3,39 +3,43 @@
 ## 0.9 — unreleased
 
 A theme: on WoW: Forever the frames now wear the client's own near-black and
-bronze, and everywhere else they look as they always have. And aura timers
-that fit their icons on every client, with a cast time you can read on the
-bar.
+bronze, and everywhere else they keep Umbra's slate and teal. Aura timers
+in Umbra's own short words, the same on every client that takes them, with
+the cast time in the spell name's color. And the party column works on
+Forever's release client, which its beta could not build; nothing in Umbra
+had to change for it.
 
 - Under Forever's theme the plates are near-black, a one-pixel line of
   bronze runs along the top, right and bottom of every frame body, the cast
-  bar is amber, and the options window and the first-login window carry a
-  gold title inside a bronze border. The left side of a frame stays the
-  class edge's
+  bar is amber, the teal accent turns a pale gold, the text a warm white
+  and the line under a buff a warm gray. The options window and the
+  first-login window carry a gold title inside a bronze border. The left
+  side of a frame stays the class edge's
 - `/uuf theme auto`, `umbra` or `forever` picks it, and so does the new
-  Theme switch in the options window
+  Theme switch in the options window, *Thema* on a German client
 - `auto` is the default, for an install that already has settings as well:
   Forever's look on WoW: Forever, Umbra's slate and teal everywhere else. So
   on Forever the frames change color with this update; `/uuf theme umbra`
   gives them back the old ones
-- A switch repaints the frames where they stand, with no `/reload`, and in
-  combat as well: only colors change, and none of them is protected
+- A switch repaints the frames where they stand, with no `/reload`. Only
+  colors change and the client protects none of them, so it should take in
+  combat as well; that has not been tried in a fight yet
 - Unit colors never change: the health bar, incoming healing and absorbs,
   the class and reaction colors, the resources and the line under a debuff
   are the same in both
 - The theme is written from lossless screenshots of Forever's own art, and
-  checked on Forever against the same kind of screenshot. On Retail and the
-  three Classic clients `auto` keeps the old colors and `forever` draws the
-  same look. Not yet inside an instance
-- Aura durations read `25m`, `8s`, `2h` in every language, rather than the
-  client's own words. On German Forever and on Portuguese clients those were
-  `25 min` and ran into the timer on the next icon; even `25 m` hung over the
-  icon's edges. The Classic clients, where Umbra writes the timer itself,
-  now print the same words
+  checked on Forever against the same kind of screenshot
+- Aura durations read `25m`, `8s`, `2h`, `2d` in every language, rather
+  than the client's own words. On German Forever those were `25 min` and
+  ran into the timer on the next icon, and Portuguese Retail and Forever
+  clients word the minute the same way; even `25 m` is wider than the
+  icon. The Classic clients, where Umbra writes the timer itself, now
+  print the same words
 - If a client refuses the new format, its own stays, and `/uuf dev check`
-  says which of the two you got
+  says which of the two you got. The check also names the theme in force,
+  and counts each portrait's model loads since the last reload
 - The cast bar's remaining time is in the spell name's color. It had been
-  gray, and on the orange fill it all but disappeared
+  gray, and on the cast bar's fill it all but disappeared
 - The class tint in the portrait column lies behind the model now, on the
   column's ground. It used to lie over the model as well and drew a faint
   veil of class color across every face
@@ -46,8 +50,16 @@ bar.
   this is the likely fix rather than a measured one
 - A model that turns up by itself while Umbra waits for it is no longer
   loaded a second time
-- Checked on Forever, where the timers now sit inside their icons. Not yet
-  on Retail, or inside an instance
+- On WoW: Forever the party column works. The beta's own group header
+  could not finish the buttons it created, so Umbra stood the column down
+  there and handed Blizzard's group panel back; the release client finishes
+  them. Nothing in Umbra had to change: two seconds after the column is
+  shown, every time it is, Umbra checks the header again
+- Checked on Retail, Forever's release client, Mists, the Anniversary
+  realms and Classic Era: the theme, both `auto` and `forever`, and the
+  portraits. On Forever `/uuf dev header` built and configured a child,
+  and the column drew a real group. The timers were measured inside their
+  icons on Forever. Not yet inside an instance, or in a fight
 
 ## 0.8 — 25 October 2026
 

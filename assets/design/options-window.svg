@@ -74,7 +74,7 @@
 <text x="76.75" y="449.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Unlock</text>
 <rect x="144.50" y="434.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
 <text x="206.25" y="449.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Reset</text>
-<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.8</text>
+<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.9</text>
 <text x="268.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
 </g>
 <polyline points="468.00,233.00 482.00,233.00 500.00,233.00 512.00,233.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
@@ -97,7 +97,7 @@
 <circle cx="468.00" cy="873.50" r="2" fill="rgba(117,220,196,0.800)"/>
 <text x="520.00" y="872.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Unlock turns into Lock</text>
 <text x="520.00" y="894.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">while the frames can be dragged</text>
-<text x="48.00" y="1033.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Two states it has to show</text>
+<text x="48.00" y="1033.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In a fight, and on WoW: Forever</text>
 <line x1="48.00" y1="999.00" x2="932.00" y2="999.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
 <g transform="translate(48.00,1091.00) scale(1.5000)">
 <rect x="-1.00" y="-1.00" width="282.00" height="492.00" fill="rgb(11,14,21)"/>
@@ -168,7 +168,7 @@
 <rect x="15.00" y="434.00" width="123.50" height="22.00" fill="url(#hatch-fine)"/>
 <rect x="144.50" y="434.00" width="123.50" height="22.00" fill="rgb(11,14,21)"/>
 <text x="206.25" y="449.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="middle" font-weight="400">Reset</text>
-<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.8</text>
+<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.9</text>
 <text x="268.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
 </g>
 <g transform="translate(512.00,1091.00) scale(1.5000)">
@@ -226,9 +226,8 @@
 <text x="37.00" y="329.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400">Hide Blizzard buffs &amp; debuffs</text>
 <rect x="15.00" y="342.00" width="14.00" height="14.00" fill="rgb(10,8,6)"/>
 <rect x="15.50" y="342.50" width="13.00" height="13.00" fill="none" stroke="rgba(166,160,148,0.350)" stroke-width="1"/>
-<text x="37.00" y="353.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="400" opacity="0.60">Hide Blizzard group manager</text>
-<rect x="15.00" y="342.00" width="14.00" height="14.00" fill="url(#hatch-fine)"/>
-<text x="268.00" y="353.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(178,93,93)" text-anchor="end" font-weight="400">not on this client</text>
+<rect x="18.00" y="345.00" width="8.00" height="8.00" fill="rgb(240,204,140)"/>
+<text x="37.00" y="353.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400">Hide Blizzard group manager</text>
 <text x="15.00" y="380.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="600" letter-spacing="1.20">DISPLAY</text>
 <rect x="15.00" y="388.00" width="14.00" height="14.00" fill="rgb(10,8,6)"/>
 <rect x="15.50" y="388.50" width="13.00" height="13.00" fill="none" stroke="rgba(166,160,148,0.350)" stroke-width="1"/>
@@ -238,7 +237,7 @@
 <text x="76.75" y="449.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="middle" font-weight="400">Unlock</text>
 <rect x="144.50" y="434.00" width="123.50" height="22.00" fill="rgb(10,8,6)"/>
 <text x="206.25" y="449.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="middle" font-weight="400">Reset</text>
-<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.8</text>
+<text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.9</text>
 <text x="268.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(166,160,148)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
 </g>
 <text x="48.00" y="1858.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In combat</text>
@@ -246,10 +245,10 @@
 <text x="48.00" y="1899.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">layout and the debuffs stay live: one picked now is</text>
 <text x="48.00" y="1918.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">applied when the fight ends.</text>
 <text x="512.00" y="1858.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">On WoW: Forever</text>
-<text x="512.00" y="1880.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The party column steps back on that client, so the</text>
-<text x="512.00" y="1899.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">switch for Blizzard's group manager has nothing to</text>
-<text x="512.00" y="1918.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">hand over. Auto picks the Forever theme there: a</text>
-<text x="512.00" y="1937.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">bronze border, the title in the client's gold.</text>
+<text x="512.00" y="1880.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Auto picks the Forever theme there: near-black plates,</text>
+<text x="512.00" y="1899.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">a bronze border, the title in the client's gold and</text>
+<text x="512.00" y="1918.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the accent a pale gold. The controls are the same as</text>
+<text x="512.00" y="1937.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">on every other client.</text>
 <line x1="48.00" y1="1986.00" x2="932.00" y2="1986.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
 <circle cx="52.00" cy="2017.00" r="3.5" fill="rgb(117,220,196)"/>
 <text x="66.00" y="2022.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
