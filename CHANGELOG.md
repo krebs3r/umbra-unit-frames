@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.9 — unreleased
+## 0.9 — 8 November 2026
 
 A theme: on WoW: Forever the frames now wear the client's own near-black and
 bronze, and everywhere else they keep Umbra's slate and teal. Aura timers
