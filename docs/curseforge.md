@@ -12,7 +12,7 @@ Inspired by ShadowedUnitFrames — the same idea about what a unit frame is for,
 
 ## What a frame is made of
 
-![Umbra Unit Frames — what a frame is made of](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/frame-anatomy.svg)
+![Umbra Unit Frames — what a frame is made of](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/frame-anatomy.svg)
 
 Player, target, pet, boss, party — every frame is built from the same parts, then cut down to what it is for. A class-colored edge. A portrait column. A name. One health bar that owns the frame, and a hairline underneath it for mana, energy or rage.
 
@@ -32,7 +32,7 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 
 **Range by fading.** Someone out of range fades out, portrait and all. They stay recognizably themselves instead of turning into a gray copy.
 
-![Umbra Unit Frames — bar and aura states](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/bar-states.svg)
+![Umbra Unit Frames — bar and aura states](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/bar-states.svg)
 
 > Accent color belongs to the interface. Class color belongs to the unit. The health bar belongs to health.
 
@@ -54,7 +54,7 @@ There is deliberately **no focus frame**. One was built and taken back out: a fr
 
 **The level** sits on a small plate across the foot of the portrait, so the name keeps its whole width — or in front of the name, or nowhere, as you prefer. On the target it takes the game's difficulty color, gray to red; an elite carries a `+`, and something too far above you to tell reads `??`. And when a kill would be worth nothing — somebody else tagged it first, or it is too far below you to give experience — the target's health bar turns gray, while the edge and the name keep their color.
 
-![Umbra Unit Frames — the party column](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/party-column.svg)
+![Umbra Unit Frames — the party column](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/party-column.svg)
 
 The party column is built on the game's own group header, which means the game creates and sorts the members — in combat as well as out of it.
 
@@ -68,13 +68,13 @@ A layout decides three things at once, because they only make sense together: wh
 
 The arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar, debuffs under the pet. The party column goes to the left edge.
 
-![Umbra Unit Frames — the modern layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/layout-modern.svg)
+![Umbra Unit Frames — the modern layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/layout-modern.svg)
 
 ### `classic` — where the player frame used to live
 
 Player and target in the top left, the pet above them, both aura rows below, and the party column hanging under the whole block.
 
-![Umbra Unit Frames — the classic layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/layout-classic.svg)
+![Umbra Unit Frames — the classic layout](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/layout-classic.svg)
 
 The boss column is the same in both — right edge, centered. It is not part of the arrangement you chose; it is something the fight brings.
 
@@ -88,11 +88,11 @@ Keep your frames right above the action bars? `/uuf debuffs above`, or the *Debu
 
 **The first login asks.** A small window walks you through the settings, one question to a page and each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and finally how to drag the frames into place. Every answer takes effect as you click it, *Skip* keeps the defaults, and `/uuf setup` brings the questions back whenever you like. An update from an earlier version does not ask — you have chosen already.
 
-![Umbra Unit Frames — the onboarding](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/onboarding.svg)
+![Umbra Unit Frames — the onboarding](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/onboarding.svg)
 
 `/uuf` opens the options window. You also find it in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* everywhere. **Every setting takes effect where you stand** — no `/reload`. In a fight the mover is refused, as the game requires; a layout or a debuffs placement picked mid-combat is kept and applied when the fight ends.
 
-![Umbra Unit Frames — the options window](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/options-window.svg)
+![Umbra Unit Frames — the options window](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/options-window.svg)
 
 The window speaks German on a German client and English everywhere else.
 
@@ -144,7 +144,7 @@ Forever launched on **4 November 2026**, and Umbra loads and draws on its releas
 
 **On Forever, the frames take on Forever's own look.** Near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame, an amber cast bar, and a gold title in a bronze border on the options window and the first-login window — the colors were sampled from the game's own tooltips and zone plaques. Your class color keeps the left edge, and nothing that belongs to a unit changes: health, class color, resources and the colored line under a debuff stay exactly as they are everywhere else. That is `/uuf theme auto`, the default, so after the update your frames on Forever look different. `/uuf theme umbra` brings back the slate and teal, `/uuf theme forever` brings the bronze to any other game version, and the switch in the options window does the same, at once and with no `/reload`. A switch in combat should work too, since only colors change, but has not been tried in one yet.
 
-![Umbra Unit Frames — Forever's own look](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.8/assets/design/forever.svg)
+![Umbra Unit Frames — Forever's own look](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.9/assets/design/forever.svg)
 
 **The party column works on Forever's release client.** On the beta it could not be built: that client's own group-header code could not finish the buttons it created, for Umbra or for any other addon, so Umbra stood its column down there and handed Blizzard's group panel back. The release client finishes them, and in a real group the column drew the party — nothing in Umbra had to change. Umbra still checks within two seconds of the column first appearing, and `/uuf dev header` answers where any given client stands. **Retail was never affected.**
 
