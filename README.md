@@ -47,7 +47,7 @@ Color, shape, and placement should make different kinds of information easy to d
 | Principle | Approach and purpose |
 | :--- | :--- |
 | **Class color at the edge** | A **3-pixel edge** and the character's name carry the class color. The health bar stays **neutral green** by default, and `/uuf health class` gives it the unit's color as well for anyone who would rather have it there. Class identity and health each have a distinct visual role. |
-| **A dedicated portrait column** | A narrow, **rectangular character portrait** sits to the left of the name and bars—including on the target frame. Subtle class tinting replaces circular medallions, glowing portrait rings, and images behind the numbers. |
+| **A dedicated portrait column** | A narrow, **rectangular character portrait** sits to the left of the name and bars—including on the target frame. Subtle class tinting replaces circular medallions, glowing portrait rings, and images behind the numbers. The tint lies on the column's ground, behind the model, so no class color is laid over the face. |
 | **Resources as a hairline** | Mana, energy, and rage use a thin line rather than a second dominant bar. Health remains the primary information. |
 | **Auras with an underline** | A slim colored line beneath each icon replaces a prominent full border. Personal and important effects stay easy to identify without cluttering the grid. |
 | **Distinct shields and healing** | Hatching indicates absorbs; a light, translucent segment represents incoming healing. Both stay clearly distinguishable from current health. |
@@ -56,6 +56,8 @@ Color, shape, and placement should make different kinds of information easy to d
 **Accent color belongs to the interface. Class color belongs to the unit. The health bar belongs to health.**
 
 ![Five health bars showing plain health, incoming healing as a ghosted segment, a hatched damage absorb, a heal absorb eating backwards into health, and the bar carrying the unit's own class color; beside them the five colors an aura underline takes](assets/design/bar-states.svg)
+
+**A theme changes the interface, never the unit.** `/uuf theme` swaps the colors around a unit — the plates and their border, the text, the accent, the cast bar, a window's title — for another set, and leaves the health bar, incoming healing, the absorbs, the class and reaction colors, the resources and the line under a debuff as they are. So *accent color belongs to the interface* holds whichever theme is on. The one besides Umbra's own is [Forever's](#wow-forever).
 
 ## The frames
 
@@ -99,7 +101,7 @@ The boss column is the same in both: the right edge, centred, as many frames as 
 
 `/uuf` on its own opens the options window. It is also in the addon compartment under the minimap on Retail and Forever, on a minimap button on the Classic clients, and under *Options › AddOns* on all of them. The window speaks German on a German client and English on every other; what `/uuf` prints in chat stays English, like the words it takes. Every setting in it takes effect where you stand — no `/reload`:
 
-![The options window: a layout switch, a switch for the debuffs' place, a health bar switch, a switch for where the level stands, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
+![The options window: a layout switch, a switch for the debuffs' place, a health bar switch, a switch for where the level stands, a theme switch, two checkboxes for Blizzard's own frames, one for the minimap button, and the unlock and reset buttons; beside it, the same window in combat with the mover refused, and on Forever with the group manager switch struck through](assets/design/options-window.svg)
 
 **The first login asks.** On an install that has never run, a window walks through the same settings one question to a page, each with a drawing of what the answer does: the layout, the health bar's color, where the level stands, whether Blizzard's own buffs and group manager stay, and how to drag the frames into place. Every answer takes effect as it is clicked, so leaving halfway loses nothing; *Skip* keeps the defaults, and `/uuf setup` brings the questions back. An update from an earlier version does not ask — its settings are already chosen.
 
@@ -117,15 +119,16 @@ The options window offers nothing the commands do not, and `/uuf help` lists the
 | `/uuf health` | `class`, `plain` | what colors the health bars |
 | `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
 | `/uuf level` | `portrait`, `name`, `off` | where the level stands, or whether it does |
+| `/uuf theme` | `auto`, `umbra`, `forever` | the frames' colors; `auto` follows the client |
 | `/uuf unlock` | — | drag the frames, every one of them, filled out |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this set's dragged positions |
 | `/uuf setup` | — | the questions of the first login, again |
 | `/uuf dev` | — | measurements and diagnostics, listed behind that word |
 
-Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `below`, `both`, `plain`, `both` and `portrait`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group.
+Given without a value, each setting prints what it is on and what the alternatives mean. The defaults are `modern`, `below`, `both`, `plain`, `both`, `portrait` and `auto`: Blizzard's own aura display and group panel stay up until you say otherwise, because the panel carries the raid markers and the way out of a group, and `auto` gives WoW: Forever its own look and every other client Umbra's.
 
-Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens. A layout or a debuffs placement picked in a fight is kept the same way and applied when it ends.
+Switching Blizzard's frames off in combat is a promise rather than a result — those frames are protected — and the reply says so when that happens. A layout or a debuffs placement picked in a fight is kept the same way and applied when it ends. A theme is a result in a fight as well as out of one: it changes colors, and the client protects none of them.
 
 ### Measurements
 
@@ -210,6 +213,10 @@ Umbra notices and steps back: two seconds after its column would first appear it
 
 No second party column out of fixed frames is planned for it. That would mean no sorting, no changes during a fight, and a second implementation to maintain — for a client that may simply have the function by the time it launches. `/uuf dev header` answers where any given client stands.
 
+**Forever's own look.** On Forever the frames wear the client's colors rather than Umbra's slate and teal: near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame body, an amber cast bar, and a gold title inside a bronze border on the options window. The values were sampled on 7 November 2026 off lossless screenshots of the client's own tooltip and zone plaque. The left side of each frame stays the class edge's, and nothing that belongs to the unit changes color. That is `/uuf theme auto`, the default, which picks by client; `/uuf theme umbra` keeps the slate and teal on Forever, and `/uuf theme forever` brings the bronze to any other client.
+
+![The player frame with its pet and the target with its target of target, twice over: once in Umbra's own slate and teal, and once in the Forever theme, on near-black plates with a one-pixel bronze line along the top, right and bottom of each frame body and an amber cast bar](assets/design/forever.svg)
+
 What the beta client actually did with Umbra — which values it hides and which events it is missing — is written down in the [development notes](docs/development.md).
 
 ### The Classic clients
@@ -248,7 +255,7 @@ Feedback, bug reports, and focused improvements are welcome. It is especially he
 
 A bug report should identify the affected frame, selected layout, version, and steps to reproduce the issue — `/uuf dev check` and `/uuf dev party` give you most of that in a window you can copy out of.
 
-The sheets in `assets/design/` are generated rather than drawn by hand — `python tools/mockups.py` rebuilds all seven. That file keeps its own copy of the metrics, so a number changed in `Core/Defaults.lua` has to be changed there too, or the sheets quietly start claiming something the addon no longer does.
+The sheets in `assets/design/` are generated rather than drawn by hand — `python tools/mockups.py` rebuilds all eight. That file keeps its own copy of the metrics, so a number changed in `Core/Defaults.lua` has to be changed there too, or the sheets quietly start claiming something the addon no longer does.
 
 The [development notes](docs/development.md) are where the reasoning lives: what the client actually does, what is built, and what comes next. Please discuss larger changes in an [issue](https://github.com/krebs3r/umbra-unit-frames/issues) first, and document the source and licensing of any code or assets you contribute.
 

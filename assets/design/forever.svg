@@ -1,0 +1,392 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="1315" viewBox="0 0 980 1315" role="img" aria-label="Umbra Unit Frames — the Forever theme">
+<title>Umbra Unit Frames — the Forever theme</title>
+<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
+<rect width="980" height="1315" fill="rgb(9,11,17)"/>
+<text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">/UUF THEME</text>
+<text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The Forever theme</text>
+<text x="48.00" y="119.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">On WoW: Forever the frames take on the client's own look, and Auto picks it there; every other client</text>
+<text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">keeps Umbra's slate and teal. The same frames twice, as the modern set stacks them. The theme repaints</text>
+<text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the interface around a unit — the plates, the text and the cast bar, now amber — and adds a bronze rim</text>
+<text x="48.00" y="191.36" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">one physical pixel wide along the top, right and bottom of each frame body. The class edge, the names,</text>
+<text x="48.00" y="215.48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">health, absorbs and resources keep their colors: a theme never changes the unit.</text>
+<text x="48.00" y="282.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra</text>
+<text x="932.00" y="282.00" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">/uuf theme umbra · auto everywhere else</text>
+<g transform="translate(48.00,358.75) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98206"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98206)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">58%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600">Umbrastra</text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">412k</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">72%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+</g>
+<g transform="translate(48.00,444.50) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(168,124,51)"/>
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
+<text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Arcane Blast</text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">1.4</text>
+</g>
+<g transform="translate(48.00,472.50) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98247"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip98247)" opacity="0.42">
+<circle cx="19.00" cy="13.20" r="5.32" fill="rgb(63,199,235)"/>
+<ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(63,199,235)"/>
+</g>
+<text x="35.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600">Water Elemental</text>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(78,122,85)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="url(#shade)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="35.00" y="29.00" width="146.40" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
+</g>
+<g transform="translate(543.50,369.25) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="41.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="41.00" fill="rgb(199,64,64)"/>
+<rect x="5.00" y="0.00" width="38.00" height="41.00" fill="rgb(35,43,60)"/>
+<rect x="5.00" y="0.00" width="38.00" height="41.00" fill="rgba(199,64,64,0.130)"/>
+<clipPath id="clip98265"><rect x="5.00" y="0" width="38.00" height="41.00"/></clipPath>
+<g clip-path="url(#clip98265)" opacity="0.42">
+<circle cx="24.00" cy="16.40" r="7.22" fill="rgb(199,64,64)"/>
+<ellipse cx="24.00" cy="34.45" rx="17.33" ry="10.83" fill="rgb(199,64,64)"/>
+</g>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">90%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(199,64,64)" text-anchor="start" font-weight="600">Ancient Protector</text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="15.00" width="76.12" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="121.12" y="15.00" width="15.57" height="20.00" fill="rgba(78,122,85,0.550)"/>
+<rect x="136.69" y="15.00" width="12.11" height="20.00" fill="rgba(154,179,214,0.650)"/>
+<rect x="136.69" y="15.00" width="12.11" height="20.00" fill="url(#hatch)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">2.1M</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">44%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="45.00" y="37.00" width="155.70" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+</g>
+<g transform="translate(543.50,308.00) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(198,155,109)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(198,155,109,0.130)"/>
+<clipPath id="clip98289"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip98289)" opacity="0.42">
+<circle cx="19.00" cy="13.20" r="5.32" fill="rgb(198,155,109)"/>
+<ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(198,155,109)"/>
+</g>
+<text x="35.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(198,155,109)" text-anchor="start" font-weight="600">Ironhide</text>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(11,14,21)"/>
+<rect x="35.00" y="13.00" width="111.63" height="14.00" fill="rgb(78,122,85)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="url(#shade)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="rgb(11,14,21)"/>
+<rect x="35.00" y="29.00" width="54.90" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
+</g>
+<line x1="48.00" y1="568.25" x2="932.00" y2="568.25" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<text x="48.00" y="602.25" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Forever</text>
+<text x="932.00" y="602.25" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">/uuf theme forever · auto on WoW: Forever</text>
+<g transform="translate(48.00,679.00) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98310"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98310)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">58%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600">Umbrastra</text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400">412k</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400">72%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="47.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="46.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(48.00,764.75) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(186,104,22)"/>
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
+<text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400">Arcane Blast</text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400">1.4</text>
+</g>
+<g transform="translate(48.00,792.75) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98354"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip98354)" opacity="0.42">
+<circle cx="19.00" cy="13.20" r="5.32" fill="rgb(63,199,235)"/>
+<ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(63,199,235)"/>
+</g>
+<text x="35.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600">Water Elemental</text>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(78,122,85)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="url(#shade)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="35.00" y="29.00" width="146.40" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="33.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="32.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(543.50,689.50) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="41.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="41.00" fill="rgb(199,64,64)"/>
+<rect x="5.00" y="0.00" width="38.00" height="41.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="38.00" height="41.00" fill="rgba(199,64,64,0.130)"/>
+<clipPath id="clip98375"><rect x="5.00" y="0" width="38.00" height="41.00"/></clipPath>
+<g clip-path="url(#clip98375)" opacity="0.42">
+<circle cx="24.00" cy="16.40" r="7.22" fill="rgb(199,64,64)"/>
+<ellipse cx="24.00" cy="34.45" rx="17.33" ry="10.83" fill="rgb(199,64,64)"/>
+</g>
+<text x="214.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(35,106,196)" text-anchor="end" font-weight="600">90%</text>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(199,64,64)" text-anchor="start" font-weight="600">Ancient Protector</text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="15.00" width="76.12" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="121.12" y="15.00" width="15.57" height="20.00" fill="rgba(78,122,85,0.550)"/>
+<rect x="136.69" y="15.00" width="12.11" height="20.00" fill="rgba(154,179,214,0.650)"/>
+<rect x="136.69" y="15.00" width="12.11" height="20.00" fill="url(#hatch)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<text x="49.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400">2.1M</text>
+<text x="214.00" y="29.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400">44%</text>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="37.00" width="155.70" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="41.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="40.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(543.50,628.25) scale(1.7500)">
+<rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(198,155,109)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgba(198,155,109,0.130)"/>
+<clipPath id="clip98402"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip98402)" opacity="0.42">
+<circle cx="19.00" cy="13.20" r="5.32" fill="rgb(198,155,109)"/>
+<ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(198,155,109)"/>
+</g>
+<text x="35.00" y="8.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(198,155,109)" text-anchor="start" font-weight="600">Ironhide</text>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="35.00" y="13.00" width="111.63" height="14.00" fill="rgb(78,122,85)"/>
+<rect x="35.00" y="13.00" width="183.00" height="14.00" fill="url(#shade)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="35.00" y="29.00" width="54.90" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="35.00" y="29.00" width="183.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="33.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="32.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<line x1="48.00" y1="888.50" x2="932.00" y2="888.50" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<text x="48.00" y="922.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The rim, enlarged 12 times</text>
+<text x="932.00" y="922.50" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="end" font-weight="400">1 physical pixel = 0.76 units at 1.3125 pixels per unit</text>
+<clipPath id="rim-corner-1"><rect x="48.00" y="948.50" width="264.00" height="180.00"/></clipPath>
+<g clip-path="url(#rim-corner-1)">
+<g transform="translate(84.00,1008.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98428"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98428)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600"></text>
+<rect x="5.00" y="31.00" width="38.00" height="16.00" fill="rgba(10,8,6,0.500)"/>
+<text x="24.00" y="43.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400"> </text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="47.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="46.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(84.00,1596.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(186,104,22)"/>
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
+<text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400"></text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400"></text>
+</g>
+</g>
+<rect x="48.50" y="949.00" width="263.00" height="179.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<text x="48.00" y="1162.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The left is the class edge's</text>
+<text x="48.00" y="1184.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The top and bottom lines start</text>
+<text x="48.00" y="1203.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where the portrait begins; the</text>
+<text x="48.00" y="1222.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">class edge and the gap beside it</text>
+<text x="48.00" y="1241.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">keep their whole height.</text>
+<clipPath id="rim-corner-2"><rect x="358.00" y="948.50" width="264.00" height="180.00"/></clipPath>
+<g clip-path="url(#rim-corner-2)">
+<g transform="translate(-2078.00,1008.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98480"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98480)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600"></text>
+<rect x="5.00" y="31.00" width="38.00" height="16.00" fill="rgba(10,8,6,0.500)"/>
+<text x="24.00" y="43.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400"> </text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="47.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="46.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(-2078.00,1596.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(186,104,22)"/>
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
+<text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400"></text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400"></text>
+</g>
+</g>
+<rect x="358.50" y="949.00" width="263.00" height="179.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<text x="358.00" y="1162.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The right owns both corners</text>
+<text x="358.00" y="1184.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">A step darker than the top, as if</text>
+<text x="358.00" y="1203.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">lit from the top left. It runs the</text>
+<text x="358.00" y="1222.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">full height and the other two stop</text>
+<text x="358.00" y="1241.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">short of it.</text>
+<clipPath id="rim-corner-3"><rect x="668.00" y="948.50" width="264.00" height="180.00"/></clipPath>
+<g clip-path="url(#rim-corner-3)">
+<g transform="translate(704.00,468.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(38,34,28)"/>
+<rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
+<clipPath id="clip98532"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98532)" opacity="0.42">
+<circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
+<ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
+</g>
+<text x="45.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(63,199,235)" text-anchor="start" font-weight="600"></text>
+<rect x="5.00" y="31.00" width="38.00" height="16.00" fill="rgba(10,8,6,0.500)"/>
+<text x="24.00" y="43.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400"> </text>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="15.00" width="124.56" height="20.00" fill="rgb(78,122,85)"/>
+<rect x="45.00" y="15.00" width="173.00" height="20.00" fill="url(#shade)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="37.00" width="100.34" height="4.00" fill="rgb(35,106,196)"/>
+<rect x="45.00" y="37.00" width="173.00" height="4.00" fill="url(#shade)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="45.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="80.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="rgb(117,220,196)"/>
+<rect x="115.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="150.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="rgb(10,8,6)"/>
+<rect x="185.00" y="43.00" width="33.00" height="4.00" fill="url(#shade)"/>
+<rect x="5.00" y="0.00" width="216.24" height="0.76" fill="rgb(154,128,92)"/>
+<rect x="221.24" y="0.00" width="0.76" height="47.00" fill="rgb(128,104,72)"/>
+<rect x="5.00" y="46.24" width="216.24" height="0.76" fill="rgb(104,80,52)"/>
+</g>
+<g transform="translate(704.00,1056.50) scale(12.0000)">
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="rgb(10,8,6)"/>
+<rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(186,104,22)"/>
+<rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
+<text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="start" font-weight="400"></text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,233,218)" text-anchor="end" font-weight="400"></text>
+</g>
+</g>
+<rect x="668.50" y="949.00" width="263.00" height="179.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
+<text x="668.00" y="1162.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Inside, on the last pixel</text>
+<text x="668.00" y="1184.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The lines lie on the body itself,</text>
+<text x="668.00" y="1203.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">so the cast bar below keeps its 2</text>
+<text x="668.00" y="1222.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">unit gap and the edges stay flush.</text>
+<text x="668.00" y="1241.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The cast bar and the aura icons</text>
+<text x="668.00" y="1260.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">get none; the bottom line runs</text>
+<text x="668.00" y="1279.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">over the level plate.</text>
+</svg>

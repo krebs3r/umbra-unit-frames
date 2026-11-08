@@ -133,10 +133,10 @@ guides:SetFrameStrata('TOOLTIP')
 guides:Hide()
 
 local function Guide()
-	local line = guides:CreateTexture(nil, 'OVERLAY')
-	local accent = Umbra.colors.accent
-
-	line:SetColorTexture(accent[1], accent[2], accent[3], 0.8)
+	-- Built at file load, before the saved theme can be read, which is why
+	-- it goes through Paint: Core/Theme.lua repaints it once the theme is
+	-- known, and again on every switch.
+	local line = Umbra:Paint(guides:CreateTexture(nil, 'OVERLAY'), Umbra.colors.accent, 0.8)
 	line:Hide()
 
 	return line
@@ -487,7 +487,7 @@ function Umbra:PlaceFrame(frame, key)
 
 	local fill = overlay:CreateTexture(nil, 'OVERLAY')
 	fill:SetAllPoints()
-	fill:SetColorTexture(self.colors.accent[1], self.colors.accent[2], self.colors.accent[3], 0.25)
+	self:Paint(fill, self.colors.accent, 0.25)
 
 	local label = overlay:CreateFontString(nil, 'OVERLAY')
 	label:SetFontObject(self.Font(self.metrics.fontSize))

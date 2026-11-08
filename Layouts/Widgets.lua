@@ -31,7 +31,11 @@ function Widgets.ColorLayer(parent, alpha)
 	bar:SetStatusBarTexture(media.bar)
 	bar:SetMinMaxValues(0, 1)
 	bar:SetValue(1)
-	bar:SetStatusBarColor(unpack(colors.muted))
+
+	-- A placeholder until the unit's color arrives. Remembered, so a theme
+	-- switch repaints it; Umbra:ApplyHealthStyle then puts the unit's color
+	-- back wherever there is a unit.
+	Umbra:Paint(bar, colors.muted)
 
 	if alpha then
 		bar:SetAlpha(alpha)
@@ -49,7 +53,7 @@ function Widgets.Text(parent, justify, size)
 	fs:SetFontObject(Umbra.Font(fs.umbraSize))
 	fs:SetJustifyH(justify)
 	fs:SetJustifyV('MIDDLE')
-	fs:SetTextColor(unpack(colors.text))
+	Umbra:Paint(fs, colors.text)
 
 	-- Text sits on top of filled bars, whose color is not ours to choose in
 	-- every case. A shadow keeps it legible without an outline font.
@@ -129,7 +133,7 @@ function Widgets.Bar(parent, color)
 
 	local background = bar:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
-	background:SetColorTexture(unpack(colors.border))
+	Umbra:Paint(background, colors.border)
 
 	-- A flat fill reads as paint rather than as a bar. The shading lies over
 	-- the whole bar rather than over the fill, because the fill's geometry

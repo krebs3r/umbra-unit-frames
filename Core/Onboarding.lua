@@ -324,6 +324,10 @@ local function FramePreview(parent)
 
 	Texture(frame, 'BACKGROUND', colors.background):SetAllPoints()
 
+	-- The same line the frame behind this window wears under the Forever
+	-- theme, measured at this preview's own scale.
+	Umbra:Rim(frame, c.classEdge + c.gap, width, height)
+
 	local edge = Texture(frame, 'ARTWORK', color)
 	edge:SetPoint('TOPLEFT')
 	edge:SetPoint('BOTTOMLEFT')
@@ -346,7 +350,8 @@ local function FramePreview(parent)
 		portrait:SetTexCoord(cut, 1 - cut, 0, 1)
 	end
 
-	local tint = Texture(frame, 'ARTWORK', color, 0.13, 1)
+	-- Behind the portrait, as on the frames: on the ground, under the art.
+	local tint = Texture(frame, 'BORDER', color, 0.13, 1)
 	tint:SetAllPoints(ground)
 
 	local plateHeight = c.fontSize + 4
@@ -478,9 +483,9 @@ local function Build()
 	frame:SetSize(WIDTH, HEIGHT)
 	frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 80)
 
-	local border = Texture(frame, 'BACKGROUND', colors.border)
-	border:SetPoint('TOPLEFT', -1, 1)
-	border:SetPoint('BOTTOMRIGHT', 1, -1)
+	-- The rim's color, as on the options window: the border color under
+	-- Umbra's own theme, Forever's bronze line under that one.
+	Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
 
 	Texture(frame, 'BACKGROUND', colors.background, nil, 1):SetAllPoints()
 
@@ -489,7 +494,7 @@ local function Build()
 	edge:SetPoint('BOTTOMLEFT')
 	edge:SetWidth(EDGE)
 
-	local title = Label(frame, 13, colors.text, 'Umbra Unit Frames')
+	local title = Label(frame, 13, colors.title, 'Umbra Unit Frames')
 	title:SetPoint('TOPLEFT', frame, 'TOPLEFT', LEFT, -12)
 
 	local close = CreateFrame('Button', nil, frame)
@@ -631,7 +636,9 @@ local function Build()
 
 	-- The next step is the one to take, so it carries the accent at rest as
 	-- well as under the pointer.
-	nextButton.UmbraLabel:SetTextColor(unpack(colors.accent))
+	-- Painted rather than set, so a theme switch keeps it in the accent
+	-- instead of handing it back to the text color PlainButton gave it.
+	Umbra:Paint(nextButton.UmbraLabel, colors.accent)
 	nextButton:SetScript('OnLeave', function(self) self.UmbraLabel:SetTextColor(unpack(colors.accent)) end)
 
 	local back = Umbra.PlainButton(frame, L['Back'], NAV)

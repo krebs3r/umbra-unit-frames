@@ -145,7 +145,7 @@ these labels sit on spell art rather than on a surface Umbra chose.
 local function Label(fontString, l)
 	fontString:ClearAllPoints()
 	fontString:SetFontObject(Umbra.Font(l.font))
-	fontString:SetTextColor(unpack(colors.text))
+	Umbra:Paint(fontString, colors.text)
 	fontString:SetShadowColor(0, 0, 0, 0.85)
 	fontString:SetShadowOffset(1, -1)
 end
@@ -171,7 +171,7 @@ local function PostCreateButton(element, button)
 	local backdrop = button:CreateTexture(nil, 'BACKGROUND')
 	backdrop:SetPoint('TOPLEFT', button, 'TOPLEFT', 0, 0)
 	backdrop:SetSize(l.icon, l.icon)
-	backdrop:SetColorTexture(unpack(colors.border))
+	Umbra:Paint(backdrop, colors.border)
 
 	local art = l.icon - 2
 
@@ -215,7 +215,14 @@ local function PostCreateButton(element, button)
 	line:SetPoint('TOPLEFT', button, 'TOPLEFT', 0, -(l.icon + l.gap))
 	line:SetSize(l.icon, l.underline)
 	line:SetTexture(media.bar)
-	line:SetVertexColor(unpack(l.harmful and colors.auraHarmful or colors.auraHelpful))
+	-- The helpful line follows the theme; the harmful one is a unit color and
+	-- never changes, which also keeps the preview's cycled dispel colors on
+	-- its harmful stand-ins from being painted over by a switch.
+	if l.harmful then
+		line:SetVertexColor(unpack(colors.auraHarmful))
+	else
+		Umbra:Paint(line, colors.auraHelpful, nil, 'vertex')
+	end
 	button.Underline = line
 
 	if not PRESERVE_ASSET or not button.AddDispelTypeTexture then return end
@@ -502,6 +509,15 @@ local function DisableOwnRows(self)
 end
 
 oUF:AddElement('UmbraOwnAuras', UpdateOwnRows, EnableOwnRows, DisableOwnRows)
+
+-- A theme switch repaints every line as neutral; our own rows then color the
+-- dispellable ones again, the way a UNIT_AURA would. oUF gives an element of
+-- ours no ForceUpdate, so this is the way in.
+function Umbra.RefreshOwnAuras(frame)
+	if frame.UmbraOwnAuras and Umbra:FrameUnit(frame) then
+		UpdateOwnRows(frame, 'UmbraTheme')
+	end
+end
 
 --[[ Umbra.OwnAuraRow(frame, config, filter, count, harmful, cancel)
 The row itself, carrying the fields a container carries, so that everything

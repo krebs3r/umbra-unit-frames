@@ -828,7 +828,13 @@ local function Style(self, unit)
 
 	local background = self:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
-	background:SetColorTexture(unpack(colors.background))
+	Umbra:Paint(background, colors.background)
+
+	-- The Forever theme's line of bronze on the body's outermost pixels: top
+	-- and bottom from where the portrait begins, and down the right side, on
+	-- a level of its own above everything on the body. Built on every frame
+	-- and shown by the theme, so a switch builds nothing. Core/Theme.lua.
+	self.UmbraRim = Umbra:Rim(self, l.classEdge + l.gap, width, height)
 
 	-- Class color lives here and on the name, never on the health bar.
 	local edge = CreateColorLayer(self)
@@ -837,16 +843,20 @@ local function Style(self, unit)
 	self.ClassEdge = edge
 
 	-- A PlayerModel renders on nothing, so without a ground of its own the
-	-- portrait shows whatever is behind the frame, and the class tint above it
+	-- portrait shows whatever is behind the frame, and the class tint on it
 	-- lands on that instead of on a neutral surface.
 	local ground = self:CreateTexture(nil, 'BACKGROUND', nil, 1)
 	ground:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	ground:SetSize(l.portrait, height)
-	ground:SetColorTexture(unpack(colors.portraitGround))
+	Umbra:Paint(ground, colors.portraitGround)
 
 	local portrait = CreateFrame('PlayerModel', nil, self)
 	portrait:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	portrait:SetSize(l.portrait, height)
+
+	-- A level clear above the frame's own, so the class tint fits in
+	-- between the ground and the model — see the tint below.
+	portrait:SetFrameLevel(self:GetFrameLevel() + 2)
 	portrait.PostUpdate = PortraitPostUpdate
 	self.Portrait = portrait
 
@@ -880,17 +890,30 @@ local function Style(self, unit)
 	portrait.umbraFlat = flat
 	portrait.umbraFlatArt = flatArt
 
+	--[[ The class tint, behind the model
+	The column's ground in a wash of the unit's color, between the ground and
+	the model rather than over both. It used to lie over the model too, and
+	laid a 13% veil of class color across every face; asked to go on 8
+	November 2026. Behind the model it tints only what shows around the
+	figure, which is all the principle asks of it: the column carries the
+	unit's color, and no color is laid over the face. The level plate is the
+	one thing that crosses the portrait, at its foot.
+
+	The 2D stand-in covers it, except in its corners: the client's portrait
+	art is round, so the corners are transparent and show the tinted ground,
+	the way the space around a model does.
+	--]]
 	local tint = CreateColorLayer(self, 0.13)
 	tint:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	tint:SetSize(l.portrait, height)
-	tint:SetFrameLevel(portrait:GetFrameLevel() + 2)
+	tint:SetFrameLevel(self:GetFrameLevel() + 1)
 	self.PortraitTint = tint
 
 	--[[ The level plate
 	A strip across the foot of the portrait rather than a number beside the
 	name: the name keeps its whole width, and the header keeps its one number
-	on the right. It sits a level above the tint, so neither the model, its
-	2D stand-in nor the class wash can cover it.
+	on the right. It sits a level above the 2D stand-in, so neither the model,
+	the stand-in nor the class wash can cover it.
 
 	Built on every frame that carries a level, whichever placement is
 	chosen, and shown or hidden by `Umbra:ApplyLevelStyle`: the setting
@@ -904,16 +927,16 @@ local function Style(self, unit)
 		local plate = CreateFrame('Frame', nil, self)
 		plate:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', l.classEdge + l.gap, 0)
 		plate:SetSize(l.portrait, plateHeight)
-		plate:SetFrameLevel(tint:GetFrameLevel() + 1)
+		plate:SetFrameLevel(flat:GetFrameLevel() + 1)
 
 		local plateGround = plate:CreateTexture(nil, 'BACKGROUND')
 		plateGround:SetAllPoints(plate)
-		plateGround:SetColorTexture(colors.border[1], colors.border[2], colors.border[3], 0.5)
+		Umbra:Paint(plateGround, colors.border, 0.5)
 
 		levelText = CreateText(plate, 'CENTER', l.fontSize)
 		levelText:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', l.classEdge + l.gap, 0)
 		levelText:SetSize(l.portrait, plateHeight)
-		levelText:SetTextColor(unpack(colors.muted))
+		Umbra:Paint(levelText, colors.muted)
 
 		plate:SetShown(UmbraUnitFramesDB.level == 'portrait')
 		self.UmbraLevelPlate = plate
@@ -946,7 +969,7 @@ local function Style(self, unit)
 		local powerValue = CreateText(self, 'RIGHT', l.fontSize)
 		powerValue:SetPoint('TOPRIGHT', self, 'TOPRIGHT', -valueRight, 0)
 		powerValue:SetSize(l.valueWidth, l.nameHeight)
-		powerValue:SetTextColor(unpack(colors.muted))
+		Umbra:Paint(powerValue, colors.muted)
 
 		-- The number reads in the color of the bar it belongs to. oUF's
 		-- powercolor tag opens a color escape from the client's own
@@ -1099,7 +1122,9 @@ local function Style(self, unit)
 	end
 
 	if config.castbar then
-		local castbar = CreateBar(self, colors.cast)
+		-- oUF never recolors a cast bar, so the theme's color is the one
+		-- that stays.
+		local castbar = Umbra:Paint(CreateBar(self, colors.cast), colors.cast)
 		castbar:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', 0, -l.gap)
 		castbar:SetSize(width, l.castbarHeight)
 

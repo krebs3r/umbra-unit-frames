@@ -73,6 +73,15 @@ local SETTINGS = {
 			return true
 		end,
 	},
+	-- The stored word, `auto` included, because that is what a switch shows
+	-- as chosen. Only colors change, and none of that is protected.
+	theme = {
+		get = function() return UmbraUnitFramesDB.theme end,
+		set = function(name)
+			UmbraUnitFramesDB.theme = name
+			return Umbra:ApplyTheme()
+		end,
+	},
 	auras = {
 		get = function() return UmbraUnitFramesDB.hideBlizzardAuras end,
 		set = function(hide)
@@ -126,17 +135,18 @@ function Umbra:OptionsChanged()
 	end
 end
 
+-- Both paint through Umbra:Paint, so everything this window and the
+-- onboarding build is repainted by a theme switch. A label whose color a
+-- control changes with its state is put right again by that control's
+-- Refresh, which runs after the switch.
 local function Texture(parent, layer, color, alpha, sublevel)
-	local texture = parent:CreateTexture(nil, layer, nil, sublevel)
-	texture:SetColorTexture(color[1], color[2], color[3], alpha or color[4] or 1)
-
-	return texture
+	return Umbra:Paint(parent:CreateTexture(nil, layer, nil, sublevel), color, alpha)
 end
 
 local function Label(parent, size, color, text)
 	local label = parent:CreateFontString(nil, 'OVERLAY')
 	label:SetFontObject(Umbra.Font(size))
-	label:SetTextColor(unpack(color))
+	Umbra:Paint(label, color)
 
 	if text then label:SetText(text) end
 
@@ -364,10 +374,10 @@ local function Build()
 
 	-- The border lies a pixel outside, the ground fills the frame, and the
 	-- accent edge stands where a unit frame keeps its class edge: the
-	-- interface's color at the place a unit keeps its own.
-	local border = Texture(frame, 'BACKGROUND', colors.border)
-	border:SetPoint('TOPLEFT', -1, 1)
-	border:SetPoint('BOTTOMRIGHT', 1, -1)
+	-- interface's color at the place a unit keeps its own. The border takes
+	-- the rim's color, which is the border color under Umbra's own theme and
+	-- Forever's bronze line under that one.
+	Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
 
 	Texture(frame, 'BACKGROUND', colors.background, nil, 1):SetAllPoints()
 
@@ -376,7 +386,7 @@ local function Build()
 	edge:SetPoint('BOTTOMLEFT')
 	edge:SetWidth(EDGE)
 
-	local title = Label(frame, 13, colors.text, 'Umbra Unit Frames')
+	local title = Label(frame, 13, colors.title, 'Umbra Unit Frames')
 	title:SetPoint('TOPLEFT', frame, 'TOPLEFT', LEFT, -12)
 
 	local close = CreateFrame('Button', nil, frame)
@@ -428,6 +438,8 @@ local function Build()
 	Add('segment', 'health', {{false, 'Neutral'}, {true, 'Class color'}})
 	Add('section', 'Show level')
 	Add('segment', 'level', {{'portrait', 'Portrait'}, {'name', 'Name'}, {'off', 'Off'}})
+	Add('section', 'Theme')
+	Add('segment', 'theme', {{'auto', 'Auto'}, {'umbra', 'Umbra'}, {'forever', 'Forever'}})
 	Add('section', 'Blizzard frames')
 	Add('check', 'auras', 'Hide Blizzard buffs & debuffs')
 	Add('check', 'group', 'Hide Blizzard group manager')
@@ -509,6 +521,7 @@ local function Build()
 		controls.debuffs:Refresh(fighting and 'applies after combat' or nil)
 		controls.health:Refresh()
 		controls.level:Refresh()
+		controls.theme:Refresh()
 		controls.auras:Refresh()
 		controls.group:Refresh(Umbra.groupStoodDown and 'not on this client' or nil)
 		controls.minimap:Refresh()

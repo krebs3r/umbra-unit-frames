@@ -17,6 +17,7 @@ Libs\oUF\oUF.xml
 
 Core\Init.lua
 Core\Defaults.lua
+Core\Theme.lua
 Core\Secrets.lua
 Core\Mover.lua
 Core\Blizzard.lua

@@ -106,6 +106,7 @@ It offers nothing the commands do not, and `/uuf help` lists them:
 | `/uuf health` | `class`, `plain` | what colors the health bars |
 | `/uuf group` | `umbra`, `both` | whether the game's group manager stays on the left edge |
 | `/uuf level` | `portrait`, `name`, `off` | where the level stands, or whether it does |
+| `/uuf theme` | `auto`, `umbra`, `forever` | the frames' colors — `auto` gives WoW: Forever its own look |
 | `/uuf unlock` | — | drag the frames — all of them, filled out so you can see what you are placing |
 | `/uuf lock` | — | put them back to work |
 | `/uuf reset` | — | forget this layout's dragged positions |
@@ -113,7 +114,7 @@ It offers nothing the commands do not, and `/uuf help` lists them:
 
 Type a setting without a value and it tells you what it is on and what the alternatives mean.
 
-Defaults are `modern`, `below`, `both`, `plain`, `both` and `portrait` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group.
+Defaults are `modern`, `below`, `both`, `plain`, `both`, `portrait` and `auto` — Blizzard's aura display and group panel stay up until you say otherwise, because that panel carries your raid markers and the way out of a group, and `auto` picks the frames' colors by game version.
 
 There is also `/uuf dev`, a set of read-only checks that change nothing and print what your client is doing. `/uuf dev test` fills every aura slot with stand-ins so you can judge a layout at its fullest, and `/uuf dev check` gives you most of a good bug report in a window you can copy out of.
 
@@ -140,6 +141,8 @@ All five run on one codebase. **The Classic clients** call themselves Classic bu
 What the class power row does not know yet stays empty: Eclipse, Shadow Orbs, Burning Embers and Demonic Fury on Mists, where Chi shows for Windwalker only. Burning Crusade and Classic Era show combo points and nothing else, and Burning Crusade has no boss column to fill.
 
 Forever launches **4 November 2026**, and Umbra already loads and draws on its beta client. Since a late beta build Forever tells addons it is a game of its own rather than Retail; Umbra 0.8 knows that answer too.
+
+**On Forever, the frames take on Forever's own look.** Near-black plates, a one-pixel line of bronze along the top, right and bottom of each frame, an amber cast bar, and a gold title on the options window — the colors were sampled from the game's own tooltips and zone plaques. Your class color keeps the left edge, and nothing that belongs to a unit changes: health, class color, resources and the colored line under a debuff stay exactly as they are everywhere else. That is `/uuf theme auto`, the default, so after the update your frames on Forever look different. `/uuf theme umbra` brings back the slate and teal, `/uuf theme forever` brings the bronze to any other game version, and the switch in the options window does the same — at once, in combat too.
 
 **The one exception on Forever is the client's, not Umbra's.**
 

@@ -122,6 +122,7 @@ local COMMANDS = {
 	{'health', {'class', 'plain'}, 'what colors the health bars'},
 	{'group', {'umbra', 'both'}, "whether the game's group manager stays on the left edge"},
 	{'level', {'portrait', 'name', 'off'}, 'where the level stands, or whether it does'},
+	{'theme', {'auto', 'umbra', 'forever'}, "the frames' colors; auto follows the client"},
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},
@@ -323,6 +324,15 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 		UmbraUnitFramesDB.debuffs = 'below'
 	end
 
+	-- Forever's own colors on Forever and Umbra's everywhere else, until one
+	-- is chosen by name. A save from before themes existed has none, and
+	-- gets auto like a fresh one: on Forever that is a change of colors on
+	-- update, which the changelog says.
+	if UmbraUnitFramesDB.theme ~= 'auto' and UmbraUnitFramesDB.theme ~= 'umbra'
+		and UmbraUnitFramesDB.theme ~= 'forever' then
+		UmbraUnitFramesDB.theme = 'auto'
+	end
+
 	-- Where the client lists addons under the minimap, a button of our own
 	-- beside that entry would be the same door twice.
 	UmbraUnitFramesDB.minimap = UmbraUnitFramesDB.minimap or {}
@@ -334,6 +344,11 @@ loader:SetScript('OnEvent', function(self, _, loaded)
 	-- ADDON_LOADED runs before the frames are built, which is the only place
 	-- this can be picked up in time to report on that build.
 	Umbra.debug = UmbraUnitFramesDB.debug or false
+
+	-- The palette, before any frame reads it. The frames are built at
+	-- PLAYER_LOGIN, which comes after this; the snap guides were painted at
+	-- file load, before the choice could be read, and are repainted here.
+	Umbra:ApplyTheme()
 end)
 
 SLASH_UMBRAUNITFRAMES1 = '/uuf'
@@ -437,6 +452,8 @@ local function Command(input)
 		-- the wrong place starts here.
 		add('layout: ' .. Umbra:LayoutName() .. ' · debuffs '
 			.. (UmbraUnitFramesDB.debuffs or 'below'))
+		add('theme: ' .. Umbra:ThemeName()
+			.. (UmbraUnitFramesDB.theme == 'auto' and ' (auto)' or ''))
 		add('')
 
 		-- Which unit values this client hands over in the clear decides how
@@ -877,6 +894,31 @@ local function Command(input)
 		else
 			Umbra:SetOption('level', which)
 			print(PREFIX .. 'level: ' .. Value(which))
+		end
+	elseif input:find('^theme') then
+		-- auto is a choice of its own, so the reply also says what it came
+		-- to on this client.
+		local which = input:match('^theme%s+(%S+)$')
+
+		local function Resolved(name)
+			return name == 'auto' and (' — ' .. Value(Umbra:ThemeName()) .. ' on this client') or ''
+		end
+
+		if not which then
+			local current = UmbraUnitFramesDB.theme
+
+			print(PREFIX .. 'theme: ' .. Value(current) .. Resolved(current))
+			print(PREFIX .. Value('auto') .. ' — ' .. Value('forever') .. ' on WoW: Forever, '
+				.. Value('umbra') .. ' everywhere else')
+			print(PREFIX .. Value('umbra') .. ' — the dark slate and teal')
+			print(PREFIX .. Value('forever') .. " — near-black and bronze, in Forever's own look")
+		elseif which ~= 'auto' and which ~= 'umbra' and which ~= 'forever' then
+			print(PREFIX .. 'no such setting: ' .. which)
+		else
+			-- Only colors change and none of that is protected, so like
+			-- `health` this is a result, in a fight as much as out of one.
+			Umbra:SetOption('theme', which)
+			print(PREFIX .. 'theme: ' .. Value(which) .. Resolved(which))
 		end
 	elseif input == 'header' then
 		--[[ One question, asked once

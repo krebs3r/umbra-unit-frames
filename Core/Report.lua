@@ -145,13 +145,13 @@ local function PlainButton(parent, text, width)
 
 	local background = button:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
-	background:SetColorTexture(unpack(colors.border))
+	Umbra:Paint(background, colors.border)
 
 	local label = button:CreateFontString(nil, 'OVERLAY')
 	label:SetFontObject(Umbra.Font(12))
 	label:SetPoint('CENTER')
 	label:SetText(text)
-	label:SetTextColor(unpack(colors.text))
+	Umbra:Paint(label, colors.text)
 
 	button:SetScript('OnEnter', function() label:SetTextColor(unpack(colors.accent)) end)
 	button:SetScript('OnLeave', function() label:SetTextColor(unpack(colors.text)) end)
@@ -207,17 +207,16 @@ local function Panel(globalName, width, height, footer)
 
 		local border = frame:CreateTexture(nil, 'BACKGROUND')
 		border:SetAllPoints()
-		border:SetColorTexture(unpack(colors.border))
+		Umbra:Paint(border, colors.rimTop)
 
 		local background = frame:CreateTexture(nil, 'BACKGROUND', nil, 1)
-		background:SetPoint('TOPLEFT', frame, 'TOPLEFT', 1, -1)
-		background:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -1, 1)
-		background:SetColorTexture(unpack(colors.background))
+		Umbra:Outline(background, frame, true)
+		Umbra:Paint(background, colors.background)
 
 		local title = frame:CreateFontString(nil, 'OVERLAY')
 		title:SetFontObject(Umbra.Font(13))
 		title:SetPoint('TOPLEFT', frame, 'TOPLEFT', PADDING, -PADDING)
-		title:SetTextColor(unpack(colors.accent))
+		Umbra:Paint(title, colors.accent)
 		frame.UmbraTitle = title
 	end
 
@@ -279,7 +278,7 @@ local function Panel(globalName, width, height, footer)
 		if not sunken then
 			local ground = body:CreateTexture(nil, 'BACKGROUND')
 			ground:SetAllPoints()
-			ground:SetColorTexture(unpack(colors.border))
+			Umbra:Paint(ground, colors.border)
 		end
 	end
 
@@ -331,7 +330,7 @@ local function Build()
 		edit:SetFontObject(ChatFontNormal)
 	end
 
-	edit:SetTextColor(unpack(colors.text))
+	Umbra:Paint(edit, colors.text)
 
 	-- Multiline, so Enter would otherwise type a newline into the report
 	-- while the person is trying to get back to chat. Both keys let go.
@@ -397,7 +396,7 @@ local function Build()
 	hint:SetText('Escape closes this. Copying hands over plain text.')
 
 	if not native then
-		hint:SetTextColor(unpack(colors.muted))
+		Umbra:Paint(hint, colors.muted)
 	end
 
 	return frame
@@ -441,6 +440,7 @@ function Umbra:ShowReport(title, lines)
 		colored[index] = Colorize(line)
 	end
 
+	window.lines = lines
 	window.report = table.concat(lines, '\n')
 	window.display = table.concat(colored, '\n')
 
@@ -523,7 +523,7 @@ local function BuildSquare(parent, attempt)
 	-- window.
 	local ground = square:CreateTexture(nil, 'BACKGROUND')
 	ground:SetAllPoints()
-	ground:SetColorTexture(unpack(colors.portraitGround))
+	Umbra:Paint(ground, colors.portraitGround)
 
 	local model = CreateFrame('PlayerModel', nil, square)
 	model:SetAllPoints()
@@ -542,7 +542,7 @@ local function BuildSquare(parent, attempt)
 	name:SetPoint('TOP', square, 'BOTTOM', 0, -4)
 	name:SetWidth(CELL - 8)
 	name:SetText(attempt.label)
-	name:SetTextColor(unpack(colors.text))
+	Umbra:Paint(name, colors.text)
 
 	local caption = square:CreateFontString(nil, 'OVERLAY')
 	caption:SetFontObject(Umbra.Font(10))
@@ -563,13 +563,13 @@ local function BuildRow(parent, index)
 	local title = row:CreateFontString(nil, 'OVERLAY')
 	title:SetFontObject(Umbra.Font(12))
 	title:SetPoint('TOPLEFT', row, 'TOPLEFT', 4, 0)
-	title:SetTextColor(unpack(colors.accent))
+	Umbra:Paint(title, colors.accent)
 	row.Title = title
 
 	local facts = row:CreateFontString(nil, 'OVERLAY')
 	facts:SetFontObject(Umbra.Font(11))
 	facts:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', 0, -3)
-	facts:SetTextColor(unpack(colors.muted))
+	Umbra:Paint(facts, colors.muted)
 	row.Facts = facts
 
 	row.Squares = {}
@@ -716,7 +716,7 @@ function Umbra:ShowPortraits(title, heading, rows)
 			local top = inset:CreateFontString(nil, 'OVERLAY')
 			top:SetFontObject(Umbra.Font(12))
 			top:SetPoint('TOPLEFT', inset, 'TOPLEFT', PADDING + 4, -PADDING)
-			top:SetTextColor(unpack(colors.accent))
+			Umbra:Paint(top, colors.accent)
 			frame.Heading = top
 			frame.Rows = {}
 
@@ -737,6 +737,9 @@ function Umbra:ShowPortraits(title, heading, rows)
 		return
 	end
 
+	-- Kept, so a theme switch can fill the open box again in the new colors.
+	portraits.umbraShown = {title, heading, rows}
+
 	Title(portraits, title)
 	portraits.Heading:SetText(heading)
 
@@ -752,4 +755,28 @@ function Umbra:ShowPortraits(title, heading, rows)
 	portraits:Show()
 
 	return portraits
+end
+
+--[[ Umbra.RecolorReports()
+Both windows write their colors into what they show: the report as escapes in
+its text, the portrait box in its captions. A theme switch repaints their
+furniture through Umbra:Paint, and this writes an open one again from what it
+was last given, so a window is never half in one palette and half in the
+other. A closed one is written fresh the next time it is asked for.
+--]]
+function Umbra.RecolorReports()
+	if window and window:IsShown() and window.lines then
+		local colored = {}
+
+		for index, line in ipairs(window.lines) do
+			colored[index] = Colorize(line)
+		end
+
+		window.display = table.concat(colored, '\n')
+		Report(window, window.plain)
+	end
+
+	if portraits and portraits:IsShown() and portraits.umbraShown then
+		Umbra:ShowPortraits(unpack(portraits.umbraShown))
+	end
 end

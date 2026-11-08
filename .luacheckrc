@@ -35,6 +35,10 @@ read_globals = {
 	'C_StringUtil', 'CreateAbbreviateConfig',
 	'wipe', 'math', 'string',
 
+	-- The Forever theme's rim is one physical pixel, worked out from the
+	-- client's pixel-to-unit factor
+	'PixelUtil',
+
 	-- Project identity
 	'WOW_PROJECT_ID', 'WOW_PROJECT_MAINLINE', 'WOW_PROJECT_CLASSIC',
 

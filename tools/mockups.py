@@ -17,6 +17,7 @@ the client decides at runtime: fonts, the spell art in an icon, what a
 portrait model looks like. Those are drawn as stand-ins and labelled as such.
 """
 
+import contextlib
 import math
 import os
 
@@ -66,7 +67,61 @@ C = {
     'muted': (141, 151, 171),
     'accent': (117, 220, 196),
     'mana': (35, 106, 196),
+    # Class-power pips. The client's power colors paint them in the
+    # addon (oUF's ClassPower), so the sheets draw one fixed stand-in that
+    # no theme touches: today's accent, which the sheets have always used.
+    'pip': (117, 220, 196),
 }
+
+# What only the Forever theme draws differently: a window's title, and the
+# line around a frame body and a window. Here they are what those places have
+# always been, so under these values nothing looks any different.
+C.update(title=C['text'], rimTop=C['border'], rimRight=C['border'],
+         rimBottom=C['border'])
+
+# --- Core/Theme.lua, Umbra.palettes ---------------------------------------
+
+# The keys a theme may change. Everything else in C is the unit's, and the
+# same in both palettes.
+THEMED = ('background', 'border', 'portraitGround', 'text', 'muted', 'accent',
+          'auraHelpful', 'cast', 'title', 'rimTop', 'rimRight', 'rimBottom')
+
+C_FOREVER = dict(
+    C,
+    background=(21, 18, 15, 0.96),
+    border=(10, 8, 6),
+    portraitGround=(38, 34, 28),
+    text=(240, 233, 218),
+    muted=(166, 160, 148),
+    accent=(240, 204, 140),
+    auraHelpful=(166, 160, 148),
+    cast=(186, 104, 22),
+    # NORMAL_FONT_COLOR, 1 / 0.82 / 0, and only ever on a window's title.
+    title=(255, 209, 0),
+    # Lit from the top left, so the right side is a step darker than the top.
+    rimTop=(154, 128, 92),
+    rimRight=(128, 104, 72),
+    rimBottom=(104, 80, 52),
+)
+
+# A theme changes the interface, never the unit.
+assert all(C_FOREVER[key] == C[key] for key in C if key not in THEMED)
+
+PALETTES = {'umbra': dict(C), 'forever': C_FOREVER}
+
+# Whether a frame body wears the rim: never under Umbra's own colors.
+RIMMED = {'umbra': False, 'forever': True}
+
+# The rim is one physical pixel, not one unit, and a sheet draws in units. The
+# Forever values were measured at 1.3125 pixels per unit (Core/Theme.lua), so
+# that is the scale a sheet draws the pixel at.
+PIXELS_PER_UNIT = 1.3125
+
+
+def outline_width():
+    """How far a window's border reaches past it, as Umbra:Outline places it:
+    one physical pixel under a rimmed theme, one unit under Umbra's own."""
+    return 1 / PIXELS_PER_UNIT if RIMMED[THEME] else 1
 
 # The client's, not ours — used so a sheet shows a real class color rather
 # than a swatch standing in for one.
@@ -259,6 +314,28 @@ def rgb(c, alpha=None):
     return 'rgba(%d,%d,%d,%.3f)' % (r, g, b, a)
 
 
+THEME = 'umbra'
+
+
+@contextlib.contextmanager
+def theme(name):
+    """Umbra:ApplyTheme for the length of a drawing.
+
+    C is rewritten in place, the way the Lua rewrites `Umbra.colors`, because
+    every drawing below reads it; and put back after, so the annotation around
+    a drawing stays in the sheet's own colors.
+    """
+    global THEME
+    worn = THEME
+    C.update((key, PALETTES[name][key]) for key in THEMED)
+    THEME = name
+    try:
+        yield
+    finally:
+        C.update((key, PALETTES[worn][key]) for key in THEMED)
+        THEME = worn
+
+
 #[[ Why the annotation type is scaled and the drawings are not
 # A sheet is read where it is embedded, and GitHub fits a README image to a
 # column around 880 wide. A 1420-wide sheet is therefore shown at 0.62, and
@@ -356,6 +433,22 @@ def defs():
 
 # --- Drawing one frame ----------------------------------------------------
 
+def draw_rim(sheet, start, w, h):
+    """Umbra:Rim, placed as SizeRim places it, in frame units.
+
+    On the body's own outermost pixels, over everything else on it: a line
+    along the top and one along the bottom, from where the portrait begins,
+    and one down the right that runs the full height and owns the corners, so
+    the other two end where it begins. None down the left, and none over
+    the class edge or the gap beside it, which keep their whole height as the
+    frame's left side.
+    """
+    px = 1 / PIXELS_PER_UNIT
+    sheet.rect(start, 0, w - start - px, px, rgb(C['rimTop']))
+    sheet.rect(w - px, 0, px, h, rgb(C['rimRight']))
+    sheet.rect(start, h - px, w - start - px, px, rgb(C['rimBottom']))
+
+
 def bar(sheet, x, y, w, h, color, fill=1.0, alpha=None, shade=True):
     """A StatusBar: border underneath, the fill, the shade over both.
 
@@ -401,6 +494,9 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
     px = c['portraitX'] = c['classEdge'] + c['gap']
     if portrait:
         sheet.rect(px, 0, c['portrait'], h, rgb(C['portraitGround']))
+        # The class tint lies on the ground, behind the model, as
+        # Layouts/Shared.lua stacks it: no color is laid over the face.
+        sheet.rect(px, 0, c['portrait'], h, rgb(color, 0.13))
         # A stand-in for the model, clipped to the column: a silhouette, so
         # nobody reads a face into a sheet that cannot have one.
         clip = 'clip%d' % (id(sheet) % 100000 + len(sheet.parts))
@@ -415,7 +511,6 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
         sheet.add('<ellipse cx="%.2f" cy="%.2f" rx="%.2f" ry="%.2f" fill="%s"/>'
                   % (cx, cy + head * 2.5, head * 2.4, head * 1.5, rgb(color)))
         sheet.add('</g>')
-        sheet.rect(px, 0, c['portrait'], h, rgb(color, 0.13))
 
     role_w = (c['nameHeight'] + c['gap']) if c.get('header') else 0
     name_x = column_x + role_w
@@ -506,7 +601,12 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
         slot = (column_w - (shown - 1) * c['gap']) / shown
         for i in range(shown):
             bar(sheet, column_x + i * (slot + c['gap']), pip_y, slot,
-                c['pipHeight'], C['accent'], 1.0 if i < filled else 0.0)
+                c['pipHeight'], C['pip'], 1.0 if i < filled else 0.0)
+
+    # The rim last, over everything on the body, as its own frame level
+    # puts it in the addon.
+    if RIMMED[THEME]:
+        draw_rim(sheet, c['classEdge'] + c['gap'], w, h)
 
     sheet.add('</g>')
 
@@ -1037,6 +1137,8 @@ OPTION_ROWS = [
     ('segment', 'health', ('Neutral', 'Class color')),
     ('section', 'Show level'),
     ('segment', 'level', ('Portrait', 'Name', 'Off')),
+    ('section', 'Theme'),
+    ('segment', 'theme', ('Auto', 'Umbra', 'Forever')),
     ('section', 'Blizzard frames'),
     ('check', 'auras', 'Hide Blizzard buffs & debuffs'),
     ('check', 'group', 'Hide Blizzard group manager'),
@@ -1145,13 +1247,16 @@ def draw_options(sheet, x, y, s, *, state=None, notes=None):
     sheet.add('<g transform="translate(%.2f,%.2f) scale(%.4f)">' % (x, y, s))
 
     # the window: border, ground, and the accent edge where a frame has its
-    # class edge — the interface's color at the place a unit keeps its own
-    sheet.rect(-1, -1, w + 2, height + 2, rgb(C['border']))
+    # class edge — the interface's color at the place a unit keeps its own.
+    # The border is the rim's color: the border color under Umbra's own
+    # theme, Forever's bronze line under that one.
+    d = outline_width()
+    sheet.rect(-d, -d, w + 2 * d, height + 2 * d, rgb(C['rimTop']))
     sheet.rect(0, 0, w, height, rgb(C['background']))
     sheet.rect(0, 0, C_EDGE, height, rgb(C['accent']))
 
     sheet.text(left, 23, 'Umbra Unit Frames', size=o['title'],
-               fill=rgb(C['text']), weight='600')
+               fill=rgb(C['title']), weight='600')
     cx, cy, cs = w - o['pad'] - 12, 12, 12
     sheet.rect(cx - 3, cy - 3, cs + 6, cs + 6, rgb(C['border']))
     sheet.line(cx, cy, cx + cs, cy + cs, stroke=rgb(C['muted']), width=1.5)
@@ -1244,6 +1349,8 @@ def sheet_options(out):
          'accent edge where a frame has its class edge'),
         (top + (ys['layout'] + 11) * s, 'Segmented switch',
          'the chosen side carries a 2 px line'),
+        (top + (ys['theme'] + 11) * s, 'Auto picks the theme by client',
+         'Forever on Forever, Umbra elsewhere'),
         (top + (ys['auras'] + 7) * s, 'Checkboxes of its own',
          'the same on all five clients'),
         (top + (buttons + 11) * s, 'Unlock turns into Lock',
@@ -1265,7 +1372,9 @@ def sheet_options(out):
     forever = dict(normal, group=False,
                    refused={'group': 'not on this client'})
     second = 980 - 48 - w
-    draw_options(sheet, second, row2, s, state=forever)
+    # Auto is chosen, and on that client auto is Forever's own colors.
+    with theme('forever'):
+        draw_options(sheet, second, row2, s, state=forever)
 
     for x, title, body in (
             (48, 'In combat',
@@ -1274,7 +1383,9 @@ def sheet_options(out):
              'fight ends.'),
             (second, 'On WoW: Forever',
              'The party column steps back on that client, so the switch for '
-             'Blizzard\'s group manager has nothing to hand over.')):
+             'Blizzard\'s group manager has nothing to hand over. Auto picks '
+             'the Forever theme there: a bronze border, the title in the '
+             'client\'s gold.')):
         by = row2 + height * s + 32
         sheet.text(x, by, title, size=12 * TYPE, fill=rgb(C['text']),
                    weight='600')
@@ -1522,12 +1633,13 @@ def draw_onboarding(sheet, x, y, s, step, state=None):
 
     sheet.add('<g transform="translate(%.2f,%.2f) scale(%.4f)">' % (x, y, s))
 
-    sheet.rect(-1, -1, w + 2, height + 2, rgb(C['border']))
+    d = outline_width()
+    sheet.rect(-d, -d, w + 2 * d, height + 2 * d, rgb(C['rimTop']))
     sheet.rect(0, 0, w, height, rgb(C['background']))
     sheet.rect(0, 0, C_EDGE, height, rgb(C['accent']))
 
     sheet.text(left, 23, 'Umbra Unit Frames', size=OPT['title'],
-               fill=rgb(C['text']), weight='600')
+               fill=rgb(C['title']), weight='600')
     cx, cy, cs = w - o['pad'] - 12, 12, 12
     sheet.rect(cx - 3, cy - 3, cs + 6, cs + 6, rgb(C['border']))
     sheet.line(cx, cy, cx + cs, cy + cs, stroke=rgb(C['muted']), width=1.5)
@@ -1675,6 +1787,161 @@ def sheet_onboarding(out):
     sheet.save(os.path.join(out, 'onboarding.svg'))
 
 
+# --- Sheet 8: the Forever theme -------------------------------------------
+
+#[[ Two palettes, one set of frames
+# The same four frames twice, drawn by the same `draw_frame` under each
+# palette in turn, so whatever differs between the two drawings is what a
+# theme changes and nothing else. The heights are the modern set's own; only
+# the distance across is brought in, since the set's spread is wider than a
+# sheet. The rim is then shown again, enlarged, where its three rules are:
+# where it starts, who owns a corner, and what it leaves out.
+#]]
+SCENE = (
+    ('player', 'near', dict(color=CLASS['MAGE'], name='Umbrastra',
+                            health=0.72, power=0.58, pips=(5, 3),
+                            health_value='412k', health_percent='72%',
+                            power_value='58%',
+                            cast=('Arcane Blast', '1.4', 0.62))),
+    ('pet', 'near', dict(color=CLASS['MAGE'], name='Water Elemental',
+                         health=1.0, power=0.8)),
+    ('target', 'far', dict(color=HOSTILE, name='Ancient Protector',
+                           health=0.44, power=0.9, health_value='2.1M',
+                           health_percent='44%', power_value='90%',
+                           heal=0.09, absorb=0.07)),
+    # A warrior, because its tan is the class color nearest to bronze.
+    ('targettarget', 'far', dict(color=CLASS['WARRIOR'], name='Ironhide',
+                                 health=0.61, power=0.3)),
+)
+
+
+def scene_extent():
+    """Where `points` puts each frame of the scene on the modern set: both on
+    one baseline, the cast bar and the pet under the player, the target's
+    target above the target. Each top is in units below the scene's top, and
+    the height is the scene's whole, cast bar included.
+    """
+    pts = points('modern')
+    tops, bottoms = {}, []
+    for unit, _, kw in SCENE:
+        c = cfg(unit)
+        tops[unit] = resolve(*pts[unit], c['width'], frame_height(c))[1]
+        bottoms.append(tops[unit] + frame_height(c)
+                       + (castbar_reach(c) if kw.get('cast') else 0))
+    first = min(tops.values())
+    return {unit: y - first for unit, y in tops.items()}, max(bottoms) - first
+
+
+def forever_scene(sheet, top, s):
+    """The scene at scale `s`, its two columns at the sheet's margins."""
+    tops, _ = scene_extent()
+    x = {'near': 48, 'far': 980 - 48 - M['width'] * s}
+    for unit, side, kw in SCENE:
+        draw_frame(sheet, x[side], top + tops[unit] * s, unit, s, **kw)
+
+
+def rim_detail(sheet, x, y, k, region, clip):
+    """A piece of the player frame at `k` times, `region` being the corner
+    (x0, y0, x1, y1) in frame units. The frame is drawn whole and clipped,
+    without its labels, which at this size would be all there is to see. The
+    level plate is drawn with a blank level, so the bottom line can be seen
+    running over it.
+    """
+    x0, y0, x1, y1 = region
+    w, h = (x1 - x0) * k, (y1 - y0) * k
+    sheet.add('<clipPath id="%s"><rect x="%.2f" y="%.2f" width="%.2f" '
+              'height="%.2f"/></clipPath>' % (clip, x, y, w, h))
+    sheet.add('<g clip-path="url(#%s)">' % clip)
+    draw_frame(sheet, x - x0 * k, y - y0 * k, 'player', k,
+               color=CLASS['MAGE'], name='', health=0.72, power=0.58,
+               pips=(5, 3), cast=('', '', 0.62), level=' ')
+    sheet.add('</g>')
+    sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="none" '
+              'stroke="%s" stroke-width="1"/>'
+              % (x + 0.5, y + 0.5, w - 1, h - 1, rgb(RULE)))
+
+
+def sheet_forever(out):
+    s, k = 1.75, 12
+    c = cfg('player')
+    w, h = c['width'], frame_height(c)
+    px = 1 / PIXELS_PER_UNIT
+
+    # Three corners of the player frame, each the same size and with the same
+    # margin of paper beside the frame: where the rim starts, where two of its
+    # lines meet, and the gap to the cast bar.
+    span_x, span_y, margin = 22, 15, 3
+    corners = (
+        ((-margin, -5), "The left is the class edge's",
+         'The top and bottom lines start where the portrait begins; the '
+         'class edge and the gap beside it keep their whole height.'),
+        ((w + margin - span_x, -5), 'The right owns both corners',
+         'A step darker than the top, as if lit from the top left. It runs '
+         'the full height and the other two stop short of it.'),
+        ((-margin, h - 7), 'Inside, on the last pixel',
+         'The lines lie on the body itself, so the cast bar below keeps its '
+         '%d unit gap and the edges stay flush. The cast bar and the aura '
+         'icons get none; the bottom line runs over the level plate.' % c['gap']),
+    )
+    notes = max(len(wrap(body, span_x * k, 11 * TYPE))
+                for _, _, body in corners)
+
+    caption_y = 52
+    strip = 282
+    scene_h = scene_extent()[1] * s
+    strip2 = strip + 26 + scene_h + 72
+    details = strip2 + 26 + scene_h + 72
+    cell_h = span_y * k
+    bottom = details + 26 + cell_h + 34 + 22 + (notes - 1) * 19 + 36
+
+    sheet = Sheet(980, int(bottom), 'Umbra Unit Frames — the Forever theme')
+    caption(sheet, 48, caption_y, '/uuf theme', 'The Forever theme',
+            'On WoW: Forever the frames take on the client\'s own look, and '
+            'Auto picks it there; every other client keeps Umbra\'s slate and '
+            'teal. The same frames twice, as the modern set stacks them. The '
+            'theme repaints the interface around a unit — the plates, the '
+            'text and the cast bar, now amber — and '
+            'adds a bronze rim one physical pixel wide along the top, right '
+            'and bottom of each frame body. The class edge, the names, '
+            'health, absorbs and resources keep their colors: a theme never '
+            'changes the unit.', width=884)
+
+    def heading(y, title, note, rule=True):
+        if rule:
+            sheet.line(48, y - 34, 932, y - 34, stroke=rgb(RULE))
+        sheet.text(48, y, title, size=12.5 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        sheet.text(932, y, note, size=11 * TYPE, fill=rgb(LABEL),
+                   anchor='end', family='mono')
+
+    heading(strip, 'Umbra', '/uuf theme umbra · auto everywhere else',
+            rule=False)
+    forever_scene(sheet, strip + 26, s)
+
+    heading(strip2, 'Forever', '/uuf theme forever · auto on WoW: Forever')
+    with theme('forever'):
+        forever_scene(sheet, strip2 + 26, s)
+
+    heading(details, 'The rim, enlarged %d times' % k,
+            '1 physical pixel = %.2f units at %g pixels per unit'
+            % (px, PIXELS_PER_UNIT))
+    gap = (884 - 3 * span_x * k) / 2
+    for i, ((x0, y0), title, body) in enumerate(corners):
+        cx = 48 + i * (span_x * k + gap)
+        cy = details + 26
+        with theme('forever'):
+            rim_detail(sheet, cx, cy, k, (x0, y0, x0 + span_x, y0 + span_y),
+                       'rim-corner-%d' % (i + 1))
+        ty = cy + cell_h + 34
+        sheet.text(cx, ty, title, size=12 * TYPE, fill=rgb(C['text']),
+                   weight='600')
+        for j, line in enumerate(wrap(body, span_x * k, 11 * TYPE)):
+            sheet.text(cx, ty + 22 + j * 19, line, size=11 * TYPE,
+                       fill=rgb(LABEL))
+
+    sheet.save(os.path.join(out, 'forever.svg'))
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out = os.path.join(root, 'assets', 'design')
@@ -1691,6 +1958,7 @@ def main():
     sheet_states(out)
     sheet_options(out)
     sheet_onboarding(out)
+    sheet_forever(out)
 
 
 if __name__ == '__main__':

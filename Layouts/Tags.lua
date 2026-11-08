@@ -174,6 +174,12 @@ thrown on — the plate is the placement that can show one.
 --]]
 local muted
 
+-- The escape is built once; a theme switch changes the color under it, so
+-- Core/Theme.lua throws it away before asking every tag again.
+function Umbra.ResetTagColors()
+	muted = nil
+end
+
 oUF.Tags.Methods['umbra:namelevel'] = function(unit, _, mode)
 	if not UmbraUnitFramesDB or UmbraUnitFramesDB.level ~= 'name' then return end
 

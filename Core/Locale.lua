@@ -26,8 +26,10 @@ local GERMAN = {
 	['Display'] = 'Anzeige',
 	['Frames'] = 'Frames',
 	['Show level'] = 'Level anzeigen',
+	['Theme'] = 'Thema',
 
-	-- Switches
+	-- Switches. Auto, Umbra and Forever are the same words in German, and
+	-- the last two are names.
 	['Modern'] = 'Modern',
 	['Classic'] = 'Klassisch',
 	['Below buffs'] = 'Unter den Buffs',

@@ -44,8 +44,8 @@ with ghosted incoming healing, and range shown through fading, which arrived
 with the group frames it was waiting for. Alongside them: two layout sets and
 a switch that puts the debuffs over the buffs in either, the
 class-power row, a cast bar, a frame mover, a switch for Blizzard's own aura
-display, one for its group panel, a switch for class-colored health bars, an
-addon-list icon and packaging.
+display, one for its group panel, a switch for class-colored health bars, a
+theme that gives Forever its own look, an addon-list icon and packaging.
 
 The aura underline is **verified in the open world and inside an instance**,
 geometry and color both, by sampling screenshots pixel by pixel — the
@@ -90,6 +90,7 @@ the version and the list.
 | `group umbra` · `group both` | whether the client's group manager — the panel on the left edge with the markers — is put away or kept |
 | `health class` · `health plain` | whether the health bar takes the unit's color too, or leaves it to the edge |
 | `level portrait` · `level name` · `level off` | where the level stands, or whether it does |
+| `theme auto` · `theme umbra` · `theme forever` | the interface's colors; `auto` is Forever's on Forever and Umbra's everywhere else |
 | `setup` | the onboarding, the questions of the first login |
 | `dev` | the measurements, listed behind that word |
 
@@ -287,6 +288,183 @@ fight. Those insets are also why a frame dragged right against the top of
 the screen moves down when its stack grows: the clamp keeps the whole stack
 on screen. A frame that was snapped against the old over-line is not moved off
 the rows that now stand there; the mover only asks at the end of a drag.
+
+### Themes
+
+Added in 0.9: `/uuf theme auto|umbra|forever` and a *Theme* switch in the
+window. The code is `Core/Theme.lua`, and its comment block is the design. Two
+palettes for the interface around a unit: `umbra`, the slate and teal every
+release has worn, and `forever`. `auto`, the default, picks `forever` on WoW:
+Forever and `umbra` everywhere else. A save from before 0.9 has no `theme` and
+is given `auto` like a fresh one, so on Forever the update changes the colors;
+the changelog says so rather than leaving it to be noticed.
+
+**It exists for Forever's look.** That client's own art — the tooltip, the
+zone plaque, the minimap ring — is flat dark panels with a one-pixel bronze
+line, lit from the top left, and under `forever` a frame body wears the same.
+The values were sampled rather than chosen, on 7 November 2026, off lossless
+screenshots of that art: the plaque measured `#110D09` and the tooltip
+`#161017`, and the plate is a touch lighter than either, without the
+tooltip's violet, at Umbra's own 0.96 opacity; the
+panel lines run from `#9A846B` at the top to `#8B6E4A` at the bottom, so the
+rim is a step darker on the right than on top and darker again at the bottom;
+the accent comes from the specular highlights on the minimap ring's lip and
+the plaque's corner; and the title is `NORMAL_FONT_COLOR`, measured off
+*Aktive Quests* as `#FFD200`. The title is only ever a window's: on a frame,
+that yellow is the target level's difficulty color.
+
+| | `umbra` | `forever` |
+| :--- | :--- | :--- |
+| `background` | `20/25/37` at 0.96 | `21/18/15` at 0.96 |
+| `border` | `11/14/21` | `10/8/6`, the black band under every bronze line |
+| `portraitGround` | `35/43/60` | `38/34/28` |
+| `text` | `230/233/240` | `240/233/218` |
+| `muted`, `auraHelpful` | `141/151/171` | `166/160/148` |
+| `accent` | `117/220/196` | `240/204/140` |
+| `cast` | `168/124/51` | `186/104/22` |
+| `title` | the text color | `255/209/0` |
+| `rimTop` · `rimRight` · `rimBottom` | the border color, and not shown | `154/128/92` · `128/104/72` · `104/80/52` |
+
+**Under `umbra` nothing looks different.** The four keys only `forever` needed
+are there too: the title is the text color the windows' titles always had, the
+three rim keys are the border color the windows' outer line always had, and a
+frame body does not show its rim at all. The options window and the onboarding
+take `rimTop` on the border that already lay outside them, and `title` for
+their title. That border is one unit wide under `umbra`, as it always was,
+and one physical pixel under `forever`: a unit renders as one pixel on one
+side and two on the next, which a near-black line hid and a bronze one does
+not. `Umbra:Outline` places it, and places it again on a switch or a new
+scale. The report window is the client's own template
+wherever the client has one, which is not ours to color; only its fallback
+takes the rim, and keeps the accent on its title.
+
+**A second pass tried to break the palette, and moved three things.** The
+CIEDE2000 distances below are worked out from the values (sRGB, D65), not
+measured off a screen:
+
+- **The warrior.** The rim, the accent and the muted text all sat within 10 of
+  the warrior's class color, `198/155/109`, so a warrior's edge read as one
+  more side of a bronze frame. Now the nearest is the rim's top line at 11.2;
+  the accent is 13.6 away, the muted text 14.6, and the darker right and bottom
+  lines 20.5 and 31.3. The rim draws no line down the left side, which stays
+  the class edge's. Its top and bottom lines first started where the edge
+  ends. Seen in the game on 8 November 2026, with the rim still a pixel
+  outside the body, an edge that stopped a pixel short of the lines read as
+  standing outside the frame, so the two lines were run over it as well.
+  Once the rim moved inside, the edge reaches the body's first and last row
+  just as the lines do and stands as the left side on its own, so the lines
+  went back to starting where it ends. Laid side by side on the lossless
+  screenshots, that capped the two-unit gap between the edge and the
+  portrait at both ends and boxed it in, so the lines now start where the
+  portrait begins: the left side is the edge and its gap, both on the whole
+  height, and the bronze frames the portrait and the bars. Tan and bronze no
+  longer touch, but a warrior's edge still stands two units from the line,
+  and the 11 CIEDE2000 stay for that.
+- **The cast bar.** Under bronze chrome, the gold it had read as more chrome,
+  and a cast is unit information — the reason `Core/Defaults.lua` gives for the
+  cast color in the first place. It is an amber now: 4.13:1 under white, 3.42:1
+  under the theme's text color. For scale, Umbra's own `168/124/51` is 8.7 from
+  the rim's top line, and the amber 15.1.
+- **One physical pixel, not one unit.** At 1.3125 pixels per unit, the scale of
+  the 7 November screenshots, a one-unit line renders as one pixel in one place
+  and two in the next. So each line is `PixelUtil.GetPixelToUIUnitFactor()`
+  over the frame's effective scale, and one unit where a client has no
+  `PixelUtil`.
+
+**The rim lies inside the body, on its outermost pixels.** It began a pixel
+outside, and seen in the game on 8 November 2026 two things came apart that
+Umbra had kept exact. The frame stood a pixel wider on the right than the cast
+bar under it and the aura row over it, which are cut to the same 222 units —
+the width the aura row sets, as *The right edge lines up too* says. And where
+two frames are stacked two units apart, the target of the target over the
+target, the upper frame's bottom line and the lower one's top line filled the
+gap like a groove. Both variants were laid side by side on the lossless
+screenshots before the move. Inside, every edge is where the metrics put it,
+stacked frames keep their gap, and the line belongs to the plate as the line on
+Forever's own tooltip belongs to the tooltip. It costs the outermost pixel of
+whatever touches the edge: the last row of the power hairline or the
+class-power pips, the first and last row of the portrait, the last row of the
+level plate, and on a party member the first row of the role mark.
+
+The three lines are textures of a child frame five levels above the frame,
+over the portrait, its 2D stand-in and the level plate and under the mover's
+overlay. As regions of the frame itself they would draw under every child and
+be covered wherever the portrait or a bar touches the edge. The right line runs
+the full height and owns both corners; the top and bottom start where the
+portrait begins and end where the right line begins, so nothing is drawn
+twice. `Layouts/Shared.lua` builds one on every frame, `Umbra:Rim(self,
+l.classEdge + l.gap, width, height)`, and the theme only shows or hides it, so
+a switch builds nothing.
+
+**Switching repaints what is already built.** Every setting takes effect where
+you stand, and colors are no exception, so whatever is painted from the
+palette at build time is painted through `Umbra:Paint(region, color, alpha,
+method)`, which remembers it in a table with weak keys. The type picks the
+call — `SetColorTexture`, `SetTextColor` for a FontString or an EditBox,
+`SetStatusBarColor` — and `method = 'vertex'` is for a texture that carries
+art of its own, which is the helpful underline. The last call for a region
+wins, which is what lets a label `Widgets.Text` built in the text color be
+repainted muted by its owner.
+
+**The palette is rewritten in place, never replaced.** Six files hold
+`Umbra.colors` in a local of their own, `local colors = Umbra.colors`, and
+their hover scripts read `colors.accent` or `colors.text` out of it when the
+pointer arrives; `Umbra:Paint` remembers the palette's own inner table for a
+region, not a copy. A new table at either level would leave all of them on
+the old colors. So `Umbra:ApplyTheme()` copies four numbers into each table
+that is already there. Both palettes carry all twelve keys in `THEMED`, so
+every table exists from the first load and a switch back leaves nothing of the
+other palette behind; `umbra` itself is copied out of `Core/Defaults.lua` at
+load, so the slate and teal are written down once.
+
+`ApplyTheme` runs at the end of `ADDON_LOADED`, before any frame is built —
+which repaints the mover's snap guides, painted at file load before the saved
+choice could be read — and again on every switch. It repaints every
+remembered region, each inside a `pcall`: inside an instance a region can
+carry an aspect the client will not let an addon recolor, so the first refusal
+goes to `/uuf dev debug` as `theme repaint refused:` and the rest carry on.
+Then it shows or hides the rims, throws away the cached escape the level in
+front of the name is colored with (`Umbra.ResetTagColors`) and asks every
+frame's tags again, has the Classic clients' own aura rows color their
+dispellable underlines again, and ends on `Umbra:ApplyHealthStyle()`, because
+the repaint put the muted placeholder back on every class edge and portrait
+tint and that puts the unit's color back wherever there is a unit.
+
+**What oUF colors is deliberately not repainted.** The health fill, incoming
+healing and the absorbs, the power hairline, the class-power pips, the dispel
+color the client lays over an underline, and `auraHarmful` never go through
+`Paint`: a runtime path colors each of them on its own, and remembering one
+would have a switch paint over the unit's color. Some surfaces carry a unit's
+color over a palette placeholder — the class edge and the portrait tint, the
+power percentage, a helpful underline on the Classic rows. The placeholder is
+remembered, so a frame with no unit shows the new palette too, and the owner
+puts the unit's color back straight after the repaint: `ApplyHealthStyle`,
+the tag's own escape, `RefreshOwnAuras`. Leaving `auraHarmful` out also
+keeps the preview's cycled dispel colors on its harmful stand-ins from being
+painted over. That is the README's *accent color belongs to the interface* in
+code: a theme can only reach what the interface owns. The cast bar does go
+through `Paint`, because oUF never recolors one, so the theme's color is the
+one that stays.
+
+**A new UI scale is measured again at once.** A frame's own scale is set
+before its rim is measured and never changes after — the onboarding's
+preview, at 1.15, is the one that has one — so the UI scale or the screen's
+resolution is the only thing that moves the pixel answer, and `UI_SCALE_CHANGED` and `DISPLAY_SIZE_CHANGED` measure
+every rim and window border again — in a fight as much as out of one: the
+lines are textures of the rim's own plain frame, only anchored to the unit's
+button, and a party member's frame built mid-fight already sizes its rim the
+same way. The colors themselves are not protected either, so a switch is a
+result in a fight as much as out of one, like `/uuf health`.
+
+**Chat keeps Umbra's accent.** `Core/Init.lua` writes the prefix and every
+value in its replies in its own `ACCENT`, `|cff75dcc4`, and that is left alone
+under `forever` on purpose. Chat is the addon speaking, not frame chrome: the
+same name in the same color in every chat frame, on every client, whichever
+palette the frames happen to wear.
+
+`assets/design/forever.svg` draws the player and target blocks in both
+palettes, from `tools/mockups.py`'s own copy of the values — change one,
+change both.
 
 ### Unlocking has to show what it asks you to place
 
@@ -1557,6 +1735,36 @@ quietly rather than erroring, which is why none of them announced itself.
    cast time on the fill; and Retail. If a check reads `the client's`, `/uuf
    dev debug` has the number the formatter failed on.
 
+3. **The theme.** Written from the screenshots of 7 November 2026 and from
+   the client's interface code, and seen on Forever on 8 November 2026 off
+   lossless screenshots at 1.3125 pixels per unit. The palette measured
+   exactly on the frames and in the options window, whose border was one
+   physical pixel; `/uuf theme` switched the frames where they stood
+   (reported, not measured). At 09:05 in *Halle der Waffen* the rim lay
+   inside the body, one pixel at `154/128/92`, `128/104/72` and `104/80/52`,
+   the right line on the frame's last column, and the target of the target
+   kept a clear three-pixel gap over the target. At 09:24 in *Tundrid-Hügel*,
+   at 2.125 pixels per unit, the lines were still one pixel each in the same
+   three colors, the right line owned both corners, and the top and bottom
+   started on the pixel after the class edge, which ran the whole height —
+   so a second UI scale is settled. At 09:42 in *Kristallsee*, back at
+   1.3125, the lines started where the portrait begins: on the player, the
+   target and the target of the target the class edge (four pixels) and the
+   gap beside it (three) ran from the body's first row to its last, and the
+   top and bottom began on the portrait's first column, in the same three
+   colors. What a look still has to settle:
+
+   - A switch in combat, which should be a result, and a UI-scale change in
+     one, which should re-measure the rims on the spot.
+   - A switch inside an instance, where a region may carry an aspect the
+     client will not let an addon recolor. `/uuf dev debug` reads `theme
+     repaint refused:` if one did.
+   - The onboarding's border, which is one physical pixel under `forever`
+     and should be even on all four sides.
+   - Retail and a Classic client, where `auto` should stay `umbra` and
+     `/uuf theme forever` should draw the same rim. `/uuf dev check` names
+     the theme in force under the layout, as `theme: forever (auto)`.
+
 Settled on 21 September 2026, measured in a delve:
 
 - **The portrait guard**, issue #1 — see *Permission to compare two units is
@@ -1773,10 +1981,11 @@ rebuild a frame.
 `debuffs` (0.8) is the first setting the onboarding does not ask. It is a
 refinement of the layout for frames kept somewhere the set did not plan for,
 and someone answering the first questions has not put them anywhere yet.
+`theme` (0.9) is the second: `auto` already answers it by client.
 
-The window is drawn from Umbra's palette rather than the client's templates,
-and `tools/mockups.py` draws it from the same numbers (`OPT`) — change one,
-change both. Its three ways in besides `/uuf` are in `Core/Minimap.lua`
+The window is drawn from Umbra's palette, whichever theme is in force, rather
+than from the client's templates, and `tools/mockups.py` draws it from the
+same numbers (`OPT`) — change one, change both. Its three ways in besides `/uuf` are in `Core/Minimap.lua`
 (the addon compartment on Retail and Forever, a minimap button on the Classic
 clients, which have none) and at the end of `Core/Options.lua` (a page under
 Options › AddOns). Its words go through `Umbra.L` (`Core/Locale.lua`), keyed
@@ -2242,7 +2451,8 @@ semantics cannot. Luacheck runs in CI.
 though hidden values apply there too, because encounters, Mythic+ and PvP add
 further restrictions.
 
-**Colors and metrics** all live in `Core/Defaults.lua`. A frame configuration
+**Colors and metrics** live in `Core/Defaults.lua`, and the `forever` palette
+and the code that switches to it in `Core/Theme.lua`. A frame configuration
 overrides any layout value through its metatable.
 
 **Where things are.** `Layouts/Widgets.lua` holds the surfaces every frame is

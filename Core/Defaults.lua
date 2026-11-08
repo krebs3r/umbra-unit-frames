@@ -127,6 +127,18 @@ Umbra.colors = {
 	text = {0.902, 0.914, 0.941},
 	muted = {0.553, 0.592, 0.671},
 	accent = {0.459, 0.863, 0.769},
+
+	--[[ What only the Forever theme draws differently
+	A window's title, and the line around a frame body and a window. Here they
+	are what those places have always been — the title in the text color, the
+	window border in the border color — and frame bodies wear no line at all,
+	so with these values nothing looks any different. Core/Theme.lua holds the
+	other palette, and says why these exist in both.
+	--]]
+	title = {0.902, 0.914, 0.941},
+	rimTop = {0.043, 0.055, 0.082},
+	rimRight = {0.043, 0.055, 0.082},
+	rimBottom = {0.043, 0.055, 0.082},
 }
 
 --[[ Umbra.power

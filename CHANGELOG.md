@@ -1,10 +1,31 @@
 # Changelog
 
-## 0.8.1 — unreleased
+## 0.9 — unreleased
 
-Aura timers that fit their icons on every client, and a cast time you can
-read on the bar.
+A theme: on WoW: Forever the frames now wear the client's own near-black and
+bronze, and everywhere else they look as they always have. And aura timers
+that fit their icons on every client, with a cast time you can read on the
+bar.
 
+- Under Forever's theme the plates are near-black, a one-pixel line of
+  bronze runs along the top, right and bottom of every frame body, the cast
+  bar is amber, and the options window and the first-login window carry a
+  gold title inside a bronze border. The left side of a frame stays the
+  class edge's
+- `/uuf theme auto`, `umbra` or `forever` picks it, and so does the new
+  Theme switch in the options window
+- `auto` is the default, for an install that already has settings as well:
+  Forever's look on WoW: Forever, Umbra's slate and teal everywhere else. So
+  on Forever the frames change color with this update; `/uuf theme umbra`
+  gives them back the old ones
+- A switch repaints the frames where they stand, with no `/reload`, and in
+  combat as well: only colors change, and none of them is protected
+- Unit colors never change: the health bar, incoming healing and absorbs,
+  the class and reaction colors, the resources and the line under a debuff
+  are the same in both
+- The theme is written from lossless screenshots of Forever's own art, and
+  checked on Forever against the same kind of screenshot. Not yet on Retail
+  or Classic, or inside an instance
 - Aura durations read `25m`, `8s`, `2h` in every language, rather than the
   client's own words. On German Forever and on Portuguese clients those were
   `25 min` and ran into the timer on the next icon; even `25 m` hung over the
@@ -14,6 +35,9 @@ read on the bar.
   says which of the two you got
 - The cast bar's remaining time is in the spell name's color. It had been
   gray, and on the orange fill it all but disappeared
+- The class tint in the portrait column lies behind the model now, on the
+  column's ground. It used to lie over the model as well and drew a faint
+  veil of class color across every face
 - Checked on Forever, where the timers now sit inside their icons. Not yet
   on Retail, or inside an instance
 
