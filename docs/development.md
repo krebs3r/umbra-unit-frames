@@ -2576,8 +2576,12 @@ before this and carried every section back to 0.1.
 
 The pictures in `docs/curseforge.md` come from the repository at a tag, so
 they move to the new tag in a commit of their own before the release, and
-the description is pasted into CurseForge once the tag is out — before
-that, the links point at a tag that does not exist yet.
+the description is pasted into CurseForge and into Wago once the tag is
+out — before that, the links point at a tag that does not exist yet. Wago
+started out with the README instead, which it took from GitHub: its
+pictures are relative paths, which point nowhere off GitHub, so not one of
+them showed there (8 November 2026). An absolute link into the repository
+loads on Wago's page, SVG included.
 
 **Checking before shipping:** syntax can be checked without the client;
 semantics cannot. Luacheck runs in CI.
