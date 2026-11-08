@@ -4,6 +4,21 @@ on:
   push:
     tags:
       - '*'
+  # Sends a tag that is already out to Wago, and to Wago alone:
+  #
+  #   gh workflow run release.yml -f tag=0.9
+  #
+  # For a release Wago missed. Up to 0.9 the TOCs named no Wago project and
+  # the repository held no Wago token, so the tag runs reached GitHub and
+  # CurseForge only. This run builds the tag again and hands the packager
+  # Wago's token and nothing else, and the packager uploads only where it
+  # holds one: CurseForge and the GitHub release stay as they are.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'A tag already released, to send to Wago'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -11,10 +26,14 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
+    env:
+      # The tag being released: the pushed one, or the one asked for by hand.
+      TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
 
       # The release page, CurseForge and Wago each get the notes for the tag
       # being released, not the whole history: 0.4.1 went out carrying every
@@ -25,10 +44,43 @@ jobs:
       - name: Release notes from the newest changelog section
         run: |
           awk '/^## /{n++} n==1' CHANGELOG.md > RELEASE_NOTES.md
-          if ! head -n1 RELEASE_NOTES.md | grep -q "^## ${GITHUB_REF_NAME} "; then
-            echo "::error::CHANGELOG.md opens with '$(head -n1 RELEASE_NOTES.md)', not a section for ${GITHUB_REF_NAME}"
+          if ! head -n1 RELEASE_NOTES.md | grep -q "^## ${TAG} "; then
+            echo "::error::CHANGELOG.md opens with '$(head -n1 RELEASE_NOTES.md)', not a section for ${TAG}"
             exit 1
           fi
+
+      # The packager skips a site it holds no token for, and the run stays
+      # green: up to 0.9 no release reached Wago and not one run said so. So
+      # a missing token stops the run here, before anything is uploaded.
+      - name: A token for every site this run uploads to
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+        run: |
+          missing=
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ -z "$CF_API_KEY" ]; then
+            missing="$missing CF_API_KEY"
+          fi
+          if [ -z "$WAGO_API_TOKEN" ]; then
+            missing="$missing WAGO_API_TOKEN"
+          fi
+          if [ -n "$missing" ]; then
+            echo "::error::No repository secret set for:$missing"
+            exit 1
+          fi
+
+      # A tag from before the Wago ID was added carries none in its TOCs, so
+      # a run started by hand takes it from the TOC on the branch it was
+      # started from, which is the one this workflow file was read from.
+      - name: Wago project from the branch this run was started on
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          id=$(git show "${GITHUB_SHA}:UmbraUnitFrames_Mainline.toc" | awk -F: '/^## X-Wago-ID:/ { gsub(/[ \t\r]/, "", $2); print $2; exit }')
+          if [ -z "$id" ]; then
+            echo "::error::UmbraUnitFrames_Mainline.toc at ${GITHUB_SHA} names no X-Wago-ID"
+            exit 1
+          fi
+          echo "WAGO_ID=$id" >> "$GITHUB_ENV"
 
       # Builds ONE package carrying every TOC file, not one per flavor —
       # measured on the 0.1 tag, which produced a single UmbraUnitFrames zip
@@ -41,7 +93,18 @@ jobs:
       # prerelease flag set beforehand, so that flag has to be set after the
       # run rather than when the release is created.
       - uses: BigWigsMods/packager@master
+        if: github.event_name == 'push'
         env:
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+
+      # Wago's token alone. With no GitHub or CurseForge token the packager
+      # uploads to neither, and `-p 0` unsets the TOCs' CurseForge project
+      # besides.
+      - uses: BigWigsMods/packager@master
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          args: -p 0 -a ${{ env.WAGO_ID }}
+        env:
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}

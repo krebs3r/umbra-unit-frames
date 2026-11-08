@@ -2555,6 +2555,17 @@ an addon manager reads to pick. It also decides the GitHub release type
 itself and **clears a prerelease flag set beforehand**, so `gh release edit
 <tag> --prerelease` belongs after the run, not before it.
 
+**Where it goes: GitHub, CurseForge and Wago.** The TOCs name the CurseForge
+project in `X-Curse-Project-ID` and the Wago one in `X-Wago-ID`, and each
+site's token is a repository secret, `CF_API_KEY` and `WAGO_API_TOKEN`. Up to
+0.9 the TOCs carried no Wago ID and the secret was not set, so the tag runs
+reached GitHub and CurseForge only — and not one of them said so, because the
+packager skips a site it holds no token for and stays green. The workflow
+now stops before uploading anything when a token is missing. A tag that is
+already out goes to Wago alone with `gh workflow run release.yml -f
+tag=<tag>`: that run builds the tag again and hands the packager Wago's token
+and nothing else, so CurseForge and the GitHub release are left as they are.
+
 **The notes are the newest changelog section, and only that.** The workflow
 cuts the first `## ` section of `CHANGELOG.md` into `RELEASE_NOTES.md`, which
 is what `.pkgmeta` hands the packager for the GitHub release body, CurseForge

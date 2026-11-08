@@ -10,6 +10,7 @@
 ## X-Website: https://github.com/krebs3r/umbra-unit-frames
 ## X-License: MIT
 ## X-Curse-Project-ID: 1707332
+## X-Wago-ID: v63QLDGb
 ## Category-enUS: Unit Frames
 ## Category-deDE: Einheitenfenster
 
