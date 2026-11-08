@@ -758,7 +758,9 @@ local function Command(input)
 				shows that script firing on a PlayerModel. A count that stays
 				at zero on a client that offers the script says it never
 				fired there, and the refresh on load never ran. The count
-				starts again with every reload.
+				starts again with every reload. On 8 November 2026 it read 2
+				and 3 on the Anniversary realms and 3 and 2 on Classic Era,
+				player and pet: the script fires there all the same.
 				--]]
 				if model.HasScript and model:HasScript('OnModelLoaded') then
 					add(label .. ': models loaded since the last reload — '

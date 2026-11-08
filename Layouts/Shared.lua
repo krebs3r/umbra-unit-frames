@@ -193,10 +193,11 @@ wardrobe's `DressUpModel`s, a kind of `PlayerModel`, there and on Mists; on
 the Anniversary realms and Classic Era nothing of Blizzard's uses it. So the
 hook is only set where the model offers the script, and `umbraLoads` counts
 the loads for `/uuf dev check`: a count that stays at zero on a client says
-the hook never ran there. A model the retry finds arrived by itself is
-refreshed there as well, which covers such a client for the case that was
-seen. Nothing in here sets a model or calls `ForceUpdate`, because a load
-would fire it again.
+the hook never ran there. It counted loads on Forever, the Anniversary
+realms and Classic Era on 8 November 2026. A model the retry finds arrived
+by itself is refreshed there as well, which would cover a client where it
+never fires, for the case that was seen. Nothing in here sets a model or
+calls `ForceUpdate`, because a load would fire it again.
 --]]
 local function RefreshPortraitCamera(element)
 	if element.RefreshCamera then

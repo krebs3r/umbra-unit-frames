@@ -1430,7 +1430,9 @@ load would fire again. `/uuf dev check` counts the loads per portrait,
 on the wardrobe's `DressUpModel`s, a kind of `PlayerModel`, there and on
 Mists; on the Anniversary realms and Classic Era nothing of Blizzard's uses it.
 A count that stays at zero on a client means the hook never ran there, and
-only the scale refresh and the retry change apply.
+only the scale refresh and the retry change apply. On 8 November 2026 it
+counted above zero on Forever, the Anniversary realms and Classic Era — see
+*Waiting to be looked at*, item 4.
 
 ### Permission to compare two units is not an answer
 
@@ -1808,18 +1810,18 @@ quietly rather than erroring, which is why none of them announced itself.
    target and the target of the target the class edge (four pixels) and the
    gap beside it (three) ran from the body's first row to its last, and the
    top and bottom began on the portrait's first column, in the same three
-   colors. What a look still has to settle:
+   colors. Later that day `/uuf setup` opened in Forever's furniture as
+   well, bronze border and gold title — looked at, not measured to the
+   pixel. And on Retail, Mists, the Anniversary realms and Classic Era,
+   the same day: `auto` kept Umbra's slate and teal, and `/uuf theme
+   forever` drew the same look — seen working on all four, not measured.
+   What a look still has to settle:
 
    - A switch in combat, which should be a result, and a UI-scale change in
      one, which should re-measure the rims on the spot.
    - A switch inside an instance, where a region may carry an aspect the
      client will not let an addon recolor. `/uuf dev debug` reads `theme
      repaint refused:` if one did.
-   - The onboarding's border, which is one physical pixel under `forever`
-     and should be even on all four sides.
-   - Retail and a Classic client, where `auto` should stay `umbra` and
-     `/uuf theme forever` should draw the same rim. `/uuf dev check` names
-     the theme in force under the layout, as `theme: forever (auto)`.
 
 4. **The portrait camera.** Written on 8 November 2026 from one picture —
    see *A portrait framed before its model arrived*. What has to be seen:
@@ -1839,9 +1841,14 @@ quietly rather than erroring, which is why none of them announced itself.
    was not set a second time — and `portrait arrived for player on its own,
    before try 2`, worded since as *try 1 had set it again*: the player's
    model was still missing at try 1, so that try reloaded it, as it should.
-   The four faces looked as they did before the change. Retail, the
-   Classic clients, the question mark of a disconnected party member and
-   the close-up itself are still open.
+   The four faces looked as they did before the change, and a party member
+   who had gone offline showed the question mark as it should. On Retail,
+   Mists, the Anniversary realms and Classic Era, the same day, the
+   portraits worked as well, and the script fires on the two clients where
+   nothing of Blizzard's uses it: `/uuf dev check` counted 2 loads on the
+   player and 3 on the pet on TBC Anniversary (interface 20506), and 3 and
+   2 on Classic Era (11509). On Retail and Mists the count was not written
+   down. Still open: the close-up.
 
 Settled on 21 September 2026, measured in a delve:
 

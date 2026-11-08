@@ -24,8 +24,9 @@ bar.
   the class and reaction colors, the resources and the line under a debuff
   are the same in both
 - The theme is written from lossless screenshots of Forever's own art, and
-  checked on Forever against the same kind of screenshot. Not yet on Retail
-  or Classic, or inside an instance
+  checked on Forever against the same kind of screenshot. On Retail and the
+  three Classic clients `auto` keeps the old colors and `forever` draws the
+  same look. Not yet inside an instance
 - Aura durations read `25m`, `8s`, `2h` in every language, rather than the
   client's own words. On German Forever and on Portuguese clients those were
   `25 min` and ran into the timer on the next icon; even `25 m` hung over the
