@@ -36,12 +36,110 @@ local PRESERVE_ASSET = styles and styles.PreserveAsset
 
 Umbra.hasAuraUnderline = PRESERVE_ASSET ~= nil
 
+--[[ The duration, in Umbra's words
+The client words the countdown on a container's icon itself, and its default
+takes the minute from `MINUTE_ONELETTER_ABBR`. That is `%d m` in English and
+in German on Retail, `%d min` on a German Forever client and on Portuguese
+ones everywhere, and a word of its own in Russian, Korean and Traditional
+Chinese. Measured on German Forever on 7 November 2026 at 1.3125 pixels per
+unit: `25 min` is 45 pixels wide on a 34 pixel icon, so neighbouring labels
+overlap by 7 to 10 pixels and the first one hangs over the frame's edge. Even
+`25 m` is 36 there, wider than the icon if clear of the next one. No setting
+of the client's own formatter gets rid of the `min`: it is the locale's word,
+and German keeps the space as well.
+
+So the words are ours, the same ones the rows below print where there is no
+container: whole seconds, then minutes, hours and days, one letter and no
+space. `49m` is 32 pixels at this font, in Friz Quadrata measured against the
+same screenshot, and every two-digit count is as wide as every other, because
+the digits are.
+
+**The value never comes through here.** A `NumericRuleFormatter` is a set of
+rules the client applies: oUF hands it to `SetDurationText`, the button's own
+binding samples the aura's duration and formats it, and the result lands in a
+label whose text is a secret aspect. Nothing in this file reads that label.
+That is what keeps it working inside an instance, where the duration is hidden.
+
+**It is asked, then tested, before it is used.** The first attempt at a format
+was reverted, because it guessed at a signature and came back as `9 Minuten 46
+Sekunden`. This one follows Blizzard's documentation for 12.1.5 and Forever
+1.60.1, which are the same, and the formatter is then made to word a handful
+of plain numbers here, at load time, where nothing is secret. Anything that
+does not come back as a count and the expected letter — a refusal, a different
+rounding by more than one, a word instead of a letter — leaves the client's
+own default in place, which is what every client showed before. `/uuf dev
+check` says which of the two a client got, and `/uuf dev debug` why.
+--]]
+local DURATION_PROBES = {
+	-- seconds, the letter, the count Remaining() below would print
+	{8.7, 's', 8},
+	{59.9, 's', 59},
+	{1500, 'm', 25},
+	{3599, 'm', 60},
+	{5400, 'h', 2},
+	{172800, 'd', 2},
+}
+
+local function Speaks(formatter)
+	for _, probe in ipairs(DURATION_PROBES) do
+		local text = formatter:FormatNumber(probe[1])
+		local count, letter = tostring(text):match('^(%d+)(%a)$')
+
+		if letter ~= probe[2] or math.abs((tonumber(count) or -99) - probe[3]) > 1 then
+			return false, ('%s seconds came back as %q'):format(probe[1], tostring(text))
+		end
+	end
+
+	return true
+end
+
+local function DurationFormatter()
+	local util = type(_G.C_StringUtil) == 'table' and C_StringUtil
+
+	if not util or type(util.CreateNumericRuleFormatter) ~= 'function' then
+		return nil, 'no NumericRuleFormatter on this client'
+	end
+
+	-- Documented as Nearest 0, Up 1, Down 2. Asked for rather than indexed
+	-- blind, like the dispel style above.
+	local rounding = type(_G.Enum) == 'table' and Enum.NumericRuleFormatRounding
+	local up = rounding and rounding.Up or 1
+	local down = rounding and rounding.Down or 2
+
+	local made, formatter = pcall(util.CreateNumericRuleFormatter)
+	if not made or not formatter then return nil, tostring(formatter) end
+
+	-- The same rounding as Remaining() and as the client's own buff frame:
+	-- seconds down, every larger unit up.
+	local set, refusal = pcall(formatter.SetBreakpoints, formatter, {
+		{threshold = 0, step = 1, rounding = down, format = '%.0fs'},
+		{threshold = 60, format = '%.0fm', components = {{div = 60, step = 1, rounding = up}}},
+		{threshold = 3600, format = '%.0fh', components = {{div = 3600, step = 1, rounding = up}}},
+		{threshold = 86400, format = '%.0fd', components = {{div = 86400, step = 1, rounding = up}}},
+	})
+	if not set then return nil, tostring(refusal) end
+
+	local spoke, speaks, why = pcall(Speaks, formatter)
+	if not spoke or not speaks then return nil, tostring(why or speaks) end
+
+	return formatter
+end
+
+local durationFormatter, durationRefusal = DurationFormatter()
+
+-- Read by `/uuf dev check`, which reports whose words the countdown is in.
+Umbra.auraDurationFormatter = durationFormatter
+
+if not durationFormatter then
+	Umbra:Debug("aura duration format refused, the client's own stays:", durationRefusal)
+end
+
 --[[ Label(fontString, l)
 Re-dresses a label oUF created with a Blizzard font, and lets go of its anchor
 so the caller can place it. oUF has already set one, and a second point on top
 of it stretches the label rather than moving it.
 
-NumberFontNormal is too large for a 22 pixel icon and carries no shadow, and
+NumberFontNormal is too large for these icons and carries no shadow, and
 these labels sit on spell art rather than on a surface Umbra chose.
 --]]
 local function Label(fontString, l)
@@ -91,7 +189,7 @@ local function PostCreateButton(element, button)
 		button.Cooldown:SetSize(art, art)
 
 		-- The cooldown frame draws its own countdown, centered and in a font
-		-- sized for Blizzard's icons, which on a 22 pixel one overhangs both
+		-- sized for Blizzard's icons, which on one of ours overhangs both
 		-- edges. Ours goes on the Time label below instead.
 		pcall(button.Cooldown.SetHideCountdownNumbers, button.Cooldown, true)
 	end
@@ -104,7 +202,9 @@ local function PostCreateButton(element, button)
 	end
 
 	-- In the middle of the icon square, not of the button: the button is
-	-- taller than the icon by the gap and the line underneath it.
+	-- taller than the icon by the gap and the line underneath it. No width
+	-- is set: what keeps the label inside the icon is the format at the top
+	-- of this file, and a clamp would only cut a longer word into `25 m…`.
 	if button.Time then
 		Label(button.Time, l)
 		button.Time:SetJustifyH('CENTER')
@@ -168,7 +268,10 @@ the button blank rather than being branched on:
 
 - The dispel color is set in Lua from `oUF.colors.dispel`, the table the
   container is handed on Retail.
-- The duration is a label on a timer, in whole seconds, minutes or hours.
+- The duration is a label on a timer, in the words the container is given
+  at the top of this file: `8s`, `25m`, `2h`, `3d`. Two copies of one rule,
+  because these values are in the open and a timer is simpler than asking
+  the formatter five times a second; a change to one is a change to both.
 - Right-clicking a buff off goes through `CancelUnitBuff`, the call the
   client's own buff frame makes on that client, and only out of combat.
 --]]
@@ -176,10 +279,11 @@ local AURA_SCAN_LIMIT = 40
 local TICK = 0.2
 
 local function Remaining(seconds)
-	if seconds >= 3600 then return ('%d h'):format(math.ceil(seconds / 3600)) end
-	if seconds >= 60 then return ('%d m'):format(math.ceil(seconds / 60)) end
+	if seconds >= 86400 then return ('%dd'):format(math.ceil(seconds / 86400)) end
+	if seconds >= 3600 then return ('%dh'):format(math.ceil(seconds / 3600)) end
+	if seconds >= 60 then return ('%dm'):format(math.ceil(seconds / 60)) end
 
-	return ('%d s'):format(math.max(0, math.floor(seconds)))
+	return ('%ds'):format(math.max(0, math.floor(seconds)))
 end
 
 local function TickTime(button, elapsed)
@@ -481,6 +585,11 @@ local function Spawn(frame, config, filter, count, harmful, cancel)
 	element.showDuration = config.auraDuration ~= false
 	element.cancelButton = cancel
 	element.PostCreateButton = PostCreateButton
+
+	-- Our words for the countdown, read by oUF when it builds each button
+	-- and handed on to the client. Nil where the formatter was refused,
+	-- which leaves the client's own default exactly as it was.
+	element.durationFormatter = durationFormatter
 
 	-- Read back in PostCreateButton. It stays off the group options, which go
 	-- to the client and are typed.

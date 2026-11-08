@@ -45,8 +45,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="47.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip61595"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip61595)" opacity="0.42">
+<clipPath id="clip10523"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip10523)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -80,7 +80,7 @@
 <rect x="0.00" y="0.00" width="137.64" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Arcane Blast</text>
-<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.4</text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">1.4</text>
 </g>
 <polyline points="270.00,226.00 256.00,226.00 238.00,208.00 226.00,208.00" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
 <circle cx="270.00" cy="226.00" r="2" fill="rgba(117,220,196,0.800)"/>

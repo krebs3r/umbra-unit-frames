@@ -518,8 +518,10 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
         bar(sheet, 0, 0, w, c['castbarHeight'], C['cast'], progress)
         sheet.text(c['inset'], c['castbarHeight'] - 4, label, size=c['fontSize'],
                    fill=rgb(C['text']))
+        # The same color as the spell name: Layouts/Shared.lua dropped muted
+        # here, because on the fill it measured 1.28:1.
         sheet.text(w - c['inset'], c['castbarHeight'] - 4, time,
-                   size=c['fontSize'], fill=rgb(C['muted']), anchor='end')
+                   size=c['fontSize'], fill=rgb(C['text']), anchor='end')
         sheet.add('</g>')
 
     return h

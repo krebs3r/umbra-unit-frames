@@ -687,19 +687,67 @@ them are what the frame width is now cut from.
 That was enough on its own: measured again at 26, the label is 31 pixels on a
 36 pixel icon, centered to within half a pixel.
 
+**It was not enough for a two-digit minute, in any of the client's words.**
+On a German Forever client, measured on 7 November 2026 off a lossless
+screenshot at 1.3125 pixels per unit, the client wrote `25 min` and `40 min`:
+45 pixels each on a 34 pixel icon, neighbours overlapping by 7 to 10 pixels
+and the first label hanging 6 pixels over the frame's left edge. The `min` is
+the locale's `MINUTE_ONELETTER_ABBR`: `%d min` on German Forever and on
+Portuguese clients everywhere, `%d m` in English and in German on Retail, a
+word of its own in Russian, Korean and Traditional Chinese. And `24 m`, the
+shortest of them, measures 36 at this size in the client's Friz Quadrata — a
+pixel over each edge of the icon, and clear of the next label only because the
+pitch is 36.75. So whatever the 31 pixels above caught, it was not a
+two-digit minute. The size held; the words did not — see the format below.
+
 **The duration sits in the middle of the icon square, not of the button.** The
 button is taller than the icon by the gap and the line, so anchoring the label
 to the button's own centre puts it low, and anchoring it to the top puts it in
 the top quarter — measured at y 11..18 against an icon spanning y 6..42, which
 is 9.5 pixels too high. The offset is written out from the icon's own size.
 
-**Leave the duration format alone.** An attempt to shorten `24 m` to `24m`
-through `CreateSecondsFormatter` was reverted: the function is not a global on
-Retail 120100, and the namespaced one took different arguments than assumed, so
-the same label came back as `9 Minuten 46 Sekunden`. The client's own default
-fits the icon at this size, and guessing at the signature cost two reloads.
-Any second attempt starts by reading the client's own callers, not by trying
-argument orders.
+**The duration format is ours, on the second attempt.** This paragraph said
+*leave the duration format alone* until 7 November 2026. The first attempt to
+shorten `24 m` to `24m` through `CreateSecondsFormatter` was reverted: the
+function is not a global on Retail 120100, and the namespaced one took
+different arguments than assumed, so the same label came back as `9 Minuten 46
+Sekunden`. The client's own default was taken to fit the icon then, and
+guessing at the signature cost two reloads. The paragraph ended on *any second attempt starts
+by reading the client's own callers, not by trying argument orders* — and the
+German Forever client above is why there is a second one.
+
+What was read, on the `live` and `forever` branches, which are identical here:
+
+- `Blizzard_CustomAuraButton.lua`: `SetDurationText(fontString, options)` is
+  Lua in a secure addon. It gives each button a `DurationTextBinding` that
+  samples the aura's duration itself, and takes `options.textFormatter` — a
+  `NumericFormatter` — or `options.textFormat`. oUF passes
+  `element.durationFormatter` through as the first. oUF's own documentation
+  calls `durationFormat` a string; the client wants a table there.
+- `Blizzard_AuraContainerShared.lua`: the default is a `SecondsFormatter` with
+  one-letter abbreviations, which is where the locale's `min` comes from. No
+  setting of a `SecondsFormatter` replaces that word, and German keeps the
+  space unless the formatter is told to ignore the locale — `25min` is still
+  44 pixels.
+- `C_StringUtil.CreateNumericRuleFormatter()` takes no arguments and is
+  configured by `SetBreakpoints`: a threshold, a printf-style format and an
+  optional division per rule. No Blizzard code uses one; oUF's author and
+  RealUI hand one to `SetDurationText`.
+
+So `Layouts/Auras.lua` builds a `NumericRuleFormatter` that words the time as
+the own rows do — `8s`, `25m`, `2h`, `3d`, seconds rounded down and every
+larger unit up — and hands it to oUF. The value never passes through Lua: the
+client applies the rules to a duration that may be secret, and writes into a
+label whose text is a secret aspect. **Before it is used, it is tested**: at
+load time it has to word six plain numbers as a count and the right letter,
+within one of what `Remaining()` prints. A refusal or a wrong answer leaves the
+client's default in place, `/uuf dev check` reports `aura duration format:
+the client's`, and `/uuf dev debug` has the answer that failed it.
+
+Measured with the client's own Friz Quadrata at this size: `49m` is 32 pixels
+including the shadow, on a 34 pixel icon, and every two-digit count is as wide
+as every other because the digits are. `24 m` with the space — the client's
+English word and the old own-row format alike — is the 36 pixels above.
 
 oUF's default `CreateButton` builds icon, cooldown, count and duration through
 the aura-button API, and is worth keeping. Umbra only re-cuts it in
@@ -1494,6 +1542,20 @@ quietly rather than erroring, which is why none of them announced itself.
    the runs so far produced one: a hunter carries no absorb of its own. The
    remaining question is whether oUF's values arrive, not whether the
    surfaces work, and a shielded tank in the target frame answers it.
+
+2. **Umbra's words for an aura's duration.** Written on 7 November 2026 from
+   the client's interface code, and seen on Forever the same evening in
+   *Eisenschmiede*, off a lossless screenshot at 1.3125 pixels per unit:
+   `/uuf dev check` read `aura duration format: ours (25m)`, so the formatter
+   was built and answered its test numbers, and the buff row read `29m`,
+   `31m` and `2h`, every label's core 3 to 11 pixels inside its icon's edges
+   where `25 min` had hung 6 over. The cast time measured `230/233/240`, the
+   text color, though it stood on the empty part of the bar in that shot.
+
+   Still to be seen: the same row inside an instance, where the duration is
+   secret and the client applies the rules without Lua seeing the value; the
+   cast time on the fill; and Retail. If a check reads `the client's`, `/uuf
+   dev debug` has the number the formatter failed on.
 
 Settled on 21 September 2026, measured in a delve:
 

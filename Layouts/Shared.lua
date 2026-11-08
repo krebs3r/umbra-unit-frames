@@ -1110,7 +1110,12 @@ local function Style(self, unit)
 		castbar.Time = CreateText(castbar, 'RIGHT', l.fontSize)
 		castbar.Time:SetPoint('RIGHT', castbar, 'RIGHT', -l.inset, 0)
 		castbar.Time:SetSize(l.valueWidth, l.castbarHeight)
-		castbar.Time:SetTextColor(unpack(colors.muted))
+
+		-- In the text color the spell name has, not muted. The number sits
+		-- at the end the fill grows towards, so it stands on the cast color
+		-- at the end of every cast and from the start of every channel, and
+		-- muted on that color is 1.28:1 against 3.09:1 for this one. Dimmed
+		-- it read as a secondary number; on the fill it did not read at all.
 
 		self.Castbar = castbar
 	end

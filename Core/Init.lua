@@ -496,6 +496,13 @@ local function Command(input)
 			and ('our own, on ' .. ownRows .. ' frames')
 			or "the client's container"))
 
+		-- Whose words the countdown is in. Our own rows always print ours;
+		-- on the container they are ours only if the formatter was built
+		-- and worded its test numbers right, and `/uuf dev debug` says why
+		-- not where it was not.
+		add('aura duration format: ' .. ((ownRows > 0 or Umbra.auraDurationFormatter)
+			and 'ours (25m)' or "the client's"))
+
 		-- Whether we could compile a snippet of our own, which is narrower
 		-- than it sounds and is **not** what decides whether a secure group
 		-- header works — `/uuf dev header` asks that one directly, and answered

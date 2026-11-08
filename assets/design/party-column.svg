@@ -10,8 +10,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,124,10)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip82888"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip82888)" opacity="0.42">
+<clipPath id="clip47672"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip47672)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,124,10)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,124,10)"/>
 </g>
@@ -40,8 +40,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(255,255,255)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip82918"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip82918)" opacity="0.42">
+<clipPath id="clip47702"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip47702)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(255,255,255)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(255,255,255)"/>
 </g>
@@ -64,7 +64,7 @@
 <rect x="0.00" y="0.00" width="111.00" height="14.00" fill="rgb(168,124,51)"/>
 <rect x="0.00" y="0.00" width="222.00" height="14.00" fill="url(#shade)"/>
 <text x="4.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Regrowth</text>
-<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400">1.1</text>
+<text x="218.00" y="10.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11.0" fill="rgb(230,233,240)" text-anchor="end" font-weight="400">1.1</text>
 </g>
 <g transform="translate(56.00,448.00) scale(2.0000)">
 <rect x="0.00" y="0.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>
@@ -75,8 +75,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(0,112,221)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip82953"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip82953)" opacity="0.42">
+<clipPath id="clip47737"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip47737)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(0,112,221)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(0,112,221)"/>
 </g>
@@ -111,8 +111,8 @@
 <rect x="0.00" y="0.00" width="222.00" height="33.00" fill="rgba(20,25,37,0.960)"/>
 <rect x="0.00" y="0.00" width="3.00" height="33.00" fill="rgb(135,136,238)"/>
 <rect x="5.00" y="0.00" width="28.00" height="33.00" fill="rgb(35,43,60)"/>
-<clipPath id="clip82989"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
-<g clip-path="url(#clip82989)" opacity="0.42">
+<clipPath id="clip47773"><rect x="5.00" y="0" width="28.00" height="33.00"/></clipPath>
+<g clip-path="url(#clip47773)" opacity="0.42">
 <circle cx="19.00" cy="13.20" r="5.32" fill="rgb(135,136,238)"/>
 <ellipse cx="19.00" cy="26.50" rx="12.77" ry="7.98" fill="rgb(135,136,238)"/>
 </g>

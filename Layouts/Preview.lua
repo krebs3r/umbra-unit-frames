@@ -24,8 +24,9 @@ What the stand-ins do and do not speak for:
 - They are packed by `Umbra:AuraPerRow`, the same arithmetic that reserves the
   block. The client packs the real rows itself, so a real row that disagrees
   with the preview is a finding about that arithmetic.
-- The icon is a question mark and the durations are stand-in strings. Neither
-  says anything about what the client would put there.
+- The icon is a question mark and the durations are stand-in strings, written
+  the way `Layouts/Auras.lua` tells the client to write them. Neither says
+  anything about which aura the client would put there.
 - The dispel colors are not invented. They cycle through `oUF.colors.dispel`,
   which oUF fills from the client's own `AuraUtil.GetDebuffDisplayInfoTable()`
   and which is the very table handed to `AddDispelTypeTexture`. So they are
@@ -38,8 +39,9 @@ them. Turning it off is what gives an honest picture of the unit again.
 
 local QUESTION_MARK = [[Interface\Icons\INV_Misc_QuestionMark]]
 
--- One that overhangs if any would, the ordinary case, and a few in between.
-local DURATIONS = {'24 m', '9 s', '1.2 m', '59 m', '3 s'}
+-- The widest the format makes, the ordinary case, and a few in between. Every
+-- two-digit count is as wide as `24m`, because the font's digits are.
+local DURATIONS = {'24m', '9s', '2h', '59m', '3s'}
 
 local shown = false
 

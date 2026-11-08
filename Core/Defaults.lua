@@ -188,7 +188,10 @@ Umbra.metrics = {
 	-- A line thick enough to read as a color rather than as an edge, and an
 	-- icon measured rather than chosen: at 22 the duration label filled it
 	-- edge to edge and two neighbours read as one run of text. 26 leaves the
-	-- label room to be legible.
+	-- label room to be legible — in Umbra's own words for it, which
+	-- Layouts/Auras.lua hands the client: `49m` is 32 pixels on a 34 pixel
+	-- icon at 1.3125 per unit. The client's own `25 min` on German Forever
+	-- is 45, which is why the words are ours.
 	auraSize = 26,
 	auraSpacing = 2,
 	auraUnderline = 2,
@@ -239,7 +242,8 @@ even. Measured on 20 September 2026 at a frame width of 210: the block was
 flush on the left and 16 units short on the right, every row, both frames.
 
 So the chain now runs the other way. The duration label has to fit inside the
-icon, which settles the icon at 26; a row of them is what a frame is for; and
+icon, in the format Layouts/Auras.lua gives it, which settles the icon at 26;
+a row of them is what a frame is for; and
 the width is whatever that row comes to. Nothing is left over on either side,
 and the name column gains the difference.
 --]]

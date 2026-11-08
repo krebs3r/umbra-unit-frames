@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.1 — unreleased
+
+Aura timers that fit their icons on every client, and a cast time you can
+read on the bar.
+
+- Aura durations read `25m`, `8s`, `2h` in every language, rather than the
+  client's own words. On German Forever and on Portuguese clients those were
+  `25 min` and ran into the timer on the next icon; even `25 m` hung over the
+  icon's edges. The Classic clients, where Umbra writes the timer itself,
+  now print the same words
+- If a client refuses the new format, its own stays, and `/uuf dev check`
+  says which of the two you got
+- The cast bar's remaining time is in the spell name's color. It had been
+  gray, and on the orange fill it all but disappeared
+- Checked on Forever, where the timers now sit inside their icons. Not yet
+  on Retail, or inside an instance
+
 ## 0.8 — 25 October 2026
 
 Debuffs over the buffs, for frames kept right above the action bars, and
