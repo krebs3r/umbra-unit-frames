@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10 — unreleased
+## 0.10 — 11 November 2026
 
 On WoW: Forever the options window and the first-login window wear the
 game's own window frame, as Soundstone's and Hourstone's windows do there.
