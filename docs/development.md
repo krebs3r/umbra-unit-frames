@@ -92,7 +92,7 @@ the version and the list.
 | `group umbra` · `group both` | whether the client's group manager — the panel on the left edge with the markers — is put away or kept |
 | `health class` · `health plain` | whether the health bar takes the unit's color too, or leaves it to the edge |
 | `level portrait` · `level name` · `level off` | where the level stands, or whether it does |
-| `theme auto` · `theme umbra` · `theme forever` | the interface's colors; `auto` is Forever's on Forever and Umbra's everywhere else |
+| `theme auto` · `theme umbra` · `theme forever` | the interface's colors, and on Forever the windows' frame; `auto` is Forever's on Forever and Umbra's everywhere else |
 | `setup` | the onboarding, the questions of the first login |
 | `dev` | the measurements, listed behind that word |
 
@@ -332,7 +332,9 @@ are there too: the title is the text color the windows' titles always had, the
 three rim keys are the border color the windows' outer line always had, and a
 frame body does not show its rim at all. The options window and the onboarding
 take `rimTop` on the border that already lay outside them, and `title` for
-their title. That border is one unit wide under `umbra`, as it always was,
+their title — except on Forever itself under `forever`, where they wear the
+client's own window frame instead (*The windows in Forever's own frame*
+below). That border is one unit wide under `umbra`, as it always was,
 and one physical pixel under `forever`: a unit renders as one pixel on one
 side and two on the next, which a near-black line hid and a bronze one does
 not. `Umbra:Outline` places it, and places it again on a switch or a new
@@ -468,6 +470,540 @@ palette the frames happen to wear.
 `assets/design/forever.svg` draws the player and target blocks in both
 palettes, from `tools/mockups.py`'s own copy of the values — change one,
 change both.
+
+### The windows in Forever's own frame
+
+**Status: proposed on 11 November 2026, approved as recommended the same day
+after a montage, and built (`Core/Window.lua`). Both windows were seen in
+the game that evening and measured, the options window under all three
+themes, switched while it was open (*Seen in the game* at the end of this
+section).**
+The montage was cut from in-game screenshots — the frame, the dropdown field
+and the inset from Hourstone's of 10 November 2026, the red buttons and
+Forever's checkbox from Forever's own options of 8 November — with the rock
+drawn in its measured tone, and stays outside the repository. Every position
+below is computed — from Soundstone's measurements of the client's art and
+from this repository's own numbers — and none of it has been seen in the
+game. Where a value is Soundstone's or Hourstone's, it says so. *As built*
+at the end of this section records where the build details the plan.
+
+**Why.** Soundstone 0.4.0 and Hourstone 0.4.0, both released on 10 November
+2026, put their windows on WoW: Forever into the client's own window frame:
+Blizzard's `ButtonFrameTemplateNoPortrait`, with its bronze metal, the rock
+ground under a dark title strip and the red close button — what Forever's
+character frame, its settings and Baganator's bags wear. Next to them Umbra's
+two windows are the last flat ones there. Under `forever` they wear a
+near-black plate, a one-pixel bronze line and a gold title, which is the
+language of Forever's tooltips and plaques, not of its windows. This plan
+gives the options window (`Core/Options.lua`) and the onboarding
+(`Core/Onboarding.lua`, `/uuf setup`) the same frame on Forever.
+
+**What does not change.**
+
+- The unit frames keep the Forever theme of 0.9. The `/uuf dev` report
+  window and the page under Options › AddOns are not part of this.
+- Retail, Mists, the Anniversary realms and Classic Era look as they do in
+  0.9, under every theme, and so does Forever under `umbra`.
+- A look changes the surface, never the information. Class and health colors
+  stay; the onboarding's previews keep showing the unit frames in their own
+  theme, the bronze rim on the player-frame preview included; and the red
+  notes — *applies after combat*, *not on this client* — stay visible, clear
+  of the frame's art.
+- No new words. Both windows keep their texts, so `Core/Locale.lua` gains
+  nothing, and the German strings keep the widths they were cut to.
+
+**When the frame shows.** Soundstone and Hourstone dropped their theme
+switches: their look had nothing to do but follow the client. Umbra's
+`/uuf theme` mainly picks the unit frames' colors, takes effect at once and
+lets `forever` be chosen on any client, so it stays, with one rule added.
+The two windows wear Forever's frame when three things hold: the client is
+Forever (`Umbra.isForever`), the theme resolves to `forever` (`auto` there,
+or `forever` by name), and the client can draw the frame's art (*Detection
+and fallback* below).
+
+| Client | `umbra` | `forever`, or `auto` resolving to it |
+| :--- | :--- | :--- |
+| Forever | as in 0.9 under `umbra` | **Forever's window frame** |
+| Retail, Mists, Anniversary, Era | as in 0.9 | as in 0.9 under `forever`: the flat plate with its bronze line, because these clients have other art under the frame's names, or none |
+
+**What the two siblings confirmed, and how.** Soundstone's frames on the
+mixer and on the compact bar were accepted by eye at client scale 0.7 and
+Soundstone 100 %; the symbols on the bar's red buttons were counted, 3 pixel
+rows above and 2 below. Its channel icons, which stood 2 pixels high when
+counted, were moved by calculation without a new screenshot, and dragging by
+the title strip, the tooltips and the `/dump` checks were not tried one by
+one. There is no record of its options window in the frame. Hourstone's
+author looked at the main window on 10 November 2026 and accepted it after
+three changes; nothing was measured, and its in-game checklist has not been
+worked through. So **no settings window and no dialog in this frame has been
+looked at in the game anywhere**; Umbra's acceptance would be the first.
+
+**The frame.** As Soundstone and Hourstone build it, in the window's own
+units:
+
+- A border frame of its own over the content, ten levels up, taking no
+  mouse, with `NineSliceUtil.ApplyLayoutByName(border,
+  'ButtonFrameTemplateNoPortrait')`, anchored TOPLEFT (−4.4, −3.35) and
+  BOTTOMRIGHT (+0.5, +0.35). Soundstone measured that the opaque metal starts
+  4.4 units inside the nine-slice's box on the left and reaches 3.35 above it
+  at the top and 0.35 below it at the bottom, which puts it flush with the
+  window on those three sides. On the right it measured the metal ending 0.5
+  beyond the box; with the box itself 0.5 outside the window, that would put
+  the metal about one unit beyond the window's right edge, where flush would
+  be −0.5. Both siblings use +0.5 and were accepted by eye. Umbra takes the
+  same anchor, so the three addons look alike side by side, and the right
+  edge is the first thing to measure in the game. Measured on 11 November
+  2026: flush, to within a third of a pixel (*Seen in the game*).
+- The rock (`Interface\FrameGeneral\UI-Background-Rock`, a file), tiled, on
+  BACKGROUND −6 from the border's (7, −21) to its (−2, 2), and over it
+  `_UI-Frame-TopTileStreaks`, 43 high, on BACKGROUND −5 from (6, −21) to
+  (−2, −21).
+- `NineSliceUtil.UpdateCornerCropping`, which only Forever has, called in
+  `pcall` with `{NineSlice = border, layoutType =
+  'ButtonFrameTemplateNoPortrait'}` and the box's height, the window's height
+  − 3.7. Passed the border itself it returns without a word and crops
+  nothing (`NineSlice.lua` on `forever`, line 263). The two windows never
+  change height, so it is called once, after the size is set. At 491 and 378
+  units it is not expected to crop anything; the two corner atlases' heights,
+  read with `/dump` in the game, settle it.
+- The scale is UIParent's. Neither window has a scale of its own, so the
+  metal is exactly as thick as on Forever's own windows. Hourstone had to
+  decide this; Umbra does not.
+
+Measured by Soundstone from the border's top: metal 6.1 wide with 5.3-unit
+chamfers, the title strip from 2.8 to 19.6, the separator ending at 25.7, the
+flat ground from 26.4. From the window's top, computed: the strip from 6.15
+to 22.95, the separator to 29.05, the rock from 29.75. Content therefore
+starts at least 29.75 below the top, ends at least 8.3 above the bottom
+(band and shade) and stays at least 8.6 from the sides (metal and about 2.5
+of shade) — Hourstone's clearances.
+
+**The content stays where it is, in both looks.** The theme switch is a row
+of the options window itself: a click on it re-skins the window under the
+pointer. If the frame moved the rows up into the room the old header leaves,
+that row would jump away from the pointer, and every row of both windows would
+need a second place. So nothing moves: the frame's strip and separator take
+the place of today's header (the title at 12, the line at 36), every row
+keeps its y, and both windows keep their heights, 491 and 378. It leaves
+about 10 units of rock between the separator and the first heading, where the
+siblings start their content right under it. Computed clearances, in window
+units:
+
+| | Needed | Options window | Onboarding |
+| :--- | :--- | :--- | :--- |
+| First content below the top | 29.75 | 40, the *Layout* heading | 49, the eyebrow |
+| Last content above the bottom | 8.3 | 12, the footer (top at 470, size 9) | 12, Back and Next |
+| Controls from the left | 8.6 | 15 | 15 |
+| Controls from the right | 8.6 | 12 | 12 |
+
+The content was placed 15 from the left and 12 from the right because the
+accent edge takes the first 3 units. Inside the frame that edge is gone, so
+the controls stand 3 units nearer the right metal than the left. Moving them
+would make every row move under the pointer again; they stay, and the right
+side is looked at in the game.
+
+**Each surface.** "Flat" is the window as it is under `forever` today, the
+fallback wherever a piece of the client's art is missing.
+
+| Umbra today | In the frame (recommended) | Alternatives |
+| :--- | :--- | :--- |
+| Border (`rimTop`, one pixel outside), ground, accent edge | Hidden; the frame, the rock and the streaks instead | — |
+| Title, size 13 at (15, −12), in `title` | Hidden; a title of its own in the strip, size 12, centered on the border 6 below its top, in `NORMAL_FONT_COLOR` read at run time (`#FFD200` if missing), as the siblings' small windows | Left-aligned at 15 |
+| Close button, 18 × 18, `×` | Hidden; Forever's red close button, 28 × 28 at the border's TOPRIGHT (0, 3): `RedButton-Exit`, `RedButton-exit-pressed`, `RedButton-Highlight` (ADD), with its own `OnClick`, because the stock one calls `HideUIPanel` | — |
+| Header line at 36 | Hidden; the frame's separator takes its place | — |
+| The onboarding's line at 332, over the navigation | Kept, one unit in `muted` at 0.18 as today, but cut to the content's width (15 to 308) instead of running into the side metal | Dropped |
+| Section headings: `muted`, capitals | As today. Hourstone keeps its settings' labels muted too | `NORMAL_FONT_COLOR`, as Forever's own settings label each control |
+| Switches of two and three fields | One of Forever's dropdown fields over the whole switch, with a one-pixel divider in each gap (*The switches* below) | Flat, as today |
+| Checkboxes | Umbra's own box in the colors of Forever's settings checkbox (*The checkboxes* below) | As today; or the client's `checkbox-minimal` atlas |
+| Unlock, Reset; Back, Next; *Unlock frames* | Red `UIPanelButtonTemplate` twins over the hidden flat buttons (*The push buttons* below) | Flat, as today |
+| Red notes, hatching of a refused checkbox | As today, in every look and at the same places; the dropdown field shows about on the switch's own rectangle (*The switches*) | — |
+| Skip, the dots, the footer and its heart, eyebrow, heading, body | As today, in the palette | — |
+| The onboarding's preview boxes | Inside `InsetFrameTemplate`'s nine-slice, the inner frame Blizzard sets content into on this kind of window; the box keeps its own `PAPER` ground and its contents, and its outline is hidden under the inset | As today: `PAPER` with a one-unit outline in `border` |
+| Dragging | The whole window, as today, in both looks | The title strip only, as the siblings |
+
+**The switches.** Hourstone's format toggle on Forever is one dropdown field
+over both halves with a one-pixel divider between them, the variant its
+author chose from a montage after the first screenshot; red push buttons as
+toggles were weighed there and not chosen. Umbra's switches take the same,
+which nobody has made for three fields yet:
+
+- The field is `common-dropdown-textholder`, the art of
+  `WowStyle1DropdownTemplate` (`Blizzard_Menu/Mainline/MenuTemplates.xml`:
+  120 × 25, the field anchored at (−8, 7) and (8, −9)). Here it is a texture
+  of the switch's parent, from the first field's TOPLEFT (−8, 7) to the last
+  one's BOTTOMRIGHT (8, −9): an atlas box of 269 × 38 in the options window
+  and 309 × 38 in the onboarding. Blizzard's control is 25 high and Umbra's
+  22, so the art is 3 units shorter than on Blizzard's own dropdowns, and
+  its ends stretch over a field wider than any dropdown the client draws.
+- A divider in the middle of each 2-unit gap: one physical pixel wide, 15
+  units high on the switch's middle, in `104/80/52` (Hourstone's `outline`,
+  which is Umbra's `rimBottom` under `forever`). In the options window at
+  141.5 on the two-field switches and at 99 and 184 on the three-field ones;
+  in the onboarding at 161.5, and at 112.3 and 210.7.
+- Each field's flat ground, its tint and its 2-unit line are hidden. The
+  labels keep Umbra's own rule: the chosen one in the accent, the others
+  muted, the text color under the pointer. Hourstone swapped two of these
+  (the chosen one in the text color, the accent under the pointer); that is
+  the alternative.
+- The atlas box reaches 7 above the switch and 9 below it, but most of that
+  is transparent. On Hourstone's lossless screenshot of 10 November 2026, at
+  1.4 pixels per unit, the field of its 185 × 25 format toggle shows as
+  255 × 36 pixels, about 182 × 25.7 units: what is visible lies about on the
+  control's own rectangle. So the notes stay where they are — in the options
+  window on the heading's row, 3 above the switch, and in the onboarding 4
+  under it — and the field's visible right edge stands about 13 units from
+  the window's, clear of the metal and its shade. Hourstone's clearance test
+  checks a control's rectangle for the same reason.
+
+**The checkboxes.** `UICheckButtonTemplate` draws Retail's gray box on
+Forever, not Forever's own. Soundstone measured Forever's settings checkbox
+on lossless screenshots: a box of `#100C08`, a chamfered bronze edge
+(`#574639` on top, `#534336` and `#493A2C` at the sides, `#5A4A39` at the
+bottom) and a gold check, median `#EDC605`. The recommendation keeps Umbra's
+shape and takes those colors, on three new textures that are only shown in
+the frame: the 14-unit square in `#574639`, the box one physical pixel inside
+it in `#100C08`, and the pip 3 units inside it, as today, in `#EDC605`. One
+color stands for the four sides of the edge, which measured within a few
+steps of each other. The hatch of a refused box lies over it as today.
+In the UI source Forever's settings draw their checkbox from
+`checkbox-minimal` and `checkmark-minimal` (`SettingsCheckboxTemplate`,
+`Blizzard_SettingControls.xml`, the same on all five branches), so the art
+Soundstone measured is most likely those atlases. Taking them would be the
+client's own picture, but their size is unknown here, and at Umbra's 14 units
+they would be drawn much smaller than in Forever's settings; that is the
+second alternative.
+
+**The push buttons.** Hourstone puts a `UIPanelButtonTemplate` over each
+hidden flat button, at the same anchor and size, whose click calls the flat
+button's own `OnClick`. On Forever the template is Retail's red art: its
+three pieces are the files `UI-Panel-Button-Up`, `-Down` while pressed and
+`-Disabled` while disabled, its label `GameFontNormal`, white under the
+pointer, gray when disabled (`SecureUIPanelTemplates.xml` on `forever`). A
+plain `SetText` keeps its width; only `SetTextToFit` would resize it.
+Umbra's labels already take `GameFontNormal`'s face (`Core/Defaults.lua`);
+whether its size there is the flat buttons' 12 is for the game to show, and
+if not, the twin's label is set to 12 as Hourstone does.
+
+For Umbra a twin has to follow more than a label. Every `Refresh` sets four
+things on a flat button that its twin has to carry: the text (Lock or
+Unlock, Next or Done), whether it is shown (Back is not on the first page),
+whether it is enabled, and the state marks. So `Refresh` sets these through
+one helper per button that sets the flat button and its twin together,
+whichever look is on — Hourstone's `setLabel`, extended to shown and enabled.
+The accent line and the hatch belong to the hidden flat button and are hidden
+with it, and its `OnEnter`/`OnLeave` hooks no longer fire. In the frame:
+
+- **Unlocked:** the label says *Lock*, and the twin's highlight stays on
+  (`LockHighlight`, released with `UnlockHighlight`), the client's own way of
+  marking a button as engaged; Blizzard does it on `forever` in
+  `SharedUIPanelTemplates.lua` (`ExpandButton:LockHighlight()`). Under the
+  pointer it looks the same as at rest. The alternative is the label alone.
+- **Refused in a fight, while locked:** the twin is disabled and draws the
+  template's own disabled art and gray label: the client's own "not now".
+- **Next as the step to take:** nothing more. Blizzard's own dialogs draw
+  their confirming button like the others, and Next stands where it does on
+  every page. The
+  alternative is a highlight held on it as on Unlock, which would make it
+  look hovered all the time.
+
+The twins never come from `Umbra.PlainButton` itself, which the report window
+and the AddOns page use as well; each is created through `pcall`, as
+`Templated` does in `Core/Report.lua`, and a button whose twin cannot be made
+stays flat.
+
+**Detection and fallback.** First the client, then the art: on Forever only,
+each atlas through `C_Texture.GetAtlasInfo` inside `pcall`, where only a
+table counts. The UI source tells which names are referenced, not what a
+client draws. Each group falls back on its own:
+
+| Group | Needs | Without it |
+| :--- | :--- | :--- |
+| `window` | `NineSliceUtil.ApplyLayoutByName`, `NineSliceLayouts.ButtonFrameTemplateNoPortrait` and the atlas of each of its pieces; `RedButton-Exit`, `RedButton-exit-pressed`, `RedButton-Highlight` | Both windows as today under `forever`, and none of the groups below |
+| `streaks` | `_UI-Frame-TopTileStreaks` | The frame without streaks |
+| `field` | `common-dropdown-textholder` | The flat switches inside the frame |
+| `inset` | `NineSliceLayouts.InsetFrameTemplate` and its atlases | The preview boxes as today |
+| A twin | `UIPanelButtonTemplate` built without an error | That button flat |
+
+The rock is a file and cannot be asked for; it goes with the frame, as in
+Blizzard's own template. The checkboxes take no art.
+
+**Switching without `/reload`.** The windows are file-local and built only
+when first opened; the frame's pieces are built later still, the first time
+a built window is to wear the frame — at the end of its own build, or on a
+switch — each group once, in a `pcall` of their own. A failure there leaves
+the window flat until the next `/reload` and goes to `/uuf dev debug`, and the
+window itself still opens. After that a switch only shows and hides:
+
+- `Umbra:ApplyTheme` gains one call at its end, after `ApplyHealthStyle` and
+  guarded the same way, `if self.ApplyWindowLook then`. It runs at
+  `ADDON_LOADED` before any window exists and then does nothing.
+- `ApplyWindowLook` decides framed or flat for each built window and shows
+  one set, hides the other: border, rock, streaks, strip title, red close,
+  fields, dividers, checkbox art, inset and twins on one side; outline,
+  ground, accent edge, title, flat close, header line, the switches' grounds,
+  the flat checkbox textures and the flat buttons on the other. One piece
+  keeps two places, set again on each change, after Soundstone's `place` and
+  `framePlace`: the onboarding's line at 332.
+- `SetOption` then calls `OptionsChanged`, and each open window's `Refresh`
+  puts back the state colors and the twins' text, visibility and state.
+- Nothing of the frame goes through `Umbra:Paint`, which remembers every
+  region and paints it again on each switch with `SetColorTexture` — that
+  would wipe an atlas. Its art comes from the client, its few colors are
+  fixed values, and the flat regions it hides keep being painted as before.
+- The pieces that were anonymous locals in `Build` (ground, outline, edge,
+  title, close, the lines, each switch's grounds) become fields the look can
+  reach.
+- The dividers and the checkbox edges are new one-pixel lines. `Umbra:Outline`
+  and the rims are measured again on `UI_SCALE_CHANGED` and
+  `DISPLAY_SIZE_CHANGED` by the scaler in `Core/Theme.lua`, which knows nothing
+  else; the new lines are measured on the same two events by a handler of
+  their own, registered only once the first of them is built — so not at all
+  on the other clients.
+
+Nothing in Soundstone or Hourstone ever switched between the frame and the
+flat look in the game, only in their simulations: Umbra's switch would be the
+first.
+
+**Code.**
+
+| File | Change |
+| :--- | :--- |
+| `Core/Window.lua` (new) | The art names and the detection, the frame, the strip title and the red close, the fields and dividers, the checkbox art, the inset, the twins and their helper, `ApplyWindowLook` and the measuring of the new lines. Exposed as `Umbra.Window`, never through `Umbra.Widgets`, which `Layouts/Widgets.lua` overwrites once it loads. Listed after `Core/Locale.lua` and before `Core/Options.lua` in all five TOCs, which then need a full client restart rather than `/reload` |
+| `Core/Options.lua` | `Segmented` and `Check` keep their grounds as fields and offer the frame's art to the window; `Build` keeps its chrome as fields, registers the window and calls the look; `Refresh` sets the buttons through the helper; the comment on its furniture is rewritten |
+| `Core/Onboarding.lua` | The same for its chrome, the line at 332, the preview boxes and its four buttons |
+| `Core/Theme.lua` | The guarded call at the end of `ApplyTheme`; the pixel helper exposed for `Core/Window.lua`; the comments on the windows |
+| `.luacheckrc` | `NineSliceUtil`, `NineSliceLayouts` and `NORMAL_FONT_COLOR` in `read_globals` |
+
+The helper could also live at the end of `Core/Options.lua`, which needs no
+TOC change. A file of its own keeps the frame apart from the controls both
+windows share, and costs one restart of the client.
+
+**API per client**, checked in Gethe/wow-ui-source on 11 November 2026,
+branches `live`, `forever`, `classic` (Mists), `classic_anniversary` and
+`classic_era`. Every new call runs on the Forever client only.
+
+| What | `live` | `forever` | `classic`, `classic_anniversary`, `classic_era` |
+| :--- | :--- | :--- | :--- |
+| `NineSliceUtil.ApplyLayoutByName` | yes | yes | yes |
+| `NineSliceUtil.UpdateCornerCropping` | — | yes | — |
+| `NineSliceLayouts.ButtonFrameTemplateNoPortrait` | `UI-Frame-Metal-*` | `UI-Frame-Metal-*`, with Camelot's offsets (top right x −2; bottom corners y −8, bottom right x −2) | other atlases (`UI-Frame-TopLeftCornerNoPortrait`, …) |
+| `NineSliceLayouts.InsetFrameTemplate` | yes | yes | yes |
+| `RedButton-Exit`, `RedButton-exit-pressed` referenced | yes | yes | — |
+| `RedButton-Highlight` referenced | yes | yes | yes |
+| `_UI-Frame-TopTileStreaks` | atlas | atlas | a file texture under that template name |
+| `UI-Background-Rock` | yes | yes | yes |
+| `common-dropdown-textholder` (`WowStyle1DropdownTemplate`) | yes | yes | — (their `Classic` menu templates load instead) |
+| `UIPanelButtonTemplate` | yes | yes | yes |
+| `Button:SetNormalAtlas`, `SetPushedAtlas`, `SetHighlightAtlas`, `GetFontString`, `SetEnabled` | yes | yes | yes |
+| `Button:LockHighlight`, `UnlockHighlight` | not in the generated documentation; used by Blizzard (`SharedUIPanelTemplates.lua`) | the same | not looked up: not called there |
+| `checkbox-minimal`, `checkmark-minimal` (only for the second checkbox alternative) | yes | yes | yes |
+
+`C_Texture.GetAtlasInfo`, `Texture:SetAtlas` with `resetTexCoords`, tiling,
+sublevels and blend modes were checked for Hourstone on 10 November 2026 on
+the same five branches, and `Frame:GetScript` on `live` and `forever` by its
+use in Blizzard's code; Umbra calls `HookScript` on every client already. No
+new events: `UI_SCALE_CHANGED` and `DISPLAY_SIZE_CHANGED` are Umbra's
+already.
+
+**How the other clients are shown to be unchanged.** Umbra has no test suite,
+and none is built for this.
+
+- By construction. The art check returns nothing unless `Umbra.isForever`,
+  and `ApplyWindowLook` returns at once while nothing framed exists, so on
+  the other clients no texture, frame or event handler of the frame is ever
+  created. What does run there is the button helper, which for a button
+  without a twin makes exactly the `SetText`, `SetShown` and `SetEnabled`
+  calls `Refresh` makes today, and the regions that became fields, which
+  change no drawing.
+- By reading the diff: every flat region keeps its anchor, size, layer and
+  paint.
+- By lint: `luacheck .` in CI after the push, or locally first if it may be
+  installed.
+- In the game: on one other client, `/uuf` and `/uuf setup` under `auto` and
+  under `forever`, beside screenshots of 0.9. On Forever under `umbra` the
+  same, and once more after a round trip `forever` → `umbra` → `forever` →
+  `umbra` with both windows open, when every framed piece exists and is
+  hidden.
+
+**Sheets and docs.** The sheets cannot draw the client's atlases. The
+options sheet's Forever panel keeps drawing the flat look and says what it
+is: `/uuf theme forever` on the other clients, and Forever's fallback. Once
+the frame is accepted, a lossless in-game crop of each window can join the
+README; the options window and the onboarding's first, fourth and fifth pages
+show no character. Whether such a crop goes into the repository is the
+author's call. The sheet draws the options window 490 high where the window is
+491 (`options_layout()` closes the footer one unit sooner); it takes the
+window's number. Then the reasoning that the windows wear Umbra's own
+furniture, wherever it stands:
+
+- `Core/Options.lua` (the header block and the comments at `Check` and at the
+  border), `Core/Onboarding.lua` (the border), `Core/Theme.lua` (the theme's
+  header and `Umbra:Outline`);
+- this file: the paragraph *Under `umbra` nothing looks different* above,
+  the window in *Configuration*, and the theme under *Waiting to be looked
+  at*;
+- the `theme` help line (`Core/Init.lua`, and the slash table in this file);
+- the README's options alt text, and its and `docs/curseforge.md`'s "a gold
+  title inside a bronze border" and "a gold title in a bronze border";
+- the Forever panel and the captions in `tools/mockups.py`, and the SVGs it
+  writes;
+- a section on top of `CHANGELOG.md`. The 0.9 section stays as it is: it is
+  what 0.9 shipped.
+
+The image links in `docs/curseforge.md` move to a new tag only in a commit of
+their own before a release, and only on the author's word.
+
+**In the game.** On lossless screenshots (`/console screenshotFormat png`),
+with the client build, the UI scale and the screen height noted. A new file in
+the TOCs needs a full restart of the client after
+`.\tools\install.ps1 -Flavor forever`.
+
+1. **Load.** `/dump C_Texture.GetAtlasInfo("UI-Frame-Metal-CornerTopLeft")`,
+   the same for `UI-Frame-Metal-CornerBottomLeft`, `RedButton-Exit`,
+   `_UI-Frame-TopTileStreaks`, `common-dropdown-textholder` and
+   `UI-Frame-InnerTopLeft`: each a table, or that piece shows its fallback.
+   The two corners' heights say whether anything could be cropped.
+2. **Frame.** The options window cropped beside a window of Blizzard's or
+   Baganator's at the same scale: the metal flush on the left, top and
+   bottom, and **the right edge measured**; nothing of the content in the
+   bands; the title centered, `#FFD200`; the red close button under the
+   pointer, pressed and clicked, and Escape.
+3. **Switches.** Every switch in the field, two and three parts, the dividers
+   one pixel and sharp, the ends of a 269-unit field; chosen, hovered and
+   clicked; on a German client as well; *applies after combat* in a fight,
+   clear of the field.
+4. **Checkboxes** beside Forever's own in its settings, measured; one ticked,
+   one not.
+5. **Push buttons.** Unlock into Lock with its highlight held, and back;
+   Unlock in a fight, disabled; Reset; the label's size under the pointer.
+6. **The switch.** With the window open, `forever` → `umbra` → `forever` →
+   `auto`, by the window's own switch and by `/uuf theme`: no row moves; under
+   `umbra` the window matches a screenshot of 0.9; the frame comes back.
+7. **The onboarding.** `/uuf setup`, all five pages: the inset around each
+   preview, the rim on the player-frame preview still one pixel, Back gone on
+   the first page, Next turning into Done, *Unlock frames* in a fight.
+8. **Scale.** A change of UI scale with both windows open: the dividers and
+   the checkbox edges stay one pixel.
+9. **Another client.** On one of Retail, Mists, the Anniversary realms or
+   Classic Era: both windows under `auto` and `forever`, beside 0.9.
+
+What a capture shows goes down in this file as measured, reported or looked
+at, as everything else here.
+
+**Not known without the game.** How the frame reads around a window 280 and
+one 320 wide, about as narrow as Soundstone's options, which nobody recorded;
+how a dropdown field stretches to 269 and 309 units and squeezes to 38; how
+the red buttons look at 64 and at 293 units wide; whether Forever's
+`checkbox-minimal` would have been the better box; and what the inset's
+nine-slice looks like around a near-black box rather than a table.
+
+**Decisions**, each with the recommendation first; all twelve were decided
+as recommended on 11 November 2026:
+
+1. **The switch** stays, with the frame only on Forever when the theme
+   resolves to `forever`; everywhere else, and under `umbra` on Forever, the
+   windows stay as they are.
+2. **Place:** the content stays where it is and the windows keep their
+   heights, so a theme switch moves nothing under the pointer; or the content
+   moves up into the old header's room and the windows get shorter.
+3. **Dragging:** the whole window, as today; or the title strip only.
+4. **Title:** centered in the strip; or left-aligned at 15.
+5. **Section headings:** muted capitals, as today; or `NORMAL_FONT_COLOR`.
+6. **Switches:** one dropdown field per switch with dividers, labels by
+   Umbra's rule; or the same with Hourstone's label colors; or flat.
+7. **Checkboxes:** Umbra's box in Forever's measured colors; or as today; or
+   the client's `checkbox-minimal`.
+8. **Push buttons:** red twins, unlocked shown by a held highlight, refused
+   by the template's disabled art, Next unmarked; or the twins without the
+   held highlight; or flat buttons.
+9. **Previews:** inside the inset frame, `PAPER` kept; or as today.
+10. **The onboarding's line over the navigation:** kept, cut to the content's
+    width; or dropped in the frame.
+11. **Code:** a file of its own, `Core/Window.lua`, which needs a client
+    restart once; or the end of `Core/Options.lua`.
+12. **Sheets:** the Forever panels keep the flat look and say so; in-game
+    crops later, if the author wants them in the repository.
+
+**As built.** Where the code details the plan:
+
+- `Core/Window.lua` gives each window a look, `Umbra.Window.New(frame)`. The
+  window names the flat pieces the frame replaces (`Flat`), its switches,
+  checkboxes, buttons and previews (`Switch`, `Check`, `Button`,
+  `Preview`) and the one piece that stands elsewhere in the frame (`Place`),
+  then calls `Apply` at the end of its build. `Umbra:ApplyWindowLook()`
+  applies every look again at the end of `ApplyTheme`.
+- `Refresh` sets the buttons through `Window.Text`, `Window.Shown`,
+  `Window.Enabled` and `Window.Held`, which make exactly the calls `Refresh`
+  made before on a button that has no twin.
+- The title is `GameFontNormal`, colored from `NORMAL_FONT_COLOR` at run
+  time; the twins keep the template's own font and colors.
+- `Segmented` and `Check` keep their grounds and boxes as fields. In the
+  frame a switch hides its tint and line and a checkbox its flat pip; the
+  checkbox's gold mark is shown by the control's own `Refresh`, which knows
+  whether it is ticked.
+- The divider and the checkbox edge are measured with `Umbra.PixelSize`,
+  which `Core/Theme.lua` now exposes, on the two scale events, from a
+  handler `Core/Window.lua` registers only when it builds the first of them.
+- The sheet draws the options window 491 high, as the window is.
+
+**Seen in the game.** On 11 November 2026 at 20:48, five lossless screenshots
+on Forever, one of each page of the onboarding, under `auto` and in German. The preview box, 293 × 132 units, measured 384 × 174 pixels,
+so about 1.3125 pixels per unit. Its edges are known in the window's own
+units (15 to 308 across, 124 to 256 down), so the window's edges follow from
+them; everything below is measured against those.
+
+- **The frame is flush on all four sides.** The metal begins within 0.3 of a
+  pixel of the window's left and top edges and ends within 0.3 of a pixel of
+  its right edge; at the bottom it ends 0.4 to 1.1 pixels inside, under one
+  unit. The right edge the plan doubted is where it should be: the
+  siblings' +0.5 is right, and the description that the metal ends 0.5
+  beyond the box does not hold there.
+- **The title** measured `#FFD200` (the median of 301 gold pixels), centered
+  on the border to within a pixel, inside the title strip.
+- **The dividers** are one pixel, exactly `#685034` (104/80/52), 20 pixels
+  high (15 units), each in the middle of its gap.
+- **The dropdown field's** ground is `#110E09`, Soundstone's device field's.
+  Its outer line lies exactly on the switch's rectangle on the left, right
+  and top, and about 2 pixels above its bottom: the 22-unit switch squeezes
+  art drawn for Blizzard's 25. It reads as Blizzard's field.
+- **The checkboxes** measured exactly as written: a one-pixel edge in
+  `#574639`, the box `#100C08`, the mark `#EDC605`.
+- **The player-frame preview's rim** is still one pixel in `#9A805C`,
+  `#806848` and `#685034` inside the inset, so the inset changed nothing of
+  what was measured in the box.
+- The red buttons, the close button, the inset and the rock were looked at:
+  the author found it all very good. That is the acceptance, looked at.
+
+At 21:00 the same evening, three more: the options window under `umbra`,
+under `forever` and under `auto`, switched by its own theme row while it
+stood open, the last with the onboarding's fourth page beside it. Measured
+against the flat window's own edges in the same place:
+
+- **Nothing moves.** Every row of text — headings, switches, checkboxes,
+  buttons, footer — lies on the same pixel rows in the flat and the framed
+  window. What differs is only what the look itself draws: the flat title
+  and the accent lines under the chosen sides, or the frame's metal.
+- **The frame lies on the window's edges**: the metal begins within half a
+  pixel of the flat window's left edge and ends on its right, top and bottom
+  edges to the pixel.
+- **The dropdown fields** lie on the switches' rectangles as in the
+  onboarding: on the left, right and top edges, and about 3 pixels above the
+  bottom. The dividers are one pixel, in the middle of each gap, on the two-
+  and the three-field switches.
+- **The title** is `#FFD200` again, and so are the red buttons' labels. The
+  red art lies inside the flat button's rectangle, its top about 3 pixels
+  below the rectangle's.
+- **Under `umbra`** the window showed the flat look with no piece of the
+  frame. It was not compared with a capture of 0.9.
+
+The labels *Gruppenverwaltung* and *Blizzard-Buffs* in the fourth page's
+drawing touched each other in German; that drawing is the same in both looks,
+so it is older than the frame. The buff row's label now stands under the row,
+flush with its right end, in the window and on the sheet, and on the 21:00
+capture the two labels stand about 50 pixels apart.
+
+Not captured yet: the held highlight and the refused button in a fight, a
+theme switch in a fight, a change of UI scale, and the other clients.
 
 ### Unlocking has to show what it asks you to place
 
@@ -1829,6 +2365,15 @@ quietly rather than erroring, which is why none of them announced itself.
    - A switch inside an instance, where a region may carry an aspect the
      client will not let an addon recolor. `/uuf dev debug` reads `theme
      repaint refused:` if one did.
+   - The options window and the onboarding in Forever's own window frame,
+     built on 11 November 2026. Both were measured in the game the same
+     evening, the options window switched between all three themes while
+     open; the states in a fight and a change of UI scale are still to be
+     seen: the checklist under *The windows in Forever's own frame*, *In the
+     game*.
+     The furniture seen on 8 November is now what the other clients show
+     under `/uuf theme forever`, and Forever where its frame's art is
+     missing.
 
 4. **The portrait camera.** Written on 8 November 2026 from one picture —
    see *A portrait framed before its model arrived*. What has to be seen:
@@ -2078,7 +2623,9 @@ and someone answering the first questions has not put them anywhere yet.
 `theme` (0.9) is the second: `auto` already answers it by client.
 
 The window is drawn from Umbra's palette, whichever theme is in force, rather
-than from the client's templates, and `tools/mockups.py` draws it from the
+than from the client's templates — except on Forever under the Forever theme,
+where it and the onboarding wear the client's own window frame (*The windows
+in Forever's own frame*) — and `tools/mockups.py` draws its flat look from the
 same numbers (`OPT`) — change one, change both. Its three ways in besides `/uuf` are in `Core/Minimap.lua`
 (the addon compartment on Retail and Forever, a minimap button on the Classic
 clients, which have none) and at the end of `Core/Options.lua` (a page under

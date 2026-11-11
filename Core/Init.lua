@@ -122,7 +122,7 @@ local COMMANDS = {
 	{'health', {'class', 'plain'}, 'what colors the health bars'},
 	{'group', {'umbra', 'both'}, "whether the game's group manager stays on the left edge"},
 	{'level', {'portrait', 'name', 'off'}, 'where the level stands, or whether it does'},
-	{'theme', {'auto', 'umbra', 'forever'}, "the frames' colors; auto follows the client"},
+	{'theme', {'auto', 'umbra', 'forever'}, "the frames' colors, and the windows' frame on Forever; auto follows the client"},
 	{'unlock', nil, 'drag the frames, every one of them, filled out'},
 	{'lock', nil, 'put them back to work'},
 	{'reset', nil, "forget this set's dragged positions"},

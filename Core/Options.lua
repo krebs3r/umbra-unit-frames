@@ -3,6 +3,7 @@ local Umbra = ns.Umbra
 
 local colors = Umbra.colors
 local L = Umbra.L
+local Window = Umbra.Window
 
 --[[ The options window
 What `/uuf` sets, in one small window: a title, sections of switches, two
@@ -17,10 +18,14 @@ way the command always has. Metrics and colors are not here: nothing rebuilds
 a frame when one changes, and a control that needs a reload is a different
 kind of promise.
 
-**It wears Umbra's furniture, not the client's.** The report window borrows
+**It wears Umbra's furniture, except on Forever.** The report window borrows
 Blizzard's templates because it holds text; this one holds switches, and a
 checkbox that looks different on each of five clients is five designs. So
 every piece is a flat rectangle in the palette, the way the frames are built.
+On WoW: Forever under the Forever theme the window wears the client's own
+window frame instead, as Soundstone's and Hourstone's do there: the switches
+lie in the client's dropdown field, the buttons are its red ones, and every
+row stays where it is (`Core/Window.lua`).
 --]]
 
 local WIDTH = 280
@@ -196,8 +201,8 @@ meaning "this one". `inner` is the width the row has, this window's unless a
 wider one asks.
 --]]
 local function Segmented(parent, y, key, choices, inner)
-	local control = {buttons = {}}
-	local gap = 2
+	local control = {buttons = {}, parent = parent, gap = 2}
+	local gap = control.gap
 	local width = ((inner or INNER) - gap * (#choices - 1)) / #choices
 
 	for index, choice in ipairs(choices) do
@@ -205,7 +210,10 @@ local function Segmented(parent, y, key, choices, inner)
 		button:SetSize(width, SEGMENT)
 		button:SetPoint('TOPLEFT', parent, 'TOPLEFT', LEFT + (index - 1) * (width + gap), -y)
 
-		Texture(button, 'BACKGROUND', colors.border):SetAllPoints()
+		-- Kept, because Forever's frame lays its field over the switch and
+		-- hides this.
+		button.ground = Texture(button, 'BACKGROUND', colors.border)
+		button.ground:SetAllPoints()
 
 		button.tint = Texture(button, 'BORDER', colors.accent, 0.12)
 		button.tint:SetAllPoints()
@@ -234,13 +242,15 @@ local function Segmented(parent, y, key, choices, inner)
 	control.note = Note(parent)
 	control.note:SetPoint('BOTTOMRIGHT', parent, 'TOPRIGHT', -PAD, -(y - 3))
 
+	-- In Forever's dropdown field the chosen side is told by its label alone;
+	-- `framed` is set by Core/Window.lua.
 	function control:Refresh(refused)
 		local current = Umbra:GetOption(key)
 
 		for _, button in ipairs(self.buttons) do
 			button.chosen = current == button.value
-			button.tint:SetShown(button.chosen)
-			button.line:SetShown(button.chosen)
+			button.tint:SetShown(button.chosen and not self.framed)
+			button.line:SetShown(button.chosen and not self.framed)
 			button.label:SetTextColor(unpack(button.chosen and colors.accent or colors.muted))
 		end
 
@@ -254,7 +264,9 @@ end
 --[[ Check(parent, y, key, text, inner)
 A box of our own rather than UICheckButtonTemplate, which is a different
 picture on every client. Ticked is a filled square inset in the box, the shape
-a class power pip has — nothing here is drawn with the client's art.
+a class power pip has — nothing here is drawn with the client's art. In
+Forever's frame the box keeps that shape and takes the colors of Forever's
+own settings checkbox (`Core/Window.lua`).
 --]]
 local function Check(parent, y, key, text, inner)
 	local control = {}
@@ -262,14 +274,17 @@ local function Check(parent, y, key, text, inner)
 	local button = CreateFrame('Button', nil, parent)
 	button:SetPoint('TOPLEFT', parent, 'TOPLEFT', LEFT, -y)
 	button:SetSize(inner or INNER, BOX)
+	control.button = button
 
 	local outline = Texture(button, 'BACKGROUND', colors.muted, 0.35)
 	outline:SetPoint('TOPLEFT')
 	outline:SetSize(BOX, BOX)
+	control.outline = outline
 
 	local box = Texture(button, 'BORDER', colors.border)
 	box:SetPoint('TOPLEFT', outline, 'TOPLEFT', 1, -1)
 	box:SetPoint('BOTTOMRIGHT', outline, 'BOTTOMRIGHT', -1, 1)
+	control.box = box
 
 	local pip = Texture(button, 'ARTWORK', colors.accent)
 	pip:SetPoint('TOPLEFT', outline, 'TOPLEFT', 3, -3)
@@ -293,8 +308,14 @@ local function Check(parent, y, key, text, inner)
 		if button:IsEnabled() then label:SetTextColor(unpack(colors.text)) end
 	end)
 
+	-- `framed` and `mark` are Forever's frame's, set by Core/Window.lua.
 	function control:Refresh(refused)
-		pip:SetShown(Umbra:GetOption(key) and true or false)
+		local on = Umbra:GetOption(key) and true or false
+
+		pip:SetShown(on and not self.framed)
+
+		if self.mark then self.mark:SetShown(on and self.framed == true) end
+
 		hatch:SetShown(refused ~= nil)
 		button:SetEnabled(refused == nil)
 
@@ -376,10 +397,13 @@ local function Build()
 	-- accent edge stands where a unit frame keeps its class edge: the
 	-- interface's color at the place a unit keeps its own. The border takes
 	-- the rim's color, which is the border color under Umbra's own theme and
-	-- Forever's bronze line under that one.
-	Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
+	-- Forever's bronze line under that one. On Forever itself, under that
+	-- theme, the client's own frame takes the place of all of the header
+	-- (Core/Window.lua), so each piece is kept.
+	local outline = Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
 
-	Texture(frame, 'BACKGROUND', colors.background, nil, 1):SetAllPoints()
+	local ground = Texture(frame, 'BACKGROUND', colors.background, nil, 1)
+	ground:SetAllPoints()
 
 	local edge = Texture(frame, 'ARTWORK', colors.accent)
 	edge:SetPoint('TOPLEFT')
@@ -406,9 +430,11 @@ local function Build()
 		rule:SetPoint('TOPLEFT', frame, 'TOPLEFT', EDGE, -y)
 		rule:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 0, -y)
 		rule:SetHeight(1)
+
+		return rule
 	end
 
-	Rule(HEADER)
+	local headerRule = Rule(HEADER)
 
 	-- The rows, top to bottom, each advancing `y` by what it takes. The same
 	-- walk `options_layout` makes in the sheet.
@@ -529,12 +555,14 @@ local function Build()
 		local unlocked = not Umbra.locked
 		local refused = fighting and not unlocked
 
-		unlock.UmbraLabel:SetText(L[unlocked and 'Lock' or 'Unlock'])
+		-- Through Core/Window.lua, which sets Forever's red twin as well.
+		Window.Text(unlock, L[unlocked and 'Lock' or 'Unlock'])
 		unlock.UmbraLabel:SetTextColor(unpack(unlocked and colors.accent or colors.text))
 		unlock.UmbraLabel:SetAlpha(refused and 0.45 or 1)
 		unlock.line:SetShown(unlocked)
 		unlock.hatch:SetShown(refused)
-		unlock:SetEnabled(not refused)
+		Window.Enabled(unlock, not refused)
+		Window.Held(unlock, unlocked)
 	end
 
 	-- PlainButton puts its own color back on leaving; the unlock button's
@@ -561,6 +589,23 @@ local function Build()
 	if type(_G.UISpecialFrames) == 'table' then
 		tinsert(UISpecialFrames, 'UmbraOptionsFrame')
 	end
+
+	-- What Forever's frame replaces, and what it dresses: every row stays
+	-- where it is, so the theme switch never moves under the pointer.
+	local look = Window.New(frame)
+	look:Flat(outline, ground, edge, title, close, headerRule)
+
+	for _, key in ipairs({'layout', 'debuffs', 'health', 'level', 'theme'}) do
+		look:Switch(controls[key])
+	end
+
+	for _, key in ipairs({'auras', 'group', 'minimap'}) do
+		look:Check(controls[key])
+	end
+
+	look:Button(unlock)
+	look:Button(reset)
+	look:Apply()
 
 	return frame
 end

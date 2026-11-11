@@ -4,9 +4,12 @@ local Umbra = ns.Umbra
 --[[ Themes
 Two sets of colors for the interface around a unit, and nothing else. On WoW:
 Forever the frames take on the client's own look — near-black plates with a
-line of bronze along their edge, gold for a window's title — and everywhere
-else they stay the slate and teal they have always been. `/uuf theme` picks
-one by name, and `auto`, the default, picks by client.
+line of bronze along their edge — and everywhere else they stay the slate and
+teal they have always been. `/uuf theme` picks one by name, and `auto`, the
+default, picks by client. The options window and the onboarding go one step
+further on Forever itself: there they wear the client's own window frame
+(`Core/Window.lua`). Under the Forever theme on any other client they wear
+the palette, a bronze border and a gold title.
 
 **A theme changes the interface, never the unit.** The health bar, incoming
 healing, the absorbs, the class and reaction colors, the resources and the
@@ -218,13 +221,18 @@ local function PixelSize(region)
 	return factor / scale
 end
 
+-- The windows' frame on Forever draws one-pixel lines of its own
+-- (Core/Window.lua), measured the same way.
+Umbra.PixelSize = PixelSize
+
 --[[ Umbra:Outline(region, frame, inward)
 The one-unit border of a window of ours, which the Forever theme turns into
 its bronze line. A unit renders as one pixel in one place and two in the
 next, which a near-black border hid and a bronze one does not, so under a
 rimmed theme it is one physical pixel instead. Under Umbra's own theme it is
 the unit it always was. `inward` is for a window whose border is its own area
-with the ground inset, rather than a texture lying outside it.
+with the ground inset, rather than a texture lying outside it. On Forever the
+options window and the onboarding hide it inside the client's own frame.
 
 Windows are not secure, so this is placed again whenever it changes, fight or
 no fight.
@@ -395,6 +403,13 @@ function Umbra:ApplyTheme()
 	-- portrait tint; this puts the unit's color back where there is a unit.
 	if self.ApplyHealthStyle then
 		self:ApplyHealthStyle()
+	end
+
+	-- The options window and the onboarding wear Forever's own window frame
+	-- on that client under this theme, and their flat look everywhere else;
+	-- Core/Window.lua shows the one and hides the other, once they are built.
+	if self.ApplyWindowLook then
+		self:ApplyWindowLook()
 	end
 
 	return true

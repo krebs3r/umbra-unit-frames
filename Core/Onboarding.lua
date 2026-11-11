@@ -5,6 +5,7 @@ local colors = Umbra.colors
 local metrics = Umbra.metrics
 local L = Umbra.L
 local W = Umbra.Widgets
+local Window = Umbra.Window
 
 local Texture, Label, Hatch = W.Texture, W.Label, W.Hatch
 
@@ -26,6 +27,11 @@ brings it back.
 
 **One height on every page.** The controls have a fixed band, so Back and Next
 stand still under the pointer from the first page to the last.
+
+**On Forever it wears the client's frame**, under the Forever theme, as the
+options window does (`Core/Window.lua`): the pages keep their bands, the
+previews sit in the client's inset, and Back, Next and the unlock button are
+its red buttons.
 --]]
 
 local WIDTH = 320
@@ -284,8 +290,11 @@ local function MiniScreen(parent, which)
 		return box
 	end
 
-	-- The label of the group tab stands above it, clear of the party column.
-	screen.auras = Blizzard('TOPRIGHT', -230, -14, 330, 70, 'Blizzard buffs', {'RIGHT', 'LEFT'}, -4, 0)
+	-- The label of the group tab stands above it, clear of the party column,
+	-- and the buff row's under the row, flush with its right end. Beside the
+	-- row, on the same height as the other, the two ran into each other in
+	-- German (seen on 11 November 2026).
+	screen.auras = Blizzard('TOPRIGHT', -230, -14, 330, 70, 'Blizzard buffs', {'TOPRIGHT', 'BOTTOMRIGHT'}, 0, -2)
 	screen.group = Blizzard('TOPLEFT', 0, -150, 22, 190, 'Group manager', {'BOTTOMLEFT', 'TOPLEFT'}, 2, 2)
 
 	function screen:ShowBlizzard(shown)
@@ -484,10 +493,12 @@ local function Build()
 	frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 80)
 
 	-- The rim's color, as on the options window: the border color under
-	-- Umbra's own theme, Forever's bronze line under that one.
-	Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
+	-- Umbra's own theme, Forever's bronze line under that one. Kept, as there,
+	-- for Forever's own frame to take the place of.
+	local outline = Umbra:Outline(Texture(frame, 'BACKGROUND', colors.rimTop), frame)
 
-	Texture(frame, 'BACKGROUND', colors.background, nil, 1):SetAllPoints()
+	local ground = Texture(frame, 'BACKGROUND', colors.background, nil, 1)
+	ground:SetAllPoints()
 
 	local edge = Texture(frame, 'ARTWORK', colors.accent)
 	edge:SetPoint('TOPLEFT')
@@ -514,10 +525,12 @@ local function Build()
 		rule:SetPoint('TOPLEFT', frame, 'TOPLEFT', EDGE, -y)
 		rule:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 0, -y)
 		rule:SetHeight(1)
+
+		return rule
 	end
 
-	Rule(HEADER)
-	Rule(RULE)
+	local headerRule = Rule(HEADER)
+	local navRule = Rule(RULE)
 
 	-- The question: the same three lines on every page, rewritten per page.
 	local eyebrow = Label(frame, 10, colors.accent)
@@ -552,9 +565,9 @@ local function Build()
 		preview:SetPoint('TOPLEFT', page, 'TOPLEFT', LEFT, -PREVIEW_Y)
 		preview:SetSize(INNER, PREVIEW)
 		Texture(preview, 'BACKGROUND', PAPER):SetAllPoints()
-		Outline(preview, colors.border)
 
 		page.preview = preview
+		page.outline = Outline(preview, colors.border)
 		pages[index] = page
 	end
 
@@ -686,8 +699,9 @@ local function Build()
 				index == current and 1 or 0.35)
 		end
 
-		back:SetShown(current > 1)
-		nextButton.UmbraLabel:SetText(L[current == #STEPS and 'Done' or 'Next'])
+		-- Through Core/Window.lua, which sets Forever's red twins as well.
+		Window.Shown(back, current > 1)
+		Window.Text(nextButton, L[current == #STEPS and 'Done' or 'Next'])
 
 		controls.layout:Refresh(fighting and 'applies after combat' or nil)
 		controls.health:Refresh()
@@ -700,12 +714,13 @@ local function Build()
 		local unlocked = not Umbra.locked
 		local refused = fighting and not unlocked
 
-		unlock.UmbraLabel:SetText(L[unlocked and 'Lock frames' or 'Unlock frames'])
+		Window.Text(unlock, L[unlocked and 'Lock frames' or 'Unlock frames'])
 		unlock.UmbraLabel:SetTextColor(unpack(unlocked and colors.accent or colors.text))
 		unlock.UmbraLabel:SetAlpha(refused and 0.45 or 1)
 		unlock.line:SetShown(unlocked)
 		unlock.hatch:SetShown(refused)
-		unlock:SetEnabled(not refused)
+		Window.Enabled(unlock, not refused)
+		Window.Held(unlock, unlocked)
 
 		local layout = Umbra:LayoutName()
 
@@ -765,6 +780,32 @@ local function Build()
 	if type(_G.UISpecialFrames) == 'table' then
 		tinsert(UISpecialFrames, 'UmbraOnboardingFrame')
 	end
+
+	-- What Forever's frame replaces and dresses, as on the options window.
+	-- The line over the way through is the one piece that stands elsewhere
+	-- there: cut to the content's width rather than running into the metal.
+	local look = Window.New(frame)
+	look:Flat(outline, ground, edge, title, close, headerRule)
+	look:Place(navRule,
+		{{'TOPLEFT', frame, 'TOPLEFT', EDGE, -RULE}, {'TOPRIGHT', frame, 'TOPRIGHT', 0, -RULE}},
+		{{'TOPLEFT', frame, 'TOPLEFT', LEFT, -RULE}, {'TOPRIGHT', frame, 'TOPRIGHT', -PAD, -RULE}})
+
+	for _, key in ipairs({'layout', 'health', 'level'}) do
+		look:Switch(controls[key])
+	end
+
+	for _, key in ipairs({'auras', 'group', 'minimap'}) do
+		if controls[key] then look:Check(controls[key]) end
+	end
+
+	for _, page in ipairs(pages) do
+		look:Preview(page.preview, page.outline)
+	end
+
+	look:Button(unlock)
+	look:Button(back)
+	look:Button(nextButton)
+	look:Apply()
 
 	return frame
 end

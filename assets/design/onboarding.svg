@@ -119,8 +119,8 @@
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
-<clipPath id="clip67301"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip67301)" opacity="0.42">
+<clipPath id="clip98805"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98805)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -192,8 +192,8 @@
 <rect x="0.00" y="0.00" width="3.00" height="47.00" fill="rgb(63,199,235)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgb(35,43,60)"/>
 <rect x="5.00" y="0.00" width="38.00" height="47.00" fill="rgba(63,199,235,0.130)"/>
-<clipPath id="clip67374"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
-<g clip-path="url(#clip67374)" opacity="0.42">
+<clipPath id="clip98878"><rect x="5.00" y="0" width="38.00" height="47.00"/></clipPath>
+<g clip-path="url(#clip98878)" opacity="0.42">
 <circle cx="24.00" cy="18.80" r="7.22" fill="rgb(63,199,235)"/>
 <ellipse cx="24.00" cy="36.85" rx="17.33" ry="10.83" fill="rgb(63,199,235)"/>
 </g>
@@ -302,7 +302,7 @@
 <rect x="60.83" y="201.78" width="33.53" height="4.98" fill="rgba(20,25,37,0.960)"/>
 <rect x="60.83" y="201.78" width="1.00" height="4.98" fill="rgb(135,136,238)"/>
 <rect x="180.50" y="134.61" width="48.84" height="9.57" fill="none" stroke="rgba(141,151,171,0.600)" stroke-width="1" stroke-dasharray="2 2"/>
-<text x="176.98" y="142.40" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="8.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">Blizzard buffs</text>
+<text x="229.85" y="153.69" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="8.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">Blizzard buffs</text>
 <rect x="58.41" y="154.66" width="3.32" height="28.70" fill="rgba(141,151,171,0.450)"/>
 <text x="58.72" y="150.66" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="8.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Group manager</text>
 <rect x="15.00" y="268.00" width="14.00" height="14.00" fill="rgb(11,14,21)"/>

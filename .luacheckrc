@@ -99,6 +99,10 @@ read_globals = {
 	'Settings', 'SettingsPanel', 'HideUIPanel', 'AddonCompartmentFrame',
 	'Minimap', 'GetMinimapShape', 'GetCursorPosition',
 
+	-- Forever's own window frame on the options window and the onboarding:
+	-- the client's nine-slices and its title color, asked for before use.
+	'NineSliceUtil', 'NineSliceLayouts', 'NORMAL_FONT_COLOR',
+
 	-- Secure templates
 	'RegisterUnitWatch', 'UnregisterUnitWatch', 'InCombatLockdown',
 	'SecureHandlerSetFrameRef', 'loadstring_untainted',

@@ -1150,7 +1150,10 @@ OPTION_ROWS = [
 
 #[[ The window furniture
 # One drawing per control, shared by the options window and the onboarding,
-# because `Core/Options.lua` builds both from the same pieces.
+# because `Core/Options.lua` builds both from the same pieces. These are the
+# flat windows, under either theme. On WoW: Forever under the Forever theme
+# both wear the client's own window frame instead (`Core/Window.lua`), whose
+# atlases a sheet cannot draw; their rows stand where they stand here.
 #]]
 def draw_segment(sheet, left, ry, inner, choices, chosen, refused=None):
     o = OPT
@@ -1225,7 +1228,9 @@ def options_layout():
     # one word.
     buttons = y
     footer = buttons + o['button'] + 22
-    return rows, buttons, footer + 12
+    # The window closes 13 under the footer's baseline: 491 high, as
+    # `Core/Options.lua` sizes it (the footer's top, its 9 and the 12 of pad).
+    return rows, buttons, footer + 13
 
 
 def draw_options(sheet, x, y, s, *, state=None, notes=None):
@@ -1249,7 +1254,8 @@ def draw_options(sheet, x, y, s, *, state=None, notes=None):
     # the window: border, ground, and the accent edge where a frame has its
     # class edge — the interface's color at the place a unit keeps its own.
     # The border is the rim's color: the border color under Umbra's own
-    # theme, Forever's bronze line under that one.
+    # theme, Forever's bronze line under that one, on every client but
+    # Forever itself, which wears its own frame.
     d = outline_width()
     sheet.rect(-d, -d, w + 2 * d, height + 2 * d, rgb(C['rimTop']))
     sheet.rect(0, 0, w, height, rgb(C['background']))
@@ -1294,7 +1300,7 @@ def draw_options(sheet, x, y, s, *, state=None, notes=None):
                     hot=i == 0 and unlocked,
                     refused=i == 0 and refused.get('unlock'))
 
-    fy = height - 12
+    fy = height - 13
     sheet.text(left, fy, '/uuf help  ·  v%s' % VERSION, size=o['footer'],
                fill=rgb(C['muted']), opacity=0.7)
     sheet.text(w - o['pad'], fy, '♥ by krebs3r', size=o['footer'],
@@ -1352,7 +1358,7 @@ def sheet_options(out):
         (top + (ys['theme'] + 11) * s, 'Auto picks the theme by client',
          'Forever on Forever, Umbra elsewhere'),
         (top + (ys['auras'] + 7) * s, 'Checkboxes of its own',
-         'the same on all five clients'),
+         "in Forever's frame, in Forever's colors"),
         (top + (buttons + 11) * s, 'Unlock turns into Lock',
          'while the frames can be dragged'),
     ]
@@ -1360,7 +1366,7 @@ def sheet_options(out):
         callout(sheet, right, py, lx, label, value)
 
     # where it looks different, under the first
-    sheet.text(48, row2 - 58, 'In a fight, and on WoW: Forever', size=12.5 * TYPE,
+    sheet.text(48, row2 - 58, 'In a fight, and under the Forever theme', size=12.5 * TYPE,
                fill=rgb(C['text']), weight='600')
     sheet.line(48, row2 - 92, 932, row2 - 92, stroke=rgb(RULE))
 
@@ -1369,12 +1375,12 @@ def sheet_options(out):
                          'debuffs': 'applies after combat'},
                   refused={'unlock': True})
     draw_options(sheet, 48, row2, s, state=combat)
-    # The Forever beta could not build the party column, and this panel
-    # struck the group manager's switch through. The release client builds
-    # it (8 November 2026), so the window there differs only in its colors.
-    forever = dict(normal)
+    # The Forever theme as the other clients draw it under `/uuf theme
+    # forever`, and as Forever draws it where its own frame's art is missing.
+    # On Forever itself the window wears the client's frame, which this
+    # sheet cannot draw.
+    forever = dict(normal, theme=2)
     second = 980 - 48 - w
-    # Auto is chosen, and on that client auto is Forever's own colors.
     with theme('forever'):
         draw_options(sheet, second, row2, s, state=forever)
 
@@ -1383,11 +1389,11 @@ def sheet_options(out):
              'The mover is refused, as /uuf unlock refuses it. The layout '
              'and the debuffs stay live: one picked now is applied when the '
              'fight ends.'),
-            (second, 'On WoW: Forever',
-             'Auto picks the Forever theme there: near-black plates, a '
-             'bronze border, the title in the client\'s gold and the accent '
-             'a pale gold. The controls are the same as on every other '
-             'client.')):
+            (second, 'The Forever theme, flat',
+             '/uuf theme forever on any other client: near-black, a bronze '
+             'border, the title in the client\'s gold and the accent a pale '
+             'gold. On WoW: Forever itself the window wears the client\'s '
+             'own frame, with every row where it is here.')):
         by = row2 + height * s + 32
         sheet.text(x, by, title, size=12 * TYPE, fill=rgb(C['text']),
                    weight='600')
@@ -1548,10 +1554,12 @@ def mini_screen(sheet, x, y, w, which, *, blizzard=None):
         return h
 
     # The client's own, where they stand by default: the buff row left of
-    # the minimap, the group manager as a tab on the left edge.
+    # the minimap, the group manager as a tab on the left edge. The buff
+    # row's label stands under it, flush with its right end, as in
+    # `Core/Onboarding.lua`: beside it, the German labels ran into each other.
     for kept, (bx, by, bw, bh), label, anchor, lx in (
             (blizzard['auras'], (SCREEN_W - 560, 14, 330, 70),
-             'Blizzard buffs', 'end', SCREEN_W - 580),
+             'Blizzard buffs', 'end', SCREEN_W - 230),
             (blizzard['group'], (0, 150, 22, 190),
              'Group manager', 'start', None)):
         rx, ry, rw, rh = x + bx * s, y + by * s, bw * s, bh * s
@@ -1562,8 +1570,9 @@ def mini_screen(sheet, x, y, w, which, *, blizzard=None):
                       'fill="none" stroke="%s" stroke-width="1" '
                       'stroke-dasharray="2 2"/>'
                       % (rx + 0.5, ry + 0.5, rw - 1, rh - 1, rgb(C['muted'], 0.6)))
-        # The group tab's label stands above it, clear of the party column.
-        ty = ry + rh / 2 + 3 if lx is not None else ry - 4
+        # The group tab's label stands above it, clear of the party column;
+        # the buff row's 2 under the row, its baseline a size-8 line lower.
+        ty = ry + rh + 2 + 7 if lx is not None else ry - 4
         sheet.text(x + (lx if lx is not None else 2) * s, ty, label, size=8,
                    fill=rgb(C['text'] if kept else C['muted']), anchor=anchor,
                    opacity=None if kept else 0.7)

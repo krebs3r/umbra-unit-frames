@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.10 — unreleased
+
+On WoW: Forever the options window and the first-login window wear the
+game's own window frame, as Soundstone's and Hourstone's windows do there.
+
+- The bronze frame with its rock ground, a title strip with the title in the
+  game's gold, and the red close button. The switches lie in the game's
+  dropdown field with a thin divider between their sides, the checkboxes
+  take the colors of Forever's own, and Unlock, Reset, Back, Next and
+  *Unlock frames* are the game's red buttons; the onboarding's drawings sit
+  in the game's inset
+- Every row stays where it was, and the windows keep their size, so the
+  theme switch does not move under the pointer when it changes the window
+  it sits in
+- Only on Forever and only under the Forever theme, `auto` included. Under
+  `/uuf theme umbra` the windows are as they were, and on every other
+  client `/uuf theme forever` still gives them the gold title inside a
+  bronze border. A switch takes effect at once, with no `/reload`
+- Where the game lacks a piece of the frame's art, that piece keeps the flat
+  look
+- Seen in the game on both windows and measured on lossless screenshots:
+  the frame flush with the window on every side, the title in the game's
+  gold, the dividers and the checkbox edges one pixel, and no row moving
+  when the theme is switched with the options window open
+- On the first-login window's fourth page, the drawing's labels for
+  Blizzard's buffs and group manager no longer run into each other in
+  German: the buffs' label stands under its row
+
 ## 0.9 — 8 November 2026
 
 A theme: on WoW: Forever the frames now wear the client's own near-black and

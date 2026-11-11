@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="980" height="2058" viewBox="0 0 980 2058" role="img" aria-label="Umbra Unit Frames — the options window">
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="2061" viewBox="0 0 980 2061" role="img" aria-label="Umbra Unit Frames — the options window">
 <title>Umbra Unit Frames — the options window</title>
 <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="1" stop-color="#000000" stop-opacity="0.28"/></linearGradient><pattern id="hatch" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="24" height="24" fill="none"/><rect width="10" height="24" fill="#ffffff" fill-opacity="0.45"/></pattern></defs>
-<rect width="980" height="2058" fill="rgb(9,11,17)"/>
+<rect width="980" height="2061" fill="rgb(9,11,17)"/>
 <defs><pattern id="hatch-fine" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="6" fill="#ffffff" fill-opacity="0.16"/></pattern></defs>
 <text x="48.00" y="52.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.4" fill="rgb(117,220,196)" text-anchor="start" font-weight="600" letter-spacing="1.40">OPTIONS · /UUF</text>
 <text x="48.00" y="86.84" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="22.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The options window</text>
@@ -9,9 +9,9 @@
 <text x="48.00" y="143.12" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">actions and a quiet footer — in Umbra's own colors. Every control takes effect where you stand, without a</text>
 <text x="48.00" y="167.24" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">reload, as the command does today.</text>
 <g transform="translate(48.00,206.00) scale(1.5000)">
-<rect x="-1.00" y="-1.00" width="282.00" height="492.00" fill="rgb(11,14,21)"/>
-<rect x="0.00" y="0.00" width="280.00" height="490.00" fill="rgba(20,25,37,0.960)"/>
-<rect x="0.00" y="0.00" width="3.00" height="490.00" fill="rgb(117,220,196)"/>
+<rect x="-1.00" y="-1.00" width="282.00" height="493.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="280.00" height="491.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="491.00" fill="rgb(117,220,196)"/>
 <text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
 <rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
 <line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
@@ -92,17 +92,17 @@
 <polyline points="468.00,693.50 482.00,693.50 500.00,693.50 512.00,693.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
 <circle cx="468.00" cy="693.50" r="2" fill="rgba(117,220,196,0.800)"/>
 <text x="520.00" y="692.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Checkboxes of its own</text>
-<text x="520.00" y="714.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the same on all five clients</text>
+<text x="520.00" y="714.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">in Forever's frame, in Forever's colors</text>
 <polyline points="468.00,873.50 482.00,873.50 500.00,873.50 512.00,873.50" fill="none" stroke="rgb(44,52,70)" stroke-width="1"/>
 <circle cx="468.00" cy="873.50" r="2" fill="rgba(117,220,196,0.800)"/>
 <text x="520.00" y="872.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="400">Unlock turns into Lock</text>
 <text x="520.00" y="894.94" font-family="JetBrains Mono,SFMono-Regular,Consolas,monospace" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">while the frames can be dragged</text>
-<text x="48.00" y="1033.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In a fight, and on WoW: Forever</text>
-<line x1="48.00" y1="999.00" x2="932.00" y2="999.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
-<g transform="translate(48.00,1091.00) scale(1.5000)">
-<rect x="-1.00" y="-1.00" width="282.00" height="492.00" fill="rgb(11,14,21)"/>
-<rect x="0.00" y="0.00" width="280.00" height="490.00" fill="rgba(20,25,37,0.960)"/>
-<rect x="0.00" y="0.00" width="3.00" height="490.00" fill="rgb(117,220,196)"/>
+<text x="48.00" y="1034.50" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.8" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In a fight, and under the Forever theme</text>
+<line x1="48.00" y1="1000.50" x2="932.00" y2="1000.50" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<g transform="translate(48.00,1092.50) scale(1.5000)">
+<rect x="-1.00" y="-1.00" width="282.00" height="493.00" fill="rgb(11,14,21)"/>
+<rect x="0.00" y="0.00" width="280.00" height="491.00" fill="rgba(20,25,37,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="491.00" fill="rgb(117,220,196)"/>
 <text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
 <rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(11,14,21)"/>
 <line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(141,151,171)" stroke-width="1.50"/>
@@ -171,10 +171,10 @@
 <text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.9</text>
 <text x="268.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(141,151,171)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
 </g>
-<g transform="translate(512.00,1091.00) scale(1.5000)">
-<rect x="-0.76" y="-0.76" width="281.52" height="491.52" fill="rgb(154,128,92)"/>
-<rect x="0.00" y="0.00" width="280.00" height="490.00" fill="rgba(21,18,15,0.960)"/>
-<rect x="0.00" y="0.00" width="3.00" height="490.00" fill="rgb(240,204,140)"/>
+<g transform="translate(512.00,1092.50) scale(1.5000)">
+<rect x="-0.76" y="-0.76" width="281.52" height="492.52" fill="rgb(154,128,92)"/>
+<rect x="0.00" y="0.00" width="280.00" height="491.00" fill="rgba(21,18,15,0.960)"/>
+<rect x="0.00" y="0.00" width="3.00" height="491.00" fill="rgb(240,204,140)"/>
 <text x="15.00" y="23.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13.0" fill="rgb(255,209,0)" text-anchor="start" font-weight="600">Umbra Unit Frames</text>
 <rect x="253.00" y="9.00" width="18.00" height="18.00" fill="rgb(10,8,6)"/>
 <line x1="256.00" y1="12.00" x2="268.00" y2="24.00" stroke="rgb(166,160,148)" stroke-width="1.50"/>
@@ -212,13 +212,13 @@
 <text x="226.50" y="229.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400">Off</text>
 <text x="15.00" y="258.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="600" letter-spacing="1.20">THEME</text>
 <rect x="15.00" y="266.00" width="83.00" height="22.00" fill="rgb(10,8,6)"/>
-<rect x="15.00" y="266.00" width="83.00" height="22.00" fill="rgba(240,204,140,0.120)"/>
-<rect x="15.00" y="286.00" width="83.00" height="2.00" fill="rgb(240,204,140)"/>
-<text x="56.50" y="281.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,204,140)" text-anchor="middle" font-weight="600">Auto</text>
+<text x="56.50" y="281.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400">Auto</text>
 <rect x="100.00" y="266.00" width="83.00" height="22.00" fill="rgb(10,8,6)"/>
 <text x="141.50" y="281.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400">Umbra</text>
 <rect x="185.00" y="266.00" width="83.00" height="22.00" fill="rgb(10,8,6)"/>
-<text x="226.50" y="281.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(166,160,148)" text-anchor="middle" font-weight="400">Forever</text>
+<rect x="185.00" y="266.00" width="83.00" height="22.00" fill="rgba(240,204,140,0.120)"/>
+<rect x="185.00" y="286.00" width="83.00" height="2.00" fill="rgb(240,204,140)"/>
+<text x="226.50" y="281.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="12.0" fill="rgb(240,204,140)" text-anchor="middle" font-weight="600">Forever</text>
 <text x="15.00" y="310.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="10.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="600" letter-spacing="1.20">BLIZZARD FRAMES</text>
 <rect x="15.00" y="318.00" width="14.00" height="14.00" fill="rgb(10,8,6)"/>
 <rect x="15.50" y="318.50" width="13.00" height="13.00" fill="none" stroke="rgba(166,160,148,0.350)" stroke-width="1"/>
@@ -240,26 +240,27 @@
 <text x="15.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(166,160,148)" text-anchor="start" font-weight="400" opacity="0.70">/uuf help  ·  v0.9</text>
 <text x="268.00" y="478.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.0" fill="rgb(166,160,148)" text-anchor="end" font-weight="400" opacity="0.70">♥ by krebs3r</text>
 </g>
-<text x="48.00" y="1858.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In combat</text>
-<text x="48.00" y="1880.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The mover is refused, as /uuf unlock refuses it. The</text>
-<text x="48.00" y="1899.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">layout and the debuffs stay live: one picked now is</text>
-<text x="48.00" y="1918.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">applied when the fight ends.</text>
-<text x="512.00" y="1858.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">On WoW: Forever</text>
-<text x="512.00" y="1880.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">Auto picks the Forever theme there: near-black plates,</text>
-<text x="512.00" y="1899.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">a bronze border, the title in the client's gold and</text>
-<text x="512.00" y="1918.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">the accent a pale gold. The controls are the same as</text>
-<text x="512.00" y="1937.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">on every other client.</text>
-<line x1="48.00" y1="1986.00" x2="932.00" y2="1986.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
-<circle cx="52.00" cy="2017.00" r="3.5" fill="rgb(117,220,196)"/>
-<text x="66.00" y="2022.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
-<text x="66.00" y="2044.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">on its own, no argument</text>
-<circle cx="273.00" cy="2017.00" r="3.5" fill="rgb(117,220,196)"/>
-<text x="287.00" y="2022.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Addon compartment</text>
-<text x="287.00" y="2044.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where the client has one</text>
-<circle cx="494.00" cy="2017.00" r="3.5" fill="rgb(117,220,196)"/>
-<text x="508.00" y="2022.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
-<text x="508.00" y="2044.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">a page with one button</text>
-<circle cx="715.00" cy="2017.00" r="3.5" fill="rgb(117,220,196)"/>
-<text x="729.00" y="2022.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Minimap button</text>
-<text x="729.00" y="2044.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where there is none</text>
+<text x="48.00" y="1861.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">In combat</text>
+<text x="48.00" y="1883.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">The mover is refused, as /uuf unlock refuses it. The</text>
+<text x="48.00" y="1902.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">layout and the debuffs stay live: one picked now is</text>
+<text x="48.00" y="1921.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">applied when the fight ends.</text>
+<text x="512.00" y="1861.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">The Forever theme, flat</text>
+<text x="512.00" y="1883.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">/uuf theme forever on any other client: near-black, a</text>
+<text x="512.00" y="1902.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">bronze border, the title in the client's gold and the</text>
+<text x="512.00" y="1921.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">accent a pale gold. On WoW: Forever itself the window</text>
+<text x="512.00" y="1940.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">wears the client's own frame, with every row where it</text>
+<text x="512.00" y="1959.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.7" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">is here.</text>
+<line x1="48.00" y1="1989.00" x2="932.00" y2="1989.00" stroke="rgb(44,52,70)" stroke-width="1.00"/>
+<circle cx="52.00" cy="2020.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="66.00" y="2025.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">/uuf</text>
+<text x="66.00" y="2047.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">on its own, no argument</text>
+<circle cx="273.00" cy="2020.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="287.00" y="2025.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Addon compartment</text>
+<text x="287.00" y="2047.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where the client has one</text>
+<circle cx="494.00" cy="2020.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="508.00" y="2025.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Options › AddOns</text>
+<text x="508.00" y="2047.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">a page with one button</text>
+<circle cx="715.00" cy="2020.00" r="3.5" fill="rgb(117,220,196)"/>
+<text x="729.00" y="2025.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="16.1" fill="rgb(230,233,240)" text-anchor="start" font-weight="600">Minimap button</text>
+<text x="729.00" y="2047.00" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="14.1" fill="rgb(126,138,160)" text-anchor="start" font-weight="400">where there is none</text>
 </svg>
