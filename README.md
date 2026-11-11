@@ -217,6 +217,8 @@ No second party column out of fixed frames was built for the beta — it would h
 
 ![The player frame with its pet and the target with its target of target, twice over: once in Umbra's own slate and teal, and once in the Forever theme, on near-black plates with a one-pixel bronze line along the top, right and bottom of each frame body and an amber cast bar](assets/design/forever.svg)
 
+![The options window and the first-login window on WoW: Forever, as the game shows them: each in the game's own bronze window frame around a rock ground, with a gold title in a dark title strip and a red close button; the switches in the game's dropdown fields, gold checkboxes and red buttons](assets/screenshots/forever-windows.png)
+
 What the beta client did with Umbra, and what the release client has shown since — which values it hides, which events it is missing, how the theme and the aura timers measured — is written down in the [development notes](docs/development.md).
 
 ### The Classic clients

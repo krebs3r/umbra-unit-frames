@@ -1005,6 +1005,16 @@ capture the two labels stand about 50 pixels apart.
 Not captured yet: the held highlight and the refused button in a fight, a
 theme switch in a fight, a change of UI scale, and the other clients.
 
+**The picture in the README** (`assets/screenshots/forever-windows.png`,
+decision 12) is cut from a lossless screenshot taken at 21:17 that evening
+with the released 0.10 installed, so its footer reads `v0.10`: the options
+window and the onboarding's first page, each cut exactly at its metal and
+set side by side. Outside the frame's 45-degree corners, and above the red
+close button, the game world is transparent, so no other player's name and
+no other pixel of the world is in it, and neither page shows a character.
+`docs/curseforge.md` links it at the commit that added it rather than at a
+tag, so the description can show it before the next release.
+
 ### Unlocking has to show what it asks you to place
 
 **oUF calls `RegisterUnitWatch` on every frame it spawns**, so a frame whose
@@ -3128,7 +3138,10 @@ out — before that, the links point at a tag that does not exist yet. Wago
 started out with the README instead, which it took from GitHub: its
 pictures are relative paths, which point nowhere off GitHub, so not one of
 them showed there (8 November 2026). An absolute link into the repository
-loads on Wago's page, SVG included.
+loads on Wago's page, SVG included. A picture added after its release is
+linked at the commit that added it, which never moves either, until the next
+release moves every link to its tag (`forever-windows.png`, 11 November
+2026).
 
 **Checking before shipping:** syntax can be checked without the client;
 semantics cannot. Luacheck runs in CI.
