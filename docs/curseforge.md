@@ -146,6 +146,8 @@ Forever launched on **4 November 2026**, and Umbra loads and draws on its releas
 
 ![Umbra Unit Frames — Forever's own look](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/0.10/assets/design/forever.svg)
 
+![Umbra Unit Frames — the options window and the first-login window in WoW: Forever's own window frame, in the game](https://raw.githubusercontent.com/krebs3r/umbra-unit-frames/3f4142599ed86ef79130299137e9755899e8794c/assets/screenshots/forever-windows.png)
+
 **The party column works on Forever's release client.** On the beta it could not be built: that client's own group-header code could not finish the buttons it created, for Umbra or for any other addon, so Umbra stood its column down there and handed Blizzard's group panel back. The release client finishes them, and in a real group the column drew the party — nothing in Umbra had to change. Umbra still checks within two seconds of the column first appearing, and `/uuf dev header` answers where any given client stands. **Retail was never affected.**
 
 **A word on Secret Values.** Since patch 12.0 the game hides exact health and power numbers inside encounters, Mythic+ and PvP — addons may display them but not read them. Umbra's design happens to suit that well: a neutral health bar with class color on the edge never needed to work out a color from your health, so your frames look and behave the same inside a boss fight as outside one. What you will notice is that health reads as a percentage while the fight hides the number.
