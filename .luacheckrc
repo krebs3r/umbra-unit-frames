@@ -64,6 +64,11 @@ read_globals = {
 	-- role a person signed up as, which the party column marks.
 	'UnitGUID', 'UnitGroupRolesAssigned',
 
+	-- The rest indicator: whether the player is in a rest area, and in a
+	-- fight. A pet's mood and its strings differ by client and are read
+	-- through `_G`.
+	'IsResting', 'UnitAffectingCombat',
+
 	-- The group itself, and where the run is taking place. Both reports ask.
 	'IsInRaid', 'IsInGroup', 'GetNumGroupMembers', 'IsInInstance',
 	'MAX_PARTY_MEMBERS',

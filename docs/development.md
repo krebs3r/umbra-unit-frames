@@ -102,8 +102,8 @@ they have forgotten a command should be about the frames.
 
 | | |
 | :--- | :--- |
-| `dev test` | fill every aura slot with stand-ins, and the health bar's prediction |
-| `dev check` | opens a report window: which unit values this client hides, the theme in force, the aura duration format, what the class-power row found, and per frame whether the unit's identity is secret, what its portrait could load and how many models it has loaded since the last reload |
+| `dev test` | fill every aura slot with stand-ins, and the health bar's prediction; show the rest indicator |
+| `dev check` | opens a report window: which unit values this client hides, the theme in force, the aura duration format, what the class-power row found, which art the rest indicator was given, whether a pet's mood can be told, and what the two say now, and per frame whether the unit's identity is secret, what its portrait could load and how many models it has loaded since the last reload |
 | `dev header` | whether a secure group header works on this client, layer by layer |
 | `dev party` | what the party column is made of, child by child, with each top edge in screen coordinates |
 | `dev portrait` | a box with four attempts at the portrait per unit, for when the column is empty and every value says it should not be |
@@ -1216,7 +1216,9 @@ kept, which is the cheaper of the two.
 - **Target-of-target** is one question — is it on the tank or on me — and is
   cut like the pet in every way, including where it lives: the shared width so
   it lines up, shorter, no castbar, no auras, and a place in the target's own
-  stack rather than a position of its own.
+  stack rather than a position of its own. Since 12 November 2026 the pet
+  carries a level as well, where the setting puts the player's — a hunter's
+  pet levels on its own — and the target-of-target still carries none.
 - **The boss frames** keep a castbar, which is the most useful line on a boss,
   and carry no aura rows: five stacked frames with rows between them would be
   a wall.
@@ -1276,6 +1278,149 @@ point straight into `SetPoint`, which on a missing entry would have thrown at
 the build with it. It reports and parks the frame in the middle instead. The
 fault would be in `Core/Defaults.lua` either way; what changed is that the
 other nine frames still get built.
+
+### Resting, in the corner of the portrait
+
+The client's own player frame shows Z's rising out of the portrait while you
+stand in an inn or a city, and Umbra showed nothing. Asked for on 12
+November 2026, with a screenshot of each from a Forever tavern: the client's
+frame with the Z's, and Umbra's in the same place without them.
+
+**The Z's stay inside the portrait column**, in a 20-unit square
+(`restSize`) in its top right corner. Blizzard's rise past the frame's top
+edge, and above that edge stand the buffs in `modern` and the pet in
+`classic` — a mockup on the real screenshot put the client's Z's straight
+across the second buff. Reaching past the box would have meant an entry in
+the stack, and with it the buff row 14 units higher all the time, resting or
+not. The square is a level above the 2D stand-in, the plate's level: the
+plate stands on the column's foot and the square hangs from its top, so the
+two share no pixels.
+
+**The art is the client's own**, as the role marker's is. Retail and
+Forever animate `UI-HUD-UnitFrame-Player-Rest-Flipbook` in
+`Mainline/PlayerFrame.xml`: a `FlipBook` of 7 rows by 6 columns, 42 frames,
+1.5 seconds, looping, on a 30-unit texture in a 20-unit frame. The Classic
+clients' frame shows a still icon instead, `UI-StateIcon` cut at `0, 0.5, 0,
+0.421875`. The UI source of Mists, Anniversary and Era never names the
+flipbook atlas, which settles nothing about their data, and no Blizzard Lua
+on any client builds a `FlipBook` animation from Lua — Blizzard only ever
+declares them in XML. So both are asked rather than assumed: the atlas with
+`Umbra.AtlasKnown`, the animation under `pcall` and checked for the methods
+it needs and for the texture it is aimed at. A flipbook atlas without its
+animation is the whole sheet of 42 frames at once, so the two go together:
+either fails and the square shows the still icon, and says why in `/uuf dev
+debug` and `/uuf dev check`.
+
+Asked in the game on 13 November 2026: the atlas is in Retail's and
+Forever's data and the animation builds from Lua on both, and it is in
+neither Mists', the Anniversary realms' nor Classic Era's, which show the
+still icon — see *Waiting to be looked at*, item 5.
+
+**Out of a fight, which is Forever's order and not Retail's.** Retail and
+the Classic clients ask whether you are resting before they ask about
+combat, so their Z's keep going in a city fight; Forever asks about combat
+first. Forever has two signals for it — auto-attack, kept from
+`PLAYER_ENTER_COMBAT`, and the hate list, kept from `PLAYER_REGEN_DISABLED`
+— and only the second is followed here. Swinging at something puts you on
+its hate list a moment later, and a flag kept by events alone goes stale on
+the one that is missed, since oUF only hands a frame its events while it is
+visible. The two regen events are read by their names; every other update
+asks `UnitAffectingCombat`, because whether the client already answers true
+inside `PLAYER_REGEN_DISABLED` has not been measured here. Neither
+`IsResting` nor `UnitAffectingCombat` carries a secret marker in the
+documentation, and both are read the way a hidden answer would have to be
+anyway.
+
+oUF's own `RestingIndicator` was not used: it knows `PLAYER_UPDATE_RESTING`
+and nothing else, and an override skips its callbacks. `UmbraRest` is a
+custom element like `UmbraRole`, with all three events registered unitless
+— oUF asserts on a non-unit event registered for a unit.
+
+### A hunter's pet says how it is
+
+Asked for the same day: the client's pet frame on Forever carries a face
+beside it — green and laughing, yellow and flat, red and frowning — that says
+whether the pet is happy, content or unhappy, and with that whether it wants
+feeding. Content is the time to feed it; unhappy, it loses loyalty and does
+less damage.
+
+**It is told in color and in words.** The pet frame's edge and the
+portrait's ground behind the model take the mood's color — `petMood`, a
+muted green, yellow and red — the edge at full strength and the ground at
+`moodTintAlpha`, 0.45, where the unit's color otherwise lies at 0.13. The
+model itself is never covered, as on every portrait since the veil over the
+faces went on 8 November. Pointing at the frame shows the unit's lines as
+always and, under them after an empty line, Blizzard's lines for the mood:
+how it is, in white as the client titles it, then the damage it does for
+it, whether its loyalty is rising or falling, and what it eats.
+
+**The edge is the one place a principle gives way.** *Class color at the
+edge* means the unit's color, which for your own pet is the reaction color:
+the same green on every pet, always, and so no information at all. On a
+hunter's pet frame with a mood to tell, the edge carries the mood instead;
+everywhere else, and on that frame the moment there is no mood — a vehicle,
+a client answering nothing — it is the unit's color as before. With no pet
+at all there is no unit color to go back to, so the frame the mood was on
+gets the placeholder it was built with, as a theme switch does; unlocking is
+where that empty frame shows. The health bar is untouched either way.
+
+It took three tries, all on 12 November 2026, off screenshots of the same
+pet. A face at the end of the name row, inside the box at the row's height —
+11 units, the role marker's size — and the client's own face, 24 by 23,
+beside the frame with its own tooltip and a reach the mover had to be told
+about, were both built and seen in the game, and neither looked right on
+Umbra's frames. The tooltip alone came next, and then a mockup on the real
+frame of four ways to color it — the ground behind the model, a veil over
+the whole portrait, a ring around it, the edge alone — of which the ground
+and the edge were chosen together.
+
+**Repainted on the mood's own events.** The colors go on in
+`UpdateIdentity`, through `umbraPaintMood`, so a new pet, a theme switch and
+`/uuf health` all reach them as they reach the unit's color. A change of
+mood alone arrives as `UNIT_HAPPINESS`, taken unitless as Blizzard takes it —
+its code never reads which unit the event names — and `PET_UI_UPDATE`, which
+the Classic pet frame refreshes on too. The event is the reason the client
+is asked whether it has one before anything is built: Retail has none, and
+registering it there is an error report on every login.
+
+**Three clients have it, in two ways**, measured against the UI source of
+all five on 12 November 2026:
+
+| | the mood | what it eats |
+| :--- | :--- | :--- |
+| Forever | `C_PetInfo.GetPetHappiness` | `C_PetInfo.GetPetFoodTypes`, a table |
+| Anniversary, Classic Era | `GetPetHappiness` | `GetPetFoodTypes`, one word per return value |
+| Mists | `GetPetHappiness`, which answers nothing since Cataclysm | `GetPetFoodTypes`, one word per return value |
+| Retail | — | — |
+
+The globals on the Classic clients are undocumented: Blizzard's pet frame
+calls `GetPetHappiness`, and its pet paper doll and stable call
+`GetPetFoodTypes` — the Classic pet frame's own tooltip has no diet line, so
+the one here follows Forever's. Colors and lines are only for a hunter, whose
+pet is the only one with a mood; `HasPetUI`'s second answer tells a hunter's
+pet from a demon at runtime, as it does for Blizzard.
+
+**Mists is left out by name**, the one place this feature asks for a client
+rather than for a function. It has the global and the event and answers
+nothing, since a pet's mood went in Cataclysm; Blizzard's own Mists pet
+frame still calls it and hides its face on the nil. Left out, the pet frame
+there is exactly what it was.
+
+**Kept in the tooltip while it is open.** On Retail and Forever the client
+rebuilds a unit tooltip from its data every so often and drops lines added
+to it, unless the owner has an `UpdateTooltip`, which it then calls instead —
+which is how Blizzard's unit frames keep theirs. So the pet frame of a hunter
+sets one, `FillTooltip`, which fills the tooltip again with the unit's lines
+and the mood's, and the mood follows while the pointer rests on the frame.
+Every other frame leaves it unset. The words are the client's globals —
+`PET_HAPPINESS1` to `3`, `PET_DAMAGE_PERCENTAGE`, `GAINING_LOYALTY`,
+`LOSING_LOYALTY`, `PET_DIET_TEMPLATE` — so they read in the client's language
+with no translation here; the diet is joined with `PET_FOOD_DELIMIT` where
+there is one and `LIST_DELIMITER` where not.
+
+oUF's own `Happiness` element is gated on Forever and stays unused, and so
+does its `colorHappiness`, which would paint the health bar: the bar belongs
+to health.
 
 ### Range fading belongs to the group frames
 
@@ -2411,6 +2556,62 @@ quietly rather than erroring, which is why none of them announced itself.
    player and 3 on the pet on TBC Anniversary (interface 20506), and 3 and
    2 on Classic Era (11509). On Retail and Mists the count was not written
    down. Still open: the close-up.
+
+5. **The rest indicator and the pet's mood.** Written on 12 November 2026
+   from the UI source of all five clients — see *Resting, in the corner of
+   the portrait* and *A hunter's pet says how it is*. `/uuf dev check`
+   prints four lines for them, `rest art`, `rest now`, `pet mood` and `pet
+   mood now`; unlocking and `/uuf dev test` show the Z's.
+
+   Seen on Forever the same evening, off a lossless screenshot
+   at 1.3125 pixels per unit: the Z's drawing in the portrait's top right
+   corner while resting, their yellow at x 839–857 and y 1041–1058 against a
+   square of 836–862 by 1037–1063, so inside it and inside the column, on
+   the frame of the flipbook that was caught.
+
+   `/uuf dev check` on Forever on 13 November 2026, a hunter resting with
+   his pet out (`dev-41ea1c7-dirty`, interface 16001):
+
+       rest art: available — the client's flipbook, 42 frames in 1.5 s
+       rest now: resting yes, in combat no, showing yes
+       pet mood: available — C_PetInfo.GetPetHappiness, on the edge, the portrait and in the tooltip
+       pet mood now: 3 of 3, 125% damage, loyalty rising, 6 foods, painted yes
+
+   So on Forever the atlas is in the data and a `FlipBook` animation builds
+   from Lua, which no Blizzard code does; `C_PetInfo` answers in the clear
+   with the level, the damage and a rising loyalty; the diet comes back as a
+   table of six; and the mood was painted.
+
+   The other four the same day, the same build:
+
+   | | `rest art` | `rest now` | `pet mood` |
+   | :--- | :--- | :--- | :--- |
+   | Retail (120105) | `available` — the flipbook | resting yes, showing yes | `none` — no pet happiness |
+   | Mists (50504) | `still` — the atlas is not in this client | resting yes, showing yes | `none` — no mood since Cataclysm |
+   | Anniversary (20506) | `still` — the atlas is not in this client | resting yes, showing yes | `none` — only a hunter's pet, on a warlock |
+   | Classic Era (11509) | `still` — the atlas is not in this client | resting **no**, showing no | `none` — only a hunter's pet, on a warlock |
+
+   So the flipbook is Retail's and Forever's, and the three Classic clients
+   have the still icon; the UI source could not have said which. On Classic
+   Era nothing showed, and the client said why: `IsResting` answered false,
+   because the character stood in a town that is not a rest area — so the
+   frame did what the client said. The icon there is taken to work as it
+   does on the Anniversary realms, which run the same code and fall back on
+   the same file. What is still to be seen:
+
+   - The Z's gone in a fight in a city and back after it.
+   - How large they draw across the whole loop. The client's cells carry a
+     margin of their own, so `restSize` may want tuning.
+   - The pet frame on Forever with a hunter's pet: yellow and then red as
+     it goes hungry, and green again after feeding, each change arriving
+     without touching the frame — `UNIT_HAPPINESS` taken unitless has not
+     yet been seen to fire for it — and off a lossless screenshot the edge
+     at `petMood`'s values and the model uncovered. The tooltip's lines in
+     German under the unit's, staying while the pointer rests on the frame.
+     A warlock's frame and tooltip unchanged.
+   - On the Anniversary realms and Classic Era with a hunter: the same
+     colors and lines, and the diet read from return values. The
+     characters checked there so far were warlocks.
 
 Settled on 21 September 2026, measured in a delve:
 

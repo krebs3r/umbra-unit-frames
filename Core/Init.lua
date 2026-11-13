@@ -142,7 +142,7 @@ measurement nobody can find is one that gets guessed at instead, which is the
 mistake this project keeps paying for.
 --]]
 local DEV = {
-	{'test', nil, 'fill every aura slot with stand-ins'},
+	{'test', nil, 'fill every aura slot with stand-ins, and show the rest indicator'},
 	{'check', nil, 'which unit values this client hides'},
 	{'header', nil, 'whether a secure group header works on this client'},
 	{'party', nil, 'what the party column is made of, child by child'},
@@ -219,6 +219,26 @@ frame was told to watch and still names the seat's owner. Reaching for
 --]]
 function Umbra:FrameUnit(frame)
 	return frame.__unit or frame:GetAttribute('unit')
+end
+
+--[[ Umbra.AtlasKnown(name)
+Whether this client can draw an atlas by that name.
+
+`SetAtlas` on a name the client does not have leaves the texture as it was
+rather than refusing, so a blank square stands where the art should be, and
+the UI source only says which names a client's own code references, not
+what its data holds. So the client is asked, and only a table counts. Lifted
+out of `Core/Window.lua`, where it was first written for Forever's window
+frame, once the rest indicator needed the same question.
+--]]
+function Umbra.AtlasKnown(name)
+	if type(C_Texture) ~= 'table' or type(C_Texture.GetAtlasInfo) ~= 'function' then
+		return false
+	end
+
+	local ok, info = pcall(C_Texture.GetAtlasInfo, name)
+
+	return ok and type(info) == 'table'
 end
 
 --[[ Umbra:Heading()
@@ -547,8 +567,10 @@ local function Command(input)
 		-- answer is a number to be puzzled over.
 		local player
 
+		-- Umbra's own frames only: after `/uuf dev header` the probe's first
+		-- child sits later in oUF.objects and stands for the player as well.
 		for _, frame in ipairs(ns.oUF.objects) do
-			if Umbra:FrameUnit(frame) == 'player' then
+			if frame.umbraConfig and Umbra:FrameUnit(frame) == 'player' then
 				player = frame
 			end
 		end
@@ -579,6 +601,15 @@ local function Command(input)
 			add(('class power: %d of %d pips, %s'):format(shown, #pips,
 				name and ('%s (spec %s)'):format(name, tostring(spec))
 					or ('no specialization yet (spec %s)'):format(tostring(spec))))
+		end
+
+		-- The rest indicator and a hunter's pet's mood: which art this client
+		-- gave the indicator and why, whether the mood can be told here, and
+		-- what the two say right now. Neither the flipbook nor the mood could
+		-- be settled from the UI source for every client, so this is where a
+		-- client answers for itself.
+		for _, line in ipairs(Umbra:IndicatorReport()) do
+			add(line)
 		end
 
 		--[[ Why a portrait column can come up empty

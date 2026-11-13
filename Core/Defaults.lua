@@ -122,6 +122,21 @@ Umbra.colors = {
 	absorb = {0.604, 0.702, 0.839, 0.65},
 	healAbsorb = {0.545, 0.220, 0.259, 0.75},
 
+	--[[ A hunter's pet's mood
+	Indexed by the client's own levels: 1 unhappy, 2 content, 3 happy. They
+	go on the pet frame's edge and on the portrait's ground behind the model,
+	in place of the reaction color, which on your own pet is always the same
+	green and says nothing. Muted rather than oUF's pure red, yellow and
+	green: they sit beside the theme's bronze and the green health bar, and
+	the yellow and the red are the ones that have to be told apart at a
+	glance. Chosen off a mockup on the real frame on 12 November 2026.
+	--]]
+	petMood = {
+		{0.804, 0.275, 0.204},
+		{0.871, 0.706, 0.188},
+		{0.353, 0.667, 0.275},
+	},
+
 	background = {0.078, 0.098, 0.145, 0.96},
 	border = {0.043, 0.055, 0.082},
 	text = {0.902, 0.914, 0.941},
@@ -196,6 +211,19 @@ Umbra.metrics = {
 	pipHeight = 4,
 	castbarHeight = 14,
 	valueWidth = 40,
+
+	-- The square the rest indicator's Z's rise in, in the top right corner
+	-- of the player's portrait column. Inside the column on purpose: above
+	-- the frame stand the buffs in one set and the pet in the other, and a
+	-- box that reaches past its frame is one every stack would have to make
+	-- room for, resting or not. The client's art carries its own margin
+	-- inside each cell, so the Z's draw smaller than the square.
+	restSize = 20,
+
+	-- How strongly a hunter's pet's mood colors the portrait's ground, where
+	-- the unit's color otherwise lies at 0.13. Strong enough to read as a
+	-- colored portrait around the model, which itself is never covered.
+	moodTintAlpha = 0.45,
 
 	-- A line thick enough to read as a color rather than as an edge, and an
 	-- icon measured rather than chosen: at 22 the duration label filled it
@@ -275,6 +303,9 @@ Umbra.frames = {
 		-- The level sits in a plate at the foot of the portrait, where it
 		-- costs the name nothing. Your own is context, so it stays muted.
 		level = true,
+		-- The Z's in an inn or a city, in the portrait's top right corner,
+		-- out of a fight. See *Resting, in the corner of the portrait*.
+		rest = true,
 		-- The pet frame hangs off this one, so it takes a place in the stack
 		-- on whichever side the set puts it.
 		owns = {pet = true},
@@ -310,6 +341,19 @@ Umbra.frames = {
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
+
+		-- Where `/uuf level` puts it, as on the player: a hunter's pet levels
+		-- on its own and can fall behind, so its level is worth a number.
+		-- Muted like the player's own; it is context, not a warning. Asked
+		-- for on 12 November 2026.
+		level = true,
+
+		-- A hunter's pet says how it is — happy, content or unhappy — in the
+		-- color of its edge and of the portrait's ground, and in words in
+		-- the frame's tooltip. Only for a hunter, on Forever, the
+		-- Anniversary realms and Classic Era; see *A hunter's pet says how
+		-- it is*.
+		happiness = true,
 	},
 
 	-- Who the target is looking at, which is one question — is it on the tank
@@ -359,8 +403,8 @@ Umbra.frames = {
 		powerValue = true,
 
 		-- Whether a friend can come along where you are going. Muted
-		-- like the player's own; the small frames that are only glanced
-		-- at carry none.
+		-- like the player's own and the pet's; the target's target, only
+		-- ever glanced at, carries none.
 		level = true,
 
 		nameHeight = 11,

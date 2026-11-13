@@ -69,9 +69,9 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 
 | Frame | What it carries |
 | :--- | :--- |
-| **Player** | Cast bar, class power row, power value, level, 16 buff and 8 debuff slots. The pet hangs off it and takes a place in its stack. |
+| **Player** | Cast bar, class power row, power value, level, 16 buff and 8 debuff slots. The pet hangs off it and takes a place in its stack. In an inn or a city the client's Z's rise in the portrait's top right corner, out of a fight. |
 | **Target** | Cast bar, power value, level, 8 buff and 16 debuff slots — the other way round, because what you have put on the target is the reason to look at it. The level reads in the client's difficulty color, with `+` for an elite and `??` for a unit too far above you, and the health bar turns gray when the kill would be worth nothing: tapped by somebody else, or too far below you. |
-| **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. |
+| **Pet** | The shared width, so it lines up, but shorter: no cast bar, no aura rows. Its level stands where the player's does. A hunter's pet shows whether it is happy, content or unhappy in the color of its edge and its portrait's ground — green, yellow, red — on WoW: Forever, the Anniversary realms and Classic Era, in place of the reaction color, which on your own pet never changes; pointing at the frame adds the game's own lines for it, the diet among them. |
 | **Target of target** | One question — is it on the tank or on me — and cut like the pet. |
 | **Boss** | As many as the client has (`MAX_BOSS_FRAMES`), identical to one another, each keeping its cast bar. No aura rows: five stacked frames with rows between them would be a wall. |
 | **Party** | A column on the client's own secure group header, so the client creates the children, assigns their units and re-sorts them — in combat as well as out of it. Cast bar, power value, level, one row of debuffs at 14 pixels, the role each member signed up as, and range fading. On WoW: Forever since its release; its beta could not build one — see [Supported clients](#supported-clients). |
@@ -136,8 +136,8 @@ Switching Blizzard's frames off in combat is a promise rather than a result — 
 
 | Command | What it answers |
 | :--- | :--- |
-| `/uuf dev test` | fills every aura slot with stand-ins, so a layout can be judged full — run it again to stop |
-| `/uuf dev check` | which unit values this client hides, which theme and aura duration format are in force, and how many models each portrait has loaded |
+| `/uuf dev test` | fills every aura slot with stand-ins, so a layout can be judged full, and shows the rest indicator — run it again to stop |
+| `/uuf dev check` | which unit values this client hides, which theme and aura duration format are in force, which art the rest indicator was given, whether a pet's mood can be told, and how many models each portrait has loaded |
 | `/uuf dev header` | whether a secure group header works on this client |
 | `/uuf dev party` | what the party column is made of, child by child |
 | `/uuf dev portrait` | four ways of asking what the portrait column has to draw, side by side |

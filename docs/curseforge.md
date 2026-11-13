@@ -42,9 +42,9 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 
 | Frame | What it carries |
 | :--- | :--- |
-| **Player** | Cast bar, class power (combo points, holy power, runes and the rest), power value, level, 16 buffs and 8 debuffs |
+| **Player** | Cast bar, class power (combo points, holy power, runes and the rest), power value, level, 16 buffs and 8 debuffs — and in an inn or a city the game's Z's in the portrait's corner |
 | **Target** | Cast bar, power value, level in the game's difficulty color, 8 buffs and 16 debuffs — the other way round, because what *you* put on the target is why you are looking at it |
-| **Pet** | Same width so it lines up, but short: no cast bar, no aura rows |
+| **Pet** | Same width so it lines up, but short: no cast bar, no aura rows. Its level stands where yours does, and a hunter's pet shows its mood in the color of its edge and portrait — green, yellow when it wants feeding, red when it is unhappy — on WoW: Forever, the Anniversary realms and Classic Era |
 | **Target of target** | One question — is it on the tank or on me — and cut the same way |
 | **Boss** | As many as the fight has, each keeping its cast bar |
 | **Party** | A column with cast bars, power values, levels, a row of debuffs, the role each member signed up as, and range fading — on WoW: Forever since its release; its beta could not build one |

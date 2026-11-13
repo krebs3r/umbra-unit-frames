@@ -37,14 +37,39 @@ secure `unit` attribute. Handing our frames to it threw
 
 So the unit is asked for through `Umbra:FrameUnit`, which knows where oUF
 actually keeps it.
+
+**A frame can add lines of its own** under the unit's, through
+`umbraTooltipLines` — the pet frame does, for a hunter's pet's mood. Such a
+frame also sets `UpdateTooltip` to `FillTooltip`: on Retail and Forever the
+client rebuilds a unit tooltip from its data now and then and drops lines
+added to it, unless the owner has an `UpdateTooltip`, which it then calls
+instead. That is how Blizzard's own unit frames keep theirs. Every other
+frame leaves it unset and is refreshed by the client as before.
 --]]
+local function FillTooltip(frame)
+	local unit = Umbra:FrameUnit(frame)
+
+	-- Normally a frame for a unit that is not there is hidden by
+	-- RegisterUnitWatch. Unlocking lets go of that watch on purpose, so
+	-- pointing at an empty frame is an expected state and says nothing.
+	if not unit or not UnitExists(unit) then return end
+
+	if GameTooltip:IsForbidden() then return end
+
+	GameTooltip:SetUnit(unit)
+
+	-- Shown again so that it grows to fit what was added.
+	local lines = frame.umbraTooltipLines
+
+	if lines and lines(GameTooltip, frame) then
+		GameTooltip:Show()
+	end
+end
+
 local function Tooltip(frame)
 	frame:SetScript('OnEnter', function(self)
 		local unit = Umbra:FrameUnit(self)
 
-		-- Normally a frame for a unit that is not there is hidden by
-		-- RegisterUnitWatch. Unlocking lets go of that watch on purpose, so
-		-- pointing at an empty frame is an expected state and says nothing.
 		if not unit or not UnitExists(unit) then return end
 
 		if GameTooltip:IsForbidden() then return end
@@ -56,7 +81,7 @@ local function Tooltip(frame)
 			GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
 		end
 
-		GameTooltip:SetUnit(unit)
+		FillTooltip(self)
 	end)
 
 	frame:SetScript('OnLeave', function()
@@ -689,6 +714,12 @@ local function UpdateIdentity(element, unit, _)
 		frame.PortraitTint:SetStatusBarColor(color:GetRGB())
 	end
 
+	-- A hunter's pet's mood over the two, where the pet frame asks for it.
+	-- See *A hunter's pet says how it is* further down.
+	if frame.umbraPaintMood then
+		frame.umbraPaintMood(frame, unit, color)
+	end
+
 	local ghost = element.HealingAll
 
 	-- Gray over either color, and only on the bar: who the unit is still
@@ -881,6 +912,541 @@ local function DisableRole(self)
 	self:UnregisterEvent('GROUP_ROSTER_UPDATE', UpdateRole)
 end
 
+--[[ Resting, in the corner of the portrait
+The Z's the client's own player frame shows in an inn or a city, in the top
+right corner of the portrait column and inside it. Blizzard's rise out of the
+portrait and past the frame's top edge; here the buffs stand there in one set
+and the pet in the other, so the square stays in the column.
+
+**The art is the client's own**, the way the role marker's is: the flipbook
+Retail and Forever animate in `Mainline/PlayerFrame.xml`, with the same
+numbers — 7 rows of 6, 42 frames, 1.5 seconds, looping. Blizzard builds it
+in XML; no Blizzard Lua creates a `FlipBook` animation on any client, so
+building one here is asked under `pcall` and checked for the methods it
+needs. Two things can fail, and either one leaves the still icon the Classic
+clients' own player frame shows, `UI-StateIcon`: the atlas may not be in a
+client's data (the UI source of Mists, Anniversary and Era never names it,
+and asked in the game on 13 November 2026 it is in none of the three), and
+the animation may not build. A
+flipbook atlas without its animation would show the whole sheet of 42
+frames at once, so the two go together or not at all.
+
+**Out of a fight**, which is Forever's order: its `PlayerFrame_UpdateStatus`
+asks about combat before it asks about resting, where Retail and the Classic
+clients ask the other way round. A rest area is no news in a fight. Two
+signals put Forever's frame there — auto-attack (`PLAYER_ENTER_COMBAT`) and
+the regen lock (`PLAYER_REGEN_DISABLED`) — and only the second is followed:
+swinging at something puts you on its hate list a moment later, and a flag
+kept by events alone goes stale on the one that is missed.
+
+The two regen events say what they mean by their name. Everything else asks
+`UnitAffectingCombat`, because whether the client already answers true
+inside `PLAYER_REGEN_DISABLED` is not something this file has measured.
+--]]
+local REST_ATLAS = 'UI-HUD-UnitFrame-Player-Rest-Flipbook'
+local REST_STILL = [[Interface\CharacterFrame\UI-StateIcon]]
+local REST_STILL_COORDS = {0, 0.5, 0, 0.421875}
+
+local REST_EVENTS = {
+	'PLAYER_UPDATE_RESTING',
+	'PLAYER_REGEN_DISABLED',
+	'PLAYER_REGEN_ENABLED',
+}
+
+--[[ RestLoop(rest, art)
+The flipbook, or nil and why not. Every call is one the client may refuse,
+and the methods are asked for before they are used: `CreateAnimation` with
+a type the client does not know may hand back something that is not a
+flipbook rather than throwing.
+--]]
+local function RestLoop(rest, art)
+	local ok, loop = pcall(function()
+		local group = rest:CreateAnimationGroup()
+		local flip = group:CreateAnimation('FlipBook')
+
+		if not flip or type(flip.SetFlipBookRows) ~= 'function' then
+			return nil
+		end
+
+		-- Blizzard's own is `childKey="RestTexture"`. SetTarget is
+		-- documented to answer whether it took on the Classic clients, so a
+		-- plain false falls back on the key, which names the same texture.
+		-- A loop aimed at anything else would leave the whole sheet showing.
+		if flip:SetTarget(art) == false then
+			flip:SetChildKey('Art')
+		end
+
+		if type(flip.GetTarget) == 'function' and flip:GetTarget() ~= art then
+			return nil
+		end
+
+		flip:SetFlipBookRows(7)
+		flip:SetFlipBookColumns(6)
+		flip:SetFlipBookFrames(42)
+		flip:SetFlipBookFrameWidth(0)
+		flip:SetFlipBookFrameHeight(0)
+		flip:SetDuration(1.5)
+		flip:SetSmoothing('NONE')
+		flip:SetOrder(1)
+
+		group:SetLooping('REPEAT')
+		group:SetToFinalAlpha(true)
+
+		return group
+	end)
+
+	-- The report window splits a line at its last ": ", and an error
+	-- message carries a file and a line number in exactly that form.
+	if not ok then return nil, 'the animation errors, ' .. (tostring(loop):gsub(': ', ' ')) end
+	if not loop then return nil, 'this client builds no flipbook animation for it' end
+
+	return loop
+end
+
+--[[ BuildRest(self, l, level)
+The square, its art and, where the client allows it, the loop. Hidden until
+the first update says there is a rest area to show.
+--]]
+local function BuildRest(self, l, level)
+	local rest = CreateFrame('Frame', nil, self)
+	rest:SetPoint('TOPRIGHT', self, 'TOPLEFT', l.classEdge + l.gap + l.portrait, 0)
+	rest:SetSize(l.restSize, l.restSize)
+	rest:SetFrameLevel(level)
+	rest:Hide()
+
+	local art = rest:CreateTexture(nil, 'ARTWORK')
+	art:SetAllPoints(rest)
+	rest.Art = art
+
+	local why
+
+	if not Umbra.AtlasKnown(REST_ATLAS) then
+		why = 'the flipbook atlas is not in this client'
+	elseif not pcall(art.SetAtlas, art, REST_ATLAS) then
+		why = 'the flipbook atlas errors'
+	else
+		rest.umbraLoop, why = RestLoop(rest, art)
+	end
+
+	if rest.umbraLoop then
+		rest.umbraArt = 'flipbook'
+	else
+		art:SetTexture(REST_STILL)
+		art:SetTexCoord(unpack(REST_STILL_COORDS))
+
+		rest.umbraArt = 'still'
+		rest.umbraWhy = why
+		Umbra:Debug('rest art: still icon,', why)
+	end
+
+	return rest
+end
+
+--[[ Readable(getter, ...)
+A yes or no from the client, or false when it throws or hides the answer.
+A hidden boolean cannot be tested, so it never reaches the `and`.
+--]]
+local function Readable(getter, ...)
+	if type(getter) ~= 'function' then return false end
+
+	local ok, value = pcall(getter, ...)
+
+	return ok and not Umbra.Secrets.Is(value) and value and true or false
+end
+
+local function UpdateRest(self, event)
+	local element = self.UmbraRest
+	if not element then return end
+
+	local fighting
+
+	if event == 'PLAYER_REGEN_DISABLED' then
+		fighting = true
+	elseif event == 'PLAYER_REGEN_ENABLED' then
+		fighting = false
+	else
+		fighting = Readable(UnitAffectingCombat, 'player')
+	end
+
+	local resting = Readable(IsResting)
+	local show = element.umbraPreview or (resting and not fighting)
+
+	element.umbraResting = resting
+	element.umbraFighting = fighting
+	element:SetShown(show and true or false)
+
+	local loop = element.umbraLoop
+
+	if loop then
+		if show then
+			if not loop:IsPlaying() then loop:Play() end
+		else
+			loop:Stop()
+		end
+	end
+end
+
+local function ForceRest(element)
+	return UpdateRest(element.__owner, 'ForceUpdate')
+end
+
+--[[ EnableRest(self) / DisableRest(self)
+All three events are about the player rather than a unit, and are
+registered unitless for it: oUF asserts on a non-unit event registered for
+a unit. oUF's own `RestingIndicator` is not used, because it knows one of
+the three and has nowhere to put the other two.
+--]]
+local function EnableRest(self)
+	local element = self.UmbraRest
+	if not element then return end
+
+	element.__owner = self
+	element.ForceUpdate = ForceRest
+
+	for _, event in ipairs(REST_EVENTS) do
+		self:RegisterEvent(event, UpdateRest, true)
+	end
+
+	return true
+end
+
+local function DisableRest(self)
+	local element = self.UmbraRest
+	if not element then return end
+
+	for _, event in ipairs(REST_EVENTS) do
+		self:UnregisterEvent(event, UpdateRest)
+	end
+
+	if element.umbraLoop then element.umbraLoop:Stop() end
+	element:Hide()
+end
+
+--[[ A hunter's pet says how it is
+Happy, content or unhappy, twice: in color, on the pet frame's edge and on
+the portrait's ground behind the model — green, yellow, red — and in words
+in the frame's tooltip, Blizzard's lines under the unit's own: how it is,
+the damage it does for it, whether its loyalty is rising or falling, and
+what it eats. Content is the time to feed it; unhappy, it loses loyalty and
+does less damage.
+
+**The color takes the place of the reaction color**, which on your own pet
+is always the same green and says nothing. The edge carries the mood at full
+strength and the ground at `moodTintAlpha`, where the unit's color otherwise
+lies at 0.13; the model itself is never covered, as on every portrait. A
+face like the client's was built twice first and seen in the game on 12
+November 2026 — at the end of the name row, and the client's own 24 by 23
+beside the frame — and neither looked right; the color was chosen off a
+mockup on the real frame the same night.
+
+**Three clients have it, in two ways.** Forever asks `C_PetInfo`, documented
+there and nowhere else; Anniversary and Classic Era ask the old globals
+`GetPetHappiness` and `GetPetFoodTypes`, undocumented — Blizzard's pet frame
+calls the first, its pet paper doll and stable the second. Retail has
+neither, and no `UNIT_HAPPINESS` either: registering it there is an error
+every login, so the event is asked for before anything is built.
+
+**Mists is left out by name.** It still has the global and the event and
+answers nothing, since a pet's mood went in Cataclysm; Blizzard's own Mists
+pet frame calls it anyway and hides its face on the nil. Leaving it out
+keeps the pet frame on Mists exactly as it was.
+
+**Kept in the tooltip while it is open.** On Retail and Forever the client
+rebuilds a unit tooltip from its data now and then and drops lines added to
+it, unless the owner has an `UpdateTooltip`, which it then calls instead —
+that is how Blizzard's own unit frames keep theirs. So the pet frame sets one
+to `FillTooltip`, which also means the lines follow the mood while the
+pointer rests on the frame. The words are the client's globals, so they read
+in the client's language without a translation here.
+--]]
+local PetInfo = _G.C_PetInfo
+local PetHappiness = PetInfo and PetInfo.GetPetHappiness or _G.GetPetHappiness
+local PetFoodTypes = PetInfo and PetInfo.GetPetFoodTypes or _G.GetPetFoodTypes
+
+local function PlayerClass()
+	local ok, _, class = pcall(UnitClass, 'player')
+
+	return ok and not Umbra.Secrets.Is(class) and class or nil
+end
+
+--[[ Umbra:PetMoodSupport()
+Whether a pet's mood can be told here, and if not, why not. Asked once per
+frame while it is built, and again by `/uuf dev check`.
+--]]
+function Umbra:PetMoodSupport()
+	if Umbra.isMists then
+		return false, 'a pet has had no mood since Cataclysm'
+	end
+
+	if type(PetHappiness) ~= 'function' then
+		return false, 'this client has no pet happiness'
+	end
+
+	if not (C_EventUtils and C_EventUtils.IsEventValid
+		and C_EventUtils.IsEventValid('UNIT_HAPPINESS')) then
+		return false, 'UNIT_HAPPINESS is not an event on this client'
+	end
+
+	if PlayerClass() ~= 'HUNTER' then
+		return false, 'only a hunter\'s pet has a mood'
+	end
+
+	return true
+end
+
+--[[ ReadMood()
+The pet's mood, the damage it does for it and which way its loyalty is going,
+or nothing. The level is checked before it is compared or joined into a
+name: a hidden value can be neither.
+--]]
+local function ReadMood()
+	if type(PetHappiness) ~= 'function' then return end
+
+	local ok, level, damage, loyalty = pcall(PetHappiness)
+
+	if not ok or Umbra.Secrets.Is(level) or type(level) ~= 'number'
+		or not (level == 1 or level == 2 or level == 3) then
+		return
+	end
+
+	if Umbra.Secrets.Is(damage) or type(damage) ~= 'number' then damage = nil end
+	if Umbra.Secrets.Is(loyalty) or type(loyalty) ~= 'number' then loyalty = nil end
+
+	return level, damage, loyalty
+end
+
+--[[ HunterPet()
+The second answer of `HasPetUI`, which is how Blizzard tells a hunter's pet
+from a warlock's demon or a mage's elemental.
+--]]
+local function HunterPet()
+	local HasPetUI = _G.HasPetUI
+	if type(HasPetUI) ~= 'function' then return false end
+
+	local ok, _, hunter = pcall(HasPetUI)
+
+	return ok and not Umbra.Secrets.Is(hunter) and hunter and true or false
+end
+
+--[[ PaintMood(frame, unit, unitColor)
+The mood over the colors `UpdateIdentity` has just put on: the edge in the
+mood's color, and the portrait's ground behind the model in it at
+`moodTintAlpha`. Without a mood to tell — no pet, a demon, a client that
+answers nothing, the pet frame standing for the player in a vehicle — the
+tint goes back to its own strength and the edge keeps the unit's color it
+was just given.
+
+**Unless there was no unit color to give.** With the pet gone the client has
+no reaction for it, `UpdateIdentity` paints nothing, and the last mood would
+stay on an empty frame — which unlocking shows. So a mood painted last time
+and nothing painted over it this time puts back the placeholder the two
+layers were built with, the one a theme switch puts back as well.
+
+Called from `UpdateIdentity` on every frame that sets `umbraPaintMood`, which
+is how a theme switch, `/uuf health` and the unit changing all reach it too.
+The colors are fixed numbers, never a unit's: nothing here is secret.
+--]]
+local PORTRAIT_TINT = 0.13
+
+local function PaintMood(frame, unit, unitColor)
+	local tint = frame.PortraitTint
+	local level
+
+	if unit == 'pet' and UnitExists('pet') and HunterPet() then
+		level = ReadMood()
+	end
+
+	local color = level and colors.petMood[level]
+
+	if color then
+		frame.ClassEdge:SetStatusBarColor(unpack(color))
+		tint:SetStatusBarColor(unpack(color))
+		tint:SetAlpha(Umbra.metrics.moodTintAlpha)
+	else
+		tint:SetAlpha(PORTRAIT_TINT)
+
+		if frame.umbraMoodPainted and not unitColor then
+			Umbra:Paint(frame.ClassEdge, colors.muted)
+			Umbra:Paint(tint, colors.muted)
+		end
+	end
+
+	frame.umbraMoodPainted = color and level or nil
+end
+
+--[[ Diet()
+What the pet eats, as a list of words. Forever hands back a table; the
+Classic clients hand back the words themselves, one return value each, which
+is why Blizzard wraps the call in `BuildListString(...)` there.
+--]]
+local function Diet()
+	if type(PetFoodTypes) ~= 'function' then return end
+
+	local answer = {pcall(PetFoodTypes)}
+
+	if not answer[1] then return end
+
+	local list = type(answer[2]) == 'table' and answer[2] or {select(2, unpack(answer))}
+	local foods = {}
+
+	for _, food in ipairs(list) do
+		if not Umbra.Secrets.Is(food) and type(food) == 'string' and food ~= '' then
+			foods[#foods + 1] = food
+		end
+	end
+
+	return foods
+end
+
+local function Formatted(template, ...)
+	if type(template) ~= 'string' then return end
+
+	local ok, text = pcall(string.format, template, ...)
+
+	return ok and text or nil
+end
+
+--[[ AddMood(tooltip, frame)
+Blizzard's lines for the pet's mood, under the unit's own, set apart by an
+empty line: the mood in white as the client titles it, then the damage, the
+loyalty and the diet in the normal color. Only while the frame stands for a
+hunter's pet — in a vehicle the pet frame shows the player, and a demon has
+no mood. Answers whether anything was added, so the caller knows the tooltip
+has to be shown again to fit it.
+--]]
+local function AddMood(tooltip, frame)
+	if Umbra:FrameUnit(frame) ~= 'pet' or not UnitExists('pet') or not HunterPet() then
+		return false
+	end
+
+	local level, damage, loyalty = ReadMood()
+	if not level then return false end
+
+	local title = _G['PET_HAPPINESS' .. level]
+	if type(title) ~= 'string' then return false end
+
+	local r, g, b = 1, 0.82, 0
+
+	if NORMAL_FONT_COLOR and NORMAL_FONT_COLOR.GetRGB then
+		r, g, b = NORMAL_FONT_COLOR:GetRGB()
+	end
+
+	tooltip:AddLine(' ')
+	tooltip:AddLine(title, 1, 1, 1)
+
+	local text = damage and Formatted(_G.PET_DAMAGE_PERCENTAGE, damage)
+	if text then tooltip:AddLine(text, r, g, b, true) end
+
+	if loyalty and loyalty < 0 and type(_G.LOSING_LOYALTY) == 'string' then
+		tooltip:AddLine(_G.LOSING_LOYALTY, r, g, b, true)
+	elseif loyalty and loyalty > 0 and type(_G.GAINING_LOYALTY) == 'string' then
+		tooltip:AddLine(_G.GAINING_LOYALTY, r, g, b, true)
+	end
+
+	local foods = Diet()
+
+	if foods then
+		local delimiter = _G.PET_FOOD_DELIMIT or _G.LIST_DELIMITER or ', '
+		local diet = #foods > 0 and table.concat(foods, delimiter) or _G.NONE
+
+		text = diet and Formatted(_G.PET_DIET_TEMPLATE, diet)
+		if text then tooltip:AddLine(text, r, g, b, true) end
+	end
+
+	return true
+end
+
+--[[ Umbra:PreviewIndicators(show)
+The rest indicator while the frames are unlocked or `/uuf dev test` is on,
+so what sits in the portrait's corner can be seen without an inn. Called next
+to `Umbra:PreviewHealth`, and undone the same way: the flag goes and one
+update puts back what the client says.
+--]]
+function Umbra:PreviewIndicators(show)
+	for _, frame in ipairs(oUF.objects) do
+		local element = frame.UmbraRest
+
+		if element then
+			element.umbraPreview = show or nil
+
+			if element.ForceUpdate then
+				element:ForceUpdate()
+			end
+		end
+	end
+end
+
+--[[ Umbra:IndicatorReport()
+The lines `/uuf dev check` prints for the rest indicator and the pet's mood:
+which art the indicator was given and why, whether the mood can be told
+here, and what the two say right now. Values carry no ": ", which is where
+the report window splits a line into label and value.
+--]]
+local function YesNo(value)
+	return value and 'yes' or 'no'
+end
+
+function Umbra:IndicatorReport()
+	local lines = {}
+	local player, pet
+
+	-- By the unit each frame was told to watch, which a vehicle does not
+	-- change; `__unit` would name the vehicle on the player frame. Only
+	-- frames of Umbra's style count: after `/uuf dev header` the probe's
+	-- first child sits later in oUF.objects and keeps watching `player`.
+	for _, frame in ipairs(oUF.objects) do
+		local watched = frame.umbraConfig and frame:GetAttribute('unit')
+
+		if watched == 'player' then player = frame end
+		if watched == 'pet' then pet = frame end
+	end
+
+	local rest = player and player.UmbraRest
+
+	if not rest then
+		lines[#lines + 1] = 'rest art: none — no indicator on the player frame'
+	elseif rest.umbraArt == 'flipbook' then
+		lines[#lines + 1] = 'rest art: available — the client\'s flipbook, 42 frames in 1.5 s'
+	else
+		lines[#lines + 1] = 'rest art: still — ' .. tostring(rest.umbraWhy)
+	end
+
+	if rest then
+		lines[#lines + 1] = ('rest now: resting %s, in combat %s, showing %s%s'):format(
+			YesNo(Readable(IsResting)), YesNo(Readable(UnitAffectingCombat, 'player')),
+			YesNo(rest:IsShown()), rest.umbraPreview and ' (preview)' or '')
+	end
+
+	local supported, why = self:PetMoodSupport()
+
+	if not supported then
+		lines[#lines + 1] = 'pet mood: none — ' .. why
+	elseif not (pet and pet.umbraTooltipLines) then
+		lines[#lines + 1] = 'pet mood: none — the pet frame\'s tooltip does not carry it'
+	else
+		lines[#lines + 1] = ('pet mood: available — %s, on the edge, the portrait and in the tooltip'):format(
+			PetInfo and PetInfo.GetPetHappiness and 'C_PetInfo.GetPetHappiness'
+				or 'GetPetHappiness')
+
+		local level, damage, loyalty = ReadMood()
+
+		if not UnitExists('pet') then
+			lines[#lines + 1] = 'pet mood now: no pet'
+		elseif not HunterPet() then
+			lines[#lines + 1] = 'pet mood now: not a hunter\'s pet'
+		elseif not level then
+			lines[#lines + 1] = 'pet mood now: the client answers nothing'
+		else
+			lines[#lines + 1] = ('pet mood now: %d of 3, %s%% damage, loyalty %s, %d foods, painted %s'):format(
+				level, tostring(damage), loyalty and (loyalty > 0 and 'rising'
+					or loyalty < 0 and 'falling' or 'steady') or 'unknown',
+				#(Diet() or {}), pet.umbraMoodPainted and 'yes' or 'no')
+		end
+	end
+
+	return lines
+end
+
 local function Style(self, unit)
 	--[[ Which config this frame is built from
 	Named exactly where one exists, which covers every single frame and the
@@ -1004,7 +1570,7 @@ local function Style(self, unit)
 	art is round, so the corners are transparent and show the tinted ground,
 	the way the space around a model does.
 	--]]
-	local tint = CreateColorLayer(self, 0.13)
+	local tint = CreateColorLayer(self, PORTRAIT_TINT)
 	tint:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap, 0)
 	tint:SetSize(l.portrait, height)
 	tint:SetFrameLevel(self:GetFrameLevel() + 1)
@@ -1041,6 +1607,14 @@ local function Style(self, unit)
 
 		plate:SetShown(UmbraUnitFramesDB.level == 'portrait')
 		self.UmbraLevelPlate = plate
+	end
+
+	-- The rest indicator, a level above the 2D stand-in like the plate. The
+	-- two share that level and no pixels: the square hangs from the top of
+	-- the column, the plate stands on its foot. See *Resting, in the corner
+	-- of the portrait* above.
+	if config.rest then
+		self.UmbraRest = BuildRest(self, l, flat:GetFrameLevel() + 1)
 	end
 
 	-- Every number on the right edge shares this inset, so they stack into one
@@ -1092,6 +1666,29 @@ local function Style(self, unit)
 		role:Hide()
 
 		self.UmbraRole = role
+	end
+
+	-- A hunter's pet's mood: in color on the edge and the portrait's ground
+	-- through `UpdateIdentity`, and in words in the frame's tooltip, kept
+	-- there while it is open. See *A hunter's pet says how it is* above, and
+	-- `Tooltip` at the top.
+	if config.happiness and Umbra:PetMoodSupport() then
+		self.umbraTooltipLines = AddMood
+		self.UpdateTooltip = FillTooltip
+		self.umbraPaintMood = PaintMood
+
+		-- The mood changes without the unit changing. Unitless, the way
+		-- Blizzard takes it: its code never reads which unit the event
+		-- names, and there is only one pet whose mood the client reports.
+		-- `PET_UI_UPDATE` is what the Classic pet frame refreshes on too.
+		local function Repaint(frame)
+			if frame.Health then
+				UpdateIdentity(frame.Health, Umbra:FrameUnit(frame))
+			end
+		end
+
+		self:RegisterEvent('UNIT_HAPPINESS', Repaint, true)
+		self:RegisterEvent('PET_UI_UPDATE', Repaint, true)
 	end
 
 	-- No color flag is set, so oUF leaves the color applied here alone and
@@ -1296,4 +1893,5 @@ local function Style(self, unit)
 end
 
 oUF:AddElement('UmbraRole', UpdateRole, EnableRole, DisableRole)
+oUF:AddElement('UmbraRest', UpdateRest, EnableRest, DisableRest)
 oUF:RegisterStyle('Umbra', Style)

@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.11 — unreleased
+
+The player frame shows when you are in a rest area, the way the game's own
+frame does, the pet frame shows its level, and a hunter's pet shows how it
+is in the color of its portrait and edge.
+
+- In an inn or a city the game's Z's rise in the top right corner of the
+  player's portrait, inside the frame, so the buffs above it and the pet in
+  the other set stay where they are. They go in a fight, as on Forever's own
+  frame, and come back after it
+- The Z's are the game's own animation on Retail and WoW: Forever. Mists,
+  the Anniversary realms and Classic Era do not have it, and show the still
+  icon their own frame shows; `/uuf dev check` says which and why
+- A hunter's pet frame shows the pet's mood in color: its edge and the
+  portrait's ground behind the model turn green while it is happy, yellow
+  while it is content — time to feed it — and red while it is unhappy. The
+  pet itself is not colored over. On WoW: Forever, the Anniversary realms
+  and Classic Era
+- Pointing at the frame adds the game's own lines under its tooltip: the
+  mood, the damage it does for it, whether its loyalty is rising or
+  falling, and what it eats, in the game's language
+- A warlock's demon and every pet on Retail and Mists look as they did, and
+  the health bar stays green. A face like the game's own was tried twice in
+  the game, at the end of the name row and beside the frame, and left out
+- The pet frame shows its level, wherever `/uuf level` and the options put
+  the player's: on the portrait, before the name, or not at all
+- Unlocking the frames and `/uuf dev test` show the Z's, so where they sit
+  can be seen without an inn
+- Seen in the game: the Z's on Retail, Forever, Mists and the Anniversary
+  realms, and a happy pet's mood painted on the frame on Forever. A hunter's
+  pet on the Anniversary realms and Classic Era is not yet confirmed
+
 ## 0.10 — 11 November 2026
 
 On WoW: Forever the options window and the first-login window wear the

@@ -70,17 +70,10 @@ asked for, and only a table counts; the UI source says which names are
 referenced, not what a client draws. Without the frame nothing else is used,
 and each of the other pieces falls back on its own. The rock is a file, which
 cannot be asked for; it goes with the frame, as in Blizzard's own template.
-Asked once: a client's atlases do not change while it runs.
+Asked once: a client's atlases do not change while it runs. The question
+itself is `Umbra.AtlasKnown`, in `Core/Init.lua`.
 --]]
-local function AtlasKnown(name)
-	if type(C_Texture) ~= 'table' or type(C_Texture.GetAtlasInfo) ~= 'function' then
-		return false
-	end
-
-	local ok, info = pcall(C_Texture.GetAtlasInfo, name)
-
-	return ok and type(info) == 'table'
-end
+local AtlasKnown = Umbra.AtlasKnown
 
 local function LayoutKnown(name)
 	if type(NineSliceUtil) ~= 'table' or type(NineSliceUtil.ApplyLayoutByName) ~= 'function'

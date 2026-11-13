@@ -276,6 +276,11 @@ function Umbra:SetPreview(show)
 
 	self:PreviewHealth(show)
 
+	-- The Z's of a rest area, which otherwise need an inn to be seen at all.
+	-- Not counted: they are not an aura slot, and the count says whether any
+	-- of those could be filled.
+	self:PreviewIndicators(show)
+
 	return count
 end
 
