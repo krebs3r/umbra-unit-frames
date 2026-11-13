@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11 — unreleased
+## 0.11 — 13 November 2026
 
 The player frame shows when you are in a rest area, the way the game's own
 frame does, the pet frame shows its level, and a hunter's pet shows how it
