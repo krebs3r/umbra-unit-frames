@@ -69,6 +69,10 @@ read_globals = {
 	-- through `_G`.
 	'IsResting', 'UnitAffectingCombat',
 
+	-- The raid marker a unit carries, which Retail and Forever document as
+	-- hidden. Asked under `pcall` and checked before anything tests it.
+	'GetRaidTargetIndex',
+
 	-- The group itself, and where the run is taking place. Both reports ask.
 	'IsInRaid', 'IsInGroup', 'GetNumGroupMembers', 'IsInInstance',
 	'MAX_PARTY_MEMBERS',

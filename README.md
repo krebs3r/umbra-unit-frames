@@ -79,9 +79,11 @@ Every frame shares the same anatomy — the portrait column, class color at the 
 
 The level stands in a plate across the foot of the portrait, so the name keeps its whole width; `/uuf level` moves it in front of the name or takes it away. On a scaled unit it is the level you fight it at — the Classic clients do not scale, and show the plain one.
 
+A raid marker — the skull, the cross and the six others the game's menu puts on a unit — stands in the portrait's top left corner, on every frame and inside it, in the game's own art: so the boss column shows the kill order, and the target's target which of the marked it is. On Retail and WoW: Forever the game documents the marker as a value it may hide, and where it does, the frame shows nothing rather than an error; `/uuf dev check` says what the game answered.
+
 There is deliberately **no focus frame**. One was built and taken out again, because a frame that never fills is a frame in the way. It costs a config entry and a point per layout set to put back.
 
-![The party column: four members, each with a role icon left of the name, a cast bar and a row of small debuffs, the fourth faded because it is out of range](assets/design/party-column.svg)
+![The party column: four members, each with a role icon left of the name, a cast bar and a row of small debuffs, the tank carrying a square raid marker in the portrait's corner, the fourth faded with its moon because it is out of range](assets/design/party-column.svg)
 
 ## Using it
 
@@ -89,11 +91,11 @@ Two **layout sets** decide where everything goes, and each set remembers its own
 
 **`modern`** — the default, and the arrangement Dragonflight introduced. Player and target meet in the lower third, buffs above them, the pet under the cast bar and the debuffs under the pet. The party column goes to the left edge, centered on it.
 
-![The modern set on a screen: player and target in the lower third with aura rows above and below, the party column centered on the left edge, the boss column on the right](assets/design/layout-modern.svg)
+![The modern set on a screen: player and target in the lower third with aura rows above and below, the party column centered on the left edge, the boss column on the right; the target and the first boss carry a skull, the second boss a cross](assets/design/layout-modern.svg)
 
 **`classic`** — where the player frame lived before Dragonflight. The pet is the topmost thing in the stack, so both aura rows hang below, and the party column hangs under the player's whole block rather than under the frame.
 
-![The classic set on a screen: player and target stacked into the top left with the pet above them and both aura rows below, the party column under the player's block, the boss column on the right](assets/design/layout-classic.svg)
+![The classic set on a screen: player and target stacked into the top left with the pet above them and both aura rows below, the party column under the player's block, the boss column on the right; the target and the first boss carry a skull, the second boss a cross](assets/design/layout-classic.svg)
 
 The boss column is the same in both: the right edge, centered, as many frames as the client has. It is not part of the arrangement you chose — it is something the fight brings.
 
@@ -136,8 +138,8 @@ Switching Blizzard's frames off in combat is a promise rather than a result — 
 
 | Command | What it answers |
 | :--- | :--- |
-| `/uuf dev test` | fills every aura slot with stand-ins, so a layout can be judged full, and shows the rest indicator — run it again to stop |
-| `/uuf dev check` | which unit values this client hides, which theme and aura duration format are in force, which art the rest indicator was given, whether a pet's mood can be told, and how many models each portrait has loaded |
+| `/uuf dev test` | fills every aura slot with stand-ins, so a layout can be judged full, and shows the rest indicator and a raid marker on every frame — run it again to stop |
+| `/uuf dev check` | which unit values this client hides, which theme and aura duration format are in force, which art the rest indicator was given, what the game answers for the target's raid marker, whether a pet's mood can be told, and how many models each portrait has loaded |
 | `/uuf dev header` | whether a secure group header works on this client |
 | `/uuf dev party` | what the party column is made of, child by child |
 | `/uuf dev portrait` | four ways of asking what the portrait column has to draw, side by side |

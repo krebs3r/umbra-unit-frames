@@ -142,7 +142,7 @@ measurement nobody can find is one that gets guessed at instead, which is the
 mistake this project keeps paying for.
 --]]
 local DEV = {
-	{'test', nil, 'fill every aura slot with stand-ins, and show the rest indicator'},
+	{'test', nil, 'fill every aura slot with stand-ins, and show the rest indicator and raid markers'},
 	{'check', nil, 'which unit values this client hides'},
 	{'header', nil, 'whether a secure group header works on this client'},
 	{'party', nil, 'what the party column is made of, child by child'},
@@ -603,11 +603,12 @@ local function Command(input)
 					or ('no specialization yet (spec %s)'):format(tostring(spec))))
 		end
 
-		-- The rest indicator and a hunter's pet's mood: which art this client
-		-- gave the indicator and why, whether the mood can be told here, and
-		-- what the two say right now. Neither the flipbook nor the mood could
-		-- be settled from the UI source for every client, so this is where a
-		-- client answers for itself.
+		-- The rest indicator, the target's raid marker and a hunter's pet's
+		-- mood: which art this client gave the indicator and why, what it
+		-- answers for the marker, whether the mood can be told here, and what
+		-- each says right now. None of the three could be settled from the UI
+		-- source for every client, so this is where a client answers for
+		-- itself.
 		for _, line in ipairs(Umbra:IndicatorReport()) do
 			add(line)
 		end

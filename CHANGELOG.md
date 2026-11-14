@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.12 — unreleased
+
+Every frame shows the raid marker the game's menu puts on a unit — the
+skull, the cross and the six others.
+
+- In the top left corner of the portrait, a little in from its edges and
+  inside the frame, so the target's target above the target and the buffs
+  above the frames stay where they are. 16 units on the player and the
+  target, clear of the rest Z's in the other corner, and 14 on the pet, the
+  target's target, the party and the boss column
+- The game's own art, on all five clients. The boss column shows the kill
+  order the group leader marked, and a party member out of range fades with
+  their marker
+- Retail and WoW: Forever document the marker as a value the game may hide.
+  Where it does, the marker is handed to the game untested, and if the game
+  refuses it the frame shows nothing rather than an error. Not yet seen in
+  a fight there; `/uuf dev check` prints what the game answered for the
+  target
+- Unlocking the frames and `/uuf dev test` put a marker on every frame, so
+  where it sits can be seen without a group
+- Seen in the game on WoW: Forever: a skull on a real target, and the
+  preview on every frame. The first build sat on the frame's top line and
+  was moved in; the one released was checked by eye, not yet measured. Not
+  yet seen on Retail, Mists, the Anniversary realms or Classic Era
+
 ## 0.11 — 13 November 2026
 
 The player frame shows when you are in a rest area, the way the game's own

@@ -1122,6 +1122,145 @@ local function DisableRest(self)
 	element:Hide()
 end
 
+--[[ A raid marker, in the portrait's other corner
+The skull, the cross and the six others that the game's menu puts on a unit,
+in the top left corner of the portrait column, a `gap` in from its edges, on
+every frame:
+a unit of any kind can be marked, and the boss column then shows the kill
+order without anyone looking above the heads. Asked for on 14 November 2026,
+with a screenshot of the menu setting a skull that Umbra's target frame did
+not show.
+
+**Where Blizzard's stands is where something else stands here.** The client's
+own target frame centers its 26-pixel icon on the portrait's top edge, half
+above the frame, and above the frame stand the target's target in both sets
+and the buffs in `modern`. So the marker takes the column's corner the rest
+square leaves free, for the reason that square is inside the column: a box
+reaching past its frame is one every stack would have to make room for,
+marked or not. The name keeps its whole width; in front of the name the
+marker would have moved it whenever one came or went, which is what the
+party column's role space exists to prevent.
+
+**A gap in, because the art has no margin of its own.** Measured on Forever
+on 15 November 2026 off a lossless screenshot at 1.3125 pixels per unit: put
+flush in the corner, the skull's lit pixels began 0.8 units from the column's
+left edge and 0.8 below the frame's top, so it sat on the Forever rim's top
+line. The rest Z's beside it start 2 units into their square and 3 below its
+top. So the square stands a `gap` in from the top and the left, and is 16
+rather than 18, which keeps the player's column exact: 2 + 16 + 20 = 38, the
+marker's art ending two units short of where the Z's begin.
+
+**The art is the client's own**, the 4 by 4 sheet every client keeps at
+`Interface\TargetingFrame\UI-RaidTargetingIcons`, cut with
+`SetSpriteSheetCell`, which all five clients document.
+
+**Retail and Forever document the index as hidden.** `GetRaidTargetIndex`
+carries `SecretReturns = true` on 12.1.5 and on Forever 1.60.1, and plain
+returns on Mists, the Anniversary realms and Classic Era. So oUF's own
+update is not used as it comes: it tests `if(index)` on that value, the shape
+issue #1 threw on, and calls Blizzard's global `SetRaidTargetIconTexture`,
+which on the Classic clients does arithmetic with it. The element stays oUF's
+— its event and its update on every change of unit — and its `Override` is
+`UpdateMarker` below, which asks whether the index is hidden before it tests
+anything, and hands a hidden one untested to `SetSpriteSheetCell`, documented
+to take a hidden cell from addon code. If the texture refuses it after all,
+the marker is not shown, and `/uuf dev check` says what the client answered.
+--]]
+local MARKER_ART = [[Interface\TargetingFrame\UI-RaidTargetingIcons]]
+local MARKER_CELLS = 4
+
+-- The client's own order, which is what `GetRaidTargetIndex` answers with.
+local MARKER_NAMES = {'star', 'circle', 'diamond', 'triangle', 'moon',
+	'square', 'cross', 'skull'}
+
+--[[ ReadMarker(unit)
+What the client says about a unit's marker, as a state and the index:
+`readable` with a number, `hidden` with a value that must not be tested,
+`none`, `refused` with the error, `no unit`, or `missing` on a client without
+the function. A hidden value is asked about before anything tests it.
+--]]
+local function ReadMarker(unit)
+	if type(_G.GetRaidTargetIndex) ~= 'function' then return 'missing' end
+	if not unit then return 'no unit' end
+
+	local ok, index = pcall(GetRaidTargetIndex, unit)
+
+	if not ok then return 'refused', tostring(index) end
+	if Umbra.Secrets.Is(index) then return 'hidden', index end
+	if index then return 'readable', index end
+
+	return 'none'
+end
+
+--[[ UpdateMarker(self)
+The `Override` of oUF's RaidTargetIndicator, and what the preview calls. The
+cell is cut before the marker shows, so a texture that refuses the index
+leaves it hidden rather than showing the whole sheet.
+--]]
+local function UpdateMarker(self)
+	local element = self.RaidTargetIndicator
+	if not element then return end
+
+	local state, index
+
+	if element.umbraPreview then
+		state, index = 'preview', element.umbraPreview
+	else
+		state, index = ReadMarker(Umbra:FrameUnit(self))
+	end
+
+	local shown = (state == 'readable' or state == 'hidden' or state == 'preview')
+		and pcall(element.SetSpriteSheetCell, element, index, MARKER_CELLS, MARKER_CELLS)
+
+	element.umbraState = state
+	element:SetShown(shown and true or false)
+end
+
+--[[ BuildMarker(self, l, level)
+The square and its texture, hidden until the first update finds a marker.
+On a frame of its own at the given level, the way the rest square is, so
+the 2D stand-in cannot cover it; the texture is what oUF is handed. A gap in
+from the column's top and left edges, for the art's want of a margin.
+--]]
+local function BuildMarker(self, l, level)
+	local square = CreateFrame('Frame', nil, self)
+	square:SetPoint('TOPLEFT', self, 'TOPLEFT', l.classEdge + l.gap + l.gap, -l.gap)
+	square:SetSize(l.raidTargetSize, l.raidTargetSize)
+	square:SetFrameLevel(level)
+
+	local marker = square:CreateTexture(nil, 'ARTWORK')
+	marker:SetAllPoints(square)
+	marker:SetTexture(MARKER_ART)
+	marker:Hide()
+
+	marker.Override = UpdateMarker
+
+	return marker
+end
+
+--[[ PreviewMarker(frame)
+Which marker a frame shows while the frames are unlocked: the skull on the
+target, the square on its target, the kill order down the boss column, and
+the party one marker each. By the unit the frame was told to watch, which a
+vehicle does not change.
+--]]
+local PREVIEW_MARKERS = {player = 2, pet = 4, target = 8, targettarget = 6}
+
+local function PreviewMarker(frame)
+	local unit = frame:GetAttribute('unit')
+
+	if type(unit) ~= 'string' then return 1 end
+	if PREVIEW_MARKERS[unit] then return PREVIEW_MARKERS[unit] end
+
+	local slot = tonumber(unit:match('(%d+)$')) or 1
+
+	if unit:match('^boss') then
+		return math.max(1, #MARKER_NAMES + 1 - slot)
+	end
+
+	return (slot - 1) % #MARKER_NAMES + 1
+end
+
 --[[ A hunter's pet says how it is
 Happy, content or unhappy, twice: in color, on the pet frame's edge and on
 the portrait's ground behind the model — green, yellow, red — and in words
@@ -1357,10 +1496,12 @@ local function AddMood(tooltip, frame)
 end
 
 --[[ Umbra:PreviewIndicators(show)
-The rest indicator while the frames are unlocked or `/uuf dev test` is on,
-so what sits in the portrait's corner can be seen without an inn. Called next
-to `Umbra:PreviewHealth`, and undone the same way: the flag goes and one
-update puts back what the client says.
+The rest indicator and a raid marker on every frame while the frames are
+unlocked or `/uuf dev test` is on, so what sits in the portrait's corners can
+be seen without an inn or a group. Called next to `Umbra:PreviewHealth`, and
+undone the same way: the flag goes and one update puts back what the client
+says. The marker is updated directly rather than through oUF's
+`ForceUpdate`, which does nothing for a frame without a unit.
 --]]
 function Umbra:PreviewIndicators(show)
 	for _, frame in ipairs(oUF.objects) do
@@ -1373,14 +1514,22 @@ function Umbra:PreviewIndicators(show)
 				element:ForceUpdate()
 			end
 		end
+
+		local marker = frame.RaidTargetIndicator
+
+		if marker and marker.Override == UpdateMarker then
+			marker.umbraPreview = show and PreviewMarker(frame) or nil
+			UpdateMarker(frame)
+		end
 	end
 end
 
 --[[ Umbra:IndicatorReport()
-The lines `/uuf dev check` prints for the rest indicator and the pet's mood:
-which art the indicator was given and why, whether the mood can be told
-here, and what the two say right now. Values carry no ": ", which is where
-the report window splits a line into label and value.
+The lines `/uuf dev check` prints for the rest indicator, the target's raid
+marker and the pet's mood: which art the indicator was given and why, what
+the client answers for the marker, whether the mood can be told here, and
+what each says right now. Values carry no ": ", which is where the report
+window splits a line into label and value.
 --]]
 local function YesNo(value)
 	return value and 'yes' or 'no'
@@ -1388,7 +1537,7 @@ end
 
 function Umbra:IndicatorReport()
 	local lines = {}
-	local player, pet
+	local player, pet, target
 
 	-- By the unit each frame was told to watch, which a vehicle does not
 	-- change; `__unit` would name the vehicle on the player frame. Only
@@ -1399,6 +1548,7 @@ function Umbra:IndicatorReport()
 
 		if watched == 'player' then player = frame end
 		if watched == 'pet' then pet = frame end
+		if watched == 'target' then target = frame end
 	end
 
 	local rest = player and player.UmbraRest
@@ -1415,6 +1565,38 @@ function Umbra:IndicatorReport()
 		lines[#lines + 1] = ('rest now: resting %s, in combat %s, showing %s%s'):format(
 			YesNo(Readable(IsResting)), YesNo(Readable(UnitAffectingCombat, 'player')),
 			YesNo(rest:IsShown()), rest.umbraPreview and ' (preview)' or '')
+	end
+
+	-- The target's marker, asked afresh rather than read off the frame:
+	-- whether the client answers in the clear, hidden or not at all is the
+	-- thing Retail and Forever document and nobody has measured yet.
+	local marker = target and target.RaidTargetIndicator
+
+	if not marker then
+		lines[#lines + 1] = 'raid marker: none — no marker on the target frame'
+	elseif type(marker.SetSpriteSheetCell) ~= 'function' then
+		lines[#lines + 1] = 'raid marker: none — this client cannot cut the sheet (no SetSpriteSheetCell)'
+	else
+		lines[#lines + 1] = ('raid marker: available — the client\'s sheet, %d units in the portrait\'s top left'):format(
+			target.umbraConfig.raidTargetSize)
+
+		local state, value = ReadMarker('target')
+		local now
+
+		if state == 'readable' then
+			now = ('readable, %s (%s)'):format(tostring(value), MARKER_NAMES[value] or 'unknown')
+		elseif state == 'hidden' then
+			now = 'hidden, handed to the texture untested'
+		elseif state == 'refused' then
+			now = 'the client errors, ' .. (value:gsub(': ', ' '))
+		elseif state == 'missing' then
+			now = 'this client has no GetRaidTargetIndex'
+		else
+			now = UnitExists('target') and 'no marker on the target' or 'no target'
+		end
+
+		lines[#lines + 1] = ('raid marker now: %s, showing %s%s'):format(now,
+			YesNo(marker:IsShown()), marker.umbraPreview and ' (preview)' or '')
 	end
 
 	local supported, why = self:PetMoodSupport()
@@ -1616,6 +1798,12 @@ local function Style(self, unit)
 	if config.rest then
 		self.UmbraRest = BuildRest(self, l, flat:GetFrameLevel() + 1)
 	end
+
+	-- The raid marker in the other top corner, on every frame and at the
+	-- same level: the rest square hangs from the column's top right, this
+	-- one a gap in from its top left, and on the player the two and the gap
+	-- fill the width. See *A raid marker, in the portrait's other corner*.
+	self.RaidTargetIndicator = BuildMarker(self, l, flat:GetFrameLevel() + 1)
 
 	-- Every number on the right edge shares this inset, so they stack into one
 	-- column. The health percentage needs it because it sits inside its own

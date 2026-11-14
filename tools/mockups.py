@@ -41,6 +41,7 @@ M = {
     'auraPerRow': 8,
     'auraFontSize': 11,
     'fontSize': 12,
+    'raidTargetSize': 16,
     'classBarAlpha': 0.6,
     'rangeAlpha': 0.45,
     'barShade': 0.28,
@@ -139,7 +140,8 @@ HOSTILE = (199, 64, 64)
 
 # --- Core/Defaults.lua, Umbra.frames --------------------------------------
 
-SMALL = {'nameHeight': 11, 'healthHeight': 14, 'portrait': 28, 'fontSize': 11}
+SMALL = {'nameHeight': 11, 'healthHeight': 14, 'portrait': 28, 'fontSize': 11,
+         'raidTargetSize': 14}
 
 FRAMES = {
     'player': {'castbar': True, 'classPower': True, 'powerValue': True,
@@ -462,15 +464,73 @@ def bar(sheet, x, y, w, h, color, fill=1.0, alpha=None, shade=True):
         sheet.rect(x, y, w, h, 'url(#shade)')
 
 
+def draw_marker(sheet, x, y, size, index):
+    """A stand-in for one cell of the client's UI-RaidTargetingIcons, in the
+    current group's units: 1 star, 2 circle, 3 diamond, 4 triangle, 5 moon,
+    6 square, 7 cross, 8 skull. The art is the client's and not ours to draw,
+    so these are shapes in its colors. Its cells keep almost no margin —
+    measured, the skull's lit pixels begin 0.8 units in — and neither do these.
+    """
+    m = size * 0.05
+    a, b, w = x + m, y + m, size - 2 * m
+    cx, cy = x + size / 2, y + size / 2
+    edge = 'stroke="rgb(20,20,24)" stroke-width="%.2f"' % (size * 0.035)
+    if index == 1:
+        pts = []
+        for k in range(10):
+            r = w / 2 if k % 2 == 0 else w * 0.21
+            ang = -math.pi / 2 + k * math.pi / 5
+            pts.append('%.2f,%.2f' % (cx + r * math.cos(ang),
+                                      cy + size * 0.04 + r * math.sin(ang)))
+        sheet.add('<polygon points="%s" fill="rgb(250,214,52)" %s/>'
+                  % (' '.join(pts), edge))
+    elif index == 2:
+        sheet.add('<circle cx="%.2f" cy="%.2f" r="%.2f" fill="rgb(238,128,24)" %s/>'
+                  % (cx, cy, w / 2.1, edge))
+    elif index == 3:
+        sheet.add('<polygon points="%.2f,%.2f %.2f,%.2f %.2f,%.2f %.2f,%.2f" '
+                  'fill="rgb(196,72,226)" %s/>'
+                  % (cx, b, a + w * 0.82, cy, cx, b + w, a + w * 0.18, cy, edge))
+    elif index == 4:
+        sheet.add('<polygon points="%.2f,%.2f %.2f,%.2f %.2f,%.2f" '
+                  'fill="rgb(84,204,64)" %s/>'
+                  % (a, b + w * 0.12, a + w, b + w * 0.12, cx, b + w * 0.95, edge))
+    elif index == 5:
+        r = w / 2
+        sheet.add('<path d="M %.2f %.2f A %.2f %.2f 0 1 0 %.2f %.2f '
+                  'A %.2f %.2f 0 1 1 %.2f %.2f Z" fill="rgb(206,224,240)" %s/>'
+                  % (cx + r * 0.35, cy - r * 0.94, r, r, cx + r * 0.35,
+                     cy + r * 0.94, r * 0.78, r * 0.78, cx + r * 0.35,
+                     cy - r * 0.94, edge))
+    elif index == 6:
+        sheet.rect(a + w * 0.08, b + w * 0.08, w * 0.84, w * 0.84,
+                   'rgb(40,126,236)', edge)
+    elif index == 7:
+        t = w * 0.24
+        for rot in (45, -45):
+            sheet.add('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+                      'fill="rgb(226,44,40)" %s transform="rotate(%d %.2f %.2f)"/>'
+                      % (cx - t / 2, b, t, w, edge, rot, cx, cy))
+    elif index == 8:
+        bone = 'rgb(236,236,230)'
+        sheet.add('<circle cx="%.2f" cy="%.2f" r="%.2f" fill="%s" %s/>'
+                  % (cx, b + w * 0.42, w * 0.42, bone, edge))
+        sheet.rect(cx - w * 0.24, b + w * 0.62, w * 0.48, w * 0.34, bone, edge)
+        for dx in (-1, 1):
+            sheet.add('<circle cx="%.2f" cy="%.2f" r="%.2f" fill="rgb(30,30,34)"/>'
+                      % (cx + dx * w * 0.17, b + w * 0.45, w * 0.12))
+
+
 def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
                pips=None, health_value=None, health_percent=None,
                power_value=None, role=None, cast=None, class_health=False,
                heal=0.0, absorb=0.0, heal_absorb=0.0, alpha=1.0, portrait=True,
-               level=None, level_at='portrait', level_color=None):
+               level=None, level_at='portrait', level_color=None, marker=None):
     """One frame at scale `s`, laid out exactly as Layouts/Shared.lua lays it.
 
     `level` is the text the level tag would print, and `level_at` where
-    `/uuf level` puts it: `portrait`, `name`, or None for off.
+    `/uuf level` puts it: `portrait`, `name`, or None for off. `marker` is
+    the raid marker's index, 1 to 8, as `GetRaidTargetIndex` answers it.
 
     Returns the frame's height in frame units, so callers can stack.
     """
@@ -561,6 +621,12 @@ def draw_frame(sheet, x, y, unit, s, *, color, name, health=0.72, power=0.55,
         sheet.rect(px, h - plate, c['portrait'], plate, rgb(C['border'], 0.5))
         sheet.text(px + c['portrait'] / 2, h - 4, level, size=c['fontSize'],
                    fill=level_fill, anchor='middle')
+
+    # The raid marker, a gap in from the column's top left corner and a level
+    # above the stand-in, the plate's level: the plate stands on the foot,
+    # this hangs from the top.
+    if marker and portrait:
+        draw_marker(sheet, px + c['gap'], c['gap'], c['raidTargetSize'], marker)
 
     # health, and the three surfaces on it
     fill_color = color if class_health else C['health']
@@ -858,7 +924,7 @@ def sheet_layout(out, which):
     tx, ty, _ = place('target', color=HOSTILE, name='Ancient Protector',
                       health=0.44, power=0.9, health_value='2.1M',
                       health_percent='44%', power_value='90%',
-                      heal=0.09, absorb=0.07,
+                      heal=0.09, absorb=0.07, marker=8,
                       cast=('Crush', '2.8', 0.35))
     place('pet', color=CLASS['MAGE'], name='Water Elemental', health=1.0,
           power=0.8)
@@ -912,7 +978,8 @@ def sheet_layout(out, which):
         draw_frame(sheet, ox + rx * s, oy + ry * s, 'boss', s, color=HOSTILE,
                    name='Encounter %d' % (i + 1), health=0.9 - i * 0.14,
                    power=0.5, health_percent='%d%%' % round((0.9 - i * 0.14) * 100),
-                   cast=('Shadow Bolt', '1.9', 0.4) if i == 0 else None)
+                   cast=('Shadow Bolt', '1.9', 0.4) if i == 0 else None,
+                   marker=(8, 7)[i] if i < 2 else None)
 
     # a legend for the two columns that are conditional
     ly = oy + SCREEN_H * s + 38
@@ -951,16 +1018,16 @@ def sheet_party(out):
             'decides is what one member looks like and how much room it '
             'takes.', width=860)
 
-    members = [('Thornhide', CLASS['DRUID'], 'TANK', 0.86, 1.0, 2),
-               ('Lightwell', CLASS['PRIEST'], 'HEALER', 0.97, 1.0, 1),
-               ('Stormfang', CLASS['SHAMAN'], 'DAMAGER', 0.64, 1.0, 4),
+    members = [('Thornhide', CLASS['DRUID'], 'TANK', 0.86, 1.0, 2, 6),
+               ('Lightwell', CLASS['PRIEST'], 'HEALER', 0.97, 1.0, 1, None),
+               ('Stormfang', CLASS['SHAMAN'], 'DAMAGER', 0.64, 1.0, 4, None),
                ('Ashvault', CLASS['WARLOCK'], 'DAMAGER', 0.41,
-                M['rangeAlpha'], 3)]
+                M['rangeAlpha'], 3, 5)]
 
-    for i, (nm, col, role, hp, alpha, debuffs) in enumerate(members):
+    for i, (nm, col, role, hp, alpha, debuffs, mark) in enumerate(members):
         my = fy + i * (slot + party['groupSpacing']) * s
         draw_frame(sheet, fx, my, 'party', s, color=col, name=nm, health=hp,
-                   power=0.7, role=role, alpha=alpha,
+                   power=0.7, role=role, alpha=alpha, marker=mark,
                    health_percent='%d%%' % round(hp * 100),
                    power_value='70%',
                    cast=('Regrowth', '1.1', 0.5) if i == 1 else None)
@@ -987,8 +1054,8 @@ def sheet_party(out):
          % (frame_height(party), castbar_reach(party),
             aura_block_height(party, 8) + party['gap'])),
         ('Out of range fades',
-         'Alpha %.2f, the portrait with it. Class color and identity stay '
-         'intact rather than going gray.' % M['rangeAlpha']),
+         'Alpha %.2f, the portrait and a raid marker with it. Class color '
+         'and identity stay intact rather than going gray.' % M['rangeAlpha']),
     ]
     for i, (title, body) in enumerate(notes):
         y = 200 + i * 128

@@ -50,6 +50,8 @@ Player, target, pet, boss, party — every frame is built from the same parts, t
 | **Party** | A column with cast bars, power values, levels, a row of debuffs, the role each member signed up as, and range fading — on WoW: Forever since its release; its beta could not build one |
 | **Raid** | Not yet, and not next — Blizzard's own do the job, class coloring included, and the group header carries them whenever they are wanted |
 
+Every frame shows a **raid marker** — skull, cross and the rest — in the top left corner of its portrait, in the game's own art, so the boss column reads as a kill order.
+
 There is deliberately **no focus frame**. One was built and taken back out: a frame that is empty most of the time is a frame in the way.
 
 **The level** sits on a small plate across the foot of the portrait, so the name keeps its whole width — or in front of the name, or nowhere, as you prefer. On the target it takes the game's difficulty color, gray to red; an elite carries a `+`, and something too far above you to tell reads `??`. And when a kill would be worth nothing — somebody else tagged it first, or it is too far below you to give experience — the target's health bar turns gray, while the edge and the name keep their color.

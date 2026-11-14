@@ -102,8 +102,8 @@ they have forgotten a command should be about the frames.
 
 | | |
 | :--- | :--- |
-| `dev test` | fill every aura slot with stand-ins, and the health bar's prediction; show the rest indicator |
-| `dev check` | opens a report window: which unit values this client hides, the theme in force, the aura duration format, what the class-power row found, which art the rest indicator was given, whether a pet's mood can be told, and what the two say now, and per frame whether the unit's identity is secret, what its portrait could load and how many models it has loaded since the last reload |
+| `dev test` | fill every aura slot with stand-ins, and the health bar's prediction; show the rest indicator and a raid marker on every frame |
+| `dev check` | opens a report window: which unit values this client hides, the theme in force, the aura duration format, what the class-power row found, which art the rest indicator was given, what the client answers for the target's raid marker, whether a pet's mood can be told, and what each says now, and per frame whether the unit's identity is secret, what its portrait could load and how many models it has loaded since the last reload |
 | `dev header` | whether a secure group header works on this client, layer by layer |
 | `dev party` | what the party column is made of, child by child, with each top edge in screen coordinates |
 | `dev portrait` | a box with four attempts at the portrait per unit, for when the column is empty and every value says it should not be |
@@ -1335,6 +1335,76 @@ oUF's own `RestingIndicator` was not used: it knows `PLAYER_UPDATE_RESTING`
 and nothing else, and an override skips its callbacks. `UmbraRest` is a
 custom element like `UmbraRole`, with all three events registered unitless
 — oUF asserts on a non-unit event registered for a unit.
+
+### A raid marker, in the portrait's other corner
+
+The game's menu puts a skull, a cross or one of six other markers on a unit,
+and the client shows it over the unit's head and in its own target frame.
+Umbra showed it nowhere. Asked for on 14 November 2026, with a screenshot of
+the menu setting a skull on a target whose Umbra frame stayed blank.
+
+**Inside the portrait column, in its top left corner**, on every frame, in a
+square of `raidTargetSize` a `gap` in from the column's top and left edges:
+16 on the player and the target, 14 on the small frames. Three places were drawn against each other first. Blizzard's own
+target frame centers a 26-pixel icon on the portrait's top edge, half above
+the frame — and in both sets the target's target hangs two units above the
+target, so the upper half would have covered its portrait, and every stack
+would have had to make room for a box that is usually empty. That is the
+argument that put the rest Z's inside the column, and it holds here too. In
+front of the name, the way the party's role sits, the icon would have been
+13 or 11 units, smaller than anything the game shows for it, and the name
+would have moved sideways whenever a marker came or went — which is exactly
+what the role's reserved space exists to prevent. The column's corner costs
+the name nothing.
+
+**A gap in from the corner, measured.** The first build put an 18-unit
+square flush in the corner, 16 on the small frames. Seen on Forever on 15
+November 2026, off two lossless screenshots at 1.3125 pixels per unit — a
+real skull on a target, and the preview on every frame — it looked right
+and sat too close to the edge: the skull's lit pixels began 0.8 units from
+the column's left edge and 0.8 below the frame's top, on the Forever rim's
+top line. The client's marker art fills its cell to within a unit. The rest
+Z's do not: beside it on the player they begin 2 units into their square
+and 3 below its top. So the square moved a `gap` in from the top and the
+left, and came down to 16, which keeps the player's column exact — 2 + 16 +
+20 = 38, the marker's art ending two units short of where the Z's begin. On
+the small frames 14, two units in, leaves two units above the level plate's
+15.
+
+**The art is the client's own**, `Interface\TargetingFrame\UI-RaidTargetingIcons`,
+a 4 by 4 sheet whose first eight cells are the markers in the order
+`GetRaidTargetIndex` answers with. It is cut with `SetSpriteSheetCell`, which
+the generated API documentation lists on all five clients, so no client is
+told apart: Blizzard's global `SetRaidTargetIconTexture` is that same call
+on Retail and Forever and texture-coordinate arithmetic on the Classic
+clients.
+
+**Retail and Forever document the index as hidden.** In
+`RaidMarkersDocumentation.lua`, `GetRaidTargetIndex` carries `SecretReturns =
+true` on 12.1.5 (70783) and on Forever 1.60.1 (70938); on Mists 5.5.4, the
+Anniversary realms 2.5.6 and Classic Era 1.15.9 it carries nothing.
+`SetSpriteSheetCell` on the first two takes its cell with `SecretArguments =
+"AllowedWhenTainted"` and the cell `ConditionalSecret`: a hidden index may
+be handed to it from addon code. Unlike `UnitGroupRolesAssigned`, which is
+secret only when the unit's identity is restricted, the marker carries no
+condition, so the documentation does not say when it hides it.
+
+So oUF's element is used for its plumbing and not for its update. It tests
+`if(index)` on the answer — a truth test on a hidden value is what issue #1
+threw on, and whether that throws for a hidden *number* as it did for a
+hidden boolean is written nowhere — and calls the global above. Its
+`Override` is `UpdateMarker`, which asks `Secrets.Is` before it tests
+anything, hands a hidden index untested to `SetSpriteSheetCell` under
+`pcall`, and shows the square only once the cell is cut: a texture that
+refuses the index stays hidden rather than showing the whole sheet. oUF
+still registers `RAID_TARGET_UPDATE`, unitless, and updates the element on
+every change of unit, the target's target's polling included.
+
+**What the documentation cannot say is what a fight looks like.** Whether
+the client hides the index there, and whether a hidden one then draws, is
+measured with `/uuf dev check`, which asks for the target's marker afresh and
+prints it as `raid marker now`: readable with its number, hidden, none, or
+the client's error — see *Waiting to be looked at*, item 6.
 
 ### A hunter's pet says how it is
 
@@ -2612,6 +2682,29 @@ quietly rather than erroring, which is why none of them announced itself.
    - On the Anniversary realms and Classic Era with a hunter: the same
      colors and lines, and the diet read from return values. The
      characters checked there so far were warlocks.
+
+6. **The raid marker.** Written on 14 November 2026 from the generated API
+   documentation of all five clients — see *A raid marker, in the
+   portrait's other corner*. `/uuf dev check` prints `raid marker` and `raid
+   marker now`; unlocking and `/uuf dev test` put a marker on every frame.
+   What is still to be seen:
+
+   - On every client: a skull set on the target appearing in the corner of
+     its portrait at once, going when it is taken off, and the target's
+     target showing its own.
+   - On Retail and Forever, in an encounter: what `raid marker now` says for
+     a marked boss, and whether the marker shows. Readable or hidden and
+     drawn are both fine; hidden and not drawn means `SetSpriteSheetCell`
+     refused what its documentation says it takes, and the error log stays
+     empty either way.
+   - Off a lossless screenshot at 1.3125 pixels per unit: the square at
+     21 pixels on the target, 18.4 on the small frames, 2.6 pixels in from
+     the column's top left corner and clear of the rim, and on the player
+     clear of the rest Z's. The first build, flush and two units larger, was
+     seen on Forever on 15 November 2026 — a skull on a real target drew at
+     once — and moved in for sitting on the rim. The build with the gap was
+     reported looking right the same night, by eye; it is released as 0.12
+     and still to be measured.
 
 Settled on 21 September 2026, measured in a delve:
 

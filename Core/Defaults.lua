@@ -220,6 +220,17 @@ Umbra.metrics = {
 	-- inside each cell, so the Z's draw smaller than the square.
 	restSize = 20,
 
+	-- The square a raid marker stands in, a `gap` in from the portrait
+	-- column's top and left edges, on every frame. Inside the column for the
+	-- reason the rest square is. The inset is there because the client's
+	-- marker art, unlike the Z's, fills its cell to within a unit: flush, the
+	-- skull sat on the frame's top line. 16 so that on the player the inset,
+	-- the marker and the rest square fill the column exactly: 2 + 16 + 20 =
+	-- 38. The small frames take 14, which leaves two units above their level
+	-- plate. See *A raid marker, in the portrait's other corner* in
+	-- Layouts/Shared.lua.
+	raidTargetSize = 16,
+
 	-- How strongly a hunter's pet's mood colors the portrait's ground, where
 	-- the unit's color otherwise lies at 0.13. Strong enough to read as a
 	-- colored portrait around the model, which itself is never covered.
@@ -341,6 +352,7 @@ Umbra.frames = {
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
+		raidTargetSize = 14,
 
 		-- Where `/uuf level` puts it, as on the player: a hunter's pet levels
 		-- on its own and can fall behind, so its level is worth a number.
@@ -364,6 +376,7 @@ Umbra.frames = {
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
+		raidTargetSize = 14,
 	},
 
 	--[[ The party column
@@ -411,6 +424,7 @@ Umbra.frames = {
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
+		raidTargetSize = 14,
 
 		-- Debuffs only, and at half the size the single frames use. A
 		-- party frame is 33 pixels tall; a 26-pixel icon under it
@@ -458,6 +472,7 @@ for index = 1, Umbra.bossCount do
 		healthHeight = 14,
 		portrait = 28,
 		fontSize = 11,
+		raidTargetSize = 14,
 	}
 end
 
