@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.12 — unreleased
+## 0.12 — 15 November 2026
 
 Every frame shows the raid marker the game's menu puts on a unit — the
 skull, the cross and the six others.
