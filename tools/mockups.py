@@ -1193,7 +1193,7 @@ OPT = {
     'footer': 9,
 }
 
-VERSION = '0.11'
+VERSION = '0.12'
 
 OPTION_ROWS = [
     ('section', 'Layout'),
