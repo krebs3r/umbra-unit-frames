@@ -677,14 +677,16 @@ end
 --[[ NoReward(unit)
 Whether killing the unit would be for nothing: somebody else struck it
 first, or it is so far below you that it gives no experience. The client
-answers both, the second through the same GetCreatureDifficultyColor the
-level is colored with — its gray is one table, QuestDifficultyColors'
-`trivial`, so the answer is an identity check rather than a guess at
-where the gray starts, which differs by client and by level.
+answers both, the second through the same Umbra:DifficultyColor the level
+is colored with (`Layouts/Tags.lua`, which says why it asks about the
+creature where the client can). Its gray is one table,
+QuestDifficultyColors' `trivial`, so the answer is an identity check rather
+than a guess at where the gray starts, which differs by client and by level.
 
 A player or anything a player controls is never tapped and never gray
 here, and a hidden answer is taken as no: the bar stays as it was rather
-than going gray on a guess.
+than going gray on a guess. So is a level too high to be told, which is
+never gray.
 --]]
 local UnitEffectiveLevel = _G.UnitEffectiveLevel or UnitLevel
 
@@ -694,15 +696,12 @@ local function NoReward(unit)
 	local denied = UnitIsTapDenied(unit)
 	if not Umbra.Secrets.Is(denied) and denied then return true end
 
-	if not UnitCanAttack('player', unit) or not GetCreatureDifficultyColor
-		or type(_G.QuestDifficultyColors) ~= 'table' then
-		return false
-	end
+	if type(_G.QuestDifficultyColors) ~= 'table' then return false end
 
 	local level = UnitEffectiveLevel(unit)
 	if Umbra.Secrets.Is(level) or not level or level <= 0 then return false end
 
-	return GetCreatureDifficultyColor(level) == QuestDifficultyColors.trivial
+	return Umbra:DifficultyColor(unit) == QuestDifficultyColors.trivial
 end
 
 local function UpdateIdentity(element, unit, _)
@@ -1528,11 +1527,44 @@ end
 The lines `/uuf dev check` prints for the rest indicator, the target's raid
 marker and the pet's mood: which art the indicator was given and why, what
 the client answers for the marker, whether the mood can be told here, and
-what each says right now. Values carry no ": ", which is where the report
-window splits a line into label and value.
+what each says right now. Last, the target's difficulty, asked the way the
+frames ask it and by its level alone. Values carry no ": ", which is where
+the report window splits a line into label and value.
 --]]
 local function YesNo(value)
 	return value and 'yes' or 'no'
+end
+
+local function DifficultyName(color)
+	if not color then return 'none' end
+
+	for name, entry in pairs(_G.QuestDifficultyColors or {}) do
+		if entry == color then return name end
+	end
+
+	return 'unknown'
+end
+
+local function Shown(value)
+	return Umbra.Secrets.Is(value) and 'hidden' or tostring(value)
+end
+
+local function DifficultyReport(unit)
+	if not UnitExists(unit) then return 'no target' end
+	if not UnitCanAttack('player', unit) then return 'not one you can attack' end
+
+	local level = UnitEffectiveLevel(unit)
+	local color, how = Umbra:DifficultyColor(unit)
+	local byLevel = 'the same'
+
+	if how == 'creature' and GetCreatureDifficultyColor
+		and not Umbra.Secrets.Is(level) and level and level > 0 then
+		byLevel = DifficultyName(GetCreatureDifficultyColor(level))
+	end
+
+	return ('%s, asked about the %s, by level alone %s; level %s against yours %s, bar gray %s'):format(
+		DifficultyName(color), how or 'nothing', byLevel, Shown(level),
+		Shown(UnitEffectiveLevel('player')), YesNo(NoReward(unit)))
 end
 
 function Umbra:IndicatorReport()
@@ -1625,6 +1657,11 @@ function Umbra:IndicatorReport()
 				#(Diet() or {}), pet.umbraMoodPainted and 'yes' or 'no')
 		end
 	end
+
+	-- The target's difficulty both ways: what the level plate and the gray
+	-- bar ask, and what the level alone would have said, which is where
+	-- Forever's gray went wrong. See Umbra:DifficultyColor in Layouts/Tags.lua.
+	lines[#lines + 1] = 'target difficulty: ' .. DifficultyReport('target')
 
 	return lines
 end

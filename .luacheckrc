@@ -55,6 +55,9 @@ read_globals = {
 	-- UnitEffectiveLevel is read through `_G`, so a client without it falls
 	-- back to UnitLevel.
 	'UnitLevel', 'UnitClassification', 'UnitCanAttack', 'GetCreatureDifficultyColor',
+	-- Retail and Forever ask about the creature rather than its level;
+	-- both are read through `_G`, so the Classic clients go without.
+	'C_PlayerInfo', 'GetDifficultyColor',
 	'UnitIsWildBattlePet', 'UnitIsBattlePetCompanion', 'UnitBattlePetLevel',
 
 	-- Whether the target is still worth anything: tapped, or gray.

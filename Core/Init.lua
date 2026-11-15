@@ -608,7 +608,7 @@ local function Command(input)
 		-- answers for the marker, whether the mood can be told here, and what
 		-- each says right now. None of the three could be settled from the UI
 		-- source for every client, so this is where a client answers for
-		-- itself.
+		-- itself. The target's difficulty comes last, for the same reason.
 		for _, line in ipairs(Umbra:IndicatorReport()) do
 			add(line)
 		end

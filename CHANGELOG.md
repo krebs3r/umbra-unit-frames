@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- WoW: Forever: the target's health bar went gray over a unit that still
+  gave experience — a level 19 target for a level 25 hunter. The gray came
+  from the level alone, measured against the range a quest goes gray in,
+  which on Forever is narrower than the one a creature stops giving
+  experience in. On Retail and Forever the level plate and the gray bar now
+  ask the game about the creature itself, the way Blizzard's own target
+  frame colors its level there. Mists, the Anniversary realms and Classic
+  Era have no such question and keep the level's color, as their own
+  target frame does
+- `/uuf dev check` prints the target's difficulty both ways, with the two
+  levels and whether the bar is gray
+- Seen in the game on WoW: Forever: the level 19 target of the report reads
+  its level green for the level 25 hunter, and its bar keeps its own color.
+  Checked by eye; not yet seen on Retail
+
 ## 0.12 — 15 November 2026
 
 Every frame shows the raid marker the game's menu puts on a unit — the

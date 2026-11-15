@@ -141,18 +141,60 @@ local function Hex(r, g, b)
 	return ('|cff%02x%02x%02x'):format(r * 255, g * 255, b * 255)
 end
 
---[[ Tag: umbra:difficulty
-Opens a color escape for how hard the unit is to fight, from the client's own
-GetCreatureDifficultyColor. Only for something you can attack: the level of a
-friend is context, not a warning, and stays in the muted color underneath.
+--[[ Umbra:DifficultyColor(unit)
+How hard the unit is to fight, as the client colors it: one of the
+QuestDifficultyColors entries, gray to red, and the way it was asked.
+Nothing for a unit you cannot attack, or for an answer that comes back
+hidden.
+
+**Ask about the creature, not about its level.** Retail and Forever have
+`C_PlayerInfo.GetContentDifficultyCreatureForPlayer`, and Blizzard's own
+target frame colors the level with it on both (`Mainline/TargetFrame.lua`,
+which Forever loads too). GetCreatureDifficultyColor takes only a level
+there, and turns gray past UnitQuestTrivialLevelRange — the range a
+*quest* goes gray in, which on Forever's Vanilla content is narrower than
+the one a creature stops giving experience in. Reported on 15 November
+2026: a level 19 target went gray for a level 25 hunter and still gave
+experience. Vanilla's rule puts gray at 18 and below for level 25.
+
+Mists, the Anniversary realms and Classic Era have no creature question,
+and their own target frame asks GetCreatureDifficultyColor with the level,
+so here that is what is asked too. Checked in Gethe/wow-ui-source on 15
+November 2026, branches `live` (12.1.5), `forever` (1.60.1), `classic`,
+`classic_anniversary` and `classic_era`. Seen on Forever on 16 November
+2026, by eye: the same level 19 target reads green for the level 25 hunter
+and its bar keeps its color. `/uuf dev check` prints both answers for the
+target, beside the two levels.
 --]]
-local function Difficulty(unit)
-	if not GetCreatureDifficultyColor or not UnitCanAttack('player', unit) then return end
+local CreatureDifficulty = _G.C_PlayerInfo and C_PlayerInfo.GetContentDifficultyCreatureForPlayer
+
+function Umbra:DifficultyColor(unit)
+	if not UnitCanAttack('player', unit) then return end
+
+	if CreatureDifficulty and _G.GetDifficultyColor then
+		local difficulty = CreatureDifficulty(unit)
+
+		-- Blizzard's mapping compares the answer, which a hidden one forbids.
+		if difficulty == nil or Umbra.Secrets.Is(difficulty) then return end
+
+		return (GetDifficultyColor(difficulty)), 'creature'
+	end
+
+	if not GetCreatureDifficultyColor then return end
 
 	local level = UnitEffectiveLevel(unit)
 	if Umbra.Secrets.Is(level) then return end
 
-	local color = GetCreatureDifficultyColor((level and level > 0) and level or 999)
+	return (GetCreatureDifficultyColor((level and level > 0) and level or 999)), 'level'
+end
+
+--[[ Tag: umbra:difficulty
+Opens a color escape for how hard the unit is to fight, from
+Umbra:DifficultyColor above. Only for something you can attack: the level of
+a friend is context, not a warning, and stays in the muted color underneath.
+--]]
+local function Difficulty(unit)
+	local color = Umbra:DifficultyColor(unit)
 	if not color then return end
 
 	return Hex(color.r, color.g, color.b)
